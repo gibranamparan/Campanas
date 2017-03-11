@@ -20,6 +20,12 @@ namespace CampanasDelDesierto_v1.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<MovimientoFinanciero> MovimientosFinancieros { get; set; }
+        public DbSet<PagoPorProducto> PagoPorProductos { get; set; }
+        public DbSet<PrestamoCapital> PrestamoCapital { get; set; }
+        public DbSet<PrestamoMaterial> PrestamoMateriales { get; set; }
+        public DbSet<Productor>Productores { get; set; }
+        public DbSet<Activo> Activos { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

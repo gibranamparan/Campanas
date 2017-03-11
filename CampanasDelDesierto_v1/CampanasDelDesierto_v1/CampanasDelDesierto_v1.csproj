@@ -197,14 +197,39 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MovimientosFinancierosController.cs" />
+    <Compile Include="Controllers\PagosPorProductosController.cs" />
+    <Compile Include="Controllers\PrestamosCapitalesController.cs" />
+    <Compile Include="Controllers\PrestamosMaterialesController.cs" />
+    <Compile Include="Controllers\ProductoresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703100723414_tablas.cs" />
+    <Compile Include="Migrations\201703100723414_tablas.Designer.cs">
+      <DependentUpon>201703100723414_tablas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703100729163_cambioActivo.cs" />
+    <Compile Include="Migrations\201703100729163_cambioActivo.Designer.cs">
+      <DependentUpon>201703100729163_cambioActivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703101451593_atributoEnPrestamosMaterial.cs" />
+    <Compile Include="Migrations\201703101451593_atributoEnPrestamosMaterial.Designer.cs">
+      <DependentUpon>201703101451593_atributoEnPrestamosMaterial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Activo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MovimientoFinanciero.cs" />
+    <Compile Include="Models\PagoPorProducto.cs" />
+    <Compile Include="Models\PrestamoCapital.cs" />
+    <Compile Include="Models\PrestamoMaterial.cs" />
+    <Compile Include="Models\Productor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -264,6 +289,36 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\Activos\Create.cshtml" />
+    <Content Include="Views\Activos\Delete.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\MovimientosFinancieros\Create.cshtml" />
+    <Content Include="Views\MovimientosFinancieros\Delete.cshtml" />
+    <Content Include="Views\MovimientosFinancieros\Details.cshtml" />
+    <Content Include="Views\MovimientosFinancieros\Edit.cshtml" />
+    <Content Include="Views\MovimientosFinancieros\Index.cshtml" />
+    <Content Include="Views\PagosPorProductos\Create.cshtml" />
+    <Content Include="Views\PagosPorProductos\Delete.cshtml" />
+    <Content Include="Views\PagosPorProductos\Details.cshtml" />
+    <Content Include="Views\PagosPorProductos\Edit.cshtml" />
+    <Content Include="Views\PagosPorProductos\Index.cshtml" />
+    <Content Include="Views\PrestamosCapitales\Create.cshtml" />
+    <Content Include="Views\PrestamosCapitales\Delete.cshtml" />
+    <Content Include="Views\PrestamosCapitales\Details.cshtml" />
+    <Content Include="Views\PrestamosCapitales\Edit.cshtml" />
+    <Content Include="Views\PrestamosCapitales\Index.cshtml" />
+    <Content Include="Views\PrestamosMateriales\Create.cshtml" />
+    <Content Include="Views\PrestamosMateriales\Delete.cshtml" />
+    <Content Include="Views\PrestamosMateriales\Details.cshtml" />
+    <Content Include="Views\PrestamosMateriales\Edit.cshtml" />
+    <Content Include="Views\PrestamosMateriales\Index.cshtml" />
+    <Content Include="Views\Productores\Create.cshtml" />
+    <Content Include="Views\Productores\Delete.cshtml" />
+    <Content Include="Views\Productores\Details.cshtml" />
+    <Content Include="Views\Productores\Edit.cshtml" />
+    <Content Include="Views\Productores\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -278,6 +333,17 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703100723414_tablas.resx">
+      <DependentUpon>201703100723414_tablas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703100729163_cambioActivo.resx">
+      <DependentUpon>201703100729163_cambioActivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703101451593_atributoEnPrestamosMaterial.resx">
+      <DependentUpon>201703101451593_atributoEnPrestamosMaterial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
