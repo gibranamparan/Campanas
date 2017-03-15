@@ -51,20 +51,24 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,cantidadMaterial,montoMovimiento,fechaMovimiento,idProductor,idActivos")] PrestamoMaterial prestamoMaterial)
         {
-            var idActivos = prestamoMaterial.idActivos;
-            var activo = db.Activos.Find(idActivos);
-            prestamoMaterial.montoMovimiento = (int)activo.costo * prestamoMaterial.cantidadMaterial;
-            
-            if (ModelState.IsValid)
+            for (int i = 1; i <= prestamoMaterial.cantidadMaterial; i++)
             {
-                db.MovimientosFinancieros.Add(prestamoMaterial);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                var idActivos = prestamoMaterial.idActivos;
+                var activo = db.Activos.Find(idActivos);
+                prestamoMaterial.montoMovimiento = (int)activo.costo;
 
+                if (ModelState.IsValid)
+                {
+                    db.MovimientosFinancieros.Add(prestamoMaterial);
+                    db.SaveChanges();
+                    
+                }
+                
+            }
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoMaterial.idProductor);
-            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", prestamoMaterial.idActivos);
-            return View(prestamoMaterial);
+            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", prestamoMaterial.idActivos);            
+            return  RedirectToAction("Index");
+
         }
 
         // GET: PrestamosMateriales/Edit/5
