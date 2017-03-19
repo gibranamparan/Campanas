@@ -216,6 +216,10 @@
     <Compile Include="Migrations\201703192208570_modificaciones.Designer.cs">
       <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703192220444_any.cs" />
+    <Compile Include="Migrations\201703192220444_any.Designer.cs">
+      <DependentUpon>201703192220444_any.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -300,11 +304,6 @@
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
-    <Content Include="Views\PagosPorProductos\Create.cshtml" />
-    <Content Include="Views\PagosPorProductos\Delete.cshtml" />
-    <Content Include="Views\PagosPorProductos\Details.cshtml" />
-    <Content Include="Views\PagosPorProductos\Edit.cshtml" />
-    <Content Include="Views\PagosPorProductos\Index.cshtml" />
     <Content Include="Views\MovimientosFinancieros\Create.cshtml" />
     <Content Include="Views\MovimientosFinancieros\Delete.cshtml" />
     <Content Include="Views\MovimientosFinancieros\Details.cshtml" />
@@ -315,6 +314,11 @@
     <Content Include="Views\Activos\Details.cshtml" />
     <Content Include="Views\Activos\Edit.cshtml" />
     <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\PagosPorProductos\Index.cshtml" />
+    <Content Include="Views\PagosPorProductos\Edit.cshtml" />
+    <Content Include="Views\PagosPorProductos\Details.cshtml" />
+    <Content Include="Views\PagosPorProductos\Delete.cshtml" />
+    <Content Include="Views\PagosPorProductos\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -336,6 +340,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703192208570_modificaciones.resx">
       <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703192220444_any.resx">
+      <DependentUpon>201703192220444_any.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
