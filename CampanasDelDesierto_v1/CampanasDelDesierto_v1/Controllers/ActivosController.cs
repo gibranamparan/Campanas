@@ -46,7 +46,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idActivos,nombreActivo,costo,estado")] Activo activo)
+        public ActionResult Create([Bind(Include = "idActivos,nombreActivo,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Activo activo)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idActivos,nombreActivo,costo,estado")] Activo activo)
+        public ActionResult Edit([Bind(Include = "idActivos,nombreActivo,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Activo activo)
         {
             if (ModelState.IsValid)
             {

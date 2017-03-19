@@ -3,7 +3,7 @@ namespace CampanasDelDesierto_v1.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class tablas : DbMigration
+    public partial class CreacionTablasConCamposNuevos : DbMigration
     {
         public override void Up()
         {
@@ -15,6 +15,10 @@ namespace CampanasDelDesierto_v1.Migrations
                         nombreActivo = c.String(),
                         costo = c.Decimal(nullable: false, precision: 18, scale: 2),
                         estado = c.String(),
+                        fecha = c.DateTime(nullable: false),
+                        concepto = c.String(),
+                        pagare = c.String(),
+                        ordenDeCompra = c.String(),
                     })
                 .PrimaryKey(t => t.idActivos);
             
@@ -26,10 +30,22 @@ namespace CampanasDelDesierto_v1.Migrations
                         montoMovimiento = c.Int(nullable: false),
                         fechaMovimiento = c.DateTime(nullable: false),
                         idProductor = c.Int(nullable: false),
-                        activo = c.String(),
+                        cantidadMaterial = c.Int(),
                         idActivos = c.Int(),
                         cantidadProducto = c.Double(),
-                        MesesAPagar = c.Int(),
+                        numeroSemana = c.Int(),
+                        cheque = c.String(),
+                        MyProperty = c.Int(),
+                        tipoProducto = c.String(),
+                        garantiaLimpieza = c.Int(),
+                        fechaDePrestamo = c.DateTime(),
+                        cheque1 = c.String(),
+                        concepto = c.String(),
+                        cargo = c.Double(),
+                        pagare = c.String(),
+                        fechaPagar = c.DateTime(),
+                        proveedor = c.String(),
+                        nota = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.idMovimiento)
@@ -46,6 +62,11 @@ namespace CampanasDelDesierto_v1.Migrations
                         nombreProductor = c.String(),
                         domicilio = c.String(),
                         fechaIntegracion = c.DateTime(nullable: false),
+                        RFC = c.String(),
+                        zona = c.String(),
+                        nombreCheque = c.String(),
+                        adeudoAnterior = c.Int(),
+                        precioCosecha = c.Int(),
                     })
                 .PrimaryKey(t => t.idProductor);
             

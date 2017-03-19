@@ -7,13 +7,13 @@ namespace CampanasDelDesierto_v1.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class tablas : IMigrationMetadata
+    public sealed partial class CreacionTablasConCamposNuevos : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(tablas));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreacionTablasConCamposNuevos));
         
         string IMigrationMetadata.Id
         {
-            get { return "201703100723414_tablas"; }
+            get { return "201703192142329_CreacionTablasConCamposNuevos"; }
         }
         
         string IMigrationMetadata.Source

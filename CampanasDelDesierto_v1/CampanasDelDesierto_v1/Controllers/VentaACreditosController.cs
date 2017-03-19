@@ -10,112 +10,116 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    public class PrestamosCapitalesController : Controller
+    public class VentaACreditosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PrestamosCapitales
+        // GET: VentaACreditos
         public ActionResult Index()
         {
-            var movimientosFinancieros = db.PrestamoCapital.Include(p => p.Productor);
+            var movimientosFinancieros = db.MovimientosFinancieros.Include(v => v.Productor);
             return View(movimientosFinancieros.ToList());
         }
 
-        // GET: PrestamosCapitales/Details/5
+        // GET: VentaACreditos/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PrestamoCapital prestamoCapital = db.PrestamoCapital.Find(id);
-            if (prestamoCapital == null)
+            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
+            if (ventaACredito == null)
             {
                 return HttpNotFound();
             }
-            return View(prestamoCapital);
+            return View(ventaACredito);
         }
 
-        // GET: PrestamosCapitales/Create
+        // GET: VentaACreditos/Create
         public ActionResult Create()
         {
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
+            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo");
             return View();
         }
 
-        // POST: PrestamosCapitales/Create
+        // POST: VentaACreditos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,MesesAPagar")] PrestamoCapital prestamoCapital)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idActivos")] VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
             {
-                db.MovimientosFinancieros.Add(prestamoCapital);
+                db.MovimientosFinancieros.Add(ventaACredito);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoCapital.idProductor);
-            return View(prestamoCapital);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
+            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            return View(ventaACredito);
         }
 
-        // GET: PrestamosCapitales/Edit/5
+        // GET: VentaACreditos/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PrestamoCapital prestamoCapital = db.PrestamoCapital.Find(id);
-            if (prestamoCapital == null)
+            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
+            if (ventaACredito == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoCapital.idProductor);
-            return View(prestamoCapital);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
+            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            return View(ventaACredito);
         }
 
-        // POST: PrestamosCapitales/Edit/5
+        // POST: VentaACreditos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,MesesAPagar")] PrestamoCapital prestamoCapital)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idActivos")] VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(prestamoCapital).State = EntityState.Modified;
+                db.Entry(ventaACredito).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoCapital.idProductor);
-            return View(prestamoCapital);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
+            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            return View(ventaACredito);
         }
 
-        // GET: PrestamosCapitales/Delete/5
+        // GET: VentaACreditos/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PrestamoCapital prestamoCapital = db.PrestamoCapital.Find(id);
-            if (prestamoCapital == null)
+            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
+            if (ventaACredito == null)
             {
                 return HttpNotFound();
             }
-            return View(prestamoCapital);
+            return View(ventaACredito);
         }
 
-        // POST: PrestamosCapitales/Delete/5
+        // POST: VentaACreditos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PrestamoCapital prestamoCapital = db.PrestamoCapital.Find(id);
-            db.MovimientosFinancieros.Remove(prestamoCapital);
+            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
+            db.MovimientosFinancieros.Remove(ventaACredito);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
