@@ -52,6 +52,7 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 db.MovimientosFinancieros.Add(movimientoFinanciero);
                 db.SaveChanges();
                 return RedirectToAction("Index");
