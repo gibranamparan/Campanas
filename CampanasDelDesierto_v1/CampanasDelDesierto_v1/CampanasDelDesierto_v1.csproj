@@ -200,7 +200,7 @@
     <Compile Include="Controllers\ActivosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MovimientosFinancierosController.cs" />
+    <Compile Include="Controllers\MovimientoFinancierosController.cs" />
     <Compile Include="Controllers\PagosPorProductosController.cs" />
     <Compile Include="Controllers\PrestamoYAbonoCapitalsController.cs" />
     <Compile Include="Controllers\ProductoresController.cs" />
@@ -304,11 +304,6 @@
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
-    <Content Include="Views\MovimientosFinancieros\Create.cshtml" />
-    <Content Include="Views\MovimientosFinancieros\Delete.cshtml" />
-    <Content Include="Views\MovimientosFinancieros\Details.cshtml" />
-    <Content Include="Views\MovimientosFinancieros\Edit.cshtml" />
-    <Content Include="Views\MovimientosFinancieros\Index.cshtml" />
     <Content Include="Views\Activos\Create.cshtml" />
     <Content Include="Views\Activos\Delete.cshtml" />
     <Content Include="Views\Activos\Details.cshtml" />
@@ -319,6 +314,11 @@
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
     <Content Include="Views\PagosPorProductos\Create.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Create.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Delete.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Details.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Edit.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
