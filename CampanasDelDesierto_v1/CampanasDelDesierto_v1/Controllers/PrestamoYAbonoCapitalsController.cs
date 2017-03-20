@@ -50,8 +50,24 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,fechaDePrestamo,cheque,concepto,cargo,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
+            double balanceAnterior = 0;
             if (ModelState.IsValid)
             {
+                try
+                {
+                    var movimientosAscendentes = db.MovimientosFinancieros.Where(mov => mov.idProductor == prestamoYAbonoCapital.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
+                    var ultimoMov = movimientosAscendentes.First();
+                    balanceAnterior = ultimoMov.balance;
+                }
+                catch { }
+                if (prestamoYAbonoCapital.concepto == "prestamo")
+                {
+                    prestamoYAbonoCapital.balance = balanceAnterior + prestamoYAbonoCapital.montoMovimiento;
+                }
+                else if(prestamoYAbonoCapital.concepto == "abono")
+                {
+                    prestamoYAbonoCapital.balance = balanceAnterior - prestamoYAbonoCapital.montoMovimiento;
+                }
                 db.MovimientosFinancieros.Add(prestamoYAbonoCapital);
                 db.SaveChanges();
                 return RedirectToAction("Index");
