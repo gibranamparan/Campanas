@@ -10,18 +10,18 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    public class MovimientosFinancierosController : Controller
+    public class MovimientoFinancierosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: MovimientosFinancieros
+        // GET: MovimientoFinancieros
         public ActionResult Index()
         {
             var movimientosFinancieros = db.MovimientosFinancieros.Include(m => m.Productor);
             return View(movimientosFinancieros.ToList());
         }
 
-        // GET: MovimientosFinancieros/Details/5
+        // GET: MovimientoFinancieros/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,14 +36,14 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
-        // GET: MovimientosFinancieros/Create
+        // GET: MovimientoFinancieros/Create
         public ActionResult Create()
         {
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
             return View();
         }
 
-        // POST: MovimientosFinancieros/Create
+        // POST: MovimientoFinancieros/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -62,7 +62,7 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
-        // GET: MovimientosFinancieros/Edit/5
+        // GET: MovimientoFinancieros/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -78,7 +78,7 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
-        // POST: MovimientosFinancieros/Edit/5
+        // POST: MovimientoFinancieros/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -95,7 +95,7 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
-        // GET: MovimientosFinancieros/Delete/5
+        // GET: MovimientoFinancieros/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -110,7 +110,7 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
-        // POST: MovimientosFinancieros/Delete/5
+        // POST: MovimientoFinancieros/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
