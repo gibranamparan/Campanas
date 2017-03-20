@@ -7,13 +7,13 @@ namespace CampanasDelDesierto_v1.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class cambioActivo : IMigrationMetadata
+    public sealed partial class any : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(cambioActivo));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(any));
         
         string IMigrationMetadata.Id
         {
-            get { return "201703100729163_cambioActivo"; }
+            get { return "201703192220444_any"; }
         }
         
         string IMigrationMetadata.Source

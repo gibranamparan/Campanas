@@ -10,112 +10,112 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    public class PagosPorProductosController : Controller
+    public class PrestamoYAbonoCapitalsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PagosPorProductos
+        // GET: PrestamoYAbonoCapitals
         public ActionResult Index()
         {
-            var pagosPorProductos = db.PagosPorProductos.Include(p => p.Productor);
-            return View(pagosPorProductos.ToList());
+            var movimientosFinancieros = db.MovimientosFinancieros.Include(p => p.Productor);
+            return View(movimientosFinancieros.ToList());
         }
 
-        // GET: PagosPorProductos/Details/5
+        // GET: PrestamoYAbonoCapitals/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            if (pagoPorProducto == null)
+            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+            if (prestamoYAbonoCapital == null)
             {
                 return HttpNotFound();
             }
-            return View(pagoPorProducto);
+            return View(prestamoYAbonoCapital);
         }
 
-        // GET: PagosPorProductos/Create
+        // GET: PrestamoYAbonoCapitals/Create
         public ActionResult Create()
         {
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
             return View();
         }
 
-        // POST: PagosPorProductos/Create
+        // POST: PrestamoYAbonoCapitals/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,MyProperty,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,fechaDePrestamo,cheque,concepto,cargo,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
             {
-                db.MovimientosFinancieros.Add(pagoPorProducto);
+                db.MovimientosFinancieros.Add(prestamoYAbonoCapital);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
-            return View(pagoPorProducto);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+            return View(prestamoYAbonoCapital);
         }
 
-        // GET: PagosPorProductos/Edit/5
+        // GET: PrestamoYAbonoCapitals/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            if (pagoPorProducto == null)
+            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+            if (prestamoYAbonoCapital == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
-            return View(pagoPorProducto);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+            return View(prestamoYAbonoCapital);
         }
 
-        // POST: PagosPorProductos/Edit/5
+        // POST: PrestamoYAbonoCapitals/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,MyProperty,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,fechaDePrestamo,cheque,concepto,cargo,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(pagoPorProducto).State = EntityState.Modified;
+                db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
-            return View(pagoPorProducto);
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+            return View(prestamoYAbonoCapital);
         }
 
-        // GET: PagosPorProductos/Delete/5
+        // GET: PrestamoYAbonoCapitals/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            if (pagoPorProducto == null)
+            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+            if (prestamoYAbonoCapital == null)
             {
                 return HttpNotFound();
             }
-            return View(pagoPorProducto);
+            return View(prestamoYAbonoCapital);
         }
 
-        // POST: PagosPorProductos/Delete/5
+        // POST: PrestamoYAbonoCapitals/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            db.MovimientosFinancieros.Remove(pagoPorProducto);
+            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+            db.MovimientosFinancieros.Remove(prestamoYAbonoCapital);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.PagoPorProducto>
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital>
 
 @{
     ViewBag.Title = "Index";
@@ -22,22 +22,28 @@
             @Html.DisplayNameFor(model => model.fechaMovimiento)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.cantidadProducto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.numeroSemana)
+            @Html.DisplayNameFor(model => model.fechaDePrestamo)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.cheque)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.abonoAnticipo)
+            @Html.DisplayNameFor(model => model.concepto)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.tipoProducto)
+            @Html.DisplayNameFor(model => model.cargo)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.garantiaLimpieza)
+            @Html.DisplayNameFor(model => model.pagare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaPagar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.proveedor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nota)
         </th>
         <th></th>
     </tr>
@@ -54,22 +60,28 @@
             @Html.DisplayFor(modelItem => item.fechaMovimiento)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.cantidadProducto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.numeroSemana)
+            @Html.DisplayFor(modelItem => item.fechaDePrestamo)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.cheque)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.abonoAnticipo)
+            @Html.DisplayFor(modelItem => item.concepto)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.tipoProducto)
+            @Html.DisplayFor(modelItem => item.cargo)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.garantiaLimpieza)
+            @Html.DisplayFor(modelItem => item.pagare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaPagar)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.proveedor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nota)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |

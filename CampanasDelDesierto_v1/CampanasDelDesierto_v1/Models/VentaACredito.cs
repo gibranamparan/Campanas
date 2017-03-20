@@ -6,7 +6,7 @@ using System.Web;
 
 namespace CampanasDelDesierto_v1.Models
 {
-    public class PrestamoMaterial:MovimientoFinanciero
+    public class VentaACredito:MovimientoFinanciero
     {
         public int cantidadMaterial { get; set; }
 

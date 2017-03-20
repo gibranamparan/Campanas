@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.PrestamoMaterial>
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.VentaACredito>
 
 @{
     ViewBag.Title = "Index";
@@ -22,10 +22,10 @@
             @Html.DisplayNameFor(model => model.fechaMovimiento)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Activo.nombreActivo)
-        </th>        
+            @Html.DisplayNameFor(model => model.cantidadMaterial)
+        </th>
         <th>
-            Costo por Material
+            @Html.DisplayNameFor(model => model.Activo.nombreActivo)
         </th>
         <th></th>
     </tr>
@@ -42,10 +42,10 @@
             @Html.DisplayFor(modelItem => item.fechaMovimiento)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Activo.nombreActivo)
-        </td>        
+            @Html.DisplayFor(modelItem => item.cantidadMaterial)
+        </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Activo.costo)
+            @Html.DisplayFor(modelItem => item.Activo.nombreActivo)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |
