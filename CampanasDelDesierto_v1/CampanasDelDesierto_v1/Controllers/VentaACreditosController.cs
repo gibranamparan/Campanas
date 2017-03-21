@@ -17,8 +17,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: VentaACreditos
         public ActionResult Index()
         {
-            var movimientosFinancieros = db.MovimientosFinancieros.Include(v => v.Productor);
-            return View(movimientosFinancieros.ToList());
+            //var movimientosFinancieros = db.MovimientosFinancieros.Include(v => v.Productor);
+            var ventaacredito = db.VentasACreditos.Include(v => v.idProductor);
+            return View(ventaacredito.ToList());
         }
 
         // GET: VentaACreditos/Details/5

@@ -17,8 +17,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: PrestamoYAbonoCapitals
         public ActionResult Index()
         {
-            var movimientosFinancieros = db.MovimientosFinancieros.Include(p => p.Productor);
-            return View(movimientosFinancieros.ToList());
+            //var movimientosFinancieros = db.MovimientosFinancieros.Include(p => p.Productor);
+            var pretamoyabonocapital = db.PrestamosYAbonosCapital.Include(p => p.Productor);
+            return View(pretamoyabonocapital.ToList());
         }
 
         // GET: PrestamoYAbonoCapitals/Details/5
