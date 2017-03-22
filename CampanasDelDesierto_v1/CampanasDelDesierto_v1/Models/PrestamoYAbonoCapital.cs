@@ -10,14 +10,14 @@ namespace CampanasDelDesierto_v1.Models
     {
 
         //public int MesesAPagar { get; set; }
-        [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
-         ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
-        public DateTime fechaDePrestamo { get; set; }
+        //[DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
+        // ApplyFormatInEditMode = true)]
+        //[DataType(DataType.Date)]
+        //public DateTime fechaDePrestamo { get; set; }
        // public int rate { get; set; }
         public string cheque { get; set; }
         public string concepto { get; set; }
-        public double cargo { get; set; }
+        //public double cargo { get; set; }
         public string pagare { get; set; }
         [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
         ApplyFormatInEditMode = true)]

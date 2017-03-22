@@ -220,6 +220,10 @@
     <Compile Include="Migrations\201703192220444_any.Designer.cs">
       <DependentUpon>201703192220444_any.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.cs" />
+    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.Designer.cs">
+      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -343,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703192220444_any.resx">
       <DependentUpon>201703192220444_any.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703222344464_eliminacionde2atributos.resx">
+      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
