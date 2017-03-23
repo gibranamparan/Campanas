@@ -49,7 +49,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,fechaDePrestamo,cheque,concepto,cargo,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cheque,concepto,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             double balanceAnterior = 0;
             if (ModelState.IsValid)
