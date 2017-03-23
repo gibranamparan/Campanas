@@ -56,7 +56,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 try
                 {
-                    var movimientosAscendentes = db.MovimientosFinancieros.Where(mov => mov.idProductor == prestamoYAbonoCapital.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
+                    var movimientosAscendentes = db.PrestamosYAbonosCapital.Where(mov => mov.idProductor == prestamoYAbonoCapital.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
                     var ultimoMov = movimientosAscendentes.First();
                     balanceAnterior = ultimoMov.balance;
                 }

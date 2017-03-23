@@ -45,6 +45,9 @@
         <th>
             @Html.DisplayNameFor(model => model.nota)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.balance)
+        </th>
         <th></th>
     </tr>
 
@@ -82,6 +85,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.nota)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.balance)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |

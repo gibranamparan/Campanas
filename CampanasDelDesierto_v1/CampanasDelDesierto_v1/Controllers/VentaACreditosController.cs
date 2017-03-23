@@ -18,8 +18,8 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult Index()
         {
             //var movimientosFinancieros = db.MovimientosFinancieros.Include(v => v.Productor);
-            var ventaacredito = db.VentasACreditos.Include(v => v.idProductor);
-            return View(ventaacredito.ToList());
+            var ventacredito = db.VentasACreditos.Include(v => v.Productor);
+            return View(ventacredito.ToList());
         }
 
         // GET: VentaACreditos/Details/5
@@ -52,8 +52,24 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idActivos")] VentaACredito ventaACredito)
         {
+            double balanceAnterior = 0;
             if (ModelState.IsValid)
             {
+                try
+                {
+                    var movimientosAscendentes = db.VentasACreditos.Where(mov => mov.idProductor == ventaACredito.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
+                    var ultimoMov = movimientosAscendentes.First();
+                    balanceAnterior = ultimoMov.balance;
+                }
+                catch { }
+                //calcula automaticamente el total de la venta 
+                Activo activo = db.Activos.Find(ventaACredito.idActivos);
+                decimal costoActivo = activo.costo;
+                decimal totalventa = costoActivo * ventaACredito.cantidadMaterial;
+                ventaACredito.montoMovimiento = (double)totalventa;
+
+                ventaACredito.balance = balanceAnterior + ventaACredito.montoMovimiento;
+
                 db.MovimientosFinancieros.Add(ventaACredito);
                 db.SaveChanges();
                 return RedirectToAction("Index");
