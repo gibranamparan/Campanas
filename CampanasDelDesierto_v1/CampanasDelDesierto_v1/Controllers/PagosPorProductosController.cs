@@ -50,9 +50,61 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,MyProperty,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
         {
+            double ultimoBalancePrestamosCapital = 0;
+            double ultimoBalancePrestamosMaterial = 0;
+            int  idActivo = 0;
+            VentaACredito ventaCredito = new VentaACredito();
+            PrestamoYAbonoCapital prestamoAbonoCapital = new PrestamoYAbonoCapital();
             if (ModelState.IsValid)
             {
+                try
+                {
+                    var movimientosAscendentes = db.PrestamosYAbonosCapital.Where(mov => mov.idProductor == pagoPorProducto.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
+                    var ultimoMov = movimientosAscendentes.First();
+                    ultimoBalancePrestamosCapital = ultimoMov.balance;
+                    var movimientos = db.VentasACreditos.Where(mov => mov.idProductor == pagoPorProducto.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
+                    var ultimoMovimiento = movimientos.First();
+                    ultimoBalancePrestamosMaterial = ultimoMovimiento.balance;
+
+                    idActivo = movimientos.First().idActivos;
+                }
+                catch { }
+                pagoPorProducto.balance = pagoPorProducto.montoMovimiento - (ultimoBalancePrestamosCapital + ultimoBalancePrestamosMaterial);
+                
+                //aal calcular el balance del pago por producto se crea un nuevo registro en prestamoyabonocapital para que asi se cancele 
+                //la deuda o se acumule para el siguiente año
+
+                prestamoAbonoCapital.montoMovimiento = 0;
+                prestamoAbonoCapital.fechaMovimiento = pagoPorProducto.fechaMovimiento;
+                prestamoAbonoCapital.idProductor = pagoPorProducto.idProductor;
+                prestamoAbonoCapital.fechaPagar = pagoPorProducto.fechaMovimiento;
+                prestamoAbonoCapital.nota = "se realizo un pagoporproducto";
+                //se hace unaa validacion si la cantidad de la produccion fue suficiente para cubrir la deuda se cancela sino se abona y se sigue acumulando
+                if(pagoPorProducto.montoMovimiento >= (ultimoBalancePrestamosCapital + ultimoBalancePrestamosMaterial))
+                {
+                    prestamoAbonoCapital.balance = 0;
+                    ventaCredito.balance = 0;
+                }
+                else
+                {
+                    prestamoAbonoCapital.balance = pagoPorProducto.balance;
+                    ventaCredito.balance = pagoPorProducto.balance;
+                }
+
+                prestamoAbonoCapital.concepto = "Pago por producto";
+
+                ventaCredito.montoMovimiento = 0;
+                ventaCredito.fechaMovimiento = pagoPorProducto.fechaMovimiento;
+                ventaCredito.idProductor = pagoPorProducto.idProductor;
+                ventaCredito.cantidadMaterial = 0;
+                ventaCredito.idActivos = idActivo;
+
+
+
                 db.MovimientosFinancieros.Add(pagoPorProducto);
+                db.MovimientosFinancieros.Add(prestamoAbonoCapital);
+                db.MovimientosFinancieros.Add(ventaCredito);
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
