@@ -1,0 +1,59 @@
+﻿@model CampanasDelDesierto_v1.Models.VentaACredito
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>VentaACredito</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Productor.nombreProductor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.montoMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.montoMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cantidadMaterial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cantidadMaterial)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo.nombreActivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo.nombreActivo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idMovimiento }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,107 @@
+﻿@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PrestamoYAbonoCapital</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Productor.nombreProductor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.montoMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.montoMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaDePrestamo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaDePrestamo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cheque)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cheque)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.concepto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.concepto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cargo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cargo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.pagare)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.pagare)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaPagar)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaPagar)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.proveedor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.proveedor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nota)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nota)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idMovimiento }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -197,14 +197,43 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MovimientoFinancierosController.cs" />
+    <Compile Include="Controllers\PagosPorProductosController.cs" />
+    <Compile Include="Controllers\PrestamoYAbonoCapitalsController.cs" />
+    <Compile Include="Controllers\ProductoresController.cs" />
+    <Compile Include="Controllers\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
+    <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
+      <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703192208570_modificaciones.cs" />
+    <Compile Include="Migrations\201703192208570_modificaciones.Designer.cs">
+      <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703192220444_any.cs" />
+    <Compile Include="Migrations\201703192220444_any.Designer.cs">
+      <DependentUpon>201703192220444_any.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.cs" />
+    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.Designer.cs">
+      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Activo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MovimientoFinanciero.cs" />
+    <Compile Include="Models\PagoPorProducto.cs" />
+    <Compile Include="Models\PrestamoYAbonoCapital.cs" />
+    <Compile Include="Models\VentaACredito.cs" />
+    <Compile Include="Models\Productor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -264,6 +293,36 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\Productores\Create.cshtml" />
+    <Content Include="Views\Productores\Delete.cshtml" />
+    <Content Include="Views\Productores\Details.cshtml" />
+    <Content Include="Views\Productores\Edit.cshtml" />
+    <Content Include="Views\Productores\Index.cshtml" />
+    <Content Include="Views\VentaACreditos\Create.cshtml" />
+    <Content Include="Views\VentaACreditos\Delete.cshtml" />
+    <Content Include="Views\VentaACreditos\Details.cshtml" />
+    <Content Include="Views\VentaACreditos\Edit.cshtml" />
+    <Content Include="Views\VentaACreditos\Index.cshtml" />
+    <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
+    <Content Include="Views\PrestamoYAbonoCapitals\Delete.cshtml" />
+    <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
+    <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
+    <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
+    <Content Include="Views\Activos\Create.cshtml" />
+    <Content Include="Views\Activos\Delete.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\PagosPorProductos\Index.cshtml" />
+    <Content Include="Views\PagosPorProductos\Edit.cshtml" />
+    <Content Include="Views\PagosPorProductos\Details.cshtml" />
+    <Content Include="Views\PagosPorProductos\Delete.cshtml" />
+    <Content Include="Views\PagosPorProductos\Create.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Create.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Delete.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Details.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Edit.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -278,6 +337,20 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.resx">
+      <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703192208570_modificaciones.resx">
+      <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703192220444_any.resx">
+      <DependentUpon>201703192220444_any.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703222344464_eliminacionde2atributos.resx">
+      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

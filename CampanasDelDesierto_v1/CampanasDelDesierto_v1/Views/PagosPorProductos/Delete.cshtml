@@ -1,0 +1,97 @@
+﻿@model CampanasDelDesierto_v1.Models.PagoPorProducto
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PagoPorProducto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Productor.nombreProductor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.montoMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.montoMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cantidadProducto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cantidadProducto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.numeroSemana)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.numeroSemana)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cheque)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cheque)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.abonoAnticipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.abonoAnticipo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tipoProducto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tipoProducto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.garantiaLimpieza)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.garantiaLimpieza)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,83 @@
+﻿@model CampanasDelDesierto_v1.Models.Productor
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Productor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreProductor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombreProductor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.domicilio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.domicilio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaIntegracion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaIntegracion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RFC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RFC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.zona)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.zona)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreCheque)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombreCheque)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.adeudoAnterior)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.adeudoAnterior)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.precioCosecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.precioCosecha)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
