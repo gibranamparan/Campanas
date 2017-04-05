@@ -26,6 +26,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Productor> Productores { get; set; }
         public DbSet<VentaACredito> VentasACreditos { get; set; }
         public DbSet<Activo> Activos { get; set; }
+        public DbSet<Proveedores> Proveedores { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

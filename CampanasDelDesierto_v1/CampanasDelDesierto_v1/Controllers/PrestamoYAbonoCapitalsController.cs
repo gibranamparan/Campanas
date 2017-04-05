@@ -41,9 +41,10 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult Create()
         {
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
+            ViewBag.idProveedor = new SelectList(db.Proveedores,"id", "nombreProveedor");
             return View();
         }
-
+       
         // POST: PrestamoYAbonoCapitals/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
