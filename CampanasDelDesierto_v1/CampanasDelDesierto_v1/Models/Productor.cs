@@ -20,6 +20,7 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de integracion")]
         public DateTime fechaIntegracion { get; set; }
 
         [Display(Name = "RFC ")]
