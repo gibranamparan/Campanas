@@ -26,3 +26,6 @@ nav header.major img{
     width: 150px;
     height: 70px;
 }
+.container.body-content {
+    width: 100%;
+}

@@ -10,8 +10,9 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Key]
         public int id { get; set; }
-        [Display(Name = "Nombre Proveedor")]
+
         [Required]
+        [Display(Name = "Nombre Proveedor")]
         public string nombreProveedor { get; set; }
     }
 }

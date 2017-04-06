@@ -10,10 +10,7 @@ namespace CampanasDelDesierto_v1.Models
     {
         public int cantidadMaterial { get; set; }
 
-
-        public virtual Activo Activo { get; set; }
         public virtual int idActivos { get; set; }
-
-
+        public virtual Activo Activo { get; set; }
     }
 }
