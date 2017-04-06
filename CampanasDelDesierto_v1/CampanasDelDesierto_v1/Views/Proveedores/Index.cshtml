@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Tabla proveedores</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear nuevo", "Create")
 </p>
 <table class="table">
     <tr>
@@ -24,7 +24,7 @@
             @Html.DisplayFor(modelItem => item.nombreProveedor)
         </td>
         <td>            
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.id }, new { @class = "glyphicon glyphicon-trash" })
         </td>
     </tr>
 }

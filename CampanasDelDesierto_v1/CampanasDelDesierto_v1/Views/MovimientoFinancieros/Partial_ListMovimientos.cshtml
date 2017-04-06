@@ -1,55 +1,45 @@
-﻿@model CampanasDelDesierto_v1.Models.Productor
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.MovimientoFinanciero>
 
 <p>
-    @Html.ActionLink("Capital", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Pago por Productos", "Create", "PagosPorProductos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Ventas a credito", "Create", "VentaACreditos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Crear Nuevo", "Create")
 </p>
-@if (Model != null && Model.MovimientosFinancieros.Count() > 0) { 
-    <table class="table">
-        <tr>
-            @*<th>
+<table class="table">
+    <tr>
+        <th>
             @Html.DisplayNameFor(model => model.Productor.nombreProductor)
-        </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
-            </th>
-            <th></th>
-        </tr>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.montoMovimiento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.balance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaMovimiento)
+        </th>
+        <th></th>
+    </tr>
 
-    @foreach (var item in Model.MovimientosFinancieros) {
-        <tr>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Productor.nombreProductor)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.montoMovimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.balance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fechaMovimiento)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |
-                @Html.ActionLink("Details", "Details", new { id=item.idMovimiento }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.idMovimiento })
-            </td>
-        </tr>
-    }
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Productor.nombreProductor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.montoMovimiento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.balance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaMovimiento)
+        </td>
+        <td>
+            @Html.ActionLink(" ", "Edit", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-pencil" }) |
+            @Html.ActionLink(" ", "Details", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-eye-open" })|
+            @Html.ActionLink(" ", "Delete", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-trash" })
+        </td>
+    </tr>
+}
 
-    </table>
-}
-else
-{
-    <div class="alert alert-warning">
-        <strong>No existen</strong> movimientos financieros para este productor.
-    </div>
-}
+</table>

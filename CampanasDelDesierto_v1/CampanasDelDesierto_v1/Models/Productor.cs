@@ -11,6 +11,7 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idProductor { get; set; }
 
+        [Display(Name = "Nombre Productor ")]
         public string nombreProductor { get; set; }
 
         [Display(Name ="Domicilio")]
@@ -19,8 +20,10 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de integracion")]
         public DateTime fechaIntegracion { get; set; }
 
+        [Display(Name = "RFC ")]
         public string RFC { get; set; }
 
         [Display(Name ="Zona")]
