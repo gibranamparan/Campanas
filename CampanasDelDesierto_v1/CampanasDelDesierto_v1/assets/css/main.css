@@ -3596,7 +3596,8 @@ Css pesonalisado
 		background-color: #cbc06e;/* sidebar*/
 		font-size: 0.9em;
 		position: relative;
-		width: 26em;
+		/*width: 26em;*/
+        width: 20em;
 	}
 
 		#sidebar h2 {
@@ -3606,7 +3607,7 @@ Css pesonalisado
 		#sidebar > .inner {
 			padding: 2.22222em 2.22222em 2.44444em 2.22222em ;
 			position: relative;
-			width: 26em;
+			/*width: 26em;*/
 		}
 
 			#sidebar > .inner > * {
