@@ -81,3 +81,5 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@Html.Partial("../MovimientoFinancieros/ListMovimientos", Model.MovimientosFinancieros)
