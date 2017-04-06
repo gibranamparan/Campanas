@@ -1,17 +1,8 @@
 ﻿@model CampanasDelDesierto_v1.Models.Productor
 
-@{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 <div>
-    <h2>Productor</h2>
+    <h4>Productor</h4>
     <hr />
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-
     <div class="row">
         <dl class="dl-horizontal col-md-6">
             <dt>
@@ -45,10 +36,8 @@
             <dd>
                 @Html.DisplayFor(model => model.RFC)
             </dd>
-
         </dl>
         <dl class="dl-horizontal col-md-6">
-
             <dt>
                 @Html.DisplayNameFor(model => model.zona)
             </dt>
@@ -84,12 +73,7 @@
         </dl>
     </div>
 </div>
-
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h2 class="panel-title">Movimientos</h2>
-    </div>
-    <div class="panel-body">
-        @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", Model)
-    </div>
-</div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
