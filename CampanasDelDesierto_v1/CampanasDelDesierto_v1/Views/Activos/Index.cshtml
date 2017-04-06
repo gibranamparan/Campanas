@@ -60,9 +60,9 @@
             @Html.DisplayFor(modelItem => item.ordenDeCompra)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.idActivos }) |
-            @Html.ActionLink("Detalles", "Details", new { id=item.idActivos }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.idActivos })
+            @Html.ActionLink(" ", "Edit", new { id=item.idActivos }, new { @class = "glyphicon glyphicon-pencil" })|
+            @Html.ActionLink(" ", "Details", new { id = item.idActivos }, new { @class = "glyphicon glyphicon-eye-open" })|
+            @Html.ActionLink(" ", "Delete", new { id=item.idActivos }, new { @class = "glyphicon glyphicon-trash" })
         </td>
     </tr>
 }

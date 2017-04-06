@@ -90,9 +90,9 @@
             @Html.DisplayFor(modelItem => item.balance)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Detalles", "Details", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.idMovimiento })
+            @Html.ActionLink(" ", "Edit", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-pencil" })|
+            @Html.ActionLink(" ", "Details", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-eye-open" })|
+            @Html.ActionLink(" ", "Delete", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-trash" })
         </td>
     </tr>
 }

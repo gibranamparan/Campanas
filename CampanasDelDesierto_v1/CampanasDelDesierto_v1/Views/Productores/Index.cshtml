@@ -66,9 +66,9 @@
             @Html.DisplayFor(modelItem => item.precioCosecha)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.idProductor }) |
-            @Html.ActionLink("Movimientos", "Details", new { id=item.idProductor }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.idProductor })
+            @Html.ActionLink(" ", "Edit", new { id = item.idProductor }, new { @class = "glyphicon glyphicon-pencil" })|
+            @Html.ActionLink(" ", "Details", new { id = item.idProductor }, new { @class = "glyphicon glyphicon-eye-open" })|
+            @Html.ActionLink(" ", "Delete", new { id=item.idProductor }, new { @class = "glyphicon glyphicon-trash" })
         </td>
     </tr>
 }

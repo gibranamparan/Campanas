@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.MovimientoFinanciero>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear Nuevo", "Create")
 </p>
 <table class="table">
     <tr>
@@ -35,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.fechaMovimiento)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idMovimiento })
+            @Html.ActionLink(" ", "Edit", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-pencil" }) |
+            @Html.ActionLink(" ", "Details", new { id = item.idMovimiento }, new { @class = "glyphicon glyphicon-eye-open" })|
+            @Html.ActionLink(" ", "Delete", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-trash" })
         </td>
     </tr>
 }
