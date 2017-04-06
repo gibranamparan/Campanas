@@ -74,6 +74,6 @@
     </div>
 </div>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Editar","Edit","Productores",new { id = Model.idProductor },null) |
+        @Html.ActionLink("Movimientos del productor","Details", "Productores", new { id = Model.idProductor }, null)
     </p>

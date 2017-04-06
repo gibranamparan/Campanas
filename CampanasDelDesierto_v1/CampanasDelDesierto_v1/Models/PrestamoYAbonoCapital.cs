@@ -20,7 +20,7 @@ namespace CampanasDelDesierto_v1.Models
         public string concepto { get; set; }
 
         //public double cargo { get; set; }
-        [Display(Name = "Pagare")]
+        [Display(Name = "Pagaré")]
         public string pagare { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
