@@ -11,8 +11,15 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idMovimiento { get; set; }
 
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public double montoMovimiento { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public double balance { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",

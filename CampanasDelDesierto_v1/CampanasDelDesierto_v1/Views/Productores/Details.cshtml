@@ -4,82 +4,92 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
-
 <div>
-    <h4>Productor</h4>
+    <h2>Productor</h2>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreProductor)
-        </dt>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 
-        <dd>
-            @Html.DisplayFor(model => model.nombreProductor)
-        </dd>
+    <div class="row">
+        <dl class="dl-horizontal col-md-6">
+            <dt>
+                @Html.DisplayNameFor(model => model.nombreProductor)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.domicilio)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.nombreProductor)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.domicilio)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.domicilio)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaIntegracion)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.domicilio)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.fechaIntegracion)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.fechaIntegracion)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RFC)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.fechaIntegracion)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RFC)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.RFC)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.zona)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.RFC)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.zona)
-        </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-6">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreCheque)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.zona)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.nombreCheque)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.zona)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.adeudoAnterior)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.nombreCheque)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.adeudoAnterior)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.nombreCheque)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.precioCosecha)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.adeudoAnterior)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.precioCosecha)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.adeudoAnterior)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.precioCosecha)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.precioCosecha)
+            </dd>
+
+        </dl>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idProductor }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
 
-@Html.Partial("../MovimientoFinancieros/ListMovimientos", Model.MovimientosFinancieros)
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title">Movimientos</h2>
+    </div>
+    <div class="panel-body">
+        @Html.Partial("../MovimientoFinancieros/ListMovimientos", Model)
+    </div>
+</div>
