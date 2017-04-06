@@ -8,6 +8,7 @@ namespace CampanasDelDesierto_v1.Models
 {
     public class VentaACredito:MovimientoFinanciero
     {
+        [Display(Name = "Cantidad del Material ")]
         public int cantidadMaterial { get; set; }
 
         public virtual int idActivos { get; set; }
