@@ -15,9 +15,5 @@ namespace CampanasDelDesierto_v1.Models
         public string tipoProducto { get; set; }
         public int? garantiaLimpieza { get; set; }
         //public int porcentajeEjidal { get; set; }
-
-
-
-
     }
 }

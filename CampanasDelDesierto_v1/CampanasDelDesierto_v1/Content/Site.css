@@ -29,3 +29,7 @@ nav header.major img{
 .container.body-content {
     width: 100%;
 }
+
+.panel-heading h1,.panel-heading h2{
+    color: white;
+}

@@ -27,7 +27,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Productor productor = db.Productores.Find(id);
+            //Productor productor = db.Productores.Find(id);
+            Productor productor = db.Productores.Include("MovimientosFinancieros").Single(pro=>pro.idProductor == id);
             if (productor == null)
             {
                 return HttpNotFound();
