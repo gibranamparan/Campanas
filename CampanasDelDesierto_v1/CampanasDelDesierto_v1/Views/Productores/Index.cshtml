@@ -10,7 +10,7 @@
 <p>
     @Html.ActionLink("Crear nuevo", "Create")
 </p>
-<table class="table">
+<table class="table table-striped table-hover">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.nombreProductor)
@@ -67,7 +67,7 @@
         </td>
         <td>
             @Html.ActionLink("Editar", "Edit", new { id=item.idProductor }) |
-            @Html.ActionLink("Detalles", "Details", new { id=item.idProductor }) |
+            @Html.ActionLink("Movimientos", "Details", new { id=item.idProductor }) |
             @Html.ActionLink("Eliminar", "Delete", new { id=item.idProductor })
         </td>
     </tr>

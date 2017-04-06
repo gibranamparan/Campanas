@@ -10,9 +10,12 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Key]
         public int idMovimiento { get; set; }
+
         public double montoMovimiento { get; set; }
+
         public double balance { get; set; }
-        [DisplayFormat(DataFormatString = "{0: yyyy/MM/dd}",
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime fechaMovimiento { get; set; }

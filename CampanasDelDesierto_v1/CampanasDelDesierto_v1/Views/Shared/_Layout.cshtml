@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/assets/css/main.css ")
-    @Scripts.Render("~/bundles/modernizr")
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    @Styles.Render("~/Content/css")
 </head>
 
 
@@ -25,9 +23,6 @@
                    
                     <!--<img style="width: 300px; height: 150px; margin-left:300px " src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">-->
                     
-                
-                      
-                  
                    @* <a href="index.html" class="logo"><strong>Campanas Del Desierto</strong> by Netcode</a>*@
                     <!--<ul class="icons">
                         <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
@@ -37,15 +32,15 @@
                 </header>
 
                 <!-- Banner -->
-                <section id="banner">
-                    <div class="container body-content">
+                <section id="container banner">
+                    <div class="body-content">
                         @RenderBody()
-                        <hr />
-                        <footer>
-                            <p>&copy; @DateTime.Now.Year - Netcode Application</p>
-                        </footer>
                     </div>
                 </section>
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - Campanas del Desierto</p>
+                </footer>
 
                 <!-- Section -->
                 @*<section>
@@ -162,16 +157,15 @@
                 <nav id="menu">
                     <header class="major">
                         
-                        <img style="width: 150px; height: 70px; margin-left:50px " src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">
+                        <img src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">
                     </header>
                     <ul>
                         <!--<li><a href="~/Home/Index">Homepage</a></li>-->
                         <li><a href="~/Productores/Index">Productores</a></li>
-                        <li><a href="~/Activos/Index">Activos</a></li>
                         <li><a href="~/VentaACreditos/Index">Prestamos Materiales</a></li>
                         <li><a href="~/PrestamoYAbonoCapitals/Index">Prestamos Capitales</a></li>
                         <li><a href="~/PagosPorProductos/Index">Pagos Por Productos</a></li>
-                        <li><a href="~/MovimientosFinancieros/Index">Movimientos</a></li>
+                        <li><a href="~/Activos/Index">Activos</a></li>
                         <li><a href="~/Proveedores">Proveedores</a></li>
 
                         @*<li>
@@ -210,8 +204,9 @@
     <script src="~/assets/js/jquery.min.js"></script>
     <script src="~/assets/js/skel.min.js"></script>
     <script src="~/assets/js/util.js"></script>
-
     <script src="~/assets/js/main.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
 
     @RenderSection("scripts", required: false)
 </body>

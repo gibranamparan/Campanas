@@ -10,22 +10,34 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Key]
         public int idProductor { get; set; }
+
         public string nombreProductor { get; set; }
-        [Display(Name ="Direccion")]
+
+        [Display(Name ="Domicilio")]
         public string domicilio { get; set; }
-        [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime fechaIntegracion { get; set; }
+
         public string RFC { get; set; }
+
         [Display(Name ="Zona")]
         public string zona { get; set; }
+
         [Display(Name ="Nombre del Cheque")]
         public string nombreCheque { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
         [Display(Name ="Adeudo Anterior")]
-        public int? adeudoAnterior { get; set; }
+        public decimal? adeudoAnterior { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
         [Display(Name ="Precio de Cosecha")]
-        public int? precioCosecha { get; set; }
+        public decimal? precioCosecha { get; set; }
 
         public ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
     }
