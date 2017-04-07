@@ -37,8 +37,18 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PagosPorProductos/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id = 0)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var productor = db.Productores.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.productor = productor;
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
             return View();
         }
