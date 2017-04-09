@@ -82,7 +82,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
                 db.MovimientosFinancieros.Add(prestamoYAbonoCapital);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return RedirectToAction("Details","Productores",new { id = prestamoYAbonoCapital.idProductor});
             }
 
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);

@@ -82,7 +82,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 db.MovimientosFinancieros.Add(ventaACredito);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
             }
 
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);

@@ -1,9 +1,21 @@
-﻿@model CampanasDelDesierto_v1.Models.VentaACredito
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.VentaACredito
 
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    Productor productor = ViewBag.productor;
 }
+
+<br />
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Información del productor</h3>
+    </div>
+    <div class="panel-body">
+        @Html.Partial("../Productores/Partial_InfoProductor", productor)
+    </div>
+</div>
 
 <h2>Crear</h2>
 

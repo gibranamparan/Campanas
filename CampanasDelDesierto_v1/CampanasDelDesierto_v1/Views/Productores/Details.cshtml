@@ -4,84 +4,14 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div>
-    <h2>Productor</h2>
-    <hr />
-    <p>
-        @Html.ActionLink("Editar", "Edit", new { id = Model.idProductor }) |
-        @Html.ActionLink("Volver a la lista", "Index")
-    </p>
 
-    <div class="row">
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.nombreProductor)
-            </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.nombreProductor)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.domicilio)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.domicilio)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.fechaIntegracion)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.fechaIntegracion)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.RFC)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.RFC)
-            </dd>
-
-        </dl>
-        <dl class="dl-horizontal col-md-6">
-
-            <dt>
-                @Html.DisplayNameFor(model => model.zona)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.zona)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.nombreCheque)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.nombreCheque)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.adeudoAnterior)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.adeudoAnterior)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.precioCosecha)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.precioCosecha)
-            </dd>
-
-        </dl>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title">Información del Productor</h2>
+    </div>
+    <div class="panel-body">
+        @Html.Partial("Partial_InfoProductor", Model)
     </div>
 </div>
 

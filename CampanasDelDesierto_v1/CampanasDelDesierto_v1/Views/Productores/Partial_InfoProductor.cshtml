@@ -1,8 +1,6 @@
 ﻿@model CampanasDelDesierto_v1.Models.Productor
 
 <div>
-    <h4>Productor</h4>
-    <hr />
     <div class="row">
         <dl class="dl-horizontal col-md-6">
             <dt>
@@ -74,6 +72,5 @@
     </div>
 </div>
     <p>
-        @Html.ActionLink("Editar","Edit","Productores",new { id = Model.idProductor },null) |
-        @Html.ActionLink("Movimientos del productor","Details", "Productores", new { id = Model.idProductor }, null)
+        @Html.ActionLink("Editar","Edit","Productores",new { id = Model.idProductor },null)
     </p>

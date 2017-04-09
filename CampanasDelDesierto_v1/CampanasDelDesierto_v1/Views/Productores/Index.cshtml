@@ -36,7 +36,7 @@
         <th>
             @Html.DisplayNameFor(model => model.precioCosecha)
         </th>
-        <th></th>
+        <th class="actions"></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -65,10 +65,16 @@
         <td>
             @Html.DisplayFor(modelItem => item.precioCosecha)
         </td>
-        <td>
-            @Html.ActionLink(" ", "Edit", new { id = item.idProductor }, new { @class = "glyphicon glyphicon-pencil" })|
-            @Html.ActionLink(" ", "Details", new { id = item.idProductor }, new { @class = "glyphicon glyphicon-eye-open" })|
-            @Html.ActionLink(" ", "Delete", new { id=item.idProductor }, new { @class = "glyphicon glyphicon-trash" })
+        <td >
+            <a href="@Url.Action("Edit","Productores",new { id = item.idProductor })">
+                <i class="glyphicon glyphicon-pencil"></i> Editar
+            </a><br />
+            <a href="@Url.Action("Details","Productores",new { id = item.idProductor })">
+                <i class="glyphicon glyphicon-usd"></i> Movimientos
+            </a><br />
+            <a href="@Url.Action("Delete","Productores",new { id = item.idProductor })">
+                <i class="glyphicon glyphicon-remove"></i> Eliminar
+            </a>
         </td>
     </tr>
 }

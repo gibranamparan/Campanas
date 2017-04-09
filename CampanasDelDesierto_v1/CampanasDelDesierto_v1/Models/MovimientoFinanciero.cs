@@ -14,7 +14,6 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
         [Display(Name = "Monto del movimiento ")]
         public double montoMovimiento { get; set; }
 
