@@ -1,7 +1,13 @@
 ﻿/* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
-function openActionsDropDown() {
-    document.getElementById("myDropdown").classList.toggle("show");
+function openActionsDropDown(actionBtn) {
+    $(actionBtn).parent().children("#myDropdown").slideToggle();
+}
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function openActionsDropDown(actionBtn) {
+    $(actionBtn).parent().children("#myDropdown").slideToggle();
 }
 
 // Close the dropdown menu if the user clicks outside of it

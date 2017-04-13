@@ -34,8 +34,6 @@ namespace CampanasDelDesierto_v1.Models
         //public int intereses { get; set; }
         [Display(Name = "Nota ")]
         public string nota { get; set; }
-
-
-
+        
     }
 }

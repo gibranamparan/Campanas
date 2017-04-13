@@ -49,12 +49,30 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+
+            PrestamoYAbonoCapital mov = prepararVista(productor);
+
+            return View(mov);
+        }
+
+        /// <summary>
+        /// Se prepara la información que será enviada a la vista de creacion de prestamo
+        /// </summary>
+        /// <param name="productor"></param>
+        /// <returns></returns>
+        private PrestamoYAbonoCapital prepararVista(Productor productor)
+        {
             ViewBag.productor = productor;
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
-            ViewBag.idProveedor = new SelectList(db.Proveedores,"id", "nombreProveedor");
-            return View();
+            ViewBag.idProveedor = new SelectList(db.Proveedores, "id", "nombreProveedor");
+            PrestamoYAbonoCapital mov = new PrestamoYAbonoCapital();
+            mov.fechaMovimiento = DateTime.Today;
+            mov.fechaPagar = DateTime.Today.AddDays(7);
+            mov.idProductor = productor.idProductor;
+
+            return mov;
         }
-       
+
         // POST: PrestamoYAbonoCapitals/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -62,31 +80,23 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cheque,concepto,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
-            double balanceAnterior = 0;
             if (ModelState.IsValid)
             {
-                try
+                //Se calcula el ultimo movimiento antes de guardar el nuevo
+                var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
+                MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+
+                db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);
+                int numReg = db.SaveChanges();
+                if (numReg > 0)
                 {
-                    var movimientosAscendentes = db.PrestamosYAbonosCapital.Where(mov => mov.idProductor == prestamoYAbonoCapital.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
-                    var ultimoMov = movimientosAscendentes.First();
-                    balanceAnterior = ultimoMov.balance;
+                    prod.ajustarBalances(ultimoMovimiento);
                 }
-                catch { }
-                if (prestamoYAbonoCapital.concepto == "prestamo")
-                {
-                    prestamoYAbonoCapital.balance = balanceAnterior + prestamoYAbonoCapital.montoMovimiento;
-                }
-                else if(prestamoYAbonoCapital.concepto == "abono")
-                {
-                    prestamoYAbonoCapital.balance = balanceAnterior - prestamoYAbonoCapital.montoMovimiento;
-                }
-                db.MovimientosFinancieros.Add(prestamoYAbonoCapital);
-                db.SaveChanges();
-                //return RedirectToAction("Index");
                 return RedirectToAction("Details","Productores",new { id = prestamoYAbonoCapital.idProductor});
             }
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+            prepararVista(db.Productores.Find(prestamoYAbonoCapital.idProductor));
+
             return View(prestamoYAbonoCapital);
         }
 
