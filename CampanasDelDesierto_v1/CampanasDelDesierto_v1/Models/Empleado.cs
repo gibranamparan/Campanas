@@ -6,17 +6,21 @@ using System.Web;
 
 namespace CampanasDelDesierto_v1.Models
 {
-    public class Activo
+    public class Empleado
     {
         [Key]
-        public int idActivo { get; set; }
-        [Display(Name ="Nombre del Activo")]
+        public int idEmpleado { get; set; }
         [Required]
-        public string nombreActivo { get; set; }
-        public string estadoActivo { get; set; }
+        public string nombre { get; set; }
+        [Required]
+        public string apellidoPaterno { get; set; }
+        [Required]
+        public string apellidoMaterno { get; set; }
 
-        //Un activo tiene una collecion de prestamos
+
         public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
         public int idPrestamo { get; set; }
+        public virtual int idSucursal { get; set; }
+
     }
 }

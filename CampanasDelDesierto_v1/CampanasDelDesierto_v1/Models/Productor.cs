@@ -42,6 +42,6 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name ="Precio de Cosecha")]
         public decimal? precioCosecha { get; set; }
 
-        public ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
+        public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
     }
 }

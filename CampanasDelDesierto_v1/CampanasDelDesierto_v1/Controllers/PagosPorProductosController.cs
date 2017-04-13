@@ -58,11 +58,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,MyProperty,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
         {
             double ultimoBalancePrestamosCapital = 0;
             double ultimoBalancePrestamosMaterial = 0;
-            int  idActivo = 0;
+            int idProducto = 0;
             VentaACredito ventaCredito = new VentaACredito();
             PrestamoYAbonoCapital prestamoAbonoCapital = new PrestamoYAbonoCapital();
             if (ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     var ultimoMovimiento = movimientos.First();
                     ultimoBalancePrestamosMaterial = ultimoMovimiento.balance;
 
-                    idActivo = movimientos.First().idActivos;
+                    idProducto = movimientos.First().idProducto;
                 }
                 catch { }
                 pagoPorProducto.balance = pagoPorProducto.montoMovimiento - (ultimoBalancePrestamosCapital + ultimoBalancePrestamosMaterial);
@@ -107,7 +107,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 ventaCredito.fechaMovimiento = pagoPorProducto.fechaMovimiento;
                 ventaCredito.idProductor = pagoPorProducto.idProductor;
                 ventaCredito.cantidadMaterial = 0;
-                ventaCredito.idActivos = idActivo;
+                ventaCredito.idProducto = idProducto;
 
 
 
