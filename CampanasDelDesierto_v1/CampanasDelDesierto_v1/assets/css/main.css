@@ -2349,7 +2349,7 @@ Css pesonalisado
 			box-shadow: none;
 		}
 
-		input[type="text"]:focus,
+		/*input[type="text"]:focus,
 		input[type="password"]:focus,
 		input[type="email"]:focus,
 		input[type="tel"]:focus,
@@ -2357,9 +2357,9 @@ Css pesonalisado
 		input[type="url"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #f56a6a;/*borde del buscador*/
+			border-color: #f56a6a;
 			box-shadow: 0 0 0 1px #f56a6a;
-		}
+		}*/
 
 	.select-wrapper {
 		text-decoration: none;
