@@ -192,7 +192,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ActivosController.cs" />
+    <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MovimientoFinancierosController.cs" />
@@ -228,15 +228,23 @@
     <Compile Include="Migrations\201704061712104_productor_preciosADecimal.Designer.cs">
       <DependentUpon>201704061712104_productor_preciosADecimal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs" />
+    <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.Designer.cs">
+      <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
+    <Compile Include="Models\Empleado.cs" />
+    <Compile Include="Models\PrestamoActivo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MovimientoFinanciero.cs" />
     <Compile Include="Models\PagoPorProducto.cs" />
     <Compile Include="Models\PrestamoYAbonoCapital.cs" />
+    <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedores.cs" />
+    <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\VentaACredito.cs" />
     <Compile Include="Models\Productor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -424,6 +432,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704061712104_productor_preciosADecimal.resx">
       <DependentUpon>201704061712104_productor_preciosADecimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.resx">
+      <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

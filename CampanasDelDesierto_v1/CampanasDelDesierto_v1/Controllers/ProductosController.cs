@@ -10,14 +10,14 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    public class ActivosController : Controller
+    public class ProductosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activos
         public ActionResult Index()
         {
-            return View(db.Activos.ToList());
+            return View(db.Productos.ToList());
         }
 
         // GET: Activos/Details/5
@@ -27,12 +27,12 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
-            if (activo == null)
+            Producto producto = db.Productos.Find(id);
+            if (producto == null)
             {
                 return HttpNotFound();
             }
-            return View(activo);
+            return View(producto);
         }
 
         // GET: Activos/Create
@@ -46,16 +46,16 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idActivos,nombreActivo,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Activo activo)
+        public ActionResult Create([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Producto Producto)
         {
             if (ModelState.IsValid)
             {
-                db.Activos.Add(activo);
+                db.Productos.Add(Producto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(activo);
+            return View(Producto);
         }
 
         // GET: Activos/Edit/5
@@ -65,12 +65,12 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
-            if (activo == null)
+            Producto producto = db.Productos.Find(id);
+            if (producto == null)
             {
                 return HttpNotFound();
             }
-            return View(activo);
+            return View(producto);
         }
 
         // POST: Activos/Edit/5
@@ -78,15 +78,15 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idActivos,nombreActivo,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Activo activo)
+        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Producto producto)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(activo).State = EntityState.Modified;
+                db.Entry(producto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(activo);
+            return View(producto);
         }
 
         // GET: Activos/Delete/5
@@ -96,12 +96,12 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
-            if (activo == null)
+            Producto producto = db.Productos.Find(id);
+            if (producto == null)
             {
                 return HttpNotFound();
             }
-            return View(activo);
+            return View(producto);
         }
 
         // POST: Activos/Delete/5
@@ -109,8 +109,8 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Activo activo = db.Activos.Find(id);
-            db.Activos.Remove(activo);
+            Producto producto = db.Productos.Find(id);
+            db.Productos.Remove(producto);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

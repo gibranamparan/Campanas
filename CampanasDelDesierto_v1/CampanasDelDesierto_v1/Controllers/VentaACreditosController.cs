@@ -51,7 +51,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             ViewBag.productor = productor;
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
-            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo");
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto");
             return View();
         }
 
@@ -60,7 +60,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idActivos")] VentaACredito ventaACredito)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")] VentaACredito ventaACredito)
         {
             double balanceAnterior = 0;
             if (ModelState.IsValid)
@@ -73,9 +73,9 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
                 catch { }
                 //calcula automaticamente el total de la venta 
-                Activo activo = db.Activos.Find(ventaACredito.idActivos);
-                decimal costoActivo = activo.costo;
-                decimal totalventa = costoActivo * ventaACredito.cantidadMaterial;
+                Producto producto = db.Productos.Find(ventaACredito.idProducto);
+                decimal costoProducto = producto.costo;
+                decimal totalventa = costoProducto * ventaACredito.cantidadMaterial;
                 ventaACredito.montoMovimiento = (double)totalventa;
 
                 ventaACredito.balance = balanceAnterior + ventaACredito.montoMovimiento;
@@ -87,7 +87,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
-            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
             return View(ventaACredito);
         }
 
@@ -104,7 +104,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
-            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
             return View(ventaACredito);
         }
 
@@ -113,7 +113,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idActivos")] VentaACredito ventaACredito)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")] VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
-            ViewBag.idActivos = new SelectList(db.Activos, "idActivos", "nombreActivo", ventaACredito.idActivos);
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
             return View(ventaACredito);
         }
 
