@@ -13,10 +13,11 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name ="Nombre del Activo")]
         [Required]
         public string nombreActivo { get; set; }
+        [Display(Name = "Estado del Activo")]
         public string estadoActivo { get; set; }
 
         //Un activo tiene una collecion de prestamos
         public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
-        public int idPrestamo { get; set; }
+        
     }
 }

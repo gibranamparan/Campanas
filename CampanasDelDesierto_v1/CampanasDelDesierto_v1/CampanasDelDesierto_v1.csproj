@@ -192,6 +192,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivosController.cs" />
+    <Compile Include="Controllers\EmpleadosController.cs" />
+    <Compile Include="Controllers\PrestamosActivosController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -200,6 +203,7 @@
     <Compile Include="Controllers\PrestamoYAbonoCapitalsController.cs" />
     <Compile Include="Controllers\ProductoresController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
+    <Compile Include="Controllers\SucursalesController.cs" />
     <Compile Include="Controllers\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -231,6 +235,10 @@
     <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs" />
     <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.Designer.cs">
       <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs" />
+    <Compile Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.Designer.cs">
+      <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -379,11 +387,6 @@
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
-    <Content Include="Views\Activos\Create.cshtml" />
-    <Content Include="Views\Activos\Delete.cshtml" />
-    <Content Include="Views\Activos\Details.cshtml" />
-    <Content Include="Views\Activos\Edit.cshtml" />
-    <Content Include="Views\Activos\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Edit.cshtml" />
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
@@ -399,6 +402,31 @@
     <Content Include="Views\Proveedores\Index.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListMovimientos.cshtml" />
     <Content Include="Views\Productores\Partial_InfoProductor.cshtml" />
+    <Content Include="Views\Productos\Index.cshtml" />
+    <Content Include="Views\Productos\Edit.cshtml" />
+    <Content Include="Views\Productos\Details.cshtml" />
+    <Content Include="Views\Productos\Delete.cshtml" />
+    <Content Include="Views\Productos\Create.cshtml" />
+    <Content Include="Views\Activos\Create.cshtml" />
+    <Content Include="Views\Activos\Delete.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\Empleados\Create.cshtml" />
+    <Content Include="Views\Empleados\Delete.cshtml" />
+    <Content Include="Views\Empleados\Details.cshtml" />
+    <Content Include="Views\Empleados\Edit.cshtml" />
+    <Content Include="Views\Empleados\Index.cshtml" />
+    <Content Include="Views\Sucursales\Create.cshtml" />
+    <Content Include="Views\Sucursales\Delete.cshtml" />
+    <Content Include="Views\Sucursales\Details.cshtml" />
+    <Content Include="Views\Sucursales\Edit.cshtml" />
+    <Content Include="Views\Sucursales\Index.cshtml" />
+    <Content Include="Views\PrestamosActivos\Create.cshtml" />
+    <Content Include="Views\PrestamosActivos\Delete.cshtml" />
+    <Content Include="Views\PrestamosActivos\Details.cshtml" />
+    <Content Include="Views\PrestamosActivos\Edit.cshtml" />
+    <Content Include="Views\PrestamosActivos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -435,6 +463,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.resx">
       <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.resx">
+      <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
