@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Lista de Activos</h2>
+<h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Crear Nuevo", "Create")
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
@@ -16,22 +16,7 @@
             @Html.DisplayNameFor(model => model.nombreActivo)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.costo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.estado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.fecha)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.concepto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.pagare)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ordenDeCompra)
+            @Html.DisplayNameFor(model => model.estadoActivo)
         </th>
         <th></th>
     </tr>
@@ -42,27 +27,12 @@
             @Html.DisplayFor(modelItem => item.nombreActivo)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.costo)
+            @Html.DisplayFor(modelItem => item.estadoActivo)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.estado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.fecha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.concepto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.pagare)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ordenDeCompra)
-        </td>
-        <td>
-            @Html.ActionLink(" ", "Edit", new { id=item.idActivos }, new { @class = "glyphicon glyphicon-pencil" })|
-            @Html.ActionLink(" ", "Details", new { id = item.idActivos }, new { @class = "glyphicon glyphicon-eye-open" })|
-            @Html.ActionLink(" ", "Delete", new { id=item.idActivos }, new { @class = "glyphicon glyphicon-trash" })
+            @Html.ActionLink("Edit", "Edit", new { id=item.idActivo }) |
+            @Html.ActionLink("Details", "Details", new { id=item.idActivo }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.idActivo })
         </td>
     </tr>
 }

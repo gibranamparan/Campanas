@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles</h2>
+<h2>Details</h2>
 
 <div>
     <h4>Activo</h4>
@@ -20,56 +20,16 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.costo)
+            @Html.DisplayNameFor(model => model.estadoActivo)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.costo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.estado)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fecha)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fecha)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.concepto)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.concepto)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.pagare)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.pagare)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ordenDeCompra)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ordenDeCompra)
+            @Html.DisplayFor(model => model.estadoActivo)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idActivos }) |
-    @Html.ActionLink("Volver a la lista", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idActivo }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

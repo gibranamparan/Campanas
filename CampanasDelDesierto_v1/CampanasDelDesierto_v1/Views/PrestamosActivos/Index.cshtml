@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.PrestamoActivo>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Activo.nombreActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Empleado.nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaPrestamoActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaEntregaActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaDevolucion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Activo.nombreActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Empleado.nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaPrestamoActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaEntregaActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaDevolucion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.idPrestamoActivo }) |
+            @Html.ActionLink("Details", "Details", new { id=item.idPrestamoActivo }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.idPrestamoActivo })
+        </td>
+    </tr>
+}
+
+</table>
