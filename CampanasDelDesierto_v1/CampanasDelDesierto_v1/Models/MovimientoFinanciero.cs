@@ -28,8 +28,8 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Fecha")]
         public DateTime fechaMovimiento { get; set; }
 
+        public int idProductor { get; set; }
         public virtual Productor Productor { get; set; }
-        public virtual int idProductor { get; set; }
 
         [Display(Name = "Tipo")]
         public string nombreDeMovimiento
