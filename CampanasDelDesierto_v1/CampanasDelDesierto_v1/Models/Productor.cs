@@ -52,16 +52,23 @@ namespace CampanasDelDesierto_v1.Models
         /// <param name="fechaInicial">Fecha desde la cual se comienzan a corregir los balances.</param>
         internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db)
         {
+            /*Tomando como referencia el ultimo movimiento anterior al recien modificado, se toman
+            todos los registros posteriores a este, en caso de que el recien modificado sea el 1ro,
+            se toman por defecto todos los registros existentes*/
             var movimientos = ultimoMovimiento!=null ? this.MovimientosFinancieros
                     .Where(mov => mov.fechaMovimiento > ultimoMovimiento.fechaMovimiento)
                     : this.MovimientosFinancieros;
 
+            //Se crea una lista encadenada ordenada cronologicamente hacia el pasado
             movimientos = movimientos.OrderByDescending(mov => mov.fechaMovimiento).ToList();
-
             LinkedList<MovimientoFinanciero> movimientosOrdenados = new LinkedList<MovimientoFinanciero>(movimientos);
+
+            //Para el registro recien modificado, se recalcula su balance
             movimientosOrdenados.Last.Value.balance = movimientosOrdenados.Last.Value.montoMovimiento + 
                 (ultimoMovimiento==null?0:ultimoMovimiento.balance);
 
+            /*Recorriendo la lista encadenada desde el registro recien modificado hasta el ultimo
+            se vam corrigiendo los balances, uno tras otro*/
             int numreg = 0;
             if (movimientos.Count() > 1)
             {
@@ -80,13 +87,14 @@ namespace CampanasDelDesierto_v1.Models
                 }
             }
 
+            //Se notifica la edicion de los registros modificados
             foreach (var mov in movimientosOrdenados)
                 db.Entry(mov).State = System.Data.Entity.EntityState.Modified;
 
+            //Se guardan cambios
             numreg = db.SaveChanges();
 
             return numreg;
-            
         }
 
         public MovimientoFinanciero getUltimoMovimiento()
@@ -99,11 +107,22 @@ namespace CampanasDelDesierto_v1.Models
 
         internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento)
         {
-            var movs = this.MovimientosFinancieros
+            /*var movs = this.MovimientosFinancieros
                 .Where(mov => mov.fechaMovimiento <= fechaMovimiento).ToList()
                 .OrderByDescending(mov => mov.fechaMovimiento);
 
-            MovimientoFinanciero m = movs.FirstOrDefault();
+            MovimientoFinanciero m = movs.FirstOrDefault();*/
+
+            var movs = this.MovimientosFinancieros
+                .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
+                .OrderByDescending(mov => mov.fechaMovimiento)
+                .Take(2).ToList();
+
+            MovimientoFinanciero m;
+            if (movs.Count() > 0)
+                m = null;
+            else
+                m = movs.ElementAt(movs.Count() - 1);
 
             return m;
         }

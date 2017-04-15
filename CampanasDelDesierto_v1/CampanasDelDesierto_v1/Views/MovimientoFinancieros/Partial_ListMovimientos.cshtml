@@ -38,7 +38,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.fechaMovimiento)
                 </td>
-                <td>
+                <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
                     @Html.DisplayFor(modelItem => item.montoMovimiento)
                 </td>
                 <td>
@@ -50,7 +50,7 @@
                         @(((PrestamoYAbonoCapital)item).proveedor)
                     }
                 </td>
-                <td>
+                <td class='@(item.balance<0?"montoNegativo":"")'>
                     @Html.DisplayFor(modelItem => item.balance)
                 </td>
                 <td>
@@ -61,7 +61,7 @@
                         </button>
                         <div id="myDropdown"
                              class="dropdown-content">
-                            <a href="@Url.Action("Edit","MovimientoFinancieros", new { id = item.idMovimiento })">
+                            <a href="@Url.Action("Edit","PrestamoYAbonoCapitals", new { id = item.idMovimiento })">
                                 <i class="glyphicon glyphicon-edit"></i> Editar
                             </a>
 

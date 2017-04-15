@@ -115,10 +115,23 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MovimientoFinanciero movimientoFinanciero = db.MovimientosFinancieros.Find(id);
-            db.MovimientosFinancieros.Remove(movimientoFinanciero);
-            db.SaveChanges();
-            return RedirectToAction("Details", "Productores", new { id = movimientoFinanciero.idProductor });
+            MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
+
+            //Se calcula el ultimo movimiento anterior al que se desea eliminar
+            var prod = db.Productores.Find(mov.idProductor);
+            MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento);
+            
+            //se elimina el movimiento
+            db.MovimientosFinancieros.Remove(mov);
+            int numReg = db.SaveChanges();
+            
+            if (numReg > 0)
+            {
+                //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                numReg = prod.ajustarBalances(ultimoMovimiento, db);
+            }
+            
+            return RedirectToAction("Details", "Productores", new { id = mov.idProductor });
             //return RedirectToAction("Index");
         }
 

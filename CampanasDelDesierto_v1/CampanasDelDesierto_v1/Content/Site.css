@@ -115,3 +115,7 @@ textarea {
  .table th{
      background-color: #e9df97 !important;
  }
+
+ td.montoNegativo{
+     color:red;
+ }

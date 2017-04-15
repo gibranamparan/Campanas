@@ -50,7 +50,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            PrestamoYAbonoCapital mov = prepararVista(productor);
+            PrestamoYAbonoCapital mov = prepararVistaCrear(productor);
 
             return View(mov);
         }
@@ -60,7 +60,7 @@ namespace CampanasDelDesierto_v1.Controllers
         /// </summary>
         /// <param name="productor"></param>
         /// <returns></returns>
-        private PrestamoYAbonoCapital prepararVista(Productor productor)
+        private PrestamoYAbonoCapital prepararVistaCrear(Productor productor)
         {
             ViewBag.productor = productor;
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
@@ -69,6 +69,20 @@ namespace CampanasDelDesierto_v1.Controllers
             mov.fechaMovimiento = DateTime.Now;
             mov.fechaPagar = mov.fechaMovimiento.AddDays(7);
             mov.idProductor = productor.idProductor;
+
+            return mov;
+        }
+
+        /// <summary>
+        /// Se prepara la información que será enviada a la vista de creacion de prestamo
+        /// </summary>
+        /// <param name="productor"></param>
+        /// <returns></returns>
+        private PrestamoYAbonoCapital prepararVistaEditar(Productor productor, PrestamoYAbonoCapital mov)
+        {
+            ViewBag.productor = productor;
+            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", mov.idProductor);
+            ViewBag.proveedor = new SelectList(db.Proveedores, "nombreProveedor", "nombreProveedor", mov.proveedor);
 
             return mov;
         }
@@ -82,36 +96,45 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Se calcula el ultimo movimiento antes de guardar el nuevo
-                var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-                MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+                prestamoYAbonoCapital = ajustarMovimientoCapital(prestamoYAbonoCapital);
 
-                //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
-                if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                    prestamoYAbonoCapital.montoMovimiento *= -1;
-                else if(prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                {
-                    prestamoYAbonoCapital.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-                }
-
-                //Se registra el nuevo movimiento
-                    //Se agrega la hora de registro a la fecha del movimiento solo para diferencia movimientos hecho el mismo dia
-                prestamoYAbonoCapital.fechaMovimiento = prestamoYAbonoCapital.fechaMovimiento
-                    .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
+                //Guardar cambios
                 db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);
                 int numReg = db.SaveChanges();
 
                 if (numReg > 0)
                 {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    numReg = prod.ajustarBalances(ultimoMovimiento,db);
+                    prod.ajustarBalances(ultimoMovimiento,db);
                 }
                 return RedirectToAction("Details","Productores",new { id = prestamoYAbonoCapital.idProductor});
             }
 
-            prepararVista(db.Productores.Find(prestamoYAbonoCapital.idProductor));
+            prepararVistaCrear(db.Productores.Find(prestamoYAbonoCapital.idProductor));
 
             return View(prestamoYAbonoCapital);
+        }
+
+        private PrestamoYAbonoCapital ajustarMovimientoCapital(PrestamoYAbonoCapital prestamoYAbonoCapital)
+        {
+            //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
+            if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                prestamoYAbonoCapital.montoMovimiento *= -1;
+            else if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+            {
+                prestamoYAbonoCapital.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+            }
+
+            //Se registra el nuevo movimiento
+            //Se agrega la hora de registro a la fecha del movimiento solo para diferencia movimientos hecho el mismo dia
+            prestamoYAbonoCapital.fechaMovimiento = prestamoYAbonoCapital.fechaMovimiento
+                .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
+
+            return prestamoYAbonoCapital;
         }
 
         // GET: PrestamoYAbonoCapitals/Edit/5
@@ -126,7 +149,9 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+
+            prepararVistaEditar(db.Productores.Find(prestamoYAbonoCapital.idProductor),prestamoYAbonoCapital);
+
             return View(prestamoYAbonoCapital);
         }
 
@@ -135,15 +160,26 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,fechaDePrestamo,cheque,concepto,cargo,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cheque,concepto,pagare,fechaPagar,proveedor,nota")] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
             {
+                prestamoYAbonoCapital = ajustarMovimientoCapital(prestamoYAbonoCapital);
                 db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                int numreg = db.SaveChanges();
+
+                if (numreg > 0) { 
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
+                }
+                return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", prestamoYAbonoCapital.idProductor);
+
+            prepararVistaEditar(db.Productores.Find(prestamoYAbonoCapital.idProductor), prestamoYAbonoCapital);
+
             return View(prestamoYAbonoCapital);
         }
 
@@ -168,9 +204,21 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+
+            //Se calcula el ultimo movimiento antes de guardar el nuevo
+            var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
+            MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+
             db.MovimientosFinancieros.Remove(prestamoYAbonoCapital);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            int numReg = db.SaveChanges();
+
+            if (numReg > 0)
+            {
+                //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                numReg = prod.ajustarBalances(ultimoMovimiento, db);
+            }
+
+            return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
         }
 
         protected override void Dispose(bool disposing)

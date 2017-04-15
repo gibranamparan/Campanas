@@ -240,6 +240,10 @@
     <Compile Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.Designer.cs">
       <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.cs" />
+    <Compile Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.Designer.cs">
+      <DependentUpon>201704150532131_tiposDeDatos_PagoPorProducto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -466,6 +470,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.resx">
       <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.resx">
+      <DependentUpon>201704150532131_tiposDeDatos_PagoPorProducto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
