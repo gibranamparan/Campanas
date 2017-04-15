@@ -64,10 +64,10 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             ViewBag.productor = productor;
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
-            ViewBag.idProveedor = new SelectList(db.Proveedores, "id", "nombreProveedor");
+            ViewBag.proveedor = new SelectList(db.Proveedores, "nombreProveedor", "nombreProveedor");
             PrestamoYAbonoCapital mov = new PrestamoYAbonoCapital();
-            mov.fechaMovimiento = DateTime.Today;
-            mov.fechaPagar = DateTime.Today.AddDays(7);
+            mov.fechaMovimiento = DateTime.Now;
+            mov.fechaPagar = mov.fechaMovimiento.AddDays(7);
             mov.idProductor = productor.idProductor;
 
             return mov;
@@ -86,11 +86,25 @@ namespace CampanasDelDesierto_v1.Controllers
                 var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
                 MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
 
+                //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
+                if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                    prestamoYAbonoCapital.montoMovimiento *= -1;
+                else if(prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                {
+                    prestamoYAbonoCapital.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+                }
+
+                //Se registra el nuevo movimiento
+                    //Se agrega la hora de registro a la fecha del movimiento solo para diferencia movimientos hecho el mismo dia
+                prestamoYAbonoCapital.fechaMovimiento = prestamoYAbonoCapital.fechaMovimiento
+                    .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
                 db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);
                 int numReg = db.SaveChanges();
+
                 if (numReg > 0)
                 {
-                    prod.ajustarBalances(ultimoMovimiento);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    numReg = prod.ajustarBalances(ultimoMovimiento,db);
                 }
                 return RedirectToAction("Details","Productores",new { id = prestamoYAbonoCapital.idProductor});
             }

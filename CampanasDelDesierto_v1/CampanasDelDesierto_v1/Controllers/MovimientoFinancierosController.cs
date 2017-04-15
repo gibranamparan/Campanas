@@ -118,7 +118,8 @@ namespace CampanasDelDesierto_v1.Controllers
             MovimientoFinanciero movimientoFinanciero = db.MovimientosFinancieros.Find(id);
             db.MovimientosFinancieros.Remove(movimientoFinanciero);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Productores", new { id = movimientoFinanciero.idProductor });
+            //return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

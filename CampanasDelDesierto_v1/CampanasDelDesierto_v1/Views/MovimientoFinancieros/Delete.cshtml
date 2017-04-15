@@ -5,46 +5,49 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Eliminar</h2>
-
-<h3>¿Estás seguro que quieres eliminar esto?
-</h3>
+<h3>¿Estás seguro que quieres eliminar este registro?</h3>
 <div>
-    <h4>Movimiento Financiero</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
-        </dt>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Movimiento Financiero</h3>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Productor.nombreProductor)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Productor.nombreProductor)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Productor.nombreProductor)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.montoMovimiento)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.montoMovimiento)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.montoMovimiento)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.montoMovimiento)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaMovimiento)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.fechaMovimiento)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.fechaMovimiento)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.fechaMovimiento)
+                </dd>
 
-    </dl>
+            </dl>
+        </div>
+    </div>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn btn-default" /> |
-            @Html.ActionLink("Volver a la lista", "Index")
+            <button class="btn btn-danger" >Eliminar</button> |
+            @Html.ActionLink("Volver a detalles del productor","Details","Productores"
+                ,new { id= Model.idProductor }, null)
         </div>
     }
 </div>

@@ -34,6 +34,21 @@ namespace CampanasDelDesierto_v1.Models
         //public int intereses { get; set; }
         [Display(Name = "Nota ")]
         public string nota { get; set; }
-        
+
+        public static class TipoMovimientoCapital
+        {
+            public static readonly string ABONO = "ABONO";
+            public static readonly string PRESTAMO = "PRESTAMO";
+        }
+
+        public static Object[] getTipoMovimientoCapitalArray()
+        {
+            Object[] englishAttachmentsArray = new Object[]{
+                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO, Text="ABONO"},
+                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO, Text="PRESTAMO"},
+            };
+            return englishAttachmentsArray;
+        }
+
     }
 }

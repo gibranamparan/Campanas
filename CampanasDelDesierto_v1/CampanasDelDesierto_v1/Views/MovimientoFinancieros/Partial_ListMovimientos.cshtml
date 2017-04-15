@@ -24,6 +24,9 @@
                 @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
             </th>
             <th>
+                Proveedor / Concepto
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
             </th>
             <th class="actions"></th>
@@ -42,6 +45,12 @@
                     @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                 </td>
                 <td>
+                    @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+                    {
+                        @(((PrestamoYAbonoCapital)item).proveedor)
+                    }
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.balance)
                 </td>
                 <td>
@@ -52,15 +61,15 @@
                         </button>
                         <div id="myDropdown"
                              class="dropdown-content">
-                            <a href="@Url.Action("Edit","Movimiento", new { id = item.idMovimiento })">
+                            <a href="@Url.Action("Edit","MovimientoFinancieros", new { id = item.idMovimiento })">
                                 <i class="glyphicon glyphicon-edit"></i> Editar
                             </a>
 
-                            <a href="@Url.Action("Details","Movimiento", new { id = item.idMovimiento })">
+                            <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
                                 <i class="glyphicon glyphicon-print"></i> Detalles
                             </a>
 
-                            <a href="@Url.Action("Delete","Movimiento", new { id = item.idMovimiento })">
+                            <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
                                 <i class="glyphicon glyphicon-remove"></i> Borrar
                             </a>
                         </div>
