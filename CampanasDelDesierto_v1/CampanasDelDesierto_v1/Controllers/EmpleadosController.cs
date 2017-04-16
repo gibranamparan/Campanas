@@ -10,6 +10,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize(Roles = "Admin, Sucursal")]
     public class EmpleadosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -79,6 +79,9 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        
+        [Display(Name ="Rol")]
+        public string rol { get; set; }
     }
 
     public class ResetPasswordViewModel
