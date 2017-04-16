@@ -10,7 +10,7 @@ namespace CampanasDelDesierto_v1.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Productores");
         }
 
         public ActionResult About()
