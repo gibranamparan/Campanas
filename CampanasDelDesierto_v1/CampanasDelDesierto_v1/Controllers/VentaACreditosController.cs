@@ -63,7 +63,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")] VentaACredito ventaACredito)
         {
-            double balanceAnterior = 0;
+            decimal balanceAnterior = 0;
             if (ModelState.IsValid)
             {
                 try
@@ -77,7 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 Producto producto = db.Productos.Find(ventaACredito.idProducto);
                 decimal costoProducto = producto.costo;
                 decimal totalventa = costoProducto * ventaACredito.cantidadMaterial;
-                ventaACredito.montoMovimiento = (double)totalventa;
+                ventaACredito.montoMovimiento = totalventa;
 
                 ventaACredito.balance = balanceAnterior + ventaACredito.montoMovimiento;
 

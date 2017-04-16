@@ -61,7 +61,7 @@
                         </button>
                         <div id="myDropdown"
                              class="dropdown-content">
-                            <a href="@Url.Action("Edit","PrestamoYAbonoCapitals", new { id = item.idMovimiento })">
+                            <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
                                 <i class="glyphicon glyphicon-edit"></i> Editar
                             </a>
 
