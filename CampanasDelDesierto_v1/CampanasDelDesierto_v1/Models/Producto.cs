@@ -11,15 +11,15 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idProducto { get; set; }
 
-        [Display(Name = "Nombre ")]
+        [Display(Name = "Nombre")]
         public string nombreProducto { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Costo ")]
+        [Display(Name = "Costo")]
         public decimal costo { get; set; }
 
-        [Display(Name = "Estado ")]
+        [Display(Name = "Estado")]
         public string estado { get; set; }
         
         //Tipo de material que es.

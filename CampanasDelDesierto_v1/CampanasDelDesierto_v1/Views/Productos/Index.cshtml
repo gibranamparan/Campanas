@@ -22,16 +22,7 @@
             @Html.DisplayNameFor(model => model.estado)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.fecha)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.concepto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.pagare)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ordenDeCompra)
+            @Html.DisplayNameFor(model => model.descripcion)
         </th>
         <th></th>
     </tr>
@@ -48,16 +39,7 @@
             @Html.DisplayFor(modelItem => item.estado)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.fecha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.concepto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.pagare)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ordenDeCompra)
+            @Html.DisplayFor(modelItem => item.descripcion)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.idProducto }) |
