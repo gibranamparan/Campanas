@@ -6,10 +6,13 @@ using System.Web;
 
 namespace CampanasDelDesierto_v1.Models
 {
+    /// <summary>
+    /// Reorese
+    /// </summary>
     public class PagoPorProducto : MovimientoFinanciero
     {
         [Display(Name = "Cantidad de productos ")]
-        public int cantidadProducto { get; set; }
+        public double cantidadProducto { get; set; }
         [Display(Name = "Numero de la semana")]
         public int numeroSemana { get; set; }
         [Display(Name = "Cheque ")]
