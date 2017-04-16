@@ -50,10 +50,20 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            VentaACredito mov = prepararVistaCrear(productor);
+            return View(mov);
+        }
+
+        private VentaACredito prepararVistaCrear(Productor productor)
+        {
             ViewBag.productor = productor;
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
             ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto");
-            return View();
+
+            VentaACredito mov = new VentaACredito();
+            mov.idProducto = productor.idProductor;
+            mov.fechaMovimiento = DateTime.Today;
+
+            return mov;
         }
 
         // POST: VentaACreditos/Create
@@ -61,34 +71,32 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")] VentaACredito ventaACredito)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "cantidadMaterial,idProducto")]
+            VentaACredito ventaACredito)
         {
-            decimal balanceAnterior = 0;
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var movimientosAscendentes = db.VentasACreditos.Where(mov => mov.idProductor == ventaACredito.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
-                    var ultimoMov = movimientosAscendentes.First();
-                    balanceAnterior = ultimoMov.balance;
-                }
-                catch { }
-                //calcula automaticamente el total de la venta 
                 Producto producto = db.Productos.Find(ventaACredito.idProducto);
-                decimal costoProducto = producto.costo;
-                decimal totalventa = costoProducto * ventaACredito.cantidadMaterial;
-                ventaACredito.montoMovimiento = totalventa;
-
-                ventaACredito.balance = balanceAnterior + ventaACredito.montoMovimiento;
+                //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
+                ventaACredito.ajustarMovimiento(producto); 
 
                 db.MovimientosFinancieros.Add(ventaACredito);
-                db.SaveChanges();
-                //return RedirectToAction("Index");
-                return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
-            }
+                int numReg = db.SaveChanges();
+                if (numReg > 0)
+                {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(ventaACredito.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento);
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
+
+                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
+                }
+            }
+            VentaACredito mov = prepararVistaCrear(db.Productores.Find(ventaACredito.idProductor));
+
             return View(ventaACredito);
         }
 
@@ -104,7 +112,6 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
             ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
             return View(ventaACredito);
         }

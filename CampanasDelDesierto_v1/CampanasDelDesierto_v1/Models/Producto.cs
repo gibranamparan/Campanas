@@ -21,23 +21,11 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Estado ")]
         public string estado { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-dd-MM}",
-        ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
-        [Display(Name = "Fecha ")]
-        public DateTime fecha { get; set; }
-
+        
         //Tipo de material que es.
-        [Display(Name = "Concepto ")]
-        public string concepto { get; set; }
+        [Display(Name = "Descripción")]
+        public string descripcion { get; set; }
 
-        [Display(Name = "Pagare")]
-        public string pagare { get; set; }
-
-        [Display(Name = "Orden de Compra ")]
-        public string ordenDeCompra { get; set; }
-
-        public ICollection<VentaACredito> PrestamosMateriales { get; set; }
+        public ICollection<VentaACredito> ventas { get; set; }
     }
 }

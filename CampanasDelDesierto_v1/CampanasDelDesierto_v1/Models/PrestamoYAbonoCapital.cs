@@ -46,19 +46,15 @@ namespace CampanasDelDesierto_v1.Models
         /// segun el concepto (Prestamo o Abono), esto para preparse para ser mostrado en la lsita de balances
         /// TODO: Checar si es posible hacer estos ajustes sobrecargando los setters de fechaMovimiento, concepto y montoDeMovimiento
         /// </summary>
-        public void ajustarMovimiento()
+        public new void ajustarMovimiento()
         {
             //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
             if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                 this.montoMovimiento *= -1;
             else if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
                 this.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-            
 
-            //Se registra el nuevo movimiento
-            //Se agrega la hora de registro a la fecha del movimiento solo para diferencia movimientos hecho el mismo dia
-            this.fechaMovimiento = this.fechaMovimiento
-                .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
+            base.ajustarMovimiento();
         }
 
         public static Object[] getTipoMovimientoCapitalArray()

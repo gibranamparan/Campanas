@@ -252,6 +252,10 @@
     <Compile Include="Migrations\201704160355090_cambioDeDatosDinero_Decimal.Designer.cs">
       <DependentUpon>201704160355090_cambioDeDatosDinero_Decimal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704162055161_correcionModeloProducto.cs" />
+    <Compile Include="Migrations\201704162055161_correcionModeloProducto.Designer.cs">
+      <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -487,6 +491,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704160355090_cambioDeDatosDinero_Decimal.resx">
       <DependentUpon>201704160355090_cambioDeDatosDinero_Decimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704162055161_correcionModeloProducto.resx">
+      <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

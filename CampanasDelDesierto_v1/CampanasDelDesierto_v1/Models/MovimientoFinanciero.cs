@@ -80,5 +80,14 @@ namespace CampanasDelDesierto_v1.Models
             else
                 return "";
         }
+
+        public void ajustarMovimiento()
+        {
+            //Se agrega la hora de registro a la fecha del movimiento solo para
+            //diferencia movimientos hecho el mismo dia
+            this.fechaMovimiento = this.fechaMovimiento
+                .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute)
+                .AddSeconds(DateTime.Now.Second);
+        }
     }
 }
