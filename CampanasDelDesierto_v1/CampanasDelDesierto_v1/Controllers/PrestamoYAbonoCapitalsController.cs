@@ -96,7 +96,8 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                prestamoYAbonoCapital = ajustarMovimientoCapital(prestamoYAbonoCapital);
+                //Ajuste de movimiento para entrar dentro de la lista de balances
+                prestamoYAbonoCapital.ajustarMovimiento();
 
                 //Guardar cambios
                 db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);
@@ -110,32 +111,16 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db);
+
+                    return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
                 }
-                return RedirectToAction("Details","Productores",new { id = prestamoYAbonoCapital.idProductor});
             }
 
             prepararVistaCrear(db.Productores.Find(prestamoYAbonoCapital.idProductor));
 
             return View(prestamoYAbonoCapital);
         }
-
-        private PrestamoYAbonoCapital ajustarMovimientoCapital(PrestamoYAbonoCapital prestamoYAbonoCapital)
-        {
-            //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
-            if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                prestamoYAbonoCapital.montoMovimiento *= -1;
-            else if (prestamoYAbonoCapital.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-            {
-                prestamoYAbonoCapital.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-            }
-
-            //Se registra el nuevo movimiento
-            //Se agrega la hora de registro a la fecha del movimiento solo para diferencia movimientos hecho el mismo dia
-            prestamoYAbonoCapital.fechaMovimiento = prestamoYAbonoCapital.fechaMovimiento
-                .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
-
-            return prestamoYAbonoCapital;
-        }
+        
 
         // GET: PrestamoYAbonoCapitals/Edit/5
         public ActionResult Edit(int? id)
@@ -164,7 +149,7 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                prestamoYAbonoCapital = ajustarMovimientoCapital(prestamoYAbonoCapital);
+                prestamoYAbonoCapital.ajustarMovimiento();
                 db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
                 int numreg = db.SaveChanges();
 

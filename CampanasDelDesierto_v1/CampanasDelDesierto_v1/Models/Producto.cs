@@ -10,14 +10,19 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Key]
         public int idProducto { get; set; }
+
         [Display(Name = "Nombre ")]
         public string nombreProducto { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
         [Display(Name = "Costo ")]
         public decimal costo { get; set; }
+
         [Display(Name = "Estado ")]
         public string estado { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
+        [DisplayFormat(DataFormatString = "{0:yyyy-dd-MM}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha ")]
@@ -26,11 +31,12 @@ namespace CampanasDelDesierto_v1.Models
         //Tipo de material que es.
         [Display(Name = "Concepto ")]
         public string concepto { get; set; }
+
         [Display(Name = "Pagare")]
         public string pagare { get; set; }
+
         [Display(Name = "Orden de Compra ")]
         public string ordenDeCompra { get; set; }
-
 
         public ICollection<VentaACredito> PrestamosMateriales { get; set; }
     }

@@ -14,13 +14,12 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [Display(Name = "Monto")]
-        public double montoMovimiento { get; set; }
+        public decimal montoMovimiento { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
         [Display(Name = "Balance ")]
-        public double balance { get; set; }
+        public decimal balance { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
@@ -28,6 +27,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Fecha")]
         public DateTime fechaMovimiento { get; set; }
 
+        //Todos los movimientos financieros le corresponden a un solo productor
         public int idProductor { get; set; }
         public virtual Productor Productor { get; set; }
 
@@ -40,14 +40,14 @@ namespace CampanasDelDesierto_v1.Models
                 if (tom == TypeOfMovements.CAPITAL)
                     return "CAPITAL";
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
-                    return "PAGO POR PRODUCTO";
+                    return "COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return "VENTA A CREDITO";
                 else
                     return "";
             }
         }
-
+        
         public enum TypeOfMovements
         {
             NONE,
@@ -66,6 +66,19 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.VENTA_A_CREDITO;
             else
                 return TypeOfMovements.NONE;
+        }
+
+        public string getNombreControlador()
+        {
+            TypeOfMovements tom = this.getTypeOfMovement();
+            if (tom == TypeOfMovements.CAPITAL)
+                return "PrestamoYAbonoCapitals";
+            else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
+                return "PagosPorProductos";
+            else if (tom == TypeOfMovements.VENTA_A_CREDITO)
+                return "VentaACreditos";
+            else
+                return "";
         }
     }
 }

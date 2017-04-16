@@ -43,14 +43,26 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             var productor = db.Productores.Find(id);
             if (productor == null)
             {
                 return HttpNotFound();
             }
+
+            var mov = prepararVistaCrear(productor);
+
+            return View(mov);
+        }
+
+        private PagoPorProducto prepararVistaCrear(Productor productor)
+        {
             ViewBag.productor = productor;
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
-            return View();
+            PagoPorProducto mov = new PagoPorProducto();
+            mov.fechaMovimiento = DateTime.Now;
+            mov.idProductor = productor.idProductor;
+
+            return mov;
         }
 
         // POST: PagosPorProductos/Create
@@ -58,71 +70,34 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")]
+            PagoPorProducto pagoPorProducto)
         {
-            double ultimoBalancePrestamosCapital = 0;
-            double ultimoBalancePrestamosMaterial = 0;
-            int idProducto = 0;
-            VentaACredito ventaCredito = new VentaACredito();
-            PrestamoYAbonoCapital prestamoAbonoCapital = new PrestamoYAbonoCapital();
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var movimientosAscendentes = db.PrestamosYAbonosCapital.Where(mov => mov.idProductor == pagoPorProducto.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
-                    var ultimoMov = movimientosAscendentes.First();
-                    ultimoBalancePrestamosCapital = ultimoMov.balance;
-                    var movimientos = db.VentasACreditos.Where(mov => mov.idProductor == pagoPorProducto.idProductor).OrderByDescending(mov => mov.fechaMovimiento);
-                    var ultimoMovimiento = movimientos.First();
-                    ultimoBalancePrestamosMaterial = ultimoMovimiento.balance;
+                //Ajuste de movimiento para entrar dentro de la lista de balances
+                pagoPorProducto.ajustarMovimiento();
 
-                    idProducto = movimientos.First().idProducto;
-                }
-                catch { }
-                pagoPorProducto.balance = pagoPorProducto.montoMovimiento - (ultimoBalancePrestamosCapital + ultimoBalancePrestamosMaterial);
-                
-                //aal calcular el balance del pago por producto se crea un nuevo registro en prestamoyabonocapital para que asi se cancele 
-                //la deuda o se acumule para el siguiente año
-
-                prestamoAbonoCapital.montoMovimiento = 0;
-                prestamoAbonoCapital.fechaMovimiento = pagoPorProducto.fechaMovimiento;
-                prestamoAbonoCapital.idProductor = pagoPorProducto.idProductor;
-                prestamoAbonoCapital.fechaPagar = pagoPorProducto.fechaMovimiento;
-                prestamoAbonoCapital.nota = "se realizo un pagoporproducto";
-                //se hace unaa validacion si la cantidad de la produccion fue suficiente para cubrir la deuda se cancela sino se abona y se sigue acumulando
-                if(pagoPorProducto.montoMovimiento >= (ultimoBalancePrestamosCapital + ultimoBalancePrestamosMaterial))
-                {
-                    prestamoAbonoCapital.balance = 0;
-                    ventaCredito.balance = 0;
-                }
-                else
-                {
-                    prestamoAbonoCapital.balance = pagoPorProducto.balance;
-                    ventaCredito.balance = pagoPorProducto.balance;
-                }
-
-                prestamoAbonoCapital.concepto = "Pago por producto";
-
-                ventaCredito.montoMovimiento = 0;
-                ventaCredito.fechaMovimiento = pagoPorProducto.fechaMovimiento;
-                ventaCredito.idProductor = pagoPorProducto.idProductor;
-                ventaCredito.cantidadMaterial = 0;
-                ventaCredito.idProducto = idProducto;
-
-
-
+                //Guardar cambios
                 db.MovimientosFinancieros.Add(pagoPorProducto);
-                db.MovimientosFinancieros.Add(prestamoAbonoCapital);
-                db.MovimientosFinancieros.Add(ventaCredito);
+                int numReg = db.SaveChanges();
 
-                db.SaveChanges();
-                //return RedirectToAction("Index");
+                if (numReg > 0)
+                {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(pagoPorProducto.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
 
-                return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor });
+                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor });
+                }
             }
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
-            return View(pagoPorProducto);
+            var mov = prepararVistaCrear(db.Productores.Find(pagoPorProducto.idProductor));
+
+            return View(mov);
         }
 
         // GET: PagosPorProductos/Edit/5
@@ -137,7 +112,9 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
+
+            ViewBag.productor = pagoPorProducto.Productor;
+
             return View(pagoPorProducto);
         }
 
@@ -146,15 +123,29 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadProducto,numeroSemana,cheque,MyProperty,tipoProducto,garantiaLimpieza")] PagoPorProducto pagoPorProducto)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")]
+            PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)
             {
+                pagoPorProducto.ajustarMovimiento();
                 db.Entry(pagoPorProducto).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                int numreg = db.SaveChanges();
+
+                if (numreg > 0)
+                {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(pagoPorProducto.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
+                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor });
+                }
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", pagoPorProducto.idProductor);
+
+            ViewBag.productor = pagoPorProducto.Productor;
+
             return View(pagoPorProducto);
         }
 
