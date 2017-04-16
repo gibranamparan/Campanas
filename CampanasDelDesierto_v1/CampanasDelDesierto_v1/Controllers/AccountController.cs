@@ -157,14 +157,21 @@ namespace CampanasDelDesierto_v1.Controllers
                 {
                     UserManager.AddToRole(user.Id, model.rol);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index","Productores");
+                    if (model.rol=="Admin")
+                    {
+                        return RedirectToAction("Index", "Productores");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Activos");
+                    }
+                    
                 }
                 AddErrors(result);
             }
