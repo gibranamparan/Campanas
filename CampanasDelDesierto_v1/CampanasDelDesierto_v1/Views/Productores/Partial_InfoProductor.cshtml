@@ -3,73 +3,46 @@
 <div>
     <div class="row">
         <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.nombreProductor)
-            </dt>
+            <dt>  @Html.DisplayNameFor(model => model.nombreProductor)  </dt>
+            <dd> @Html.DisplayFor(model => model.nombreProductor) </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.nombreProductor)
-            </dd>
+            <dt>@Html.DisplayNameFor(model => model.domicilio)</dt>
+            <dd>@Html.DisplayFor(model => model.domicilio) </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.domicilio)
-            </dt>
+            <dt> @Html.DisplayNameFor(model => model.fechaIntegracion)</dt>
+            <dd> @Html.DisplayFor(model => model.fechaIntegracion) </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.domicilio)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.fechaIntegracion)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.fechaIntegracion)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.RFC)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.RFC)
-            </dd>
+            <dt> @Html.DisplayNameFor(model => model.RFC)</dt>
+            <dd> @Html.DisplayFor(model => model.RFC)  </dd>
         </dl>
         <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.zona)
-            </dt>
+            <dt> @Html.DisplayNameFor(model => model.zona) </dt>
+            <dd> @Html.DisplayFor(model => model.zona)  </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.zona)
-            </dd>
+            <dt> @Html.DisplayNameFor(model => model.nombreCheque)   </dt>
+            <dd> @Html.DisplayFor(model => model.nombreCheque) </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.nombreCheque)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.nombreCheque)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.adeudoAnterior)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.adeudoAnterior)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.precioCosecha)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.precioCosecha)
-            </dd>
-
+            <dt> @Html.DisplayNameFor(model => model.adeudoAnterior) </dt>
+            <dd> @Html.DisplayFor(model => model.adeudoAnterior)</dd>
         </dl>
     </div>
+    <fieldset class="col-md-12 row">
+        <legend>Precio de cosecha por tonelada</legend>
+        <dl class="dl-horizontal col-md-6">
+            <dt>  @(Model.tipoProducto1) </dt>
+            <dd>   @Html.DisplayFor(model => model.precioProducto1) </dd>
+
+            <dt>  @( Model.tipoProducto2) </dt>
+            <dd> @Html.DisplayFor(model => model.precioProducto2) </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-6">
+            <dt>@( Model.tipoProducto3) </dt>
+            <dd> @Html.DisplayFor(model => model.precioProducto3)  </dd>
+
+            <dt> @( Model.tipoProductoOtro)  </dt>
+            <dd> @Html.DisplayFor(model => model.precioProductoOtro) </dd>
+        </dl>
+    </fieldset>
 </div>
     <p>
         @Html.ActionLink("Editar","Edit","Productores",new { id = Model.idProductor },null)
