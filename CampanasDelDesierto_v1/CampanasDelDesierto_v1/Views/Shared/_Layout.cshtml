@@ -174,7 +174,7 @@
                     
                 </nav>
                 <!--Rol sucursales-->
-                @if (User.IsInRole("Sucursal")&& User.IsInRole("Admin"))
+                @if (User.IsInRole("Sucursal") || User.IsInRole("Admin"))
                 {
                     <nav id="menu">
                         <ul>

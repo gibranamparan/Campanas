@@ -10,7 +10,12 @@ namespace CampanasDelDesierto_v1.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Productores");
+            if (User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Productores");
+            else if (User.IsInRole("Sucursal"))
+                return RedirectToAction("Index", "Sucursales");
+            else
+                return RedirectToAction("Login", "Account");
         }
 
         public ActionResult About()
