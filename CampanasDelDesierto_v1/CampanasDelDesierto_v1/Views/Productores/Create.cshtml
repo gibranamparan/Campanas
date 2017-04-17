@@ -83,6 +83,30 @@
                 </div>
 
                 <div class="form-group">
+                    @Html.LabelFor(model => model.costoProducto1, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-xs-4">
+                        @Html.EditorFor(model => model.costoProducto1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.costoProducto1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.costoProducto2, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-xs-4">
+                        @Html.EditorFor(model => model.costoProducto2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.costoProducto2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.costoProductoOtro, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-xs-4">
+                        @Html.EditorFor(model => model.costoProductoOtro, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.costoProductoOtro, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button class="btn btn-primary">Crear</button>
                     </div>

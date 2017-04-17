@@ -43,7 +43,29 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name ="Precio de Cosecha")]
         public decimal? precioCosecha { get; set; }
 
+        //Tipos de producto
+        public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        public decimal costoProducto1 { get; set; }
+
+        public string tipoProducto2 { get { return TiposDeProducto.PRODUCTO2; } }
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        public decimal costoProducto2 { get; set; }
+
+        public string tipoProductoOtro { get { return TiposDeProducto.OTRO; } }
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        public decimal costoProductoOtro { get; set; }
+
         public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
+
+        public static class TiposDeProducto {
+            public static readonly string PRODUCTO1 = "MANZANITA";
+            public static readonly string PRODUCTO2 = "MISSION";
+            public static readonly string OTRO = "OTRO";
+        }
 
         /// <summary>
         /// Se ajustan todos los balances de los movimientos del productor
