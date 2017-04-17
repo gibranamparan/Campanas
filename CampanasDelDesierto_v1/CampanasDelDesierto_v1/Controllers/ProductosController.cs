@@ -50,7 +50,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Producto Producto)
+        public ActionResult Create([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,"+
+            "concepto,pagare,ordenDeCompra")]
+            Producto Producto)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +84,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,concepto,pagare,ordenDeCompra")] Producto producto)
+        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,"+
+            "concepto,pagare,ordenDeCompra")]
+            Producto producto)
         {
             if (ModelState.IsValid)
             {

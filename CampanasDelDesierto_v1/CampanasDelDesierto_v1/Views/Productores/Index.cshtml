@@ -16,6 +16,9 @@
             @Html.DisplayNameFor(model => model.nombreProductor)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.nombreCheque)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.domicilio)
         </th>
         <th>
@@ -28,10 +31,10 @@
             @Html.DisplayNameFor(model => model.zona)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.nombreCheque)
+            @("Ton. "+Model.FirstOrDefault().tipoProducto1)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.adeudoAnterior)
+            @("Ton. " + Model.FirstOrDefault().tipoProducto2)
         </th>
         <th class="actions"></th>
     </tr>
@@ -40,6 +43,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.nombreProductor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nombreCheque)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.domicilio)
@@ -54,10 +60,10 @@
             @Html.DisplayFor(modelItem => item.zona)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.nombreCheque)
+            @Html.DisplayFor(modelItem => item.precioProducto1)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.adeudoAnterior)
+            @Html.DisplayFor(modelItem => item.precioProducto2)
         </td>
         <td >
             <a href="@Url.Action("Edit","Productores",new { id = item.idProductor })">

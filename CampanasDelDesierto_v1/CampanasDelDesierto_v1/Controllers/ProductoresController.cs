@@ -51,7 +51,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
-            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProductoOtro")]
+            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProducto3,precioProductoOtro")]
             Productor productor)
         {
             if (ModelState.IsValid)
@@ -84,7 +84,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,precioCosecha")] Productor productor)
+        public ActionResult Edit([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
+            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProducto3,precioProductoOtro")]
+                Productor productor)
         {
             if (ModelState.IsValid)
             {

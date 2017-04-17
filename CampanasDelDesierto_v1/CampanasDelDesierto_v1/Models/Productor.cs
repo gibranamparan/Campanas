@@ -49,6 +49,11 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         public decimal precioProducto2 { get; set; }
 
+        public string tipoProducto3 { get { return TiposDeProducto.PRODUCTO3; } }
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        public decimal precioProducto3 { get; set; }
+
         public string tipoProductoOtro { get { return TiposDeProducto.OTRO; } }
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
@@ -58,7 +63,8 @@ namespace CampanasDelDesierto_v1.Models
 
         public static class TiposDeProducto {
             public static readonly string PRODUCTO1 = "MANZANITA";
-            public static readonly string PRODUCTO2 = "MISSION";
+            public static readonly string PRODUCTO2 = "OBLIZA";
+            public static readonly string PRODUCTO3 = "MISSION";
             public static readonly string OTRO = "OTRO";
         }
 
