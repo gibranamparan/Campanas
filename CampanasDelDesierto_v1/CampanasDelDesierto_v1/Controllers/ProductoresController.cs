@@ -40,7 +40,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Productores/Create
         public ActionResult Create()
         {
-            return View();
+            Productor prod = new Productor();
+            prod.fechaIntegracion = DateTime.Today;
+            return View(prod);
         }
 
         // POST: Productores/Create

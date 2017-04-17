@@ -37,27 +37,22 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [Display(Name ="Adeudo Anterior")]
         public decimal? adeudoAnterior { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:C}",
-        ApplyFormatInEditMode = true)]
-        [Display(Name ="Precio de Cosecha")]
-        public decimal? precioCosecha { get; set; }
-
+        
         //Tipos de producto
         public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        public decimal costoProducto1 { get; set; }
+        public decimal precioProducto1 { get; set; }
 
         public string tipoProducto2 { get { return TiposDeProducto.PRODUCTO2; } }
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        public decimal costoProducto2 { get; set; }
+        public decimal precioProducto2 { get; set; }
 
         public string tipoProductoOtro { get { return TiposDeProducto.OTRO; } }
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        public decimal costoProductoOtro { get; set; }
+        public decimal precioProductoOtro { get; set; }
 
         public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
 
