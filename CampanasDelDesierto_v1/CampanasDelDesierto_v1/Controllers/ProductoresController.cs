@@ -50,7 +50,9 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,precioCosecha")] Productor productor)
+        public ActionResult Create([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
+            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProductoOtro")]
+            Productor productor)
         {
             if (ModelState.IsValid)
             {
