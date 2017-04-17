@@ -57,10 +57,10 @@ namespace CampanasDelDesierto_v1.Controllers
         private VentaACredito prepararVistaCrear(Productor productor)
         {
             ViewBag.productor = productor;
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto");
+            ViewBag.idProducto = new SelectList(db.Productos.ToList(), "idProducto", "nombreProducto",null);
 
             VentaACredito mov = new VentaACredito();
-            mov.idProducto = productor.idProductor;
+            mov.idProductor = productor.idProductor;
             mov.fechaMovimiento = DateTime.Today;
 
             return mov;
@@ -112,6 +112,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.productor = ventaACredito.Productor;
             ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
             return View(ventaACredito);
         }
@@ -121,43 +123,40 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")] VentaACredito ventaACredito)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")]
+            VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ventaACredito).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", ventaACredito.idProductor);
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
-            return View(ventaACredito);
-        }
+                Producto producto = db.Productos.Find(ventaACredito.idProducto);
+                //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
+                ventaACredito.ajustarMovimiento(producto);
 
-        // GET: VentaACreditos/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //Se modifica el registro
+                db.Entry(ventaACredito).State = EntityState.Modified;
+                int numReg = db.SaveChanges();
+                if (numReg > 0)
+                {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(ventaACredito.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento);
+
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
+
+                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
+                }
             }
-            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
-            if (ventaACredito == null)
+
+            var productor = db.Productores.Find(ventaACredito.idProductor);
+            if (productor == null)
             {
                 return HttpNotFound();
             }
-            return View(ventaACredito);
-        }
+            ViewBag.productor = productor;
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
 
-        // POST: VentaACreditos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            VentaACredito ventaACredito = db.VentasACreditos.Find(id);
-            db.MovimientosFinancieros.Remove(ventaACredito);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(ventaACredito);
         }
 
         protected override void Dispose(bool disposing)

@@ -235,6 +235,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
       <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
@@ -282,6 +283,10 @@
     <Compile Include="Migrations\201704162055161_correcionModeloProducto.cs" />
     <Compile Include="Migrations\201704162055161_correcionModeloProducto.Designer.cs">
       <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.cs" />
+    <Compile Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.Designer.cs">
+      <DependentUpon>201704170242425_campoAgregado_Producto_isArbolAceituna.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -521,6 +526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704162055161_correcionModeloProducto.resx">
       <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.resx">
+      <DependentUpon>201704170242425_campoAgregado_Producto_isArbolAceituna.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

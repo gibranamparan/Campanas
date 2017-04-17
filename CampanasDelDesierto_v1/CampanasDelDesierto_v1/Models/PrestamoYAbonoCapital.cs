@@ -14,9 +14,9 @@ namespace CampanasDelDesierto_v1.Models
         //[DataType(DataType.Date)]
         //public DateTime fechaDePrestamo { get; set; }
         // public int rate { get; set; }
-        [Display(Name = "Cheque ")]
+        [Display(Name = "Cheque/Folio")]
         public string cheque { get; set; }
-        [Display(Name = "Concepto ")]
+        [Display(Name = "Concepto")]
         public string concepto { get; set; }
 
         //public double cargo { get; set; }
@@ -26,13 +26,13 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
-        [Display(Name = "Fecha a pagar ")]
+        [Display(Name = "Fecha a pagar")]
         public DateTime fechaPagar { get; set; }
-        [Display(Name = "Proveedor ")]
+        [Display(Name = "Proveedor")]
         public string proveedor { get; set; }
 
         //public int intereses { get; set; }
-        [Display(Name = "Nota ")]
+        [Display(Name = "Nota")]
         public string nota { get; set; }
 
         public static class TipoMovimientoCapital
@@ -59,11 +59,11 @@ namespace CampanasDelDesierto_v1.Models
 
         public static Object[] getTipoMovimientoCapitalArray()
         {
-            Object[] englishAttachmentsArray = new Object[]{
+            Object[] opciones = new Object[]{
                 new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO, Text="ABONO"},
                 new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO, Text="PRESTAMO"},
             };
-            return englishAttachmentsArray;
+            return opciones;
         }
     }
 }

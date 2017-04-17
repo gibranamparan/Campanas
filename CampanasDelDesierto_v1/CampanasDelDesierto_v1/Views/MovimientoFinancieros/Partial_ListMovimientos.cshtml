@@ -6,9 +6,9 @@
 }
 
 <p>
-    @Html.ActionLink("Movimiento de Capital", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Pago por Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Venta de material", "Create", "VentaACreditos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Anticipos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Registro de Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
 </p>
 @if (Model != null && Model.MovimientosFinancieros.Count() > 0)
 {

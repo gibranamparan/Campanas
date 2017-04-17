@@ -24,3 +24,26 @@ window.onclick = function (event) {
         }
     }
 }
+
+//Agrega funcion a JQuery para permitir solicitudes asincronas identificandose como usuario logeado
+jQuery.postJSON = function (url, data, dataType, success, fail, always, antiForgeryToken) {
+    if (dataType === void 0) { dataType = "json"; }
+    if (typeof (data) === "object") { data = JSON.stringify(data); }
+    var ajax = {
+        url: url,
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: dataType,
+        data: data,
+        success: success,
+        fail: fail,
+        always: always
+    };
+    if (antiForgeryToken) {
+        ajax.headers = {
+            "__RequestVerificationToken": antiForgeryToken
+        };
+    };
+
+    return jQuery.ajax(ajax);
+};

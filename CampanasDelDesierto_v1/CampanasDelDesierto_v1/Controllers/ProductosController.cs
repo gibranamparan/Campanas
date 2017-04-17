@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using System.Web.Helpers;
+using CampanasDelDesierto_v1.HerramientasGenerales;
+using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -124,5 +127,14 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpPost, ValidateHeaderAntiForgeryToken]
+        public JsonResult productoInfo(int id)
+        {
+            var producto = db.Productos.Find(id);
+            var vmProducto = new { id = id, nombre = producto.nombreProducto, costo = producto.costo };
+            return Json(vmProducto);
+        }
+
     }
 }

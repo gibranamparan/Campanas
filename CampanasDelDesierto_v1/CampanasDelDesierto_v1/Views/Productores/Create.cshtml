@@ -4,11 +4,6 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <h2>Crear</h2>
 
 
@@ -89,16 +84,18 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Crear" class="btn btn-default" />
+                        <button class="btn btn-primary">Crear</button>
                     </div>
                 </div>
             </form>
         </div>
         }
 
-        <div>
-            @Html.ActionLink("Volver a la lista", "Index")
-        </div>
+    <div>
+        <a href="@Url.Action("Index")">
+            <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+        </a>
+    </div>
 
         @section Scripts {
             @Scripts.Render("~/bundles/jqueryval")
