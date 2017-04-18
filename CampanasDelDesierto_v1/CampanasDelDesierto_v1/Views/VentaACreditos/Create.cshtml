@@ -94,7 +94,7 @@
                 antiForgeryToken
             );
 
-            $("#cantidadMaterial").change(function () {
+            $("#cantidadMaterial").keyup(function () {
                 cantidad = $(this).val();
                 actualizarMontoTotal();
             })

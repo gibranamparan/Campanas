@@ -3494,7 +3494,7 @@ Css pesonalisado
 	}
 
 		#main > .inner {
-			padding: 0 6em 0.1em 6em ;
+            padding: 0px 6em 0.1em 9em;
             /*padding: 0 4em 0.1em 4em;*/
 			margin: 0 auto;
 			/*max-width: 110em;*/

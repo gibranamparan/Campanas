@@ -45,10 +45,7 @@
                     @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                 </td>
                 <td>
-                    @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                    {
-                        @(((PrestamoYAbonoCapital)item).proveedor)
-                    }
+                     @item.conceptoProveedor
                 </td>
                 <td class='@(item.balance<0?"montoNegativo":"")'>
                     @Html.DisplayFor(modelItem => item.balance)

@@ -149,5 +149,28 @@ namespace CampanasDelDesierto_v1.Models
 
             return m;
         }
+
+
+        public VMTipoProducto[] getListaProductos()
+        {
+            VMTipoProducto[] opciones = new VMTipoProducto[]{
+                new VMTipoProducto(this.precioProducto1, this.tipoProducto1),
+                new VMTipoProducto(this.precioProducto2, this.tipoProducto2),
+                new VMTipoProducto(this.precioProducto3, this.tipoProducto3),
+                new VMTipoProducto(this.precioProductoOtro, this.tipoProductoOtro),
+            };
+            return opciones;
+        }
+
+        public class VMTipoProducto
+        {
+            public decimal Value { get; set;}
+            public string Text { get; set; }
+            public VMTipoProducto() { }
+            public VMTipoProducto(decimal Value, string Text) {
+                this.Value = Value;
+                this.Text = Text;
+            }
+        }
     }
 }

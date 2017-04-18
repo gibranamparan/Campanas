@@ -47,7 +47,24 @@ namespace CampanasDelDesierto_v1.Models
                     return "";
             }
         }
-        
+
+        [Display(Name = "Tipo")]
+        public string conceptoProveedor
+        {
+            get
+            {
+                TypeOfMovements tom = this.getTypeOfMovement();
+                if (tom == TypeOfMovements.CAPITAL)
+                    return ((PrestamoYAbonoCapital)this).proveedor;
+                else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
+                    return ((PagoPorProducto)this).tipoProducto;
+                else if (tom == TypeOfMovements.VENTA_A_CREDITO)
+                    return ((VentaACredito)this).Producto.nombreProducto;
+                else
+                    return "";
+            }
+        }
+
         public enum TypeOfMovements
         {
             NONE,

@@ -11,13 +11,13 @@ namespace CampanasDelDesierto_v1.Models
     /// </summary>
     public class PagoPorProducto : MovimientoFinanciero
     {
-        [Display(Name = "Cantidad de cosecha")]
+        [Display(Name = "Toneladas")]
         public double cantidadProducto { get; set; }
 
         [Display(Name = "Numero de la semana")]
         public int numeroSemana { get; set; }
 
-        [Display(Name = "Cheque ")]
+        [Display(Name = "Cheque / Folio")]
         public string cheque { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",

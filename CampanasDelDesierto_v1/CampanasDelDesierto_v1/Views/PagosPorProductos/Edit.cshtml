@@ -3,10 +3,17 @@
 @model CampanasDelDesierto_v1.Models.PagoPorProducto
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Productor productor = ViewBag.productor;
+    Productor.VMTipoProducto[] tipoProductos = productor.getListaProductos();
+    Productor.VMTipoProducto productoSeleccionado = tipoProductos
+        .SingleOrDefault(prod => prod.Text == Model.tipoProducto);
+
+    SelectList listaDeSeleccion = new SelectList(tipoProductos, "Value", "Text", productoSeleccionado);
+
+    double precioRegistrado = (double)Model.montoMovimiento / Model.cantidadProducto;
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor })">
@@ -34,34 +41,10 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row">
             <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.montoMovimiento, new
-               {
-                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
-               })
-                    @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.cantidadProducto, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.cantidadProducto, new
-               {
-                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
-               })
-                    @Html.ValidationMessageFor(model => model.cantidadProducto, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group col-md-6">
@@ -91,17 +74,6 @@
                     @Html.ValidationMessageFor(model => model.abonoAnticipo, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.tipoProducto, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.tipoProducto, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.tipoProducto, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.garantiaLimpieza, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -114,9 +86,66 @@
             </div>
         </div>
 
+        <fieldset class="form-group">
+            <legend>Cálculo de monto total</legend>
+            <div class="alert alert-info">
+                Precio registrado por tonelada: 
+                <strong>@(String.Format("{0:C}", precioRegistrado))</strong>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.tipoProducto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="hidden" name="tipoProducto" value="@productoSeleccionado.Text" />
+                        <select name="tipoProducto" id="tipoProducto" class = "form-control">
+                            @foreach(var prod in tipoProductos)
+                            {
+                                <option value="@prod.Value"
+                                        @(prod.Text==Model.tipoProducto?"selected":"")>@prod.Text</option>
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.tipoProducto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.cantidadProducto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.cantidadProducto, new
+                   {
+                       htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+                   })
+                        @Html.ValidationMessageFor(model => model.cantidadProducto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label col-md-2">Precio por Ton.</label>
+                    <div class="col-md-10">
+                        <input id="precioPorTon" value="@String.Format("{0:C}",precioRegistrado)" class="form-control"
+                               data-mask="###0.00" data-mask-reverse="true" />
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.montoMovimiento, new
+                   {
+                       htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+                   })
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+
         <div class="form-group">
             <div class="col-md-10">
-                <button type="submit" class="btn btn-success">Editar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
             </div>
         </div>
     </div>
@@ -125,4 +154,37 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var cantidad = @Model.cantidadProducto;
+        var precioPorTon = @productoSeleccionado.Value;
+        $("#tipoProducto").change(function () {
+            precioPorTon = $(this).val();
+            $("#precioPorTon").val($(this).val());
+            $("input[name='tipoProducto']").val($(this).find(":selected").text())
+            recalcularMontoTotal();
+        })
+
+        $("#precioPorTon").keyup(function () {
+            if (!$(this).val()) {
+                precioPorTon = 0;
+            } else {
+                precioPorTon = $(this).val();
+            }
+            recalcularMontoTotal();
+        })
+
+        $("#cantidadProducto").keyup(function () {
+            if (!$(this).val()) {
+                cantidad = 0;
+            } else {
+                cantidad = $(this).val();
+            }
+            recalcularMontoTotal();
+        })
+
+        function recalcularMontoTotal() {
+            montoTotal = cantidad * precioPorTon*100;
+            $("#montoMovimiento").val(montoTotal).trigger('input');
+        }
+    </script>
 }
