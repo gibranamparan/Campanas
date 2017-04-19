@@ -117,3 +117,9 @@ textarea {
  td.montoNegativo{
      color:red;
  }
+
+ /*Varios*/
+ .searchPanel{
+     margin-bottom: .5em;
+     margin-top: .5em;
+ }

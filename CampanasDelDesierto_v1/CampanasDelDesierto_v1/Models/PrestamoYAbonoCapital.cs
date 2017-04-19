@@ -8,12 +8,6 @@ namespace CampanasDelDesierto_v1.Models
 {
     public class PrestamoYAbonoCapital:MovimientoFinanciero
     {
-        //public int MesesAPagar { get; set; }
-        //[DisplayFormat(DataFormatString = "{0: dd/MM/yyyy}",
-        // ApplyFormatInEditMode = true)]
-        //[DataType(DataType.Date)]
-        //public DateTime fechaDePrestamo { get; set; }
-        // public int rate { get; set; }
         [Display(Name = "Cheque/Folio")]
         public string cheque { get; set; }
         [Display(Name = "Concepto")]
@@ -28,6 +22,7 @@ namespace CampanasDelDesierto_v1.Models
         [DataType(DataType.Date)]
         [Display(Name = "Fecha a pagar")]
         public DateTime fechaPagar { get; set; }
+
         [Display(Name = "Proveedor")]
         public string proveedor { get; set; }
 

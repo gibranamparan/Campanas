@@ -32,5 +32,6 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [Display(Name = "Pago de garantia de la limpieza")]
         public decimal garantiaLimpieza { get; set; }
+        
     }
 }

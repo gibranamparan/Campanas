@@ -22,18 +22,30 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Productores/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? anioCosecha)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Productor productor = db.Productores.Find(id);
-            Productor productor = db.Productores.Include("MovimientosFinancieros").Single(pro=>pro.idProductor == id);
+
+            Productor productor = db.Productores.Find(id);
             if (productor == null)
             {
                 return HttpNotFound();
             }
+
+            if (anioCosecha == null || anioCosecha.Value == 0)
+                anioCosecha = DateTime.Now.Year;
+
+            ViewBag.anioCosecha = anioCosecha;
+
+            //Se selecciona los movimientos dentro del periodo de tiempo que corresponde a una cosecha
+            productor.MovimientosFinancieros = productor.MovimientosFinancieros
+                .Where(mov => mov.fechaMovimiento.Year == anioCosecha 
+                    || mov.fechaMovimiento.Year == anioCosecha-1)
+                .ToList().Where(mov=>mov.anioCosecha == anioCosecha).ToList();
+
             return View(productor);
         }
 

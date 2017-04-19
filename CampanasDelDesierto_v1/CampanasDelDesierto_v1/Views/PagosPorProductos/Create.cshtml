@@ -3,7 +3,7 @@
 @model CampanasDelDesierto_v1.Models.PagoPorProducto
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Cosecha";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
@@ -16,6 +16,8 @@
     Model.numeroSemana = random.Next(1, 9);
     Model.abonoAnticipo = random.Next(1, 10) * 50;
     Model.garantiaLimpieza = random.Next(1, 10) * 50;
+    Model.cantidadProducto = 1;
+    Model.montoMovimiento = (decimal)Model.cantidadProducto * primerProducto.Value;
 
 
     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

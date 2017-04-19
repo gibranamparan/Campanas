@@ -3,13 +3,27 @@
 
 @{ 
     var movimientos = Model.MovimientosFinancieros.OrderBy(mov => mov.fechaMovimiento).ToList();
+    int anioCosecha = ViewBag.anioCosecha;
 }
-
-<p>
-    @Html.ActionLink("Anticipos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Registro de Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor }, new { @class = "btn btn-primary" })
-</p>
+<div class="row searchPanel">
+    <div class="col-md-6">
+        @Html.ActionLink("Anticipos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Registro de Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
+    </div>
+    <div class="col-md-6">
+        @using (Html.BeginForm())
+        {
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label for="anioCosecha">Periodo de Cosecha:</label>
+                    <input type="number" value="@anioCosecha" id="anioCosecha" name="anioCosecha" class="form-control" />
+                    <button class="btn btn-info">Buscar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 @if (Model != null && Model.MovimientosFinancieros.Count() > 0)
 {
     <table class="table">
@@ -80,6 +94,6 @@
 else
 {
     <div class="alert alert-warning">
-        <strong>No existen</strong> movimientos financieros para este productor.
+        <strong>No existen</strong> movimientos financieros en este periodo para este productor.
     </div>
 }

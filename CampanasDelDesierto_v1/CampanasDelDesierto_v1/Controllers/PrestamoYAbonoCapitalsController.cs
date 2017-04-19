@@ -39,7 +39,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PrestamoYAbonoCapitals/Create
-        public ActionResult Create(int? id)
+        public ActionResult Create(int? id, int? anioCosecha)
         {
             if (id == null)
             {
@@ -52,7 +52,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             PrestamoYAbonoCapital mov = prepararVistaCrear(productor);
-
+            mov.introducirMovimientoEnPeriodo(anioCosecha);
             return View(mov);
         }
 
@@ -121,7 +121,8 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db);
 
-                    return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
+                    return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
+                        anioCosecha = prestamoYAbonoCapital.anioCosecha });
                 }
             }
 
@@ -171,7 +172,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
                 }
-                return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
+                return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor, anioCosecha = prestamoYAbonoCapital.anioCosecha });
             }
 
             prepararVistaEditar(db.Productores.Find(prestamoYAbonoCapital.idProductor), prestamoYAbonoCapital);

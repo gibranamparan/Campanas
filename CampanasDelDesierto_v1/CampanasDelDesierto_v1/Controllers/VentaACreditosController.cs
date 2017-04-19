@@ -39,7 +39,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: VentaACreditos/Create
-        public ActionResult Create(int? id)
+        public ActionResult Create(int? id, int? anioCosecha)
         {
             if (id == null)
             {
@@ -51,6 +51,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             VentaACredito mov = prepararVistaCrear(productor);
+            mov.introducirMovimientoEnPeriodo(anioCosecha);
+
             return View(mov);
         }
 
@@ -92,7 +94,8 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
 
-                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
+                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor,
+                        anioCosecha = ventaACredito.anioCosecha });
                 }
             }
             VentaACredito mov = prepararVistaCrear(db.Productores.Find(ventaACredito.idProductor));
@@ -144,7 +147,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
 
-                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor });
+                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor, anioCosecha = ventaACredito.anioCosecha });
                 }
             }
 

@@ -31,6 +31,29 @@ namespace CampanasDelDesierto_v1.Models
         public int idProductor { get; set; }
         public virtual Productor Productor { get; set; }
 
+        private int DIA_INICIO_PERIODO = 30;
+        private int DIA_FIN_PERIODO = 30;
+        private int MES_PERIODO = 8;
+
+        public int anioCosecha { get {
+                int anioCosecha = this.fechaMovimiento.Year;
+                if (this.fechaMovimiento > new DateTime(this.fechaMovimiento.Year, 
+                        this.MES_PERIODO, this.DIA_INICIO_PERIODO))
+                    anioCosecha++;
+                return anioCosecha;
+            }
+        }
+
+        public DateTime inicioCosecha
+        {
+            get {return new DateTime(anioCosecha - 1, MES_PERIODO, DIA_INICIO_PERIODO); }
+        }
+
+        public DateTime finCosecha
+        {
+            get {return new DateTime(anioCosecha, MES_PERIODO, DIA_INICIO_PERIODO); }
+        }
+
         [Display(Name = "Tipo")]
         public string nombreDeMovimiento
         {
@@ -59,7 +82,8 @@ namespace CampanasDelDesierto_v1.Models
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
                     return ((PagoPorProducto)this).tipoProducto;
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
-                    return ((VentaACredito)this).Producto.nombreProducto;
+                    return ((VentaACredito)this).cantidadMaterial
+                        +" "+((VentaACredito)this).Producto.nombreProducto;
                 else
                     return "";
             }
@@ -105,6 +129,26 @@ namespace CampanasDelDesierto_v1.Models
             this.fechaMovimiento = this.fechaMovimiento
                 .AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute)
                 .AddSeconds(DateTime.Now.Second);
+        }
+
+        /// <summary>
+        /// Introduce la fecha del movimiento dentro del año de periodo de cosecha indicado, tomando por defecto
+        /// el día y mes de la fecha de registro.
+        /// </summary>
+        /// <param name="anioCosecha">Año que representa un periodo de cosecha</param>
+        internal void introducirMovimientoEnPeriodo(int? anioCosecha)
+        {
+            //Si se determina el periodo de cosecha, se establece por defecto el año de la fecha del movimiento
+            if (anioCosecha == null || anioCosecha == 0)
+                anioCosecha = DateTime.Now.Year;
+
+            //Si la fecha determinada no entra dentro del periodo de cosecha
+            this.fechaMovimiento = new DateTime(anioCosecha.Value,DateTime.Now.Month,DateTime.Now.Day);
+            //Si es mayor al rango de periodo de cosecha
+            if (this.fechaMovimiento > new DateTime(anioCosecha.Value, this.MES_PERIODO, this.DIA_FIN_PERIODO))
+                this.fechaMovimiento = this.fechaMovimiento.AddYears(-1); //Se le resta un año
+            else if ((this.fechaMovimiento < new DateTime(anioCosecha.Value-1, this.MES_PERIODO, this.DIA_FIN_PERIODO)))
+                this.fechaMovimiento = this.fechaMovimiento.AddYears(1); //Se le suma un año
         }
     }
 }

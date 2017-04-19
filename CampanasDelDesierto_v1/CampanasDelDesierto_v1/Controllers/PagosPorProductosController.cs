@@ -38,7 +38,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PagosPorProductos/Create
-        public ActionResult Create(int? id = 0)
+        public ActionResult Create(int? id = 0, int? anioCosecha=0)
         {
             if (id == null)
             {
@@ -51,16 +51,17 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            var mov = prepararVistaCrear(productor);
+            var mov = prepararVistaCrear(productor, anioCosecha.Value);
+
+            mov.introducirMovimientoEnPeriodo(anioCosecha);
 
             return View(mov);
         }
 
-        private PagoPorProducto prepararVistaCrear(Productor productor)
+        private PagoPorProducto prepararVistaCrear(Productor productor, int? anioCosecha)
         {
             ViewBag.productor = productor;
             PagoPorProducto mov = new PagoPorProducto();
-            mov.fechaMovimiento = DateTime.Now;
             mov.idProductor = productor.idProductor;
 
             return mov;
@@ -92,11 +93,12 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
 
-                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor });
+                    return RedirectToAction("Details", "Productores", 
+                        new { id = pagoPorProducto.idProductor, anioCosecha = pagoPorProducto.anioCosecha });
                 }
             }
 
-            var mov = prepararVistaCrear(db.Productores.Find(pagoPorProducto.idProductor));
+            var mov = prepararVistaCrear(db.Productores.Find(pagoPorProducto.idProductor), pagoPorProducto.fechaMovimiento.Year);
 
             return View(mov);
         }
@@ -142,7 +144,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
-                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor });
+                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor, anioCosecha = pagoPorProducto.anioCosecha });
                 }
             }
 
