@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
+using Microsoft.Web.Services3;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -53,6 +55,10 @@ namespace CampanasDelDesierto_v1.Controllers
 
             PrestamoYAbonoCapital mov = prepararVistaCrear(productor);
             mov.introducirMovimientoEnPeriodo(anioCosecha);
+
+            BaxicoWebService bws = new BaxicoWebService("http://www.banxico.org.mx/DgieWSWeb/DgieWS?WSDL");
+            SoapEnvelope returnEnvelope = bws.RequestResponseMethod(new Microsoft.Web.Services3.SoapEnvelope());
+
             return View(mov);
         }
 
