@@ -29,11 +29,17 @@ namespace CampanasDelDesierto_v1.Models
         //public int intereses { get; set; }
         [Display(Name = "Nota")]
         public string nota { get; set; }
-
+        
         public static class TipoMovimientoCapital
         {
             public static readonly string ABONO = "ABONO";
             public static readonly string PRESTAMO = "PRESTAMO";
+        }
+
+        public static class Divisas
+        {
+            public static readonly string MXN = "MXN";
+            public static readonly string USD = "USD";
         }
 
         /// <summary>
@@ -57,6 +63,15 @@ namespace CampanasDelDesierto_v1.Models
             Object[] opciones = new Object[]{
                 new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO, Text="ABONO"},
                 new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO, Text="PRESTAMO"},
+            };
+            return opciones;
+        }
+
+        public static Object[] getDivisasArray()
+        {
+            Object[] opciones = new Object[]{
+                new {Value=PrestamoYAbonoCapital.Divisas.MXN, Text="MXN"},
+                new {Value=PrestamoYAbonoCapital.Divisas.USD, Text="USD"},
             };
             return opciones;
         }

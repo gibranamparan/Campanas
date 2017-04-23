@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -133,6 +135,14 @@ namespace CampanasDelDesierto_v1.Controllers
             
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor });
             //return RedirectToAction("Index");
+        }
+
+        [HttpPost, ValidateHeaderAntiForgeryToken]
+        public JsonResult getCambioDolar()
+        {
+            BaxicoWebService bws = new BaxicoWebService();
+            decimal res = bws.getCambioDolar();
+            return Json(new { tipoCambio = res });
         }
 
         protected override void Dispose(bool disposing)

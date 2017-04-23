@@ -56,8 +56,6 @@ namespace CampanasDelDesierto_v1.Controllers
             PrestamoYAbonoCapital mov = prepararVistaCrear(productor);
             mov.introducirMovimientoEnPeriodo(anioCosecha);
 
-            BaxicoWebService bws = new BaxicoWebService("http://www.banxico.org.mx/DgieWSWeb/DgieWS?WSDL");
-            SoapEnvelope returnEnvelope = bws.RequestResponseMethod(new Microsoft.Web.Services3.SoapEnvelope());
 
             return View(mov);
         }
