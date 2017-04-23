@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idActivo { get; set; }
 
-        [Required]
+        
         [Display(Name ="Nombre del Activo")]
         public string nombreActivo { get; set; }
 
@@ -20,5 +20,10 @@ namespace CampanasDelDesierto_v1.Models
 
         //Un activo tiene una collecion de prestamos
         public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
+
+        //Cada activo pertenece a un inventario
+        
+        public int inventarioID { get; set; }
+        public virtual Inventario Inventario { get; set; }
     }
 }

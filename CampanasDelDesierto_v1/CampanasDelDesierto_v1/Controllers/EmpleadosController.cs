@@ -18,7 +18,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Empleados
         public ActionResult Index()
         {
-            var empleados = db.Empleados.Include(e => e.Sucursal);
+            var empleados = db.Empleados.Include(e => e.Departamento);
             return View(empleados.ToList());
         }
 
@@ -58,7 +58,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.departamentoID);
             return View(empleado);
         }
 
@@ -74,7 +74,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.departamentoID);
             return View(empleado);
         }
 
@@ -91,7 +91,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.departamentoID);
             return View(empleado);
         }
 

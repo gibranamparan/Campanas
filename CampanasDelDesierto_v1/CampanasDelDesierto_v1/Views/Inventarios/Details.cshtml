@@ -1,0 +1,51 @@
+﻿@model CampanasDelDesierto_v1.Models.Inventario
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Inventario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Sucursal.nombreSucursal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sucursal.nombreSucursal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreInventario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombreInventario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.modeloInventario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.modeloInventario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.costo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.costo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.inventarioID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

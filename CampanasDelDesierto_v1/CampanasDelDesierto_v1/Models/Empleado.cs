@@ -11,21 +11,21 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idEmpleado { get; set; }
 
-        [Required]
+        
         [Display(Name = "Nombre del Empleado")]
         public string nombre { get; set; }
 
-        [Required]
+        
         [Display(Name = "Apellido Paterno")]
         public string apellidoPaterno { get; set; }
 
-        [Required]
+       
         [Display(Name = "Apellido Materno")]
         public string apellidoMaterno { get; set; }
 
-        [Display(Name = "Sucursal")]
-        public int idSucursal { get; set; }
-        public virtual Sucursal Sucursal { get; set; }
+        
+        public int departamentoID { get; set; }
+        public virtual Departamento Departamento { get; set; }
 
         public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
     }

@@ -11,14 +11,14 @@ namespace CampanasDelDesierto_v1.Models
         [Key]        
         public int idPrestamoActivo { get; set; }
 
-        [Required]
+        
         [Display(Name = "Fecha de prestamo")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime fechaPrestamoActivo { get; set; }
 
-        [Required]
+        
         [Display(Name = "Fecha de entrega")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]

@@ -33,6 +33,9 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<PrestamoActivo> PrestamoActivos { get; set; }
+        public DbSet<Inventario> Inventarios { get; set; }
+        public DbSet<Departamento> Departamentos { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
