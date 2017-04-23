@@ -30,8 +30,8 @@ namespace CampanasDelDesierto_v1.Migrations
                         idActivo = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.idPrestamoActivo)
-                .ForeignKey("dbo.Activoes", t => t.idActivo, cascadeDelete: true)
-                .ForeignKey("dbo.Empleadoes", t => t.idEmpleado, cascadeDelete: true)
+                .ForeignKey("dbo.Activoes", t => t.idActivo, cascadeDelete: false)
+                .ForeignKey("dbo.Empleadoes", t => t.idEmpleado, cascadeDelete: false)
                 .Index(t => t.idEmpleado)
                 .Index(t => t.idActivo);
             
@@ -47,7 +47,7 @@ namespace CampanasDelDesierto_v1.Migrations
                         idSucursal = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.idEmpleado)
-                .ForeignKey("dbo.Sucursals", t => t.idSucursal, cascadeDelete: true)
+                .ForeignKey("dbo.Sucursals", t => t.idSucursal, cascadeDelete: false)
                 .Index(t => t.idSucursal);
             
             CreateTable(

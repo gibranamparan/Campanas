@@ -1171,11 +1171,6 @@
     <Content Include="Views\Productos\Details.cshtml" />
     <Content Include="Views\Productos\Delete.cshtml" />
     <Content Include="Views\Productos\Create.cshtml" />
-    <Content Include="Views\Activos\Create.cshtml" />
-    <Content Include="Views\Activos\Delete.cshtml" />
-    <Content Include="Views\Activos\Details.cshtml" />
-    <Content Include="Views\Activos\Edit.cshtml" />
-    <Content Include="Views\Activos\Index.cshtml" />
     <Content Include="Views\Empleados\Create.cshtml" />
     <Content Include="Views\Empleados\Delete.cshtml" />
     <Content Include="Views\Empleados\Details.cshtml" />
@@ -1202,6 +1197,11 @@
     <Content Include="Views\Inventarios\Edit.cshtml" />
     <Content Include="Views\Inventarios\Index.cshtml" />
     <None Include="Service References\Banxico\DgieWS.wsdl" />
+    <Content Include="Views\Activos\Create.cshtml" />
+    <Content Include="Views\Activos\Delete.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Activos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1289,7 +1289,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56046</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56046/</IISUrl>
+          <IISUrl>http://localhost:56047/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

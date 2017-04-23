@@ -1,5 +1,4 @@
 ﻿@model CampanasDelDesierto_v1.Models.Activo
-@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Create";
@@ -16,27 +15,34 @@
     <div class="form-horizontal">
         <h4>Activo</h4>
         <hr />
-        <div class="col-md-6">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.nombreActivo, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.nombreActivo, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.nombreActivo, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.estadoActivo, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model=>model.estadoActivo, new SelectList(Producto.getEstadosDeProducto(),"Text","Value"))
-                    @Html.ValidationMessageFor(model => model.estadoActivo, "", new { @class = "text-danger" })
-                </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombreActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.nombreActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombreActivo, "", new { @class = "text-danger" })
             </div>
         </div>
+
         <div class="form-group">
+            @Html.LabelFor(model => model.estadoActivo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <button class="btn btn-primary">Crear</button>
+                @Html.EditorFor(model => model.estadoActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.estadoActivo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.inventarioID, "inventarioID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("inventarioID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.inventarioID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>

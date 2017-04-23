@@ -10,7 +10,6 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = "Admin, Sucursal")]
     public class ActivosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -18,7 +17,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Activos
         public ActionResult Index()
         {
-            return View(db.Activos.ToList());
+            var activos = db.Activos.Include(a => a.Inventario);
+            return View(activos.ToList());
         }
 
         // GET: Activos/Details/5
@@ -39,15 +39,16 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Activos/Create
         public ActionResult Create()
         {
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
             return View();
         }
 
         // POST: Activos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idActivo,nombreActivo,estadoActivo")] Activo activo)
+        public ActionResult Create([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
@@ -56,6 +57,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 
@@ -71,15 +73,16 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 
         // POST: Activos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo")] Activo activo)
+        public ActionResult Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
@@ -87,6 +90,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 

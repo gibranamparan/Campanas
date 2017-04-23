@@ -40,7 +40,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Empleados/Create
         public ActionResult Create()
         {
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+            ViewBag.idDepartamento = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
             return View();
         }
 
@@ -49,7 +49,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idEmpleado,nombre,apellidoPaterno,apellidoMaterno,idSucursal")] Empleado empleado)
+        public ActionResult Create([Bind(Include = "idEmpleado,nombre,apellidoPaterno,apellidoMaterno,departamentoID")] Empleado empleado)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", empleado.departamentoID);
+            ViewBag.idDepartamento = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
             return View(empleado);
         }
 
