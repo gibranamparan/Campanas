@@ -58,7 +58,7 @@
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(mode=>Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray()), new { @class = "form-control" })
+                    @Html.DropDownListFor(mode=>Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(),"Text","Value"), new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -150,5 +150,10 @@
                 $("#formGroupProveedor").slideDown();
             }
         })
+
+        function setPrecioDolar() {
+
+            $("#precioDelDolar").val()
+        }
     </script>
 }
