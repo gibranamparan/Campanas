@@ -37,7 +37,7 @@ jQuery.postJSON = function (url, data, dataType, success, fail, always, antiForg
         data: data,
         success: success,
         fail: fail,
-        always: always
+        complete: always
     };
     if (antiForgeryToken) {
         ajax.headers = {

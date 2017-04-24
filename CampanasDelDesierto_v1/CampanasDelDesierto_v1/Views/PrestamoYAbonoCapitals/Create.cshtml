@@ -11,7 +11,7 @@
 
     /*Just for test*/
     Random random = new Random();
-    Model.montoMovimiento = random.Next(1,10)*50;
+    decimal montoMovimiento = random.Next(1,10)*50*100;
 
     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     Model.cheque = new string(Enumerable.Repeat(chars, 5)
@@ -41,38 +41,59 @@
     <div class="form-horizontal">
         <h4>Nuevo Movimiento de Capital</h4>
         <hr />
-      
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.montoMovimiento, new
                {
-                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+                   htmlAttributes = new { @class = "form-control", disabled= "disabled",
+                       data_mask = "###0.00", data_mask_reverse = "true"
+                   }
                })
                     @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(mode=>Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(),"Text","Value"), new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                <div id="divPrecioDelDolar" class="col-md-8">
                     @Html.EditorFor(model => model.precioDelDolar, new
-               {
-                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
-               })
+                   {
+                       htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+                   })
                     @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
+                </div>
+                <a class="satLogo" target="_blank"
+                   href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
+                    <img src="/images/sat_logo.png" />
+                </a>
+                <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">Monto (Pesos)</label>
+                <div class="col-md-10">
+                    <input id="montoPesos" class="form-control" value="@montoMovimiento"
+                           data-mask="###0.00" data-mask-reverse="true" />
                 </div>
             </div>
 
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -96,9 +117,6 @@
                         new { @class = "form-control" })
                 </div>
             </div>
-
-        </div>
-        <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -106,6 +124,9 @@
                     @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+        </div>
+        <div class="row">
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -143,17 +164,32 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        $("#concepto").change(function () {
-            if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
-                $("#formGroupProveedor").slideUp();
-            } else {
-                $("#formGroupProveedor").slideDown();
+        $().ready(function () { 
+            $("#concepto").change(function () {
+                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
+                    $("#formGroupProveedor").slideUp();
+                } else {
+                    $("#formGroupProveedor").slideDown();
+                }
+            })
+
+            function setPrecioDolar() {
+                var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+                $("#loadingImg").toggleClass('hidden');
+                jQuery.postJSON("/MovimientoFinancieros/getCambioDolar", 0, 'JSON',
+                    function (res) {
+                        $("#precioDelDolar").val(res.precioDolar)
+                    },
+                    function(err){},
+                    function () {
+                        $("#loadingImg").toggleClass('hidden');
+                        $('#divPrecioDelDolar').removeClass('col-md-8');
+                        $('#divPrecioDelDolar').addClass('col-md-9');
+                    },
+                antiForgeryToken)
             }
+            setPrecioDolar();
         })
 
-        function setPrecioDolar() {
-
-            $("#precioDelDolar").val()
-        }
     </script>
 }
