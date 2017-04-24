@@ -29,7 +29,13 @@ namespace CampanasDelDesierto_v1.Models
         //public int intereses { get; set; }
         [Display(Name = "Nota")]
         public string nota { get; set; }
-        
+
+        [Display(Name = "Precio del dólar")]
+        public decimal precioDelDolar { get; set; }
+
+        [Display(Name = "Divisa")]
+        public string divisa { get; set; }
+
         public static class TipoMovimientoCapital
         {
             public static readonly string ABONO = "ABONO";

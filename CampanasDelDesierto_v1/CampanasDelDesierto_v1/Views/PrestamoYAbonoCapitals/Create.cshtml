@@ -56,6 +56,24 @@
             </div>
 
             <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(mode=>Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray()), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioDelDolar, new
+               {
+                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+               })
+                    @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
