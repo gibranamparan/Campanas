@@ -54,9 +54,15 @@
             @Html.DisplayFor(modelItem => item.balance)
         </td>
         <td>
-            @Html.ActionLink(" ", "Edit", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-pencil" }) |
-            @Html.ActionLink(" ", "Details", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-eye-open" })|
-            @Html.ActionLink(" ", "Delete", new { id=item.idMovimiento }, new { @class = "glyphicon glyphicon-trash" })
+            <a href="@Url.Action("Edit","VentaACreditos",new { id = item.idMovimiento })">
+                <i class="glyphicon glyphicon-pencil"></i> Editar
+            </a><br />
+            <a href="@Url.Action("Details","VentaACreditos",new { id = item.idMovimiento })">
+                <i class="glyphicon glyphicon-usd"></i> Movimientos
+            </a><br />
+            <a href="@Url.Action("Delete","VentaACreditos",new { id = item.idMovimiento })">
+                <i class="glyphicon glyphicon-remove"></i> Eliminar
+            </a>
         </td>
     </tr>
 }
