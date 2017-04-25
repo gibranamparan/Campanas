@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace CampanasDelDesierto_v1.Models
         public string nota { get; set; }
 
         [Display(Name = "Precio del dólar")]
+        [DecimalPrecision(18, 4)]
         public decimal precioDelDolar { get; set; }
 
         [Display(Name = "Divisa")]
@@ -60,7 +62,7 @@ namespace CampanasDelDesierto_v1.Models
                 this.montoMovimiento *= -1;
             else if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
                 this.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-
+            
             base.ajustarMovimiento();
         }
 

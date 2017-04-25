@@ -3,10 +3,13 @@
 @model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Productor productor = ViewBag.productor;
+
+    decimal montoMovimientoPesos = Model.precioDelDolar * Model.montoMovimiento;
+    montoMovimientoPesos = montoMovimientoPesos < 0 ? montoMovimientoPesos * -1 : montoMovimientoPesos;
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor })">
@@ -45,6 +48,46 @@
             </div>
 
             <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div id="conversionDivisa" class="row" style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?"block":"none")">
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">Monto (Pesos)</label>
+                <div class="col-md-10">
+                    <input id="montoPesos" class="form-control" value="@montoMovimientoPesos"
+                           data-mask="###0.00" data-mask-reverse="true" />
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div id="divPrecioDelDolar" class="col-md-8">
+                    @Html.EditorFor(model => model.precioDelDolar, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask_reverse = "true",
+                       data_mask = "###0.0000"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
+                </div>
+                <a class="satLogo" target="_blank"
+                   href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
+                    <img src="/images/sat_logo.png" />
+                </a>
+                <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
@@ -68,8 +111,6 @@
                 </div>
             </div>
 
-        </div>
-        <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -77,7 +118,9 @@
                     @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -113,13 +156,70 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $("#concepto").change(function () {
-            if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
-                $("#formGroupProveedor").slideUp();
-            } else {
-                $("#formGroupProveedor").slideDown();
+    
+<script>
+    $().ready(function () {
+        var precioDolar = $('#precioDelDolar').val();
+            
+            recalcularMontoPesos();
+
+            $("#concepto").change(function () {
+                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
+                    $("#formGroupProveedor").slideUp();
+                } else {
+                    $("#formGroupProveedor").slideDown();
+                }
+            })
+
+            $("#montoPesos").keyup(function () {
+                recalcularMontoDolares();
+            })
+
+            $("#montoMovimiento").keyup(function () {
+                recalcularMontoPesos();
+            })
+
+            $('#divisa').change(function () {
+                if($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN'){
+                    $('#conversionDivisa').slideDown();
+                    $("#montoMovimiento").prop('disabled', true);
+                } else {
+                    $('#conversionDivisa').slideUp();
+                    $("#montoMovimiento").prop('disabled', false);
+                }
+            })
+
+            function setPrecioDolar() {
+                var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+                $("#loadingImg").toggleClass('hidden');
+                getTipoCambioAsync(
+                    function (res) {
+                        $("#precioDelDolar").val(res.precioDolar).trigger('input');;
+                        precioDolar = res.precioDolar;
+                    },
+                    function (err) { },
+                    function () {
+                        $("#loadingImg").toggleClass('hidden');
+                        $('#divPrecioDelDolar').removeClass('col-md-8');
+                        $('#divPrecioDelDolar').addClass('col-md-9');
+                    }, antiForgeryToken)
             }
+
+            function recalcularMontoDolares() {
+                var montoPesos = $("#montoPesos").val();
+                $('#montoMovimiento')
+                    .val(Math.trunc((montoPesos / precioDolar) * 100) / 100)
+                    .trigger('input');
+            }
+
+            function recalcularMontoPesos() {
+                var montoDolares = $("#montoMovimiento").val();
+                $('#montoPesos')
+                    .val(Math.trunc((montoDolares * precioDolar) * 100) / 100)
+                    .trigger('input');
+            }
+
         })
-    </script>
+
+</script>
 }

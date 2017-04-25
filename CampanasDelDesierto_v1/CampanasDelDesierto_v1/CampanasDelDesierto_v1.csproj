@@ -244,6 +244,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HerramientasGenerales\BaxicoWebService.cs" />
+    <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
@@ -324,6 +325,10 @@
     <Compile Include="Migrations\201704240508106_divisa_PrestamosYAbonos.cs" />
     <Compile Include="Migrations\201704240508106_divisa_PrestamosYAbonos.Designer.cs">
       <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs" />
+    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.Designer.cs">
+      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1282,6 +1287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704240508106_divisa_PrestamosYAbonos.resx">
       <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.resx">
+      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,6 @@
 @model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 
 @{
-
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
@@ -11,7 +10,7 @@
 
     /*Just for test*/
     Random random = new Random();
-    decimal montoMovimiento = random.Next(1,10)*50*100;
+   // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
 
     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     Model.cheque = new string(Enumerable.Repeat(chars, 5)
@@ -39,7 +38,7 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model=> model.idProductor)
     <div class="form-horizontal">
-        <h4>Nuevo Movimiento de Capital</h4>
+        <h4>Nuevo Anticipo o Abono</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -49,38 +48,13 @@
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.montoMovimiento, new
                {
-                   htmlAttributes = new { @class = "form-control", disabled= "disabled",
-                       data_mask = "###0.00", data_mask_reverse = "true"
+                   htmlAttributes = new { @class = "form-control"/*, disabled= "disabled"*/,
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true",
+                       disabled= "disabled"
                    }
                })
                     @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div id="divPrecioDelDolar" class="col-md-8">
-                    @Html.EditorFor(model => model.precioDelDolar, new
-                   {
-                       htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
-                   })
-                    @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
-                </div>
-                <a class="satLogo" target="_blank"
-                   href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
-                    <img src="/images/sat_logo.png" />
-                </a>
-                <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label class="control-label col-md-2">Monto (Pesos)</label>
-                <div class="col-md-10">
-                    <input id="montoPesos" class="form-control" value="@montoMovimiento"
-                           data-mask="###0.00" data-mask-reverse="true" />
                 </div>
             </div>
 
@@ -90,6 +64,36 @@
                     @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
                 </div>
+            </div>
+        </div>
+
+        <div id="conversionDivisa" class="row">
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">Monto (Pesos)</label>
+                <div class="col-md-10">
+                    <input id="montoPesos" class="form-control" @*value="montoMovimientoPesos"*@
+                           data-mask="###0.00" data-mask-reverse="true" />
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div id="divPrecioDelDolar" class="col-md-8">
+                    @Html.EditorFor(model => model.precioDelDolar, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask_reverse = "true",
+                       data_mask = "###0.0000"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
+                </div>
+                <a class="satLogo" target="_blank"
+                   href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
+                    <img src="/images/sat_logo.png" />
+                </a>
+                <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
             </div>
         </div>
 
@@ -164,7 +168,9 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        $().ready(function () { 
+        $().ready(function () {
+            var precioDolar = 0;
+
             $("#concepto").change(function () {
                 if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
                     $("#formGroupProveedor").slideUp();
@@ -173,21 +179,55 @@
                 }
             })
 
+            $("#montoPesos").keyup(function () {
+                recalcularMontoDolares();
+            })
+
+            $("#montoMovimiento").keyup(function () {
+                recalcularMontoPesos();
+            })
+
+            $('#divisa').change(function () {
+                if($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN'){
+                    $('#conversionDivisa').slideDown();
+                    $("#montoMovimiento").prop('disabled', true);
+                } else {
+                    $('#conversionDivisa').slideUp();
+                    $("#montoMovimiento").prop('disabled', false);
+                }
+            })
+
             function setPrecioDolar() {
                 var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
                 $("#loadingImg").toggleClass('hidden');
-                jQuery.postJSON("/MovimientoFinancieros/getCambioDolar", 0, 'JSON',
+                getTipoCambioAsync(
                     function (res) {
-                        $("#precioDelDolar").val(res.precioDolar)
+                        $("#precioDelDolar").val(res.precioDolar).trigger('input');;
+                        precioDolar = res.precioDolar;
+                        recalcularMontoDolares();
                     },
-                    function(err){},
+                    function (err) { },
                     function () {
                         $("#loadingImg").toggleClass('hidden');
                         $('#divPrecioDelDolar').removeClass('col-md-8');
                         $('#divPrecioDelDolar').addClass('col-md-9');
-                    },
-                antiForgeryToken)
+                    }, antiForgeryToken)
             }
+
+            function recalcularMontoDolares() {
+                var montoPesos = $("#montoPesos").val();
+                $('#montoMovimiento')
+                    .val(Math.trunc((montoPesos / precioDolar) * 100) / 100)
+                    .trigger('input');
+            }
+
+            function recalcularMontoPesos() {
+                var montoDolares = $("#montoMovimiento").val();
+                $('#montoPesos')
+                    .val(Math.trunc((montoDolares * precioDolar) * 100) / 100)
+                    .trigger('input');
+            }
+
             setPrecioDolar();
         })
 
