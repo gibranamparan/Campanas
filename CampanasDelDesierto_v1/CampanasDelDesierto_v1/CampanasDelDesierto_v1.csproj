@@ -244,6 +244,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HerramientasGenerales\BaxicoWebService.cs" />
+    <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
@@ -325,6 +326,10 @@
     <Compile Include="Migrations\201704240508106_divisa_PrestamosYAbonos.Designer.cs">
       <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs" />
+    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.Designer.cs">
+      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -368,6 +373,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\loading.gif" />
     <Content Include="images\LogoCamp.png" />
     <Content Include="images\pic01.jpg" />
     <Content Include="images\pic02.jpg" />
@@ -412,6 +418,7 @@
     <Content Include="assets\sass\libs\_skel.scss" />
     <Content Include="assets\sass\libs\_vars.scss" />
     <Content Include="assets\sass\main.scss" />
+    <Content Include="images\sat_logo.png" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -1280,6 +1287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704240508106_divisa_PrestamosYAbonos.resx">
       <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.resx">
+      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
