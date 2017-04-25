@@ -42,8 +42,8 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Crear" class="btn btn-default" />
+                    <div class="col-md-10">
+                        <button class="btn btn-primary">Crear</button>
                     </div>
                 </div>
            </form>
@@ -51,8 +51,11 @@
 }
 
 <div>
-    @Html.ActionLink("Volver a la lista", "Index")
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+    </a>
 </div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

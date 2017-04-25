@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Tabla de Sucursales</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear Nuevo", "Create")
 </p>
 <table class="table">
     <tr>
@@ -30,9 +30,16 @@
             @Html.DisplayFor(modelItem => item.domicilioSucursal)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idSucursal }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idSucursal }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idSucursal })
+            <a href="@Url.Action("Edit","Sucursales",new { id = item.idSucursal })">
+                <i class="glyphicon glyphicon-pencil"></i> Editar
+            </a><br />
+            <a href="@Url.Action("Details","Sucursales",new { id = item.idSucursal })">
+                <i class="glyphicon glyphicon-usd"></i> Movimientos
+            </a><br />
+            <a href="@Url.Action("Delete","Sucursales",new { id = item.idSucursal })">
+                <i class="glyphicon glyphicon-remove"></i> Eliminar
+            </a>
+
         </td>
     </tr>
 }

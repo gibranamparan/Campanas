@@ -42,7 +42,7 @@
 @*Panel para detalles de registro de cosecha*@
 @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO) {
     <div>
-        @(((PagoPorProducto)Model).)
+        @(((PagoPorProducto)Model).nombreDeMovimiento)
     </div>
 }
 else if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
