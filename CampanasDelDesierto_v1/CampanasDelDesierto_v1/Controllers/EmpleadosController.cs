@@ -49,7 +49,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idEmpleado,nombre,apellidoPaterno,apellidoMaterno,departamentoID")] Empleado empleado)
+        public ActionResult Create(Empleado empleado)
         {
             if (ModelState.IsValid)
             {
