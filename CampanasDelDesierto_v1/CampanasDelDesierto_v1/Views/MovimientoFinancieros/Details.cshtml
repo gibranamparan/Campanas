@@ -1,4 +1,5 @@
 ﻿@model CampanasDelDesierto_v1.Models.MovimientoFinanciero
+@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Details";
@@ -37,7 +38,24 @@
 
     </dl>
 </div>
+
+@*Panel para detalles de registro de cosecha*@
+@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO) {
+    <div>
+        @(((PagoPorProducto)Model).)
+    </div>
+}
+else if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+{
+    @*Panel para detalles movimentos de capital*@
+    <div></div>
+}
+@*Panel para detalles para ventas a credito*@
+<div></div>
 <p>
     @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
-    @Html.ActionLink("Volver a la lista", "Index")
+    
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+    </a>
 </p>
