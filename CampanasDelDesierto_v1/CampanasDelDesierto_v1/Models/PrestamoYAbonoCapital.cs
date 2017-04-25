@@ -22,7 +22,7 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha a pagar")]
-        public DateTime fechaPagar { get; set; }
+        public DateTime? fechaPagar { get; set; }
 
         [Display(Name = "Proveedor")]
         public string proveedor { get; set; }
@@ -62,9 +62,11 @@ namespace CampanasDelDesierto_v1.Models
             //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
             if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                 this.montoMovimiento *= -1;
-            else if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+            else if (this.concepto == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) { 
                 this.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-            
+                this.fechaPagar = null;
+            }
+
             base.ajustarMovimiento();
         }
 
