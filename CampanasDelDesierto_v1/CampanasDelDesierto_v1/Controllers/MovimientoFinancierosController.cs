@@ -141,8 +141,8 @@ namespace CampanasDelDesierto_v1.Controllers
         public JsonResult getCambioDolar()
         {
             BaxicoWebService bws = new BaxicoWebService();
-            decimal res = bws.getCambioDolar();
-            return Json(new { tipoCambio = res });
+            decimal precioDolar = bws.getCambioDolar();
+            return Json(new { precioDolar = precioDolar });
         }
 
         protected override void Dispose(bool disposing)

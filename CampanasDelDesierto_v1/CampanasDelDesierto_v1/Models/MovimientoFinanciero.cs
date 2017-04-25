@@ -13,7 +13,7 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Monto")]
+        [Display(Name = "Monto (dólares)")]
         public decimal montoMovimiento { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",
