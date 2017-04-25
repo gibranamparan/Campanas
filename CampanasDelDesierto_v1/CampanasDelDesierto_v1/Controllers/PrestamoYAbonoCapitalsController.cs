@@ -77,7 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
             //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
             mov.fechaPagar = new DateTime(mov.fechaMovimiento.Year,8,15);
             if (mov.fechaMovimiento > mov.fechaPagar)
-                mov.fechaPagar = mov.fechaPagar.AddYears(1);
+                mov.fechaPagar = mov.fechaPagar.Value.AddYears(1);
 
             mov.idProductor = productor.idProductor;
 
@@ -104,7 +104,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota")]
+            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa")]
             PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)

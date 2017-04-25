@@ -49,10 +49,10 @@
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.montoMovimiento, new
                {
-                   htmlAttributes = new { @class = "form-control"/*, disabled= "disabled"*/,
+                   htmlAttributes = new { @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       disabled= "disabled"
+                       @readonly= "readonly"
                    }
                })
                     @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
@@ -80,14 +80,14 @@
                 @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div id="divPrecioDelDolar" class="col-md-8">
                     @Html.EditorFor(model => model.precioDelDolar, new
-               {
-                   htmlAttributes = new
                    {
-                       @class = "form-control",
-                       data_mask_reverse = "true",
-                       data_mask = "###0.0000"
-                   }
-               })
+                       htmlAttributes = new
+                       {
+                           @class = "form-control",
+                           data_mask_reverse = "true",
+                           data_mask = "###0.0000"
+                       }
+                   })
                     @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
                 </div>
                 <a class="satLogo" target="_blank"
@@ -106,11 +106,6 @@
                     @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-        </div>
-            
-            <div class="row">
-
                 <div class="form-group col-md-6">
                     @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -136,7 +131,6 @@
 
         </div>
         <div id="formGroupDeuda" class="row" style="display:none">
-
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -145,7 +139,7 @@
                 </div>
             </div>
 
-            <div id="formGroupProveedor" class="form-group col-md-6" style="display:none">
+            <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.DropDownList("proveedor", null, htmlAttributes: new { @class = "form-control" })
@@ -161,13 +155,12 @@
             </div>
         </div>
 
-            <div class="form-group">
-                <div class="col-md-10">
-                    <button type="submit" class="btn btn-success">Crear</button>
-                </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <button type="submit" class="btn btn-success">Crear</button>
             </div>
         </div>
-        </div>
+    </div>
 }
 <div>
     <a href="@Url.Action("Index")">
@@ -201,10 +194,10 @@
             $('#divisa').change(function () {
                 if($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN'){
                     $('#conversionDivisa').slideDown();
-                    $("#montoMovimiento").prop('disabled', true);
+                    $("#montoMovimiento").prop('readonly', true);
                 } else {
                     $('#conversionDivisa').slideUp();
-                    $("#montoMovimiento").prop('disabled', false);
+                    $("#montoMovimiento").prop('readonly', false);
                 }
             })
 
@@ -213,7 +206,8 @@
                 $("#loadingImg").toggleClass('hidden');
                 getTipoCambioAsync(
                     function (res) {
-                        $("#precioDelDolar").val(res.precioDolar).trigger('input');;
+                        $("#precioDelDolar").val(res.precioDolar).trigger('input');
+                        $('#precioDelDolar').attr('value', res.precioDolar);
                         precioDolar = res.precioDolar;
                         recalcularMontoDolares();
                     },
@@ -230,8 +224,8 @@
                 var precioDolar = $("#precioDelDolar").val()
                 var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
                 $('#montoMovimiento')
-                    .val(numeral(num).format('0.00'))
-                    .trigger('input');
+                    .val(numeral(num).format('0.00')).trigger('input');
+                $('#montoMovimiento').attr('value',num);
             }
 
             function recalcularMontoPesos() {
@@ -239,6 +233,7 @@
                 var precioDolar = $("#precioDelDolar").val()
                 var num = Math.trunc((montoDolares * precioDolar) * 100) / 100;
                 $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
+                $('#montoPesos').attr('value', num);
             }
 
             setPrecioDolar();
