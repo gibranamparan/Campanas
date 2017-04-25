@@ -16,7 +16,8 @@ namespace CampanasDelDesierto_v1
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/customFunctions.js",
-                        "~/Scripts/jquery.mask.js"));
+                        "~/Scripts/jquery.mask.js",
+                        "~/Scripts/numeral.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));

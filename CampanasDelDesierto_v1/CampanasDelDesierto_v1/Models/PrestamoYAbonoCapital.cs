@@ -32,6 +32,8 @@ namespace CampanasDelDesierto_v1.Models
         public string nota { get; set; }
 
         [Display(Name = "Precio del dólar")]
+        [DisplayFormat(DataFormatString = "{0:C4}",
+        ApplyFormatInEditMode = true)]
         [DecimalPrecision(18, 4)]
         public decimal precioDelDolar { get; set; }
 

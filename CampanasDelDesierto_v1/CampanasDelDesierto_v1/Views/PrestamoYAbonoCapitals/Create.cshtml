@@ -19,6 +19,7 @@
       .Select(s => s[random.Next(s.Length)]).ToArray());
 
 }
+
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor })">
         <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
@@ -169,8 +170,6 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $().ready(function () {
-            var precioDolar = 0;
-
             $("#concepto").change(function () {
                 if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
                     $("#formGroupProveedor").slideUp();
@@ -180,6 +179,10 @@
             })
 
             $("#montoPesos").keyup(function () {
+                recalcularMontoDolares();
+            })
+
+            $("#precioDelDolar").keyup(function () {
                 recalcularMontoDolares();
             })
 
@@ -216,16 +219,18 @@
 
             function recalcularMontoDolares() {
                 var montoPesos = $("#montoPesos").val();
+                var precioDolar = $("#precioDelDolar").val()
+                var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
                 $('#montoMovimiento')
-                    .val(Math.trunc((montoPesos / precioDolar) * 100) / 100)
+                    .val(numeral(num).format('0.00'))
                     .trigger('input');
             }
 
             function recalcularMontoPesos() {
                 var montoDolares = $("#montoMovimiento").val();
-                $('#montoPesos')
-                    .val(Math.trunc((montoDolares * precioDolar) * 100) / 100)
-                    .trigger('input');
+                var precioDolar = $("#precioDelDolar").val()
+                var num = Math.trunc((montoDolares * precioDolar) * 100) / 100;
+                $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
             }
 
             setPrecioDolar();
