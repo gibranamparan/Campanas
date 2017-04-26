@@ -7,9 +7,7 @@
 
 <h2>Venta Credito</h2>
 
-<p>
-    @Html.ActionLink("Crear Nuevo", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -58,7 +56,7 @@
                 <i class="glyphicon glyphicon-pencil"></i> Editar
             </a><br />
             <a href="@Url.Action("Details","VentaACreditos",new { id = item.idMovimiento })">
-                <i class="glyphicon glyphicon-usd"></i> Movimientos
+                <i class="glyphicon glyphicon-eye-open"></i> Detalles
             </a><br />
             <a href="@Url.Action("Delete","VentaACreditos",new { id = item.idMovimiento })">
                 <i class="glyphicon glyphicon-remove"></i> Eliminar

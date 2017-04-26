@@ -6,11 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Lista de Pago por Producto</h2>
+<h2>Lista de Cosechas</h2>
 
-<p>
-    @Html.ActionLink("Crear Nuevo", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -83,7 +81,7 @@
                 <i class="glyphicon glyphicon-pencil"></i> Editar
             </a><br />
             <a href="@Url.Action("Details","PagosPorProductos",new { id = item.idMovimiento })">
-                <i class="glyphicon glyphicon-usd"></i> Movimientos
+                <i class="glyphicon glyphicon-eye-open"></i> Detalles
             </a><br />
             <a href="@Url.Action("Delete","PagosPorProductos",new { id = item.idMovimiento })">
                 <i class="glyphicon glyphicon-remove"></i> Eliminar
