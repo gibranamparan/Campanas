@@ -10,51 +10,63 @@
 <p>
     @Html.ActionLink("Crear Nuevo", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.apellidoPaterno)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.apellidoMaterno)
-        </th>
-        <th></th>
-    </tr>
+<table class="table datablejs">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.apellidoPaterno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.apellidoMaterno)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.apellidoPaterno)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.apellidoMaterno)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Empleados",new { id = item.idEmpleado })">
+                        <i class="glyphicon glyphicon-pencil"></i> Editar
+                    </a><br />
+                    <a href="@Url.Action("Details","Empleados",new { id = item.idEmpleado })">
+                        <i class="glyphicon glyphicon-usd"></i> Movimientos
+                    </a><br />
+                    <a href="@Url.Action("Delete","Empleados",new { id = item.idEmpleado })">
+                        <i class="glyphicon glyphicon-remove"></i> Eliminar
+                    </a>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.apellidoPaterno)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.apellidoMaterno)
-        </td>
-        <td>
-            <a href="@Url.Action("Edit","Empleados",new { id = item.idEmpleado })">
-                <i class="glyphicon glyphicon-pencil"></i> Editar
-            </a><br />
-            <a href="@Url.Action("Details","Empleados",new { id = item.idEmpleado })">
-                <i class="glyphicon glyphicon-usd"></i> Movimientos
-            </a><br />
-            <a href="@Url.Action("Delete","Empleados",new { id = item.idEmpleado })">
-                <i class="glyphicon glyphicon-remove"></i> Eliminar
-            </a>
 
-
-        </td>
-    </tr>
-}
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $('.datablejs').DataTable();
+    });
+</script>
+}

@@ -17,7 +17,8 @@ namespace CampanasDelDesierto_v1
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/customFunctions.js",
                         "~/Scripts/jquery.mask.js",
-                        "~/Scripts/numeral.min.js"));
+                        "~/Scripts/numeral.min.js",
+                        "~/Scripts/jquery.dataTables.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -33,7 +34,8 @@ namespace CampanasDelDesierto_v1
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/Site.css",
-                      "~/Content/bootstrap.min.css"));
+                      "~/Content/bootstrap.min.css",
+                      "~/Content/jquery.dataTables.min.css"));
         }
     }
 }

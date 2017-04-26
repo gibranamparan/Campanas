@@ -25,14 +25,7 @@
         <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
     </a>
 </p>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3 class="panel-title">Información del Productor</h3>
-    </div>
-    <div class="panel-body">
-        @Html.Partial("../Productores/Partial_InfoProductor", productor)
-    </div>
-</div>
+@Html.Partial("../Productores/Partial_InfoProductor", productor)
 
 @using (Html.BeginForm()) 
 {

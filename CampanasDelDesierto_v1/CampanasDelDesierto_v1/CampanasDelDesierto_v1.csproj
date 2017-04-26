@@ -239,6 +239,7 @@
     <Compile Include="Controllers\ProductoresController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\SucursalesController.cs" />
+    <Compile Include="Controllers\TemporadaDeCosechasController.cs" />
     <Compile Include="Controllers\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -334,6 +335,10 @@
     <Compile Include="Migrations\201704251616255_fechaApagar_anticposAbonos_nulleable.Designer.cs">
       <DependentUpon>201704251616255_fechaApagar_anticposAbonos_nulleable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.cs" />
+    <Compile Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.Designer.cs">
+      <DependentUpon>201704262125563_creacionTabla_TemporadaDeCosecha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -349,6 +354,7 @@
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedores.cs" />
     <Compile Include="Models\Sucursal.cs" />
+    <Compile Include="Models\TemporadaDeCosecha.cs" />
     <Compile Include="Models\VentaACredito.cs" />
     <Compile Include="Models\Productor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -373,6 +379,7 @@
     <Content Include="assets\js\util.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1104,6 +1111,7 @@
     <Content Include="Scripts\DataTables-1.10.15\media\js\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables-1.10.15\media\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables-1.10.15\media\js\jquery.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.mask.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -1221,6 +1229,11 @@
     <Content Include="Views\Activos\Details.cshtml" />
     <Content Include="Views\Activos\Edit.cshtml" />
     <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Create.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Delete.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1297,6 +1310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704251616255_fechaApagar_anticposAbonos_nulleable.resx">
       <DependentUpon>201704251616255_fechaApagar_anticposAbonos_nulleable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.resx">
+      <DependentUpon>201704262125563_creacionTabla_TemporadaDeCosecha.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

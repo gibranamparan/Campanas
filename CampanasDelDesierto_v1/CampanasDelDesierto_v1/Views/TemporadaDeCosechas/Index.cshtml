@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.TemporadaDeCosecha>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaInicio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaFin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precioProducto1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precioProducto2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precioProducto3)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precioProductoOtro)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaInicio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaFin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.precioProducto1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.precioProducto2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.precioProducto3)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.precioProductoOtro)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TemporadaDeCosechaID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.TemporadaDeCosechaID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TemporadaDeCosechaID })
+        </td>
+    </tr>
+}
+
+</table>

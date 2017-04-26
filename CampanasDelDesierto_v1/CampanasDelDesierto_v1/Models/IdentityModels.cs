@@ -54,5 +54,7 @@ namespace CampanasDelDesierto_v1.Models
             // Precision attribute for decimals
             DecimalPrecision.ConfigureModelBuilder(modelBuilder);
         }
+
+        public System.Data.Entity.DbSet<CampanasDelDesierto_v1.Models.TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
     }
 }

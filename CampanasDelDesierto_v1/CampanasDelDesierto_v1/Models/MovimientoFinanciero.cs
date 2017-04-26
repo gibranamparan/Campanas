@@ -31,28 +31,9 @@ namespace CampanasDelDesierto_v1.Models
         public int idProductor { get; set; }
         public virtual Productor Productor { get; set; }
 
-        private int DIA_INICIO_PERIODO = 30;
-        private int DIA_FIN_PERIODO = 30;
-        private int MES_PERIODO = 8;
-
-        public int anioCosecha { get {
-                int anioCosecha = this.fechaMovimiento.Year;
-                if (this.fechaMovimiento > new DateTime(this.fechaMovimiento.Year, 
-                        this.MES_PERIODO, this.DIA_INICIO_PERIODO))
-                    anioCosecha++;
-                return anioCosecha;
-            }
-        }
-
-        public DateTime inicioCosecha
-        {
-            get {return new DateTime(anioCosecha - 1, MES_PERIODO, DIA_INICIO_PERIODO); }
-        }
-
-        public DateTime finCosecha
-        {
-            get {return new DateTime(anioCosecha, MES_PERIODO, DIA_INICIO_PERIODO); }
-        }
+        //Cada movimiento entra dentro de un periodo de cosecha previamente aperturado
+        public int TemporadaDeCosechaID { get; set; }
+        public virtual TemporadaDeCosecha temporadaDeCosecha { get; set; }
 
         [Display(Name = "Tipo")]
         public string nombreDeMovimiento
@@ -155,6 +136,32 @@ namespace CampanasDelDesierto_v1.Models
                 this.fechaMovimiento = this.fechaMovimiento.AddYears(-1); //Se le resta un año
             else if ((this.fechaMovimiento < new DateTime(anioCosecha.Value-1, this.MES_PERIODO, this.DIA_FIN_PERIODO)))
                 this.fechaMovimiento = this.fechaMovimiento.AddYears(1); //Se le suma un año
+        }
+
+        private int DIA_INICIO_PERIODO = 30;
+        private int DIA_FIN_PERIODO = 30;
+        private int MES_PERIODO = 8;
+
+        public int anioCosecha
+        {
+            get
+            {
+                int anioCosecha = this.fechaMovimiento.Year;
+                if (this.fechaMovimiento > new DateTime(this.fechaMovimiento.Year,
+                        this.MES_PERIODO, this.DIA_INICIO_PERIODO))
+                    anioCosecha++;
+                return anioCosecha;
+            }
+        }
+
+        public DateTime inicioCosecha
+        {
+            get { return new DateTime(anioCosecha - 1, MES_PERIODO, DIA_INICIO_PERIODO); }
+        }
+
+        public DateTime finCosecha
+        {
+            get { return new DateTime(anioCosecha, MES_PERIODO, DIA_INICIO_PERIODO); }
         }
     }
 }
