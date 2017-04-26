@@ -5,11 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Lista de Prestamo y Abono Capital</h2>
+<h2>Lista de Anticipos</h2>
 
-<p>
-    @Html.ActionLink("Crear Nuevo", "Create")
-</p>
+
 <table class="table table-responsive">
     <tr>
         <th>
@@ -94,7 +92,7 @@
                 <i class="glyphicon glyphicon-pencil"></i> Editar
             </a><br />
             <a href="@Url.Action("Details","PrestamoYAbonoCapitals",new { id = item.idMovimiento })">
-                <i class="glyphicon glyphicon-usd"></i> Movimientos
+                <i class="glyphicon glyphicon-print"></i> Imprimir
             </a><br />
             <a href="@Url.Action("Delete","PrestamoYAbonoCapitals",new { id = item.idMovimiento })">
                 <i class="glyphicon glyphicon-remove"></i> Eliminar
