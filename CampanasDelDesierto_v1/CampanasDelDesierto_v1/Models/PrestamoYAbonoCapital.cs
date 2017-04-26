@@ -43,7 +43,7 @@ namespace CampanasDelDesierto_v1.Models
         public static class TipoMovimientoCapital
         {
             public static readonly string ABONO = "ABONO";
-            public static readonly string PRESTAMO = "PRESTAMO";
+            public static readonly string PRESTAMO = "ANTICIPO";
         }
 
         public static class Divisas
@@ -73,8 +73,10 @@ namespace CampanasDelDesierto_v1.Models
         public static Object[] getTipoMovimientoCapitalArray()
         {
             Object[] opciones = new Object[]{
-                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO, Text="ABONO"},
-                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO, Text="PRESTAMO"},
+                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO,
+                    Text =PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO},
+                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO,
+                    Text =PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO},
             };
             return opciones;
         }
@@ -82,8 +84,10 @@ namespace CampanasDelDesierto_v1.Models
         public static Object[] getDivisasArray()
         {
             Object[] opciones = new Object[]{
-                new {Value=PrestamoYAbonoCapital.Divisas.MXN, Text="MXN"},
-                new {Value=PrestamoYAbonoCapital.Divisas.USD, Text="USD"},
+                new {Value=PrestamoYAbonoCapital.Divisas.MXN,
+                    Text =PrestamoYAbonoCapital.Divisas.MXN},
+                new {Value=PrestamoYAbonoCapital.Divisas.USD,
+                    Text =PrestamoYAbonoCapital.Divisas.USD},
             };
             return opciones;
         }

@@ -72,8 +72,7 @@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">Monto (Pesos)</label>
                 <div class="col-md-10">
-                    <input id="montoPesos" class="form-control" @*value="montoMovimientoPesos"*@
-                           data-mask="###0.00" data-mask-reverse="true" />
+                    <input id="montoPesos" class="form-control" data-mask="###0.00" data-mask-reverse="true" />
                 </div>
             </div>
             <div class="form-group col-md-6">
@@ -107,23 +106,22 @@
                 </div>
             </div>
 
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
+                </div>
+            </div>
         </div>
             
-            <div class="row">
-
-                <div class="form-group col-md-6">
-                    @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(x => x.concepto, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
-                        new { @class = "form-control" })
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(x => x.concepto, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
+                    new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group col-md-6">
@@ -133,8 +131,8 @@
                     @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
                 </div>
             </div>
-
         </div>
+
         <div id="formGroupDeuda" class="row" style="display:none">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -165,7 +163,6 @@
                     <button type="submit" class="btn btn-success">Crear</button>
                 </div>
             </div>
-        </div>
         </div>
 }
 <div>
@@ -210,6 +207,8 @@
             function setPrecioDolar() {
                 var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
                 $("#loadingImg").toggleClass('hidden');
+
+                //Se hace solicitud del precio del dolar al server
                 getTipoCambioAsync(
                     function (res) {
                         $("#precioDelDolar").val(res.precioDolar).trigger('input');
@@ -237,7 +236,7 @@
             function recalcularMontoPesos() {
                 var montoDolares = $("#montoMovimiento").val();
                 var precioDolar = $("#precioDelDolar").val()
-                var num = Math.trunc((montoDolares * precioDolar) * 100) / 100;
+                var num = Math.trunc(Math.round(montoDolares * precioDolar * 100)) / 100;
                 $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
                 $('#montoPesos').attr('value', num);
             }

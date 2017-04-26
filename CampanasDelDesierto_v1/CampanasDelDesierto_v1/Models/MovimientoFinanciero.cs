@@ -60,8 +60,14 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 TypeOfMovements tom = this.getTypeOfMovement();
-                if (tom == TypeOfMovements.CAPITAL)
-                    return "CAPITAL";
+                if (tom == TypeOfMovements.CAPITAL) {
+                    if (this.conceptoProveedor == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                        return PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+                    else if (this.conceptoProveedor == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                        return PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO;
+                    else
+                        return "CAPITAL";
+                }
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
                     return "COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)

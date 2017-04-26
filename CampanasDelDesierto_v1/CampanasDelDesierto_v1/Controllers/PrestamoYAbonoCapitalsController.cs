@@ -160,7 +160,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota")]
+            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa")]
             PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)

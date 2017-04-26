@@ -32,17 +32,22 @@
     @Html.HiddenFor(model => model.idMovimiento)
     <div class="form-horizontal">
         <h4>Editar Movimiento de Capital</h4>
-        <hr />
-
+        <div class="alert alert-info">
+            <strong>Precio de dólar registrado: </strong>@Html.DisplayFor(model=>model.precioDelDolar)
+            <button type="button" onclick="restaurarPrecioDolar()" class="btn btn-info">Restaurar</button>
+        </div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.montoMovimiento, new
-               {
-                   htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
-               })
+                       {
+                           htmlAttributes = new { @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                           }
+                       })
                     @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -82,6 +87,7 @@
                    href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
                     <img src="/images/sat_logo.png" />
                 </a>
+                <button id="refreshButton" class="glyphicon glyphicon-refresh btn btn-info" type="button" onclick="setPrecioDolar()"></button>
                 <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
             </div>
         </div>
@@ -120,7 +126,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div id="formGroupDeuda" class="row" style=@(Model.concepto==PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO?"display:none":"")>
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -129,7 +135,7 @@
                 </div>
             </div>
 
-            <div id="formGroupProveedor" class="form-group col-md-6" style=@(Model.concepto==PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO?"display:none":"")>
+            <div id="formGroupProveedor" class="form-group col-md-6" >
                 @Html.LabelFor(model => model.proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.DropDownList("proveedor", null, htmlAttributes: new { @class = "form-control" })
@@ -157,77 +163,87 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     
-<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 <script>
+    var setPrecioDolar;
+    var restaurarPrecioDolar;
+    var precioDolarOriginal=@Model.precioDelDolar;
+
     $().ready(function () {
-
         var precioDolar = $('#precioDelDolar').val();
-            
-            recalcularMontoPesos();
 
-            $("#concepto").change(function () {
-                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
-                    $("#formGroupProveedor").slideUp();
-                } else {
-                    $("#formGroupProveedor").slideDown();
-                }
-            })
-
-            $("#montoPesos").keyup(function () {
-                recalcularMontoDolares();
-            })
-
-            $("#precioDelDolar").keyup(function () {
-                recalcularMontoDolares();
-            })
-
-            $("#montoMovimiento").keyup(function () {
-                recalcularMontoPesos();
-            })
-
-            $('#divisa').change(function () {
-                if($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN'){
-                    $('#conversionDivisa').slideDown();
-                    $("#montoMovimiento").prop('disabled', true);
-                } else {
-                    $('#conversionDivisa').slideUp();
-                    $("#montoMovimiento").prop('disabled', false);
-                }
-            })
-
-            function setPrecioDolar() {
-                var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
-                $("#loadingImg").toggleClass('hidden');
-                getTipoCambioAsync(
-                    function (res) {
-                        $("#precioDelDolar").val(res.precioDolar).trigger('input');;
-                        precioDolar = res.precioDolar;
-                    },
-                    function (err) { },
-                    function () {
-                        $("#loadingImg").toggleClass('hidden');
-                        $('#divPrecioDelDolar').removeClass('col-md-8');
-                        $('#divPrecioDelDolar').addClass('col-md-9');
-                    }, antiForgeryToken)
+        restaurarPrecioDolar = function (){
+            $("#precioDelDolar").val(numeral(precioDolarOriginal).format('0.0000')).trigger('input');
+            $('#precioDelDolar').attr('value', precioDolarOriginal);
+            recalcularMontoDolares();
+        }
+        $('#divisa').change(function () {
+            if ($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN') {
+                $('#conversionDivisa').slideDown();
+                $("#montoMovimiento").prop('readonly', true);
+            } else {
+                $('#conversionDivisa').slideUp();
+                $("#montoMovimiento").prop('readonly', false);
             }
-
-            function recalcularMontoDolares() {
-                var montoPesos = $("#montoPesos").val();
-                var precioDolar = $("#precioDelDolar").val()
-                var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
-                $('#montoMovimiento')
-                    .val(numeral(num).format('0.00'))
-                    .trigger('input');
-            }
-
-            function recalcularMontoPesos() {
-                var montoDolares = $("#montoMovimiento").val();
-                var precioDolar = $("#precioDelDolar").val()
-                var num = Math.trunc((montoDolares * precioDolar) * 100) / 100;
-                $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
-            }
-
         })
+
+        $("#concepto").change(function () {
+            if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
+                $("#formGroupDeuda").slideUp();
+            } else {
+                $("#formGroupDeuda").slideDown();
+            }
+        })
+
+        $("#montoPesos").keyup(function () {
+            recalcularMontoDolares();
+        })
+
+        $("#precioDelDolar").keyup(function () {
+            recalcularMontoDolares();
+        })
+
+        $("#montoMovimiento").keyup(function () {
+            recalcularMontoPesos();
+        })
+
+        setPrecioDolar = function() {
+            var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+            $("#loadingImg").toggleClass('hidden');
+
+            //Se hace solicitud del precio del dolar al server
+            getTipoCambioAsync(
+                function (res) {
+                    $("#precioDelDolar").val(res.precioDolar).trigger('input');
+                    $('#precioDelDolar').attr('value', res.precioDolar);
+                    precioDolar = res.precioDolar;
+                    recalcularMontoDolares();
+                },
+                function (err) { },
+                function () {
+                    $("#loadingImg").toggleClass('hidden');
+                }, antiForgeryToken)
+        }
+
+        function recalcularMontoDolares() {
+            var montoPesos = $("#montoPesos").val();
+            var precioDolar = $("#precioDelDolar").val()
+            var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
+            $('#montoMovimiento')
+                .val(numeral(num).format('0.00')).trigger('input');
+            $('#montoMovimiento').attr('value', num);
+        }
+
+        function recalcularMontoPesos() {
+            var montoDolares = $("#montoMovimiento").val();
+            var precioDolar = $("#precioDelDolar").val()
+            var num = Math.trunc(Math.round(montoDolares * precioDolar * 100)) / 100;
+            $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
+            $('#montoPesos').attr('value', num);
+        }
+
+        recalcularMontoPesos();
+        $('#divisa').trigger('change');
+    })
 
 </script>
 }
