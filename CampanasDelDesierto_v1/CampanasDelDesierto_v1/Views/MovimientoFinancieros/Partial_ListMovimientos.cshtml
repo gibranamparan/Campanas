@@ -18,11 +18,9 @@
         {
             <div class="form-inline pull-right">
                 <div class="form-group">
-                    <label for="temporadas">Periodo de Cosecha:</label>
-                    @*<input type="number" value="@anioCosecha" id="anioCosecha" name="anioCosecha" class="form-control" />*@
+                    <label for="temporadas">@Html.DisplayNameFor(model=>movimientos.FirstOrDefault().temporadaDeCosecha.rangoTiempo)</label>
                     @Html.DropDownList("temporada", new SelectList(temporadas,"TemporadaDeCosechaID",
-                        "rangoTiempo", temporada), new { @class= "form-control" })
-                    <button class="btn btn-info">Buscar</button>
+                        "rangoTiempo", temporada), new { @class= "form-control", onchange="submitBusqueda(this)" })
                 </div>
             </div>
         }
@@ -101,3 +99,9 @@ else
         <strong>No existen</strong> movimientos financieros en este periodo para este productor.
     </div>
 }
+
+<script>
+    function submitBusqueda(ddl) {
+        $(ddl).closest("form").submit();
+    }
+</script>

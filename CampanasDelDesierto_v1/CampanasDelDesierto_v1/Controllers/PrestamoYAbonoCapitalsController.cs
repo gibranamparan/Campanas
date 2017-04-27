@@ -12,6 +12,9 @@ using Microsoft.Web.Services3;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    /// <summary>
+    /// Representa las entidades de registro de cosecha de un productor.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class PrestamoYAbonoCapitalsController : Controller
     {
@@ -154,7 +157,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa")]
+            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa,TemporadaDeCosechaID")]
             PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
@@ -170,26 +173,12 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
                 }
-                return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor, anioCosecha = prestamoYAbonoCapital.anioCosecha });
+                return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
+                    temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
             }
 
             prepararVistaEditar(db.Productores.Find(prestamoYAbonoCapital.idProductor), prestamoYAbonoCapital);
 
-            return View(prestamoYAbonoCapital);
-        }
-
-        // GET: PrestamoYAbonoCapitals/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
-            if (prestamoYAbonoCapital == null)
-            {
-                return HttpNotFound();
-            }
             return View(prestamoYAbonoCapital);
         }
 

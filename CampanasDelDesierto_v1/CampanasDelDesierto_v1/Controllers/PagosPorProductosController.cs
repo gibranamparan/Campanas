@@ -10,6 +10,9 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    /// <summary>
+    /// Representa las entidades de registro de cosecha de un productor.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class PagosPorProductosController : Controller
     {
@@ -38,7 +41,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PagosPorProductos/Create
-        public ActionResult Create(int? id = 0, int? anioCosecha=0)
+        public ActionResult Create(int? id = 0, int? temporada=0)
         {
             if (id == null)
             {
@@ -51,14 +54,14 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            var mov = prepararVistaCrear(productor, anioCosecha.Value);
+            var mov = prepararVistaCrear(productor);
 
-            mov.introducirMovimientoEnPeriodo(anioCosecha);
+            mov.introducirMovimientoEnPeriodo(temporada,db);
 
             return View(mov);
         }
 
-        private PagoPorProducto prepararVistaCrear(Productor productor, int? anioCosecha)
+        private PagoPorProducto prepararVistaCrear(Productor productor)
         {
             ViewBag.productor = productor;
             PagoPorProducto mov = new PagoPorProducto();
@@ -73,7 +76,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")]
+            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza,TemporadaDeCosechaID")]
             PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)
@@ -94,11 +97,11 @@ namespace CampanasDelDesierto_v1.Controllers
                     prod.ajustarBalances(ultimoMovimiento, db);
 
                     return RedirectToAction("Details", "Productores", 
-                        new { id = pagoPorProducto.idProductor, anioCosecha = pagoPorProducto.anioCosecha });
+                        new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
                 }
             }
 
-            var mov = prepararVistaCrear(db.Productores.Find(pagoPorProducto.idProductor), pagoPorProducto.fechaMovimiento.Year);
+            var mov = prepararVistaCrear(db.Productores.Find(pagoPorProducto.idProductor));
 
             return View(mov);
         }
@@ -128,7 +131,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza")]
+            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza,TemporadaDeCosechaID")]
             PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)
@@ -144,7 +147,8 @@ namespace CampanasDelDesierto_v1.Controllers
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
-                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor, anioCosecha = pagoPorProducto.anioCosecha });
+                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor,
+                        temporada = pagoPorProducto.TemporadaDeCosechaID });
                 }
             }
 
@@ -152,33 +156,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             return View(pagoPorProducto);
         }
-
-        // GET: PagosPorProductos/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            if (pagoPorProducto == null)
-            {
-                return HttpNotFound();
-            }
-            return View(pagoPorProducto);
-        }
-
-        // POST: PagosPorProductos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            db.MovimientosFinancieros.Remove(pagoPorProducto);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -39,7 +39,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: VentaACreditos/Create
-        public ActionResult Create(int? id, int? anioCosecha)
+        public ActionResult Create(int? id, int? temporada)
         {
             if (id == null)
             {
@@ -51,7 +51,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             VentaACredito mov = prepararVistaCrear(productor);
-            mov.introducirMovimientoEnPeriodo(anioCosecha);
+            mov.introducirMovimientoEnPeriodo(temporada);
 
             return View(mov);
         }
@@ -74,7 +74,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadMaterial,idProducto")]
+            "cantidadMaterial,idProducto,TemporadaDeCosechaID")]
             VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     prod.ajustarBalances(ultimoMovimiento, db);
 
                     return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor,
-                        anioCosecha = ventaACredito.anioCosecha });
+                        temporada = ventaACredito.TemporadaDeCosechaID });
                 }
             }
             VentaACredito mov = prepararVistaCrear(db.Productores.Find(ventaACredito.idProductor));
@@ -126,7 +126,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto")]
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto,TemporadaDeCosechaID")]
             VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)

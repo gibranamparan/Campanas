@@ -5,6 +5,7 @@
     ViewBag.Title = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
     Productor productor = ViewBag.productor;
+    Model.montoMovimiento *= -1;
 }
 
 <p>
@@ -12,98 +13,117 @@
         <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
     </a>
 </p>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3 class="panel-title">Información del productor</h3>
-    </div>
-    <div class="panel-body">
-        @Html.Partial("../Productores/Partial_InfoProductor", productor)
-    </div>
-</div>
+
+@Html.Partial("../Productores/Partial_InfoProductor", productor)
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.idProductor)
     @Html.HiddenFor(model => model.idMovimiento)
+    @Html.HiddenFor(model => model.TemporadaDeCosechaID)
 
     <div class="form-horizontal">
         <h4>Editar venta de material a crédito</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.idProducto, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("idProducto", null, "Selecciona un producto", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.idProducto, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.idProducto, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("idProducto", null, string.Empty, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.idProducto, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.cantidadMaterial, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cantidadMaterial, new { htmlAttributes = new { @class = "form-control", min = 1 } })
+                    @Html.ValidationMessageFor(model => model.cantidadMaterial, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">Costo Unitario</label>
+                <div class="col-md-10">
+                    <input id="costoUnitario" class="form-control"
+                           data-mask="###0.00" data-mask-reverse="true" disabled />
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.cantidadMaterial, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidadMaterial, new { htmlAttributes = new { @class = "form-control", min = 1 } })
-                @Html.ValidationMessageFor(model => model.cantidadMaterial, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.montoMovimiento, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       disabled = "disabled",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.montoMovimiento, new
-           {
-               htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true", disabled = "disabled" }
-           })
-                @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-md-10">
+                    <button class="btn btn-success">Editar</button>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-primary">Editar</button>
-            </div>
-        </div>
-    </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        var costoProducto = 0;
+        var cantidad = $("#cantidadMaterial").val();
         $("#idProducto").change(function () {
             //Se toma la llave unica de este cliente
             var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
-
-            var costoProducto = 0;
-            var cantidad = $("#cantidadMaterial").val();
             //Se hace la solicitud indetificandose con la llave unica
             $.postJSON("/Productos/productoInfo", { id: $(this).val() }, 'JSON',
                 function (res) {
                     costoProducto = res.costo;
+                    $('#costoUnitario').val(numeral(costoProducto)
+                        .format('0.00')).trigger('input');
                     actualizarMontoTotal();
                 },
                 function () { }, function () { },
-                antiForgeryToken
-            );
-
-            $("#cantidadMaterial").change(function () {
-                cantidad = $(this).val();
-                actualizarMontoTotal();
-            })
-
-            function actualizarMontoTotal(){
-                montoTotal = costoProducto * cantidad;
-                $("#montoMovimiento").val(montoTotal)
-            }
+                antiForgeryToken);
         })
+
+        $("#cantidadMaterial").keyup(function () {
+            cantidad = $(this).val();
+            actualizarMontoTotal();
+        })
+        $("#cantidadMaterial").change(function () {
+            cantidad = $(this).val();
+            actualizarMontoTotal();
+        })
+
+        function actualizarMontoTotal(){
+            montoTotal = costoProducto * cantidad;
+            $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input')
+        }
+
+        $("#idProducto").trigger('change');
 
     </script>
 }

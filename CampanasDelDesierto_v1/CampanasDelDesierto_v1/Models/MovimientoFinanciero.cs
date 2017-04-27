@@ -137,6 +137,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public void introducirMovimientoEnPeriodo(TemporadaDeCosecha tem)
         {
+            this.temporadaDeCosecha = tem;
             this.TemporadaDeCosechaID = tem.TemporadaDeCosechaID;
             int anioCosecha = tem.fechaFin.Year;
             //Si la fecha determinada no entra dentro del periodo de cosecha
@@ -163,5 +164,7 @@ namespace CampanasDelDesierto_v1.Models
                 return anioCosecha;
             }
         }
+
+
     }
 }

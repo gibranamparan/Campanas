@@ -8,8 +8,8 @@
 
 
     Productor productor = ViewBag.productor;
-    Productor.VMTipoProducto[] tipoProductos = productor.getListaProductos();
-    Productor.VMTipoProducto primerProducto = tipoProductos[0];
+    TemporadaDeCosecha.VMTipoProducto[] tipoProductos = Model.temporadaDeCosecha.getListaProductos();
+    TemporadaDeCosecha.VMTipoProducto primerProducto = tipoProductos[0];
 
     /*Just for test*/
     Random random = new Random();
@@ -144,11 +144,6 @@
         </div>
     </div>
 }
-<div>
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-    </a>
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
