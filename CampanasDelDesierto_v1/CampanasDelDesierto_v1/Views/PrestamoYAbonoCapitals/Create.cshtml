@@ -8,9 +8,16 @@
 
     Productor productor = ViewBag.productor;
 
+    //Se establece como fecha a pagar el 15 de agosto mas próximo
+    //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
+    Model.fechaPagar = new DateTime(Model.fechaMovimiento.Year, 8, 15);
+    if (Model.fechaMovimiento > Model.fechaPagar) {
+        Model.fechaPagar = Model.fechaPagar.Value.AddYears(1);
+    }
+
     /*Just for test*/
     Random random = new Random();
-   // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
+    // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
 
     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     Model.cheque = new string(Enumerable.Repeat(chars, 5)
@@ -35,7 +42,7 @@
         <h4>Nuevo Anticipo o Abono</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+        @Html.HiddenFor(model=>model.TemporadaDeCosechaID)
         <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -158,11 +165,6 @@
             </div>
         </div>
 }
-<div>
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-    </a>
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -127,7 +127,7 @@ namespace CampanasDelDesierto_v1.Controllers
             db.MovimientosFinancieros.Remove(mov);
             int numReg = db.SaveChanges();
             
-            if (numReg > 0)
+            if (numReg > 0 && prod.MovimientosFinancieros.Count()>0)
             {
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                 numReg = prod.ajustarBalances(ultimoMovimiento, db);

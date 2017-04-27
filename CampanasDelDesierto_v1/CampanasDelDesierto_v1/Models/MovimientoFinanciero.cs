@@ -123,19 +123,29 @@ namespace CampanasDelDesierto_v1.Models
         /// el día y mes de la fecha de registro.
         /// </summary>
         /// <param name="anioCosecha">Año que representa un periodo de cosecha</param>
-        internal void introducirMovimientoEnPeriodo(int? anioCosecha)
+        internal void introducirMovimientoEnPeriodo(int? periodoID)
         {
-            //Si se determina el periodo de cosecha, se establece por defecto el año de la fecha del movimiento
-            if (anioCosecha == null || anioCosecha == 0)
-                anioCosecha = DateTime.Now.Year;
+            ApplicationDbContext db = new ApplicationDbContext();
+            introducirMovimientoEnPeriodo(periodoID, db);
+        }
 
+        public void introducirMovimientoEnPeriodo(int? periodoID, ApplicationDbContext db)
+        {
+            TemporadaDeCosecha tem = TemporadaDeCosecha.findTemporada(periodoID);
+            introducirMovimientoEnPeriodo(tem);
+        }
+
+        public void introducirMovimientoEnPeriodo(TemporadaDeCosecha tem)
+        {
+            this.TemporadaDeCosechaID = tem.TemporadaDeCosechaID;
+            int anioCosecha = tem.fechaFin.Year;
             //Si la fecha determinada no entra dentro del periodo de cosecha
-            this.fechaMovimiento = new DateTime(anioCosecha.Value,DateTime.Now.Month,DateTime.Now.Day);
+            this.fechaMovimiento = new DateTime(anioCosecha, DateTime.Now.Month, DateTime.Now.Day);
             //Si es mayor al rango de periodo de cosecha
-            if (this.fechaMovimiento > new DateTime(anioCosecha.Value, this.MES_PERIODO, this.DIA_FIN_PERIODO))
-                this.fechaMovimiento = this.fechaMovimiento.AddYears(-1); //Se le resta un año
-            else if ((this.fechaMovimiento < new DateTime(anioCosecha.Value-1, this.MES_PERIODO, this.DIA_FIN_PERIODO)))
-                this.fechaMovimiento = this.fechaMovimiento.AddYears(1); //Se le suma un año
+            if (this.fechaMovimiento > tem.fechaFin)
+                this.fechaMovimiento = tem.fechaFin; //Se le resta un año
+            else if (this.fechaMovimiento < tem.fechaInicio)
+                this.fechaMovimiento = tem.fechaInicio; //Se le suma un año
         }
 
         private int DIA_INICIO_PERIODO = 30;
@@ -152,16 +162,6 @@ namespace CampanasDelDesierto_v1.Models
                     anioCosecha++;
                 return anioCosecha;
             }
-        }
-
-        public DateTime inicioCosecha
-        {
-            get { return new DateTime(anioCosecha - 1, MES_PERIODO, DIA_INICIO_PERIODO); }
-        }
-
-        public DateTime finCosecha
-        {
-            get { return new DateTime(anioCosecha, MES_PERIODO, DIA_INICIO_PERIODO); }
         }
     }
 }

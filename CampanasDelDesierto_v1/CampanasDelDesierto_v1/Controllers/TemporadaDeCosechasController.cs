@@ -17,7 +17,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: TemporadaDeCosechas
         public ActionResult Index()
         {
-            return View(db.TemporadaDeCosechas.ToList());
+            return View(db.TemporadaDeCosechas.OrderByDescending(tem=>tem.fechaFin).ToList());
         }
 
         // GET: TemporadaDeCosechas/Details/5

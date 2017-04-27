@@ -41,7 +41,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PrestamoYAbonoCapitals/Create
-        public ActionResult Create(int? id, int? anioCosecha)
+        public ActionResult Create(int? id, int? temporada)
         {
             if (id == null)
             {
@@ -54,7 +54,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             PrestamoYAbonoCapital mov = prepararVistaCrear(productor);
-            mov.introducirMovimientoEnPeriodo(anioCosecha);
+            mov.introducirMovimientoEnPeriodo(temporada);
 
 
             return View(mov);
@@ -72,13 +72,7 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.proveedor = new SelectList(db.Proveedores, "nombreProveedor", "nombreProveedor");
             PrestamoYAbonoCapital mov = new PrestamoYAbonoCapital();
             mov.fechaMovimiento = DateTime.Now;
-
-            //Se establece como fecha a pagar el 15 de agosto mas próximo
-            //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
-            mov.fechaPagar = new DateTime(mov.fechaMovimiento.Year,8,15);
-            if (mov.fechaMovimiento > mov.fechaPagar)
-                mov.fechaPagar = mov.fechaPagar.Value.AddYears(1);
-
+            
             mov.idProductor = productor.idProductor;
 
             return mov;
@@ -104,7 +98,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa")]
+            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa,TemporadaDeCosechaID")]
             PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
@@ -126,7 +120,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     prod.ajustarBalances(ultimoMovimiento,db);
 
                     return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
-                        anioCosecha = prestamoYAbonoCapital.anioCosecha });
+                        temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
                 }
             }
 

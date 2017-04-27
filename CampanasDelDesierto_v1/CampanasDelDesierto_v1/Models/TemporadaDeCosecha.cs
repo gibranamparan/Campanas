@@ -23,6 +23,29 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Fin")]
         public DateTime fechaFin { get; set; }
 
+        [Display(Name ="Rango de Tiempo")]
+        public string rangoTiempo { get {
+                System.Globalization.CultureInfo cult = System.Globalization
+                    .CultureInfo.CreateSpecificCulture("es-MX");
+                string salida = this.fechaInicio.ToString("dd/MMMM/yy", cult);
+                salida+=" - "+ this.fechaFin.ToString("dd/MMMM/yy", cult);
+                return salida;
+            } }
+
+        public static TemporadaDeCosecha findTemporada(int? temporada)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            TemporadaDeCosecha tem;
+            if (temporada == null || temporada.Value == 0)
+                tem = getUltimaTemporada();
+            else
+                tem = db.TemporadaDeCosechas.Find(temporada);
+            if (tem == null)
+                tem = getUltimaTemporada();
+
+            return tem;
+        }
+
         //Tipos de producto
         public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
         [DisplayFormat(DataFormatString = "{0:C}",
@@ -57,6 +80,18 @@ namespace CampanasDelDesierto_v1.Models
             int anioActual = DateTime.Today.Year;
             this.fechaInicio = new DateTime(anioActual, MES_PERIODO, DIA_INICIO_PERIODO);
             this.fechaFin = this.fechaInicio.AddYears(1);
+        }
+
+        public static TemporadaDeCosecha getUltimaTemporada()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            return getUltimaTemporada(db);
+        }
+
+        public static TemporadaDeCosecha getUltimaTemporada(ApplicationDbContext db)
+        {
+            var tem = db.TemporadaDeCosechas.OrderByDescending(t => t.fechaInicio).FirstOrDefault();
+            return tem;
         }
 
         public static class TiposDeProducto

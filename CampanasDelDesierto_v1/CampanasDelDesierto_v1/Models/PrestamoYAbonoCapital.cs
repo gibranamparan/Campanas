@@ -67,6 +67,10 @@ namespace CampanasDelDesierto_v1.Models
                 this.fechaPagar = null;
             }
 
+            //Por defecto se establece se introduce el nuevo movimiento en la ultima temporada de cosecha
+            if (this.TemporadaDeCosechaID == 0)
+                this.TemporadaDeCosechaID = TemporadaDeCosecha.getUltimaTemporada().TemporadaDeCosechaID;
+
             base.ajustarMovimiento();
         }
 

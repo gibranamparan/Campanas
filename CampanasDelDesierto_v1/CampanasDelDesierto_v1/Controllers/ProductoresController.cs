@@ -22,7 +22,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Productores/Details/5
-        public ActionResult Details(int? id, int? anioCosecha)
+        public ActionResult Details(int? id, int? temporada)
         {
             if (id == null)
             {
@@ -35,16 +35,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            if (anioCosecha == null || anioCosecha.Value == 0)
-                anioCosecha = DateTime.Now.Year;
-
-            ViewBag.anioCosecha = anioCosecha;
-
-            //Se selecciona los movimientos dentro del periodo de tiempo que corresponde a una cosecha
-            productor.MovimientosFinancieros = productor.MovimientosFinancieros
-                .Where(mov => mov.fechaMovimiento.Year == anioCosecha 
-                    || mov.fechaMovimiento.Year == anioCosecha-1)
-                .ToList().Where(mov=>mov.anioCosecha == anioCosecha).ToList();
+            TemporadaDeCosecha tem = TemporadaDeCosecha.findTemporada(temporada);
+            
+            ViewBag.temporadas = db.TemporadaDeCosechas.ToList();
+            ViewBag.temporada = tem.TemporadaDeCosechaID;
 
             return View(productor);
         }

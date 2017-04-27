@@ -2,22 +2,26 @@
 @using CampanasDelDesierto_v1.Models;
 
 @{ 
-    var movimientos = Model.MovimientosFinancieros.OrderBy(mov => mov.fechaMovimiento).ToList();
-    int anioCosecha = ViewBag.anioCosecha;
+    int temporada = ViewBag.temporada;
+    var movimientos = Model.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporada).ToList()
+        .OrderBy(mov=>mov.fechaMovimiento);
+    List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }
 <div class="row searchPanel">
     <div class="col-md-6">
-        @Html.ActionLink("Anticipos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Registro de Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor, anioCosecha = anioCosecha }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Anticipos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Registro de Cosecha", "Create", "PagosPorProductos", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
     </div>
     <div class="col-md-6">
         @using (Html.BeginForm())
         {
             <div class="form-inline pull-right">
                 <div class="form-group">
-                    <label for="anioCosecha">Periodo de Cosecha:</label>
-                    <input type="number" value="@anioCosecha" id="anioCosecha" name="anioCosecha" class="form-control" />
+                    <label for="temporadas">Periodo de Cosecha:</label>
+                    @*<input type="number" value="@anioCosecha" id="anioCosecha" name="anioCosecha" class="form-control" />*@
+                    @Html.DropDownList("temporada", new SelectList(temporadas,"TemporadaDeCosechaID",
+                        "rangoTiempo", temporada), new { @class= "form-control" })
                     <button class="btn btn-info">Buscar</button>
                 </div>
             </div>
