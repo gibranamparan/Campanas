@@ -1,4 +1,8 @@
-﻿/* When the user clicks on the button, 
+﻿$(document).ready(function () {
+    $('.datablejs').DataTable();
+});
+
+/* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
 function openActionsDropDown(actionBtn) {
     $(actionBtn).parent().children("#myDropdown").slideToggle();

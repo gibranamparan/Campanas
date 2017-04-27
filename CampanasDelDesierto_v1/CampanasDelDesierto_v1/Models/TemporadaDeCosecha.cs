@@ -11,8 +11,15 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int TemporadaDeCosechaID { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
+        ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         [Display(Name ="Inicio")]
         public DateTime fechaInicio { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
+        ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         [Display(Name = "Fin")]
         public DateTime fechaFin { get; set; }
 
@@ -39,6 +46,18 @@ namespace CampanasDelDesierto_v1.Models
 
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
+
+
+        private int DIA_INICIO_PERIODO = 30;
+        private int DIA_FIN_PERIODO = 30;
+        private int MES_PERIODO = 8;
+
+        public TemporadaDeCosecha()
+        {
+            int anioActual = DateTime.Today.Year;
+            this.fechaInicio = new DateTime(anioActual, MES_PERIODO, DIA_INICIO_PERIODO);
+            this.fechaFin = this.fechaInicio.AddYears(1);
+        }
 
         public static class TiposDeProducto
         {

@@ -38,7 +38,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: TemporadaDeCosechas/Create
         public ActionResult Create()
         {
-            return View();
+            TemporadaDeCosecha tem = new TemporadaDeCosecha();
+            return View(tem);
         }
 
         // POST: TemporadaDeCosechas/Create

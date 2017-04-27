@@ -430,6 +430,11 @@
     <Content Include="assets\sass\libs\_vars.scss" />
     <Content Include="assets\sass\main.scss" />
     <Content Include="images\sat_logo.png" />
+    <Content Include="images\sort_asc.png" />
+    <Content Include="images\sort_asc_disabled.png" />
+    <Content Include="images\sort_both.png" />
+    <Content Include="images\sort_desc.png" />
+    <Content Include="images\sort_desc_disabled.png" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

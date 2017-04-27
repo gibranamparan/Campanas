@@ -30,15 +30,6 @@
         <th>
             @Html.DisplayNameFor(model => model.zona)
         </th>
-        <th>
-            @("Ton. "+Model.FirstOrDefault().tipoProducto1)
-        </th>
-        <th>
-            @("Ton. " + Model.FirstOrDefault().tipoProducto2)
-        </th>
-        <th>
-            @("Ton. " + Model.FirstOrDefault().tipoProducto3)
-        </th>
         <th class="actions"></th>
     </tr>
 
@@ -61,15 +52,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.zona)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.precioProducto1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.precioProducto2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.precioProducto3)
         </td>
         <td >
             <a href="@Url.Action("Edit","Productores",new { id = item.idProductor })">
