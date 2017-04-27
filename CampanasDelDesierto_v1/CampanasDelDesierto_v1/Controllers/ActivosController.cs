@@ -15,11 +15,11 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activos
-        public ActionResult Index()
-        {
-            var activos = db.Activos.Include(a => a.Inventario);
-            return View(activos.ToList());
-        }
+        //public ActionResult Index()
+        //{
+        //    var activos = db.Activos.Include(a => a.Inventario);
+        //    return View(activos.ToList());
+        //}
 
         // GET: Activos/Details/5
         public ActionResult Details(int? id)
@@ -57,7 +57,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo);
             return View(activo);
         }
 
@@ -73,7 +73,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo);
             return View(activo);
         }
 
@@ -90,7 +90,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
             return View(activo);
         }
 
