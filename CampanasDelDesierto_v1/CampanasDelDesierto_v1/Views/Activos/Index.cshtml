@@ -4,17 +4,17 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
-<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
 
-<h2>Lista de Activos</h2>
+<h2>Index</h2>
 
-
-<table class="DataTable">
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-striped table-hover datablejs">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Inventario.nombreInventario)
+                @Html.DisplayNameFor(model => model.inventario.nombreInventario)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.nombreActivo)
@@ -25,15 +25,12 @@
             <th></th>
         </tr>
     </thead>
-
-
     <tbody>
-
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Inventario.nombreInventario)
+                    @Html.DisplayFor(modelItem => item.inventario.nombreInventario)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.nombreActivo)
@@ -42,26 +39,11 @@
                     @Html.DisplayFor(modelItem => item.estadoActivo)
                 </td>
                 <td>
-                    <a href="@Url.Action("Edit","Activos",new { id = item.idActivo })">
-                        <i class="glyphicon glyphicon-pencil"></i> Editar
-                    </a><br />
-                    <a href="@Url.Action("Details","Activos",new { id = item.idActivo })">
-                        <i class="glyphicon glyphicon-eye-open"></i> Detalles
-                    </a><br />
-                    <a href="@Url.Action("Delete","Activos",new { id = item.idActivo })">
-                        <i class="glyphicon glyphicon-remove"></i> Eliminar
-                    </a>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.idActivo }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.idActivo }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.idActivo })
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-                $('.DataTable').DataTable();
-        });
-    </script>
-    
-  }

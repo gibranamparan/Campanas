@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Inventario</h2>
+<h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Crear Nuevo", "Create")
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
@@ -23,6 +23,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.costo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.cantidad)
         </th>
         <th></th>
     </tr>
@@ -42,15 +45,12 @@
             @Html.DisplayFor(modelItem => item.costo)
         </td>
         <td>
-            <a href="@Url.Action("Edit","Inventarios",new { id = item.inventarioID })">
-                <i class="glyphicon glyphicon-pencil"></i> Editar
-            </a><br />
-            <a href="@Url.Action("Details","Inventarios",new { id = item.inventarioID })">
-                <i class="glyphicon glyphicon-eye-open"></i> Detalles
-            </a><br />
-            <a href="@Url.Action("Delete","Inventarios",new { id = item.inventarioID })">
-                <i class="glyphicon glyphicon-remove"></i> Eliminar
-            </a>
+            @Html.DisplayFor(modelItem => item.cantidad)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.inventarioID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.inventarioID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.inventarioID })
         </td>
     </tr>
 }

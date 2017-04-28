@@ -343,6 +343,14 @@
     <Compile Include="Migrations\201704270924548_cambio en activos.Designer.cs">
       <DependentUpon>201704270924548_cambio en activos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704280754514_cambios en el modelo de activo.cs" />
+    <Compile Include="Migrations\201704280754514_cambios en el modelo de activo.Designer.cs">
+      <DependentUpon>201704280754514_cambios en el modelo de activo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704280928235_atributo cantidad en inventario.cs" />
+    <Compile Include="Migrations\201704280928235_atributo cantidad en inventario.Designer.cs">
+      <DependentUpon>201704280928235_atributo cantidad en inventario.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -535,11 +543,6 @@
     <Content Include="Views\Productos\Details.cshtml" />
     <Content Include="Views\Productos\Delete.cshtml" />
     <Content Include="Views\Productos\Create.cshtml" />
-    <Content Include="Views\Empleados\Create.cshtml" />
-    <Content Include="Views\Empleados\Delete.cshtml" />
-    <Content Include="Views\Empleados\Details.cshtml" />
-    <Content Include="Views\Empleados\Edit.cshtml" />
-    <Content Include="Views\Empleados\Index.cshtml" />
     <Content Include="Views\Sucursales\Create.cshtml" />
     <Content Include="Views\Sucursales\Delete.cshtml" />
     <Content Include="Views\Sucursales\Details.cshtml" />
@@ -550,6 +553,22 @@
     <Content Include="Views\PrestamosActivos\Details.cshtml" />
     <Content Include="Views\PrestamosActivos\Edit.cshtml" />
     <Content Include="Views\PrestamosActivos\Index.cshtml" />
+    <None Include="Service References\Banxico\DgieWS.wsdl" />
+    <Content Include="Views\TemporadaDeCosechas\Create.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Delete.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
+    <Content Include="Views\Activos\Create.cshtml" />
+    <Content Include="Views\Activos\Delete.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Activos\Index.cshtml" />
+    <Content Include="Views\Empleados\Create.cshtml" />
+    <Content Include="Views\Empleados\Delete.cshtml" />
+    <Content Include="Views\Empleados\Details.cshtml" />
+    <Content Include="Views\Empleados\Edit.cshtml" />
+    <Content Include="Views\Empleados\Index.cshtml" />
     <Content Include="Views\Departamentos\Create.cshtml" />
     <Content Include="Views\Departamentos\Delete.cshtml" />
     <Content Include="Views\Departamentos\Details.cshtml" />
@@ -560,17 +579,6 @@
     <Content Include="Views\Inventarios\Details.cshtml" />
     <Content Include="Views\Inventarios\Edit.cshtml" />
     <Content Include="Views\Inventarios\Index.cshtml" />
-    <None Include="Service References\Banxico\DgieWS.wsdl" />
-    <Content Include="Views\Activos\Create.cshtml" />
-    <Content Include="Views\Activos\Delete.cshtml" />
-    <Content Include="Views\Activos\Details.cshtml" />
-    <Content Include="Views\Activos\Edit.cshtml" />
-    <Content Include="Views\Activos\Index.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Create.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Delete.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -653,6 +661,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704270924548_cambio en activos.resx">
       <DependentUpon>201704270924548_cambio en activos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704280754514_cambios en el modelo de activo.resx">
+      <DependentUpon>201704280754514_cambios en el modelo de activo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704280928235_atributo cantidad en inventario.resx">
+      <DependentUpon>201704280928235_atributo cantidad en inventario.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

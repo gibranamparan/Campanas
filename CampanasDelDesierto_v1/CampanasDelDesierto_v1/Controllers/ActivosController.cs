@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -15,20 +16,20 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activos
-        //public ActionResult Index()
-        //{
-        //    var activos = db.Activos.Include(a => a.Inventario);
-        //    return View(activos.ToList());
-        //}
+        public async Task<ActionResult> Index()
+        {
+            var activos = db.Activos.Include(a => a.inventario);
+            return View(await activos.ToListAsync());
+        }
 
         // GET: Activos/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
+            Activo activo = await db.Activos.FindAsync(id);
             if (activo == null)
             {
                 return HttpNotFound();
@@ -48,32 +49,32 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
+        public async Task<ActionResult> Create([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
                 db.Activos.Add(activo);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo);
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 
         // GET: Activos/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
+            Activo activo = await db.Activos.FindAsync(id);
             if (activo == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo);
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 
@@ -82,26 +83,26 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
+        public async Task<ActionResult> Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(activo).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
+            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);
         }
 
         // GET: Activos/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activo activo = db.Activos.Find(id);
+            Activo activo = await db.Activos.FindAsync(id);
             if (activo == null)
             {
                 return HttpNotFound();
@@ -112,11 +113,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // POST: Activos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Activo activo = db.Activos.Find(id);
+            Activo activo = await db.Activos.FindAsync(id);
             db.Activos.Remove(activo);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
