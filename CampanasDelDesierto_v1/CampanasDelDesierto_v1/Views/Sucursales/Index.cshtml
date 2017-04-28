@@ -4,15 +4,14 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
-<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
 
 <h2>Tabla de Sucursales</h2>
 
 <p>
     @Html.ActionLink("Crear Nuevo", "Create")
 </p>
-<table class="DataTable">
+<table class="datablejs">
     <thead>
         <tr>
             <th>
@@ -21,6 +20,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.domicilioSucursal)
             </th>
+            <th>Numero de Departamentos</th>
             <th></th>
         </tr>
     </thead>
@@ -33,6 +33,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.domicilioSucursal)
+                </td>
+                <td>
+                    @item.Departamentos.Count()
                 </td>
                 <td>
                     <a href="@Url.Action("Edit","Sucursales",new { id = item.idSucursal })">

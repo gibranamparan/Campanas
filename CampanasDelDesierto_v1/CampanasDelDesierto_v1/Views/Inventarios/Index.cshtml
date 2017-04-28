@@ -26,7 +26,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.cantidad)
-        </th>
+        </th>        
         <th></th>
     </tr>
 
@@ -48,9 +48,9 @@
             @Html.DisplayFor(modelItem => item.cantidad)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.inventarioID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.inventarioID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.inventarioID })
+            @Html.ActionLink("Editar", "Edit", new { id=item.inventarioID }) |
+            @Html.ActionLink("Ver Activos", "Details", new { id=item.inventarioID }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.inventarioID })
         </td>
     </tr>
 }

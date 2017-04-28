@@ -38,9 +38,18 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Activos/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
+            if (id == null)
+            {
+                ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
+            }
+            else
+            {
+                Inventario Inventario = db.Inventarios.Find(id);
+                ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario",Inventario.inventarioID);
+            }
+            
             return View();
         }
 
