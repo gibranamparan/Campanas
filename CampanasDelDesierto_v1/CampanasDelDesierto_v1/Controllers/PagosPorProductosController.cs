@@ -76,7 +76,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza,TemporadaDeCosechaID")]
+            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")]
             PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)
@@ -131,7 +131,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,cheque,abonoAnticipo,tipoProducto,garantiaLimpieza,TemporadaDeCosechaID")]
+            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")]
             PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)

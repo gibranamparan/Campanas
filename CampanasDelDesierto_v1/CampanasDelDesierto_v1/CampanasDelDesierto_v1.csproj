@@ -227,6 +227,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivosController.cs" />
     <Compile Include="Controllers\DepartamentosController.cs" />
+    <Compile Include="Controllers\EmisionDeChequesController.cs" />
     <Compile Include="Controllers\EmpleadosController.cs" />
     <Compile Include="Controllers\InventariosController.cs" />
     <Compile Include="Controllers\PrestamosActivosController.cs" />
@@ -351,10 +352,15 @@
     <Compile Include="Migrations\201704281802075_Cambios en modelos de inventario campanas.Designer.cs">
       <DependentUpon>201704281802075_Cambios en modelos de inventario campanas.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.cs" />
+    <Compile Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.Designer.cs">
+      <DependentUpon>201704282158141_nuevaEntidad_EmisionDeCheques.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
     <Compile Include="Models\Departamento.cs" />
+    <Compile Include="Models\EmisionDeCheque.cs" />
     <Compile Include="Models\Empleado.cs" />
     <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\PrestamoActivo.cs" />
@@ -579,6 +585,11 @@
     <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Create.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Delete.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Details.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -667,6 +678,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704281802075_Cambios en modelos de inventario campanas.resx">
       <DependentUpon>201704281802075_Cambios en modelos de inventario campanas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.resx">
+      <DependentUpon>201704282158141_nuevaEntidad_EmisionDeCheques.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

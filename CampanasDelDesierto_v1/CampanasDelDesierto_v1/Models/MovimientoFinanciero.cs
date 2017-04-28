@@ -53,6 +53,8 @@ namespace CampanasDelDesierto_v1.Models
                     return "COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return "VENTA A CREDITO";
+                else if (tom == TypeOfMovements.CHEQUE)
+                    return "CHEQUE";
                 else
                     return "";
             }
@@ -81,7 +83,8 @@ namespace CampanasDelDesierto_v1.Models
             NONE,
             PAGO_POR_PRODUCTO,
             CAPITAL,
-            VENTA_A_CREDITO
+            VENTA_A_CREDITO,
+            CHEQUE
         };
 
         public TypeOfMovements getTypeOfMovement()
@@ -92,6 +95,8 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.CAPITAL;
             else if (this is VentaACredito)
                 return TypeOfMovements.VENTA_A_CREDITO;
+            else if (this is EmisionDeCheque)
+                return TypeOfMovements.CHEQUE;
             else
                 return TypeOfMovements.NONE;
         }
@@ -105,6 +110,8 @@ namespace CampanasDelDesierto_v1.Models
                 return "PagosPorProductos";
             else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                 return "VentaACreditos";
+            else if (tom == TypeOfMovements.CHEQUE)
+                return "EmisionDeCheques";
             else
                 return "";
         }
