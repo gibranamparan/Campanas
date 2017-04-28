@@ -13,12 +13,12 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Monto (dólares)")]
+        [Display(Name = "Monto (USD)")]
         public decimal montoMovimiento { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Balance ")]
+        [Display(Name = "Balance (USD)")]
         public decimal balance { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",

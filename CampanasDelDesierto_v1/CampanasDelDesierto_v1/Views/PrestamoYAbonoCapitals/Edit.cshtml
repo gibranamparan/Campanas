@@ -12,7 +12,7 @@
     montoMovimientoPesos = montoMovimientoPesos < 0 ? montoMovimientoPesos * -1 : montoMovimientoPesos;
 }
 <p>
-    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor })">
+    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
     </a>
 </p>
@@ -58,7 +58,7 @@
 
         <div id="conversionDivisa" class="row" style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?"block":"none")">
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">Monto (Pesos)</label>
+                <label class="control-label col-md-2">Monto (MXN)</label>
                 <div class="col-md-10">
                     <input id="montoPesos" class="form-control" value="@montoMovimientoPesos"
                            data-mask="###0.00" data-mask-reverse="true" />

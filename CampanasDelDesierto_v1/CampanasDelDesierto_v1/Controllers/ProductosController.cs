@@ -133,9 +133,12 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [HttpPost, ValidateHeaderAntiForgeryToken]
-        public JsonResult productoInfo(int id)
+        public JsonResult productoInfo(int id=0)
         {
-            var producto = db.Productos.Find(id);
+            Producto producto= new Producto();
+            if (id != 0) 
+                producto = db.Productos.Find(id);
+
             var vmProducto = new { id = id, nombre = producto.nombreProducto, costo = producto.costo };
             return Json(vmProducto);
         }
