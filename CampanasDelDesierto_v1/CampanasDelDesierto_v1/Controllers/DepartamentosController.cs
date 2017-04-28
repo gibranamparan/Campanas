@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -15,20 +16,20 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Departamentos
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var departamentos = db.Departamentos.Include(d => d.Sucursal);
-            return View(departamentos.ToList());
+            return View(await departamentos.ToListAsync());
         }
 
         // GET: Departamentos/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departamento departamento = db.Departamentos.Find(id);
+            Departamento departamento = await db.Departamentos.FindAsync(id);
             if (departamento == null)
             {
                 return HttpNotFound();
@@ -45,15 +46,15 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // POST: Departamentos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Create([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Departamentos.Add(departamento);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -62,13 +63,13 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Departamentos/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departamento departamento = db.Departamentos.Find(id);
+            Departamento departamento = await db.Departamentos.FindAsync(id);
             if (departamento == null)
             {
                 return HttpNotFound();
@@ -79,15 +80,15 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // POST: Departamentos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(departamento).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
@@ -95,13 +96,13 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Departamentos/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departamento departamento = db.Departamentos.Find(id);
+            Departamento departamento = await db.Departamentos.FindAsync(id);
             if (departamento == null)
             {
                 return HttpNotFound();
@@ -112,11 +113,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // POST: Departamentos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Departamento departamento = db.Departamentos.Find(id);
+            Departamento departamento = await db.Departamentos.FindAsync(id);
             db.Departamentos.Remove(departamento);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

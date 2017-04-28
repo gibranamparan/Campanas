@@ -20,6 +20,9 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Costo")]
         public decimal costo { get; set; }
 
+        [Display(Name = "Cantidad")]
+        public int cantidad { get; set; }
+
         //Un inventario tiene muchos activos
         public virtual ICollection<Activo> Activos { get; set; }
 

@@ -19,11 +19,11 @@ namespace CampanasDelDesierto_v1.Models
         public string estadoActivo { get; set; }
 
         //Un activo tiene una collecion de prestamos
-        //public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
+        public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
 
         //Cada activo pertenece a un inventario
-        
-        //public int inventarioID { get; set; }
-        //public virtual Inventario Inventario { get; set; }
+
+        public int inventarioID { get; set; }
+        public virtual Inventario inventario { get; set; }
     }
 }
