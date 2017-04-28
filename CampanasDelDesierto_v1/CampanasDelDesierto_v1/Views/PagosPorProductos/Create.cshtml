@@ -25,7 +25,7 @@
       .Select(s => s[random.Next(s.Length)]).ToArray());
 }
 <p>
-    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor })">
+    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
     </a>
 </p>
@@ -35,10 +35,30 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.idProductor)
+    @Html.HiddenFor(mode=>mode.TemporadaDeCosechaID)
     <div class="form-horizontal">
         <h4>Pago por producto</h4>
-        <hr />
-
+        <div class="alert alert-info">
+            <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
+            <div class="row">
+                <span class="col-md-3">
+                    <label>@(Model.temporadaDeCosecha.tipoProducto1): </label>
+                    @(Model.temporadaDeCosecha.precioProducto1.ToString("C"))
+                </span>
+                <span class="col-md-3">
+                    <label>@(Model.temporadaDeCosecha.tipoProducto2): </label>
+                    @(Model.temporadaDeCosecha.precioProducto2.ToString("C"))
+                </span>
+                <span class="col-md-3">
+                    <label>@(Model.temporadaDeCosecha.tipoProducto3): </label>
+                    @(Model.temporadaDeCosecha.precioProducto3.ToString("C"))
+                </span>
+                <span class="col-md-3">
+                    <label>@(Model.temporadaDeCosecha.tipoProductoOtro): </label>
+                    @(Model.temporadaDeCosecha.precioProductoOtro.ToString("C"))
+                </span>
+            </div>
+        </div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row">
             <div class="form-group col-md-6">
@@ -107,7 +127,7 @@
                         @Html.EditorFor(model => model.cantidadProducto, new
                            {
                                htmlAttributes = new { @class = "form-control",
-                                   data_mask = "###0.00", data_mask_reverse = "true" }
+                                   data_mask = "###0.000", data_mask_reverse = "true" }
                            })
                         @Html.ValidationMessageFor(model => model.cantidadProducto, "", new { @class = "text-danger" })
                     </div>
@@ -128,7 +148,10 @@
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.montoMovimiento, new
                    {
-                       htmlAttributes = new { @class = "form-control", data_mask = "###0.00", data_mask_reverse = "true" }
+                       htmlAttributes = new { @class = "form-control",
+                           @readonly = "readonly",
+                           data_mask = "###0.00",
+                           data_mask_reverse = "true"}
                    })
                         @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
                     </div>
@@ -139,7 +162,7 @@
 
         <div class="form-group">
             <div class="col-md-10">
-                <button class="btn btn-primary">Crear</button>
+                <button class="btn btn-success">Crear</button>
             </div>
         </div>
     </div>
@@ -148,7 +171,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        var cantidad = 0;
+        var cantidad = 1;
         var precioPorTon = @primerProducto.Value;
         $("#tipoProducto").change(function () {
             precioPorTon = $(this).val();
@@ -176,8 +199,10 @@
         })
 
         function recalcularMontoTotal() {
-            montoTotal = cantidad * precioPorTon*100;
-            $("#montoMovimiento").val(montoTotal).trigger('input');
+            montoTotal = cantidad * precioPorTon;
+            $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input');
         }
+
+        recalcularMontoTotal();
     </script>
 }

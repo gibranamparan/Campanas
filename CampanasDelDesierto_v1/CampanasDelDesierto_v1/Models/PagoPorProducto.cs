@@ -22,7 +22,7 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Abono de anticipo ")]
+        [Display(Name = "Abono de anticipo (USD)")]
         public decimal abonoAnticipo { get; set; }
 
         [Display(Name = "Tipo de producto ")]
@@ -30,7 +30,7 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Pago de garantia de la limpieza")]
+        [Display(Name = "Pago de garantia de la limpieza (USD)")]
         public decimal garantiaLimpieza { get; set; }
         
     }
