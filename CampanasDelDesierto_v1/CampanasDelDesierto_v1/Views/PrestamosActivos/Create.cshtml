@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Crear</h2>
+<h2>Create</h2>
 
 
 @using (Html.BeginForm()) 
@@ -33,6 +33,14 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.fechaDevolucion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.fechaDevolucion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.fechaDevolucion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.idEmpleado, "idEmpleado", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("idEmpleado", null, htmlAttributes: new { @class = "form-control" })
@@ -50,16 +58,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <buton class="btn btn-primary">Crear</buton>
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-    </a>
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

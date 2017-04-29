@@ -49,3 +49,40 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idEmpleado }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<legend>Prestamos</legend>
+
+
+<table class="table datablejs">
+    <thead>
+        <tr>
+            <th>Inventario</th>
+            <th>Activo</th>
+            <th>Fecha de Prestamo</th>
+            <th>Fecha de Entrega</th>
+            <th>Fecha de Devolucion</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Prestamo in Model.PrestamosActivos)
+            {
+            <tr>
+                <td>@(Prestamo.Activo.inventario.nombreInventario)</td>
+                <td>@(Prestamo.Activo.nombreActivo)</td>
+                <td>@Prestamo.fechaPrestamoActivo</td>
+                <td>@Prestamo.fechaEntregaActivo</td>
+                <td>@Prestamo.fechaDevolucion</td>
+                <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = Prestamo.idPrestamoActivo }, null)  </td>
+                <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = Prestamo.idPrestamoActivo }, null)  </td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+<div>
+    @Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { idEmpleado = Model.idEmpleado }, new { @class = "btn btn-primary" })
+</div>

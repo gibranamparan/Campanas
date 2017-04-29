@@ -49,7 +49,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 Inventario Inventario = db.Inventarios.Find(id);
                 ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario",Inventario.inventarioID);
             }
-            
+                
+
             return View();
         }
 

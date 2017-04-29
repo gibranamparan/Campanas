@@ -48,7 +48,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.cantidad)
+            @Model.Activos.Count()
         </dd>
 
     </dl>
@@ -69,6 +69,8 @@
                     <th>Estado del Activo</th>
                     <th></th>
                     <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -79,6 +81,8 @@
                         <td>@activo.estadoActivo</td>
                         <td>@Html.ActionLink("Eliminar", "Delete", "Activos", new { id = activo.idActivo }, null)  </td>
                         <td>@Html.ActionLink("Detalles", "Details", "Activos", new { id = activo.idActivo }, null)  </td>
+                        <td>@Html.ActionLink("Editar", "Edit", "Activos", new { id = activo.idActivo }, null)  </td>
+                        <td>@Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { id = activo.idActivo }, new { @class = "btn btn-primary" })</td>
                     </tr>
                 }
             </tbody>

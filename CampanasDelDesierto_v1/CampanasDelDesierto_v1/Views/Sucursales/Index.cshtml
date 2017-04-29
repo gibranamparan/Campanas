@@ -11,6 +11,7 @@
 <p>
     @Html.ActionLink("Crear Nuevo", "Create")
 </p>
+
 <table class="datablejs">
     <thead>
         <tr>
@@ -20,7 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.domicilioSucursal)
             </th>
-            <th>Numero de Departamentos</th>
+            <th>Departamentos</th>
+            <th>Inventarios</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -38,28 +41,30 @@
                     @item.Departamentos.Count()
                 </td>
                 <td>
-                    <a href="@Url.Action("Edit","Sucursales",new { id = item.idSucursal })">
+                    @item.Inventarios.Count()
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-pencil"></i> Editar
                     </a><br />
-                    <a href="@Url.Action("Details","Sucursales",new { id = item.idSucursal })">
+                    <a href="@Url.Action("Details", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-eye-open"></i> Detalles
                     </a><br />
-                    <a href="@Url.Action("Delete","Sucursales",new { id = item.idSucursal })">
+                    <a href="@Url.Action("Delete", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-remove"></i> Eliminar
                     </a>
 
                 </td>
+                <td>
+                    @Html.ActionLink("Inventarios", "Inventarios", new { id = item.idSucursal },new{ @class = "btn btn-primary"})
+                </td>
             </tr>
+       
+        
+            
+        
         }
     </tbody>
 </table>
 
-
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-            $('.DataTable').DataTable();
-        });
-    </script>
-
-}
+        

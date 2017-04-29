@@ -38,9 +38,18 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Inventarios/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+            if (id==null)
+            {
+                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+            }
+            else
+            {
+                Sucursal Sucursal = db.Sucursales.Find(id);
+                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", Sucursal.idSucursal);
+            }
+            
             return View();
         }
 
@@ -54,13 +63,14 @@ namespace CampanasDelDesierto_v1.Controllers
             if (ModelState.IsValid)
             {
                 var activos = inventario.cantidad;
-                for (int i = 1; i < activos ; i++)
+                for (int i = 0; i < activos ; i++)
                 {
                     //Se crea una instancia al modelo de activo
                     Activo activo = new Activo();
                     //se le asignan los datos
                     activo.nombreActivo = inventario.nombreInventario;
                     activo.inventarioID = inventario.inventarioID;
+                    activo.estadoActivo = "No establecido";
                     //Se guardan los datos
                     db.Activos.Add(activo);
                     

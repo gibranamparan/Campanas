@@ -33,12 +33,11 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idSucursal }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
-<div class="">
+
     <legend>Departamentos</legend>
     
         
-    <div>
-        <table class="table datablejs">
+     <table class="table datablejs">
             <thead>
                 <tr>
                     <th>Nombre del Departamento</th>
@@ -61,11 +60,7 @@
 
 
         </table>
-        
-        
-        
-    </div>
-</div>
+                    
 <div>    
     @Html.ActionLink("Crear Departamento", "Create", "Departamentos", new { id = Model.idSucursal }, new { @class = "btn btn-primary" })
 </div>

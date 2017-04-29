@@ -559,11 +559,6 @@
     <Content Include="Views\Sucursales\Details.cshtml" />
     <Content Include="Views\Sucursales\Edit.cshtml" />
     <Content Include="Views\Sucursales\Index.cshtml" />
-    <Content Include="Views\PrestamosActivos\Create.cshtml" />
-    <Content Include="Views\PrestamosActivos\Delete.cshtml" />
-    <Content Include="Views\PrestamosActivos\Details.cshtml" />
-    <Content Include="Views\PrestamosActivos\Edit.cshtml" />
-    <Content Include="Views\PrestamosActivos\Index.cshtml" />
     <Content Include="Views\Departamentos\Create.cshtml" />
     <Content Include="Views\Departamentos\Delete.cshtml" />
     <Content Include="Views\Departamentos\Details.cshtml" />
@@ -590,6 +585,12 @@
     <Content Include="Views\EmisionDeCheques\Details.cshtml" />
     <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
     <Content Include="Views\EmisionDeCheques\Index.cshtml" />
+    <Content Include="Views\Sucursales\Inventarios.cshtml" />
+    <Content Include="Views\PrestamosActivos\Create.cshtml" />
+    <Content Include="Views\PrestamosActivos\Delete.cshtml" />
+    <Content Include="Views\PrestamosActivos\Details.cshtml" />
+    <Content Include="Views\PrestamosActivos\Edit.cshtml" />
+    <Content Include="Views\PrestamosActivos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

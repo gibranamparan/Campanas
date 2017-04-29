@@ -124,5 +124,18 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             base.Dispose(disposing);
         }
+        public ActionResult Inventarios(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Sucursal Sucursales = db.Sucursales.Find(id);
+            if (Sucursales == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Sucursales);
+        }
     }
 }

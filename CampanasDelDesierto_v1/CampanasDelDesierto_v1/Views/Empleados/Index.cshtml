@@ -24,6 +24,7 @@
         <th>
             @Html.DisplayNameFor(model => model.apellidoMaterno)
         </th>
+        <th>Prestamos</th>
         <th></th>
     </tr>
 
@@ -41,10 +42,13 @@
         <td>
             @Html.DisplayFor(modelItem => item.apellidoMaterno)
         </td>
+            @item.PrestamosActivos.Count()
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idEmpleado }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idEmpleado }) |
+            @Html.ActionLink("Edit", "Edit", new { id=item.idEmpleado }) |            
             @Html.ActionLink("Delete", "Delete", new { id=item.idEmpleado })
+        </td>
+        <td>
+            @Html.ActionLink("Prestamos", "Details", new { id = item.idEmpleado }, new { @class = "btn btn-primary" }) 
         </td>
     </tr>
 }
