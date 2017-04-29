@@ -10,7 +10,6 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = "Admin, Sucursal")]
     public class PrestamosActivosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -38,16 +37,35 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PrestamosActivos/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id, int? idEmpleado)
         {
-            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
-            ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre");
+            if (id == null)
+            {
+                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
+                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre");
+            }
+            else
+            {
+                Activo activo = db.Activos.Find(id);                
+                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", activo.idActivo);                
+            }
+            if (idEmpleado==null)
+            {
+                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
+                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre");
+            }
+            else
+            {
+                Empleado empleado = db.Empleados.Find(idEmpleado);
+                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre", empleado.idEmpleado);
+            }
+
             return View();
         }
 
         // POST: PrestamosActivos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idPrestamoActivo,fechaPrestamoActivo,fechaEntregaActivo,fechaDevolucion,idEmpleado,idActivo")] PrestamoActivo prestamoActivo)
@@ -83,7 +101,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // POST: PrestamosActivos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idPrestamoActivo,fechaPrestamoActivo,fechaEntregaActivo,fechaDevolucion,idEmpleado,idActivo")] PrestamoActivo prestamoActivo)

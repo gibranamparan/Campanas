@@ -147,7 +147,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
 
-                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor, anioCosecha = ventaACredito.anioCosecha });
+                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });
                 }
             }
 

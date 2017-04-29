@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -15,20 +16,20 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Inventarios
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var inventarios = db.Inventarios.Include(i => i.Sucursal);
-            return View(inventarios.ToList());
+            return View(await inventarios.ToListAsync());
         }
 
         // GET: Inventarios/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventario inventario = db.Inventarios.Find(id);
+            Inventario inventario = await db.Inventarios.FindAsync(id);
             if (inventario == null)
             {
                 return HttpNotFound();
@@ -37,23 +38,45 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Inventarios/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+            if (id==null)
+            {
+                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+            }
+            else
+            {
+                Sucursal Sucursal = db.Sucursales.Find(id);
+                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", Sucursal.idSucursal);
+            }
+            
             return View();
         }
 
         // POST: Inventarios/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,idSucursal")] Inventario inventario)
+        public async Task<ActionResult> Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,idSucursal")] Inventario inventario)
         {
             if (ModelState.IsValid)
             {
+                var activos = inventario.cantidad;
+                for (int i = 0; i < activos ; i++)
+                {
+                    //Se crea una instancia al modelo de activo
+                    Activo activo = new Activo();
+                    //se le asignan los datos
+                    activo.nombreActivo = inventario.nombreInventario;
+                    activo.inventarioID = inventario.inventarioID;
+                    activo.estadoActivo = "No establecido";
+                    //Se guardan los datos
+                    db.Activos.Add(activo);
+                    
+                }
                 db.Inventarios.Add(inventario);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -62,13 +85,13 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Inventarios/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventario inventario = db.Inventarios.Find(id);
+            Inventario inventario = await db.Inventarios.FindAsync(id);
             if (inventario == null)
             {
                 return HttpNotFound();
@@ -79,15 +102,15 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // POST: Inventarios/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,idSucursal")] Inventario inventario)
+        public async Task<ActionResult> Edit([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,idSucursal")] Inventario inventario)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(inventario).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.idSucursal);
@@ -95,13 +118,13 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Inventarios/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventario inventario = db.Inventarios.Find(id);
+            Inventario inventario = await db.Inventarios.FindAsync(id);
             if (inventario == null)
             {
                 return HttpNotFound();
@@ -112,11 +135,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // POST: Inventarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Inventario inventario = db.Inventarios.Find(id);
+            Inventario inventario = await db.Inventarios.FindAsync(id);
             db.Inventarios.Remove(inventario);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

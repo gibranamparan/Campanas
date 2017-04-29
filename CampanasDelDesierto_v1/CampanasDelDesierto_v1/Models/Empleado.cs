@@ -24,9 +24,9 @@ namespace CampanasDelDesierto_v1.Models
         public string apellidoMaterno { get; set; }
 
         
-        public int departamentoID { get; set; }
+        
         public virtual Departamento Departamento { get; set; }
-
+        public int departamentoID { get; set; }
         public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
     }
 }

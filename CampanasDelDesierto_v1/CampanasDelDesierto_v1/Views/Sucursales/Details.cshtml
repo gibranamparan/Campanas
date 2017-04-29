@@ -33,3 +33,34 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idSucursal }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+    <legend>Departamentos</legend>
+    
+        
+     <table class="table datablejs">
+            <thead>
+                <tr>
+                    <th>Nombre del Departamento</th>
+                    <th>Numero de Empleados</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var departamento in Model.Departamentos)
+            {
+                    <tr>
+                        <td>@(departamento.nombreDepartamento)</td>
+                        <td>@departamento.Empleados.Count()</td>
+                        <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
+                        <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
+                    </tr>
+                }
+            </tbody>
+
+
+        </table>
+                    
+<div>    
+    @Html.ActionLink("Crear Departamento", "Create", "Departamentos", new { id = Model.idSucursal }, new { @class = "btn btn-primary" })
+</div>

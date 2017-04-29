@@ -4,15 +4,15 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
-<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
 
 <h2>Tabla de Sucursales</h2>
 
 <p>
     @Html.ActionLink("Crear Nuevo", "Create")
 </p>
-<table class="DataTable">
+
+<table class="datablejs">
     <thead>
         <tr>
             <th>
@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.domicilioSucursal)
             </th>
+            <th>Departamentos</th>
+            <th>Inventarios</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -35,28 +38,33 @@
                     @Html.DisplayFor(modelItem => item.domicilioSucursal)
                 </td>
                 <td>
-                    <a href="@Url.Action("Edit","Sucursales",new { id = item.idSucursal })">
+                    @item.Departamentos.Count()
+                </td>
+                <td>
+                    @item.Inventarios.Count()
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-pencil"></i> Editar
                     </a><br />
-                    <a href="@Url.Action("Details","Sucursales",new { id = item.idSucursal })">
+                    <a href="@Url.Action("Details", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-eye-open"></i> Detalles
                     </a><br />
-                    <a href="@Url.Action("Delete","Sucursales",new { id = item.idSucursal })">
+                    <a href="@Url.Action("Delete", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-remove"></i> Eliminar
                     </a>
 
                 </td>
+                <td>
+                    @Html.ActionLink("Inventarios", "Inventarios", new { id = item.idSucursal },new{ @class = "btn btn-primary"})
+                </td>
             </tr>
+       
+        
+            
+        
         }
     </tbody>
 </table>
 
-
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-            $('.DataTable').DataTable();
-        });
-    </script>
-
-}
+        

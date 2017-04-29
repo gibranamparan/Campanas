@@ -43,9 +43,57 @@
             @Html.DisplayFor(model => model.costo)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.cantidad)
+        </dt>
+
+        <dd>
+            @Model.Activos.Count()
+        </dd>
+
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.inventarioID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<div class="">
+    <legend>Departamentos</legend>
+
+
+    <div>
+        <table class="table datablejs">
+            <thead>
+                <tr>
+                    <th>Nombre del Activo</th>
+                    <th>Estado del Activo</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var activo in Model.Activos)
+            {
+                    <tr>
+                        <td>@(activo.nombreActivo)</td>
+                        <td>@activo.estadoActivo</td>
+                        <td>@Html.ActionLink("Eliminar", "Delete", "Activos", new { id = activo.idActivo }, null)  </td>
+                        <td>@Html.ActionLink("Detalles", "Details", "Activos", new { id = activo.idActivo }, null)  </td>
+                        <td>@Html.ActionLink("Editar", "Edit", "Activos", new { id = activo.idActivo }, null)  </td>
+                        <td>@Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { id = activo.idActivo }, new { @class = "btn btn-primary" })</td>
+                    </tr>
+                }
+            </tbody>
+
+
+        </table>
+
+
+
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Crear Activo", "Create", "Activos", new { id = Model.inventarioID }, new { @class = "btn btn-primary" })
+</div>

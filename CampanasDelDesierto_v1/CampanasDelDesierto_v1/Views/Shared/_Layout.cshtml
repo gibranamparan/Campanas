@@ -7,10 +7,6 @@
     @Styles.Render("~/assets/css/main.css ")
     @Styles.Render("~/Content/css")
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/template")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/bootstrap")
 </head>
 
 <body>
@@ -74,12 +70,13 @@
                 {
                     <nav id="menu">
                         <ul>
-                            <li><a href="~/Activos/">Activos</a></li>
-                            <li><a href="~/Empleados/">Empleados</a></li>
                             <li><a href="~/PrestamosActivos/">Prestamos de Activos</a></li>
                             <li><a href="~/Sucursales/">Sucursales</a></li>
+                            @*<li><a href="~/Inventarios/">Inventarios</a></li>
+                            <li><a href="~/Activos/">Activos</a></li>*@                                                                                    
                             <li><a href="~/Departamentos/">Departamentos</a></li>
-                            <li><a href="~/Inventarios/">Inventarios</a></li>
+                            <li><a href="~/Empleados/">Empleados</a></li>
+                            
                         </ul>
                     </nav>
                 }
@@ -87,6 +84,10 @@
         </div>
     </div>
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/template")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
 
