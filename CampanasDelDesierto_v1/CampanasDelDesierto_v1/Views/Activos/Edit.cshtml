@@ -54,7 +54,9 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+    </a>
 </div>
 
 @section Scripts {

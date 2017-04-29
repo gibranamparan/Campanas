@@ -51,6 +51,7 @@
             @Html.DisplayFor(model => model.numeroSemana)
         </dd>
 
+       @*
         <dt>
             @Html.DisplayNameFor(model => model.cheque)
         </dt>
@@ -66,6 +67,7 @@
         <dd>
             @Html.DisplayFor(model => model.abonoAnticipo)
         </dd>
+    *@
 
         <dt>
             @Html.DisplayNameFor(model => model.tipoProducto)
@@ -75,17 +77,23 @@
             @Html.DisplayFor(model => model.tipoProducto)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.garantiaLimpieza)
-        </dt>
+        @*<dt>
+                @Html.DisplayNameFor(model => model.garantiaLimpieza)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.garantiaLimpieza)
-        </dd>
-
+            <dd>
+                @Html.DisplayFor(model => model.garantiaLimpieza)
+            </dd>
+    *@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
-    @Html.ActionLink("Volver a la lista", "Index")
+    <a href="@Url.Action("Edit","PagosPorProductos",new { id = Model.idMovimiento })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a><br />
+    <div>
+        <a href="@Url.Action("Index")">
+            <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+        </a>
+    </div>
 </p>

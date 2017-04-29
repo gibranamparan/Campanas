@@ -27,8 +27,11 @@
                 <dd> @Html.DisplayFor(model => model.adeudoAnterior)</dd>
             </dl>
         </div>
-        <p>
-            @Html.ActionLink("Editar", "Edit", "Productores", new { id = Model.idProductor }, null)
-        </p>
-    </div>
+       
+        
+            <a href="@Url.Action("Edit","Productores",new { id = Model.idProductor })">
+                <i class="glyphicon glyphicon-pencil"></i> Editar
+            </a><br />
+        
+</div>
 </div>

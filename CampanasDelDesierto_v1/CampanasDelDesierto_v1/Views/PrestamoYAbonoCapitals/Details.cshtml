@@ -34,15 +34,15 @@
         <dd>
             @Html.DisplayFor(model => model.fechaMovimiento)
         </dd>
+@*
+    <dt>
+        @Html.DisplayNameFor(model => model.fechaDePrestamo)
+    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaDePrestamo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaDePrestamo)
-        </dd>
-
+    <dd>
+        @Html.DisplayFor(model => model.fechaDePrestamo)
+    </dd>
+*@
         <dt>
             @Html.DisplayNameFor(model => model.cheque)
         </dt>
@@ -59,14 +59,14 @@
             @Html.DisplayFor(model => model.concepto)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.cargo)
-        </dt>
+        @*<dt>
+        @Html.DisplayNameFor(model => model.cargo)
+    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.cargo)
-        </dd>
-
+    <dd>
+        @Html.DisplayFor(model => model.cargo)
+    </dd>
+        *@
         <dt>
             @Html.DisplayNameFor(model => model.pagare)
         </dt>
@@ -101,7 +101,22 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
-    @Html.ActionLink("Volver a la lista", "Index")
+<p class="hidden-print">
+    <a href="@Url.Action("Edit","PrestamoYAbonoCapitals",new { id = Model.idMovimiento })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a><br />
+
+    <div>
+        <a href="@Url.Action("Index")">
+            <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+        </a>
+    </div>
 </p>
+
+<input style="Background-color:#cbc06e" class="hidden-print" type="button"
+       onClick="window.print()"
+       value="Imprimir" />
+
+
+
+
