@@ -208,7 +208,7 @@
                 //Se hace solicitud del precio del dolar al server
                 getTipoCambioAsync(
                     function (res) {
-                        $("#precioDelDolar").val(res.precioDolar).trigger('input');
+                        $("#precioDelDolar").val(numeral(res.precioDolar).format('0.0000')).trigger('input');
                         $('#precioDelDolar').attr('value', res.precioDolar);
                         precioDolar = res.precioDolar;
                         recalcularMontoDolares();
