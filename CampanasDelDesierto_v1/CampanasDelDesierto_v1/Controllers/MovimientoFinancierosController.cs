@@ -38,6 +38,21 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
 
+        // GET: MovimientoFinancieros/Details/5
+        public ActionResult Pagare(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            MovimientoFinanciero movimientoFinanciero = db.MovimientosFinancieros.Find(id);
+            if (movimientoFinanciero == null)
+            {
+                return HttpNotFound();
+            }
+            return View(movimientoFinanciero);
+        }
+
         // GET: MovimientoFinancieros/Create
         public ActionResult Create()
         {
@@ -96,6 +111,8 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", movimientoFinanciero.idProductor);
             return View(movimientoFinanciero);
         }
+
+
 
         // GET: MovimientoFinancieros/Delete/5
         public ActionResult Delete(int? id)

@@ -8,7 +8,7 @@
 
 <h2>Detalles</h2>
 
-<div>
+<div>   
     <h4>Movimiento Financiero</h4>
     <hr />
     <dl class="dl-horizontal">
@@ -36,25 +36,70 @@
             @Html.DisplayFor(model => model.fechaMovimiento)
         </dd>
 
+        @*Panel para detalles de registro de cosecha*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+        {
+            @(((PagoPorProducto)Model).nombreDeMovimiento)
+        }
+        else if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+        {
+            PrestamoYAbonoCapital movAnticipo = (PrestamoYAbonoCapital)Model;
+            @*Panel para detalles movimentos de capital (Prestamos o abonos)*@
+            <dt>
+                @Html.DisplayNameFor(model => movAnticipo.cheque)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => movAnticipo.cheque)
+            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => movAnticipo.concepto)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => movAnticipo.concepto)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => movAnticipo.proveedor)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => movAnticipo.proveedor)
+                </dd>
+                @*
+                    <dt>
+                        @Html.DisplayNameFor(model => model.pagare)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.pagare)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.fechaPagar)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.fechaPagar)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.nota)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.nota)
+                    </dd>*@
+        }
+
+        @*Panel para detalles para ventas a credito*@
+
     </dl>
 </div>
-
-@*Panel para detalles de registro de cosecha*@
-@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO) {
-    <div>
-        @(((PagoPorProducto)Model).nombreDeMovimiento)
-    </div>
-}
-else if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-{
-    @*Panel para detalles movimentos de capital*@
-    <div></div>
-}
-@*Panel para detalles para ventas a credito*@
-<div></div>
 <p>
     @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
-    
+
     <a href="@Url.Action("Index")">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
     </a>
