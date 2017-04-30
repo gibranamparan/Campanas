@@ -47,7 +47,7 @@ namespace CampanasDelDesierto_v1.Models
                     else if (this.conceptoProveedor == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                         return PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO;
                     else
-                        return "CAPITAL";
+                        return "ANTICIPO";
                 }
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
                     return "COSECHA";
