@@ -10,6 +10,20 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@using (Html.BeginForm("Index","PrestamosActivos",FormMethod.Post, new { id="formulario"}))
+{
+
+    <div class="row">
+        <div>@Html.TextBox("FechaI", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaI", name="FechaI"})</div>
+        <div>@Html.TextBox("FechaF", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaF", name = "FechaF" })</div>
+        <div><button disabled id="Buscar" name="Buscar" type="submit" onclick="compararFechas('FechaI','FechaF');" class="btn btn-primary">Buscar</button></div>
+       
+    </div>
+
+
+
+}
+    
 <table class="table">
     <tr>
         <th>
@@ -56,3 +70,54 @@
 }
 
 </table>
+@section Scripts{
+ <script>
+     
+     //Validacion texbox llenados y habilitacion de boton buscar
+     $("#FechaI").change(function () {
+         var fech1 = document.getElementById("FechaI").value;
+         var fech2 = document.getElementById("FechaF").value;
+        
+         if (fech2 == "") {
+             $('#Buscar').attr('disabled', true)
+         }
+         else
+         {
+             $('#Buscar').attr('disabled', false)
+         }
+         //Valida los rangos
+         if ((Date.parse(fech1)) > (Date.parse(fech2))) {
+             alert('La fecha inicial no puede ser mayor que la fecha final');
+             if ($('#Buscar').attr('disabled', true)) {
+
+             }
+             else
+             {
+                 $('#Buscar').attr('disabled', true)
+             }
+         }
+     });
+     $("#FechaF").change(function () {
+         var fech1 = document.getElementById("FechaI").value;
+         var fech2 = document.getElementById("FechaF").value;
+         if (fech1 == "") {
+             $('#Buscar').attr('disabled', true)
+         }
+         else
+         {
+             $('#Buscar').attr('disabled', false)
+         }
+         //Valida los rangos
+         if ((Date.parse(fech1)) > (Date.parse(fech2))) {
+             alert('La fecha inicial no puede ser mayor que la fecha final');
+             if ($('#Buscar').attr('disabled', true)) {
+
+             }
+             else {
+                 $('#Buscar').attr('disabled', true)
+             }
+         }
+     });
+    
+</script>
+    }

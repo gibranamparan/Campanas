@@ -11,6 +11,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize]
     public class InventariosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

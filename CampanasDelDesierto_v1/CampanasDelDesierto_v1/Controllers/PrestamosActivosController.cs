@@ -10,6 +10,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize]
     public class PrestamosActivosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -19,6 +20,13 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado);
             return View(prestamoActivos.ToList());
+        }
+        //Metodo post para poder realizar la busqueda (Buscador rango por fechas)
+        [HttpPost]
+        public ActionResult Index(DateTime fechaI, DateTime fechaF)
+        {
+            var prestamos = db.PrestamoActivos.Where(resultado => resultado.fechaPrestamoActivo>= fechaI && resultado.fechaPrestamoActivo<=fechaF).ToList();
+            return View(prestamos);
         }
 
         // GET: PrestamosActivos/Details/5
