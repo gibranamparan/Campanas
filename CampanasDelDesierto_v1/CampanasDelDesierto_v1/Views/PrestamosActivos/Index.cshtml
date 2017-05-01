@@ -5,11 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<h2>Prestamos de Activos</h2>
+<div class="container">
+    <div class=" form-group">
+        @Html.ActionLink("Realizar prestamo", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+    
+</div>
 @using (Html.BeginForm("Index","PrestamosActivos",FormMethod.Post, new { id="formulario"}))
 {
 
@@ -17,7 +19,7 @@
         <div>@Html.TextBox("FechaI", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaI", name="FechaI"})</div>
         <div>@Html.TextBox("FechaF", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaF", name = "FechaF" })</div>
         <div><button disabled id="Buscar" name="Buscar" type="submit" onclick="compararFechas('FechaI','FechaF');" class="btn btn-primary">Buscar</button></div>
-       
+        <div class="glyphicon">@Html.ActionLink(".", "Index", null, new { @class = "glyphicon glyphicon-repeat" })</div>
     </div>
 
 

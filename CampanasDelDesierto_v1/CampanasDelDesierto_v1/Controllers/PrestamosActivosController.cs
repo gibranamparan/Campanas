@@ -18,7 +18,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: PrestamosActivos
         public ActionResult Index()
         {
-            var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado);
+            var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado).OrderBy(a=> a.fechaPrestamoActivo).Take(10);
             return View(prestamoActivos.ToList());
         }
         //Metodo post para poder realizar la busqueda (Buscador rango por fechas)
