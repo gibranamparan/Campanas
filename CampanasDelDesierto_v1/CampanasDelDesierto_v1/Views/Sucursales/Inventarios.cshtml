@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Inventarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
 }
 
 <h2>Inventarios</h2>
@@ -24,7 +25,7 @@
                     <tr>
                         <td>@(inventario.nombreInventario)</td>
                         <td>@inventario.modeloInventario</td>
-                        <td>@inventario.costo</td>
+                        <td>@inventario.costo</td>                        
                         <td>@inventario.Activos.Count()</td>
                         <td>@Html.ActionLink("Eliminar", "Delete", "Inventarios", new { id = inventario.inventarioID }, null)  </td>
                         <td>@Html.ActionLink("Ver Activos", "Details", "Inventarios", new { id = inventario.inventarioID }, null)  </td>
