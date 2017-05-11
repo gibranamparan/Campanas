@@ -17,8 +17,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // GET: PrestamosActivos
         public ActionResult Index()
-        {
-            var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado);
+        {        
+            var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado).OrderBy(a=> a.fechaPrestamoActivo).Take(10);
             return View(prestamoActivos.ToList());
         }
         //Metodo post para poder realizar la busqueda (Buscador rango por fechas)
@@ -54,8 +54,8 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             else
             {
-                Activo activo = db.Activos.Find(id);                
-                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", activo.idActivo);                
+                Activo activo = db.Activos.Find(id);
+                ViewBag.idActivo = new SelectList(db.Empleados, "idEmpleado", "nombre", activo.idActivo);
             }
             if (idEmpleado==null)
             {
@@ -80,9 +80,22 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.PrestamoActivos.Add(prestamoActivo);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var activo = new Activo();                
+                var ac = activo.estaPrestado(prestamoActivo.idActivo);
+                if (ac==true)
+                {
+                    ViewBag.Mensaje = "El prestamo no se pudo realizar";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+
+                    db.PrestamoActivos.Add(prestamoActivo);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                
+                
             }
 
             ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", prestamoActivo.idActivo);

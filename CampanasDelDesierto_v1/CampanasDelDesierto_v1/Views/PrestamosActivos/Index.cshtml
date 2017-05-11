@@ -5,25 +5,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<h2>Prestamos de Activos</h2>
+<div class="container row">
+    <div class=" form-group">
+        @Html.ActionLink("Realizar prestamo", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+    
+</div>
 @using (Html.BeginForm("Index","PrestamosActivos",FormMethod.Post, new { id="formulario"}))
 {
 
-    <div class="row">
+    <div class="row form-group">
         <div>@Html.TextBox("FechaI", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaI", name="FechaI"})</div>
         <div>@Html.TextBox("FechaF", "dd/mm/yyyy", new { @class = "form-control", type = "Date", id = "FechaF", name = "FechaF" })</div>
         <div><button disabled id="Buscar" name="Buscar" type="submit" onclick="compararFechas('FechaI','FechaF');" class="btn btn-primary">Buscar</button></div>
-       
+        
+        <div class="row">
+            <h4>
+                <a href="@Url.Action("Index","PrestamosActivos")">
+                    <i class="glyphicon glyphicon-repeat"></i>
+                </a><br />
+            </h4>
+        </div>
+</div>
+    <div id="mensajes" class="form-group col-md-4">
+
     </div>
 
 
 
 }
-    
+
 <table class="table">
     <tr>
         <th>
@@ -87,14 +99,19 @@
          }
          //Valida los rangos
          if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-             alert('La fecha inicial no puede ser mayor que la fecha final');
+             $('#mensaje').remove();
+             $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La fecha inicial no puede ser mayor a la fecha final</div>");
              if ($('#Buscar').attr('disabled', true)) {
 
              }
-             else
-             {
+             else {
                  $('#Buscar').attr('disabled', true)
              }
+         }
+         else
+         {
+             $('#mensaje').remove();
+             $('#mensajes').append("<div id='mensaje' class='alert alert-success'>El rango de fechas es correcto</div>");
          }
      });
      $("#FechaF").change(function () {
@@ -109,13 +126,20 @@
          }
          //Valida los rangos
          if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-             alert('La fecha inicial no puede ser mayor que la fecha final');
+             $('#mensaje').remove();
+             $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La fecha inicial no puede ser mayor a la fecha final</div>");
              if ($('#Buscar').attr('disabled', true)) {
 
              }
              else {
+
                  $('#Buscar').attr('disabled', true)
              }
+         }
+         else
+         {
+             $('#mensaje').remove();
+             $('#mensajes').append("<div id='mensaje' class='alert alert-success'>El rango de fechas es correcto</div>");
          }
      });
     

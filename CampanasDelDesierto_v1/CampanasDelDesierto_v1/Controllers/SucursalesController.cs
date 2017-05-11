@@ -130,11 +130,12 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sucursal Sucursales = db.Sucursales.Find(id);
+            Sucursal Sucursales = db.Sucursales.Find(id);            
             if (Sucursales == null)
             {
                 return HttpNotFound();
             }
+             ViewBag.EnAlmacen= Sucursales.GetActivosEnAlmacen(id);
             return View(Sucursales);
         }
     }
