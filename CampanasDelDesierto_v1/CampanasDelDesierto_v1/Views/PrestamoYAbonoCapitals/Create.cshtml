@@ -7,14 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Productor productor = ViewBag.productor;
-
-    //Se establece como fecha a pagar el 15 de agosto mas próximo
-    //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
-    Model.fechaPagar = new DateTime(Model.fechaMovimiento.Year, 8, 15);
-    if (Model.fechaMovimiento > Model.fechaPagar) {
-        Model.fechaPagar = Model.fechaPagar.Value.AddYears(1);
-    }
-
+    
     /*Just for test*/
     Random random = new Random();
     // decimal montoMovimientoPesos = random.Next(1,10)*50*100;

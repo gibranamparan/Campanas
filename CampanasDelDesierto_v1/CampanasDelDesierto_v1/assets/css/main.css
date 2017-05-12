@@ -2322,10 +2322,6 @@ Css pesonalisado
 	input[type="number"],
 	select,
 	textarea {
-		-moz-appearance: none;
-		-webkit-appearance: none;
-		-ms-appearance: none;
-		appearance: none;
 		background: #ffffff;
 		border-radius: 0.375em;
 		border: none;
@@ -2334,7 +2330,6 @@ Css pesonalisado
 		display: block;
 		outline: 0;
 		padding: 0 1em;
-		text-decoration: none;
 		width: 100%;
 	}
 

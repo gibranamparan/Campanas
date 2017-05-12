@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using CampanasDelDesierto_v1.Models;
+using System.Web.Mvc;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -11,6 +12,9 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Key]
         public int idProductor { get; set; }
+
+        [Display(Name = "Número de Productor")]
+        public string numProductor { get; set; }
 
         [Display(Name = "Nombre Productor ")]
         public string nombreProductor { get; set; }
@@ -35,7 +39,7 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name ="Adeudo Anterior")]
+        [Display(Name ="Adeudo Anterior (USD)")]
         public decimal? adeudoAnterior { get; set; }
 
         public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
@@ -90,6 +94,35 @@ namespace CampanasDelDesierto_v1.Models
             numreg = db.SaveChanges();
 
             return numreg;
+        }
+
+        public static class Zonas
+        {
+            public const string ZONA1 = "Caborca";
+            public const string ZONA2 = "Baja";
+        }
+
+        /// <summary>
+        /// Arroja aregglo de zones enumeradas en la clase estatica Zonas.
+        /// </summary>
+        /// <returns>Arreglo de objectos dinamicos con Text y Value como atributos,
+        /// ambos con el nombre de la zona.</returns>
+        public static object[] getZonasItemArray()
+        {
+            object[] array = {
+                new { Text=Zonas.ZONA1, Value=Zonas.ZONA1},
+                new { Text=Zonas.ZONA2, Value=Zonas.ZONA2}
+            };
+            return array;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selVal">Optional, valor seleccionado por defecto.</param>
+        /// <returns>Select list listo para ser usado en la vista rellenado con las zonas</returns>
+        public static SelectList getZonasSelectList(object selVal = null)
+        {
+            return new SelectList(Productor.getZonasItemArray(), "Value", "Text", selVal);
         }
 
         public MovimientoFinanciero getUltimoMovimiento()

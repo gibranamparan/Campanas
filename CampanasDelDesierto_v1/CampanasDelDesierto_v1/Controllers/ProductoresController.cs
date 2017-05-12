@@ -57,14 +57,52 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
-            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProducto3,precioProductoOtro")]
+            "nombreCheque,adeudoAnterior")]
             Productor productor)
         {
             if (ModelState.IsValid)
             {
+                //Si existe adeudo anterior, se introduce como movimiento de anticipo con
+                //dicho concepto
+                if (productor.adeudoAnterior > 0)
+                {
+                    String errorMsg = "";
+                    //Inicializa servicio de doalres
+                    HerramientasGenerales.BaxicoWebService bws = new HerramientasGenerales.BaxicoWebService();
+                    //Lista de movimientos para nuevo productor
+                    productor.MovimientosFinancieros = new List<MovimientoFinanciero>();
+                    //Se determinar la ultima temporada
+                    TemporadaDeCosecha tc = TemporadaDeCosecha.getUltimaTemporada();
+                    //Se crea el nuevo movimiento que representa la deuda anterior
+                    PrestamoYAbonoCapital deuda = new PrestamoYAbonoCapital();
+
+                    //Se rellenan los atributos del nuevo movimiento
+                    deuda.introducirMovimientoEnPeriodo(tc);
+                    deuda.temporadaDeCosecha = null; //Evitando error de multiple tracking
+                    deuda.montoMovimiento = -productor.adeudoAnterior.Value;
+                    deuda.balance = deuda.montoMovimiento;
+                    deuda.concepto = PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO;
+                    deuda.divisa = PrestamoYAbonoCapital.Divisas.USD;
+                    deuda.precioDelDolar = bws.getCambioDolar(ref errorMsg);
+                    deuda.proveedor = "DEUDA ANTERIOR";
+                    deuda.fechaPagar = new DateTime(deuda.fechaMovimiento.Year, 8, 15);
+                    if (deuda.fechaMovimiento > deuda.fechaPagar)
+                        deuda.fechaPagar = deuda.fechaPagar.Value.AddYears(1);
+
+                    //Ajuste de movimiento para entrar dentro de la lista de balances
+                    deuda.ajustarMovimiento();
+                    //Se agrega el movimiento al nuevo productor
+                    productor.MovimientosFinancieros.Add(deuda);
+                }
+
+                productor.RFC = productor.RFC.ToUpper();
+                productor.nombreCheque = productor.nombreCheque.ToUpper();
+                productor.nombreProductor = productor.nombreProductor.ToUpper();
+
+                //Se guarda nuevo productor
                 db.Productores.Add(productor);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Productores", new { id = productor.idProductor });
             }
 
             return View(productor);

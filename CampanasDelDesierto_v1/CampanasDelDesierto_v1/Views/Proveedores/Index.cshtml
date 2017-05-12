@@ -7,10 +7,10 @@
 
 <h2>Tabla proveedores</h2>
 
-<p>
-    @Html.ActionLink("Crear Nuevo", "Create")
-</p>
-<table class="table">
+<a href="@Url.Action("Create")">
+    <i class="fa fa-plus-circle"></i> Nuevo Proveedor
+</a>
+<table class="table table-hover table-striped">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.nombreProveedor)

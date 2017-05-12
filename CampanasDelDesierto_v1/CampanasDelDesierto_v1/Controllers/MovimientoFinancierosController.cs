@@ -157,9 +157,10 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost, ValidateHeaderAntiForgeryToken]
         public JsonResult getCambioDolar()
         {
+            String errorMsg = "";
             BaxicoWebService bws = new BaxicoWebService();
-            decimal precioDolar = bws.getCambioDolar();
-            return Json(new { precioDolar = precioDolar });
+            decimal precioDolar = bws.getCambioDolar(ref errorMsg);
+            return Json(new { precioDolar = precioDolar, errorMsg = errorMsg });
         }
 
         protected override void Dispose(bool disposing)

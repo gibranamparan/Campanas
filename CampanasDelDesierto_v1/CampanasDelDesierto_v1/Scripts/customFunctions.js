@@ -55,5 +55,5 @@ jQuery.postJSON = function (url, data, dataType, success, fail, always, antiForg
 /*Llamada asincrona para tomar del servidor el tipo de cambio de forma asincrona*/
 function getTipoCambioAsync(success, error, complete , antiForgeryToken) {
     jQuery.postJSON("/MovimientoFinancieros/getCambioDolar", 0, 'JSON',
-        success, error, complete, antiForgeryToken)
+        success, error, complete, antiForgeryToken);
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.TemporadaDeCosecha>
+﻿@using CampanasDelDesierto_v1.Models
+@model IEnumerable<CampanasDelDesierto_v1.Models.TemporadaDeCosecha>
 
 @{
     ViewBag.Title = "Index";
@@ -17,13 +18,13 @@
                 @Html.DisplayNameFor(model => model.rangoTiempo)
             </th>
             <th>
-                @Model.FirstOrDefault().tipoProducto1
+                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO1
             </th>
             <th>
-                @Model.FirstOrDefault().tipoProducto2
+                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO2
             </th>
             <th>
-                @Model.FirstOrDefault().tipoProducto3
+                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO3
             </th>
             <th></th>
         </tr>

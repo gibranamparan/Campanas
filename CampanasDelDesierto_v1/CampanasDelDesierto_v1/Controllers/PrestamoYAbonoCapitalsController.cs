@@ -75,7 +75,13 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.proveedor = new SelectList(db.Proveedores, "nombreProveedor", "nombreProveedor");
             PrestamoYAbonoCapital mov = new PrestamoYAbonoCapital();
             mov.fechaMovimiento = DateTime.Now;
-            
+
+            //Se establece como fecha a pagar el 15 de agosto mas próximo
+            //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
+            mov.fechaPagar = new DateTime(mov.fechaMovimiento.Year, 8, 15);
+            if (mov.fechaMovimiento > mov.fechaPagar)
+                mov.fechaPagar = mov.fechaPagar.Value.AddYears(1);
+
             mov.idProductor = productor.idProductor;
 
             return mov;
