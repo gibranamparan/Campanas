@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using System.Data.OleDb;
+using OfficeOpenXml;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -32,6 +34,27 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            return View(temporadaDeCosecha);
+        }
+
+        // GET: TemporadaDeCosechas/Details/5
+        [HttpPost, ActionName("Details")]
+        public ActionResult UploadExcelAcumuladosAceituna(HttpPostedFileBase xlsFile, int id=0)
+        {
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TemporadaDeCosecha temporadaDeCosecha = db.TemporadaDeCosechas.Find(id);
+            if (temporadaDeCosecha == null)
+            {
+                return HttpNotFound();
+            }
+
+            int regsSaved = temporadaDeCosecha.importarIngresoDeProductos(xlsFile,db);
+            if (regsSaved == 0)
+                ModelState.AddModelError("", "No fue posible importar el excel, compruebe su estructura.");
+
             return View(temporadaDeCosecha);
         }
 
