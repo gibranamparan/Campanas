@@ -8,9 +8,9 @@
 
 <h2>Historial de Temporadas</h2>
 
-<p>
-    @Html.ActionLink("Nueva Temporada", "Create")
-</p>
+<a href="@Url.Action("Create")">
+    <i class="fa fa-plus-circle"></i> Editar
+</a>
 <table class="table table-hover table-striped">
     <thead>
         <tr>
@@ -46,7 +46,12 @@
                     @Html.DisplayFor(modelItem => item.precioProducto3)
                 </td>
                 <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.TemporadaDeCosechaID })
+                    <a href="@Url.Action("Edit", new { id = item.TemporadaDeCosechaID })">
+                        <i class="fa fa-pencil"></i> Editar
+                    </a> | 
+                    <a href="@Url.Action("Details", new { id = item.TemporadaDeCosechaID })">
+                        <i class="fa fa-file-excel-o"></i> Importar Datos
+                    </a>
                 </td>
             </tr>
         }

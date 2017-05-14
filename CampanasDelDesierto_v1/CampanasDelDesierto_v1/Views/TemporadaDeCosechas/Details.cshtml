@@ -5,63 +5,111 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>TemporadaDeCosecha</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaInicio)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaInicio)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaFin)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaFin)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.precioProducto1)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.precioProducto1)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.precioProducto2)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.precioProducto2)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.precioProducto3)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.precioProducto3)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.precioProductoOtro)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.precioProductoOtro)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TemporadaDeCosechaID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<a href="@Url.Action("Index")">
+    <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
+</a>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title"><strong>Temporada: </strong>@Model.rangoTiempo</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-inline">
+            <div class="form-group col-md-3">
+                <label>@Model.tipoProducto1: </label>
+                @Html.DisplayFor(model => model.precioProducto1)
+            </div>
+            <div class="form-group col-md-3">
+                <label>@Model.tipoProducto2: </label>
+                @Html.DisplayFor(model => model.precioProducto2)
+            </div>
+            <div class="form-group col-md-3">
+                <label>@Model.tipoProducto3: </label>
+                @Html.DisplayFor(model => model.precioProducto3)
+            </div>
+            <div class="form-group col-md-3">
+                <label>@Model.tipoProductoOtro: </label>
+                @Html.DisplayFor(model => model.precioProductoOtro)
+            </div>
+        </div>
+        <a href="@Url.Action("Edit", new { id = Model.TemporadaDeCosechaID })">
+            <i class="fa fa-pencil"></i> Editar
+        </a> 
+    </div>
+</div>
+<div class="alert alert-info">
+    Sube al servidor el archivo Excel de "Acumulados de recepción de Aceituna" correspondiente a esta temporada.
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post,
+                new { enctype = "multipart/form-data", @class = "form-inline" }))
+{
+    @Html.ValidationSummary()
+    <div class="col-md-12">
+        <label for="xlsFile">Archivo Excel</label>
+        <input id="xlsFile" name="xlsFile" type="file" class="form-control"
+               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+    </div>
+    <button class="btn btn-success">
+        <i class="fa fa-upload"></i> Subir
+    </button>
+}
+@*Panel que muestra la recepcion ingresada en el excel*@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ingreso de producto (Importado de Excel)</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover table-striped datatablejs">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().numeroRecibo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().numProductor)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().nombreProductor)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd1)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd2)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd3)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var recepcion in Model.recepcionesDeProducto)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model=>recepcion.numeroRecibo)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(model => recepcion.numProductor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.nombreProductor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd3)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

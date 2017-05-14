@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('.datablejs').DataTable();
+    $('.datatablejs').DataTable();
 });
 
 /* When the user clicks on the button, 

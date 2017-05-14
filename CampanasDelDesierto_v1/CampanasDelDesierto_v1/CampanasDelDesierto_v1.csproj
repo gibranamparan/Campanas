@@ -56,6 +56,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.7\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -248,6 +252,7 @@
     <Compile Include="HerramientasGenerales\BaxicoWebService.cs" />
     <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
+    <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
       <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
@@ -360,6 +365,22 @@
     <Compile Include="Migrations\201705120212444_productor_newField_numProductor.Designer.cs">
       <DependentUpon>201705120212444_productor_newField_numProductor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.cs" />
+    <Compile Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.Designer.cs">
+      <DependentUpon>201705130652401_nuevaTabla_RecepcionAceituna.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.cs" />
+    <Compile Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.Designer.cs">
+      <DependentUpon>201705130721424_deshabilitado_autoincremento_recepcionProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.cs" />
+    <Compile Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.Designer.cs">
+      <DependentUpon>201705130733299_recepcionDeProducto_RecepcionID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.cs" />
+    <Compile Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.Designer.cs">
+      <DependentUpon>201705130802463_recepcionDeProducto_NulleableTemporadaID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -375,6 +396,7 @@
     <Compile Include="Models\PrestamoYAbonoCapital.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedores.cs" />
+    <Compile Include="Models\RecepcionDeProducto.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\TemporadaDeCosecha.cs" />
     <Compile Include="Models\VentaACredito.cs" />
@@ -483,7 +505,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -690,6 +714,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705120212444_productor_newField_numProductor.resx">
       <DependentUpon>201705120212444_productor_newField_numProductor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.resx">
+      <DependentUpon>201705130652401_nuevaTabla_RecepcionAceituna.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.resx">
+      <DependentUpon>201705130721424_deshabilitado_autoincremento_recepcionProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.resx">
+      <DependentUpon>201705130733299_recepcionDeProducto_RecepcionID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.resx">
+      <DependentUpon>201705130802463_recepcionDeProducto_NulleableTemporadaID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

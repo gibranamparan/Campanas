@@ -1,6 +1,9 @@
-﻿using System;
+﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +26,8 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Fin")]
         public DateTime fechaFin { get; set; }
 
+        public TimePeriod periodo { get { return new TimePeriod(this.fechaInicio, this.fechaFin); } }
+
         [Display(Name ="Rango de Tiempo")]
         public string rangoTiempo { get {
                 System.Globalization.CultureInfo cult = System.Globalization
@@ -31,20 +36,6 @@ namespace CampanasDelDesierto_v1.Models
                 salida+=" - "+ this.fechaFin.ToString("dd/MMMM/yy", cult);
                 return salida;
             } }
-
-        public static TemporadaDeCosecha findTemporada(int? temporada)
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-            TemporadaDeCosecha tem;
-            if (temporada == null || temporada.Value == 0)
-                tem = getUltimaTemporada();
-            else
-                tem = db.TemporadaDeCosechas.Find(temporada);
-            if (tem == null)
-                tem = getUltimaTemporada();
-
-            return tem;
-        }
 
         //Tipos de producto
         public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
@@ -70,10 +61,68 @@ namespace CampanasDelDesierto_v1.Models
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
 
+        //Los movimientos financieros se registran dentro de una temporada de cosecha
+        public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
+
+        internal int importarIngresoDeProductos(HttpPostedFileBase xlsFile,ApplicationDbContext db)
+        {
+            int regsSaved = 0;
+            if ((xlsFile != null) && (xlsFile.ContentLength > 0) && !string.IsNullOrEmpty(xlsFile.FileName))
+            {
+                string fileName = xlsFile.FileName;
+                string fileContentType = xlsFile.ContentType;
+                byte[] fileBytes = new byte[xlsFile.ContentLength];
+                var data = xlsFile.InputStream.Read(fileBytes, 0, Convert.ToInt32(xlsFile.ContentLength));
+
+                if (this.recepcionesDeProducto == null)
+                    this.recepcionesDeProducto = new List<RecepcionDeProducto>();
+
+                var package = new ExcelPackage(xlsFile.InputStream);
+                var currentSheet = package.Workbook.Worksheets;
+                var workSheet = currentSheet.First();
+                var noOfCol = workSheet.Dimension.End.Column;
+                var noOfRow = workSheet.Dimension.End.Row;
+
+                for (int rowIterator = 5; rowIterator <= 15; rowIterator++)
+                {
+                    var rowRecepcion = workSheet.Cells[rowIterator, 1, rowIterator, noOfCol];
+                    var recepcion = new RecepcionDeProducto(rowRecepcion, this.TemporadaDeCosechaID);
+                    var recepcionDB = this.recepcionesDeProducto.ToList()
+                        .FirstOrDefault(rp => rp.numeroRecibo == recepcion.numeroRecibo);
+                    //Si el registro no existe, se agrega
+                    if (recepcionDB == null)
+                        db.RecepcionesDeProducto.Add(recepcion);
+                    else {
+                        //Si ya existe, se identifica con el mismo ID y se marca como modificado
+                        recepcion.recepcionID = recepcionDB.recepcionID;
+                        //db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
+                        this.recepcionesDeProducto.Remove(recepcionDB);
+                        this.recepcionesDeProducto.Add(recepcion);
+                    }
+                }
+                db.Entry(this).State = System.Data.Entity.EntityState.Modified;
+                regsSaved = db.SaveChanges();
+            }
+            return regsSaved;
+        }
 
         private int DIA_INICIO_PERIODO = 30;
         private int DIA_FIN_PERIODO = 30;
         private int MES_PERIODO = 8;
+
+        public static TemporadaDeCosecha findTemporada(int? temporada)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            TemporadaDeCosecha tem;
+            if (temporada == null || temporada.Value == 0)
+                tem = getUltimaTemporada();
+            else
+                tem = db.TemporadaDeCosechas.Find(temporada);
+            if (tem == null)
+                tem = getUltimaTemporada();
+
+            return tem;
+        }
 
         public TemporadaDeCosecha()
         {
@@ -96,10 +145,10 @@ namespace CampanasDelDesierto_v1.Models
 
         public static class TiposDeProducto
         {
-            public static readonly string PRODUCTO1 = "MANZANITA";
-            public static readonly string PRODUCTO2 = "OBLIZA";
-            public static readonly string PRODUCTO3 = "MISSION";
-            public static readonly string OTRO = "OTRO";
+            public const string PRODUCTO1 = "MANZANITA";
+            public const string PRODUCTO2 = "OBLIZA";
+            public const string PRODUCTO3 = "MISSION";
+            public const string OTRO = "OTRO";
         }
 
         public VMTipoProducto[] getListaProductos()
@@ -124,5 +173,6 @@ namespace CampanasDelDesierto_v1.Models
                 this.Text = Text;
             }
         }
+
     }
 }
