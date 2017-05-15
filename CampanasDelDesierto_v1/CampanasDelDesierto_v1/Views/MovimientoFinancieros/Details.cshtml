@@ -97,13 +97,13 @@
 <p class="hidden-print">
     @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
 
-
-    <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento }) ">
-        <i class="glyphicon glyphicon-print"></i> Pagare
-        </a>
-
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+    @if(Model.conceptoProveedor != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) { 
+        <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
+            <i class="glyphicon glyphicon-print"></i> Pagare
+        </a> @(" | ")
+    }
+    <a href="@Url.Action("Details","Productores", new { id=Model.idProductor })">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a movimientos del productor
     </a>
 </p>
 
@@ -126,8 +126,6 @@
         });
     }
       *@
-        </script>
-    }
 
 
 
