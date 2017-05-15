@@ -8,16 +8,17 @@ namespace CampanasDelDesierto_v1
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            /*SCRIPTS BUNDLES*/
             bundles.Add(new ScriptBundle("~/bundles/template").Include(
-                        "~/assets/js/skel.min.js",
-                        "~/assets/js/util.js",
-                        "~/assets/js/main.js"));
+                        "~/Scripts/skel.min.js",
+                        "~/Scripts/util.js",
+                        "~/Scripts/main.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery.mask.js",
-                        "~/Scripts/numeral.min.js",
                         "~/Scripts/jquery.dataTables.min.js",
+                        "~/Scripts/numeral.min.js",
                         "~/Scripts/customFunctions.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -32,10 +33,16 @@ namespace CampanasDelDesierto_v1
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            /*STYLE BUNDLES*/
+            bundles.Add(new StyleBundle("~/Content/template").Include(
+                      "~/Content/main.css",
+                      "~/Content/bootstrap.css",
                       "~/Content/Site.css",
-                      "~/Content/bootstrap.min.css",
                       "~/Content/jquery.dataTables.min.css"));
+
+            bundles.Add(new StyleBundle("~/Content/icons").Include(
+                      "~/Content/font-awesome.min.css",
+                      "~/Content/icomoon.css"));
         }
     }
 }

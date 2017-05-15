@@ -1,16 +1,37 @@
-﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
+﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.HerramientasGenerales
+@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    List<RecepcionDeProducto.VMRecepcionProductoError> erroresExcel = ViewBag.erroresExcel;
+    RecepcionDeProducto.VMRecepcionProductoError errorPrecios = ViewBag.errorPrecios;
 
+    VMConfirmModalAttributes importExcelErrorOptions = new VMConfirmModalAttributes();
+    if (erroresExcel != null) {
+        importExcelErrorOptions = new VMConfirmModalAttributes()
+        {
+            modalID = "importExcelErrorMessage",
+            modalTitle = "Errores en la importación",
+            primaryMessage = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+            + " Revise la tabla de errores de importación en la parte inferior.",
+            javascriptFunction = "removeGuest",
+            modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.WARNING),
+            callType = VMConfirmModalAttributes.CallType.NONE
+
+        };
+    }
+    if (errorPrecios != null && errorPrecios.isError)
+    {
+        importExcelErrorOptions.primaryMessage = errorPrecios+"<br>" + importExcelErrorOptions.primaryMessage;
+    }
+}
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
+    </a>
 </p>
-<a href="@Url.Action("Index")">
-    <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
-</a>
 <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title"><strong>Temporada: </strong>@Model.rangoTiempo</h3>
@@ -40,20 +61,23 @@
     </div>
 </div>
 <div class="alert alert-info">
-    Sube al servidor el archivo Excel de "Acumulados de recepción de Aceituna" correspondiente a esta temporada.
+    Carga en la aplicación el archivo Excel de <strong>"Acumulados de recepción de Aceituna"</strong> correspondiente a esta temporada.
+    Hecho esto, los datos estarán disponibles para generar pagos semanales de producto y ser integrados al balance del productor.
 </div>
 @using (Html.BeginForm(null, null, FormMethod.Post,
                 new { enctype = "multipart/form-data", @class = "form-inline" }))
 {
     @Html.ValidationSummary()
-    <div class="col-md-12">
-        <label for="xlsFile">Archivo Excel</label>
-        <input id="xlsFile" name="xlsFile" type="file" class="form-control"
-               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+    <div class="row">
+        <div class="col-md-12">
+            <label for="xlsFile">Archivo Excel</label>
+            <input id="xlsFile" name="xlsFile" type="file" class="form-control"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <button class="btn btn-success">
+                <i class="fa fa-upload"></i> Subir
+            </button>
+        </div>
     </div>
-    <button class="btn btn-success">
-        <i class="fa fa-upload"></i> Subir
-    </button>
 }
 @*Panel que muestra la recepcion ingresada en el excel*@
 <div class="panel panel-primary">
@@ -69,6 +93,12 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().numProductor)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().fecha)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().semana)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().nombreProductor)
@@ -96,6 +126,12 @@
                             @Html.DisplayFor(model => recepcion.numProductor)
                         </td>
                         <td>
+                            @recepcion.fecha.ToString("dd-MMM-yy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.semana)
+                        </td>
+                        <td>
                             @Html.DisplayFor(model => recepcion.nombreProductor)
                         </td>
                         <td>
@@ -113,3 +149,72 @@
         </table>
     </div>
 </div>
+
+@if (erroresExcel!=null && erroresExcel.Count() > 0)
+{
+    <div class="panel">
+        <div class="panel-heading alert-warning">
+            <h2 class="panel-title" onclick="changeIcon(this)"
+                data-toggle="collapse" data-target="#pnlTablaErrores">
+                <span>Errores al importar documento Excel</span>
+                <i class="pull-right fa fa-window-minimize"></i>
+            </h2>
+        </div>
+        <div class="panel-body in" id="pnlTablaErrores">
+            <div class="alert alert-info">
+                Los demás registros han sido cargados satisfactoriamente. Los registros aquí mostrados presentaron problemas
+                para ser procesados. Sí los registros mostros en esta tabla de errores son relevantes, 
+                corrija los datos dentro Excel y vuelva a subir la información. 
+                Si el error persiste, consulte al admnistrador.
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="50%">
+                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().errorMsg)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.numeroRecibo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.numProductor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.nombreProductor)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in erroresExcel)
+                    {
+                        <tr>
+                            <td width="50%">
+                                @Html.Raw(item.errorMsg)
+                                @Html.Raw(item.errorDetails)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.registro.numeroRecibo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.registro.numProductor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.registro.nombreProductor)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @Html.Partial("../Shared/Partial_ConfirmationModal", importExcelErrorOptions)
+
+}
+@section Scripts{
+    @if (erroresExcel != null && erroresExcel.Count() > 0) {
+        <script>
+            $('@("#"+ importExcelErrorOptions.modalID)').modal();
+        </script>
+    }
+}

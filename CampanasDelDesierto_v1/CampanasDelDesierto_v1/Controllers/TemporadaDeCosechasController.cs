@@ -50,11 +50,17 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            //Lista para recoleccion de errores
+            List<RecepcionDeProducto.VMRecepcionProductoError> errores = new List<RecepcionDeProducto.VMRecepcionProductoError>();
+            RecepcionDeProducto.VMRecepcionProductoError errorPrecios = new RecepcionDeProducto.VMRecepcionProductoError();
+            //Se importan los datos de recepcion de producto desde el excel recibido
+            int regsSaved = temporadaDeCosecha.importarIngresoDeProductos(xlsFile,db, out errores, out errorPrecios);
 
-            int regsSaved = temporadaDeCosecha.importarIngresoDeProductos(xlsFile,db);
             if (regsSaved == 0)
                 ModelState.AddModelError("", "No fue posible importar el excel, compruebe su estructura.");
 
+            ViewBag.erroresExcel = errores;
+            ViewBag.errorPrecios = errorPrecios;
             return View(temporadaDeCosecha);
         }
 

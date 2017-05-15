@@ -4,9 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Campanas del Desierto</title>
-    @Styles.Render("~/assets/css/main.css ")
-    @Styles.Render("~/Content/css")
-
+    @Styles.Render("~/Content/template")
+    @Styles.Render("~/Content/icons")
 </head>
 
 <body>
@@ -17,7 +16,6 @@
             <div class="inner">
                 <!-- Header -->
                 <header id="header">
-                   
                 </header>
 
                 <!-- Banner -->
@@ -30,7 +28,6 @@
                 <footer>
                     <p>&copy; @DateTime.Now.Year - Campanas del Desierto</p>
                 </footer>
-
             </div>
         </div>
 
@@ -39,7 +36,6 @@
             <div class="inner">
                 
                 <!-- Menu -->
-              
                 <nav id="menu">
                     <header class="major">                        
                         <img src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">
@@ -63,7 +59,6 @@
                             <li><a href="~/TemporadaDeCosechas">Temporadas</a></li>
                         </ul>
                     }
-
                 </nav>
                 <!--Rol sucursales-->
                 @if (User.IsInRole("Sucursal") || User.IsInRole("Admin"))
@@ -76,7 +71,6 @@
                             <li><a href="~/Activos/">Activos</a></li>*@                                                                                    
                             <li><a href="~/Departamentos/">Departamentos</a></li>
                             <li><a href="~/Empleados/">Empleados</a></li>
-                            
                         </ul>
                     </nav>
                 }
@@ -89,7 +83,5 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-
-
 </body>
 </html>

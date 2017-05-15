@@ -64,42 +64,65 @@ namespace CampanasDelDesierto_v1.Models
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
 
-        internal int importarIngresoDeProductos(HttpPostedFileBase xlsFile,ApplicationDbContext db)
+        public int importarIngresoDeProductos(HttpPostedFileBase xlsFile,ApplicationDbContext db,
+            out List<RecepcionDeProducto.VMRecepcionProductoError> errores, out RecepcionDeProducto.VMRecepcionProductoError errorPrecios)
         {
             int regsSaved = 0;
+            //Lista para recoleccion de errores
+            errores = new List<RecepcionDeProducto.VMRecepcionProductoError>();
+            errorPrecios = new RecepcionDeProducto.VMRecepcionProductoError();
+            //Se verifica la validez del archivo recibido
             if ((xlsFile != null) && (xlsFile.ContentLength > 0) && !string.IsNullOrEmpty(xlsFile.FileName))
             {
-                string fileName = xlsFile.FileName;
-                string fileContentType = xlsFile.ContentType;
-                byte[] fileBytes = new byte[xlsFile.ContentLength];
-                var data = xlsFile.InputStream.Read(fileBytes, 0, Convert.ToInt32(xlsFile.ContentLength));
-
-                if (this.recepcionesDeProducto == null)
-                    this.recepcionesDeProducto = new List<RecepcionDeProducto>();
-
+                //Se toman los datos del archivo
+                string fileName = xlsFile.FileName;//nombre
+                string fileContentType = xlsFile.ContentType;//tipo
+                byte[] fileBytes = new byte[xlsFile.ContentLength];//composicion en bytes
+                var data = xlsFile.InputStream.Read(fileBytes, 0, Convert.ToInt32(xlsFile.ContentLength)); //datos a leer
+                
+                //Se crea el archivo Excel procesable
                 var package = new ExcelPackage(xlsFile.InputStream);
                 var currentSheet = package.Workbook.Worksheets;
-                var workSheet = currentSheet.First();
-                var noOfCol = workSheet.Dimension.End.Column;
-                var noOfRow = workSheet.Dimension.End.Row;
+                var workSheet = currentSheet.First();//Se toma la 1ra hoja de excel
+                var noOfCol = workSheet.Dimension.End.Column;//Se determina el ancho de la tabla en no. columnas
+                var noOfRow = workSheet.Dimension.End.Row;//El alto de la tabla en numero de renglores
 
-                for (int rowIterator = 5; rowIterator <= 15; rowIterator++)
+                RecepcionDeProducto.VMRecepcionProductoError error = new RecepcionDeProducto.VMRecepcionProductoError();
+                //Se recorre cada renglon de la hoja
+                //for (int rowIterator = 5; rowIterator <= noOfRow; rowIterator++)
+                for (int rowIterator = 5; rowIterator <= 10; rowIterator++)
                 {
+                    //Se toma renglon
                     var rowRecepcion = workSheet.Cells[rowIterator, 1, rowIterator, noOfCol];
-                    var recepcion = new RecepcionDeProducto(rowRecepcion, this.TemporadaDeCosechaID);
-                    var recepcionDB = this.recepcionesDeProducto.ToList()
-                        .FirstOrDefault(rp => rp.numeroRecibo == recepcion.numeroRecibo);
-                    //Si el registro no existe, se agrega
-                    if (recepcionDB == null)
-                        db.RecepcionesDeProducto.Add(recepcion);
-                    else {
-                        //Si ya existe, se identifica con el mismo ID y se marca como modificado
-                        recepcion.recepcionID = recepcionDB.recepcionID;
-                        //db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
-                        this.recepcionesDeProducto.Remove(recepcionDB);
-                        this.recepcionesDeProducto.Add(recepcion);
-                    }
+                    //Se convierte renglon en registro para DB con registro de errores
+                    var recepcion = new RecepcionDeProducto(rowRecepcion, this.TemporadaDeCosechaID,ref error);
+
+                    if (!error.isError) { 
+                        var recepcionDB = this.recepcionesDeProducto.ToList()
+                            .FirstOrDefault(rp => rp.numeroRecibo == recepcion.numeroRecibo);
+                        //Si el registro no existe, se agrega
+                        if (recepcionDB == null)
+                            db.RecepcionesDeProducto.Add(recepcion);
+                        else {
+                            //Si ya existe, se identifica con el mismo ID y se marca como modificado
+                            recepcion.recepcionID = recepcionDB.recepcionID;
+                            this.recepcionesDeProducto.Remove(recepcionDB);
+                            this.recepcionesDeProducto.Add(recepcion);
+                        }
+                    }else
+                        errores.Add(error);
                 }
+
+                //Se toman los costos por tonelada de producto
+                TemporadaDeCosecha tc = RecepcionDeProducto.VMCostosDeProducto.tomarCostosProducto(ref workSheet, ref error);
+                if (!error.isError) { 
+                    this.precioProducto1 = tc.precioProducto1;
+                    this.precioProducto2 = tc.precioProducto2;
+                    this.precioProducto3 = tc.precioProducto3;
+                    this.precioProductoOtro = tc.precioProductoOtro;
+                }
+                errorPrecios = error;
+
                 db.Entry(this).State = System.Data.Entity.EntityState.Modified;
                 regsSaved = db.SaveChanges();
             }

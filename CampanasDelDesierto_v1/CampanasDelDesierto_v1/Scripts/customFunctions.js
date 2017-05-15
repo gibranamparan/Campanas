@@ -2,6 +2,11 @@
     $('.datatablejs').DataTable();
 });
 
+
+function changeIcon(bar) {
+    $(bar).find("i").toggleClass("fa-window-minimize fa-window-maximize")
+}
+
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
 function openActionsDropDown(actionBtn) {
