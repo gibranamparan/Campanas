@@ -10,7 +10,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class ProductoresController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -56,9 +56,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
-            "nombreCheque,adeudoAnterior")]
-            Productor productor)
+        public ActionResult Create([Bind(Include = "idProductor,numProductor,nombreProductor,domicilio,"+
+            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior")] Productor productor)
         {
             if (ModelState.IsValid)
             {
@@ -98,6 +97,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 productor.RFC = productor.RFC.ToUpper();
                 productor.nombreCheque = productor.nombreCheque.ToUpper();
                 productor.nombreProductor = productor.nombreProductor.ToUpper();
+                productor.numProductor = productor.numProductor.Trim();
 
                 //Se guarda nuevo productor
                 db.Productores.Add(productor);
@@ -128,12 +128,13 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProductor,nombreProductor,domicilio,fechaIntegracion,RFC,zona,"+
-            "nombreCheque,adeudoAnterior,precioProducto1,precioProducto2,precioProducto3,precioProductoOtro")]
+        public ActionResult Edit([Bind(Include = "idProductor,,numProductor,nombreProductor,domicilio,"
+            +"fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior")]
                 Productor productor)
         {
             if (ModelState.IsValid)
             {
+                productor.numProductor = productor.numProductor.Trim();
                 db.Entry(productor).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

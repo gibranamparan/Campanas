@@ -13,7 +13,7 @@ using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class ProductosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

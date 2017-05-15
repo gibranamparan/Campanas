@@ -12,6 +12,7 @@ using OfficeOpenXml;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class TemporadaDeCosechasController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -19,6 +19,12 @@ namespace CampanasDelDesierto_v1.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public static class RoleNames
+        {
+            public const string SUCURSAL = "Sucursal";
+            public const string ADMIN = "Admin";
+        }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

@@ -11,7 +11,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class ProveedoresController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

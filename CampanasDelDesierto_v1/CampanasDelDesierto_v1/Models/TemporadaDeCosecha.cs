@@ -171,7 +171,7 @@ namespace CampanasDelDesierto_v1.Models
             public const string PRODUCTO1 = "MANZANITA";
             public const string PRODUCTO2 = "OBLIZA";
             public const string PRODUCTO3 = "MISSION";
-            public const string OTRO = "OTRO";
+            public const string OTRO = "MISSION-BAJA";
         }
 
         public VMTipoProducto[] getListaProductos()

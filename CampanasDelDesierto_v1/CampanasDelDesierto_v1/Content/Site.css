@@ -3,6 +3,7 @@
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 1em;
+    min-height: 650px;
 }
 
 div#main {
@@ -58,6 +59,11 @@ input[readonly='readonly']{
         width: 100%;
     }
 /*****/
+
+/*Footer*/
+footer{
+    border-top:solid 2px #6e460b;
+}
 
 /*Ajustes de color de bootstrap*/
     .panel-primary .panel-heading h1,.panel-primary .panel-heading h2{

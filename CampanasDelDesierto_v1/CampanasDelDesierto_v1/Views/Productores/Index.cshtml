@@ -8,12 +8,17 @@
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
 <h2>Lista de Productores</h2>
 
-<a href="@Url.Action("Create")">
-    <i class="fa fa-plus-circle"></i> Nuevo Productor
-</a>
+<p>
+    <a href="@Url.Action("Create")">
+        <i class="fa fa-plus-circle"></i> Nuevo Productor
+    </a>
+</p>
 <table class="table table-striped table-hover datablejs">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.numProductor)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.nombreProductor)
             </th>
@@ -40,6 +45,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.numProductor)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.nombreProductor)
                 </td>

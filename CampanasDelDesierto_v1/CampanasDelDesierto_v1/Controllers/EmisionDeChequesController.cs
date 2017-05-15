@@ -10,6 +10,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class EmisionDeChequesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

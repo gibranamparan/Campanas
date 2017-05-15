@@ -12,7 +12,7 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;

@@ -13,7 +13,7 @@ namespace CampanasDelDesierto_v1.Controllers
     /// <summary>
     /// Representa las entidades de registro de cosecha de un productor.
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class PagosPorProductosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

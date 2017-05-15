@@ -12,6 +12,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class MovimientoFinancierosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
