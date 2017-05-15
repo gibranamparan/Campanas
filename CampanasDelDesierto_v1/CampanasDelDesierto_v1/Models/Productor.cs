@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using CampanasDelDesierto_v1.Models;
 using System.Web.Mvc;
+using OfficeOpenXml;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -43,6 +45,39 @@ namespace CampanasDelDesierto_v1.Models
         public decimal? adeudoAnterior { get; set; }
 
         public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
+
+        //Los productores tienen recepciones de producto
+        public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
+
+        public Productor() { }
+        public Productor(ExcelRange rowProductor, ref ExcelTools.ExcelParseError error)
+        {
+            try
+            {
+                this.numProductor = rowProductor.ElementAt((int)ExcelColumns.NUM).Value.ToString().Trim();
+                this.nombreProductor = rowProductor.ElementAt((int)ExcelColumns.NOMBRE).Value.ToString();
+                this.zona = rowProductor.ElementAt((int)ExcelColumns.ZONA).Value.ToString();
+                this.zona = this.zona.Replace("Zona", "").Trim();
+                this.fechaIntegracion = DateTime.Today;
+            }
+            catch (NullReferenceException exc)
+            {
+                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
+                error.registro = new Productor(this);
+            }
+            catch (Exception exc)
+            {
+                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
+                error.registro = new Productor(this);
+            }
+        }
+
+        public Productor(Productor otro)
+        {
+            this.numProductor = otro.numProductor;
+            this.nombreProductor = otro.nombreProductor;
+            this.zona = otro.zona;
+        }
 
         /// <summary>
         /// Se ajustan todos los balances de los movimientos del productor
@@ -95,11 +130,70 @@ namespace CampanasDelDesierto_v1.Models
 
             return numreg;
         }
+        
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}. Zona: {2}", this.numProductor, this.nombreProductor, this.zona);
+        }
 
         public static class Zonas
         {
             public const string ZONA1 = "Caborca";
             public const string ZONA2 = "Baja";
+        }
+
+        public enum ExcelColumns
+        {
+            NUM = 0, NOMBRE=1, ZONA=2
+        }
+
+        public static int importarProductores(HttpPostedFileBase xlsFile, ApplicationDbContext db,
+            out List<ExcelTools.ExcelParseError> errores, out ExcelTools.ExcelParseError errorGeneral)
+        {
+            int regsSaved = 0;
+            //Lista para recoleccion de errores
+            errores = new List<ExcelTools.ExcelParseError>();
+            errorGeneral = new ExcelTools.ExcelParseError();
+            //Se verifica la validez del archivo recibido
+            if ((xlsFile != null) && (xlsFile.ContentLength > 0) && !string.IsNullOrEmpty(xlsFile.FileName))
+            {
+                //Se toman los datos del archivo
+                string fileName = xlsFile.FileName;//nombre
+                string fileContentType = xlsFile.ContentType;//tipo
+                byte[] fileBytes = new byte[xlsFile.ContentLength];//composicion en bytes
+                var data = xlsFile.InputStream.Read(fileBytes, 0, Convert.ToInt32(xlsFile.ContentLength)); //datos a leer
+
+                //Se crea el archivo Excel procesable
+                var package = new ExcelPackage(xlsFile.InputStream);
+                //var workSheet = currentSheet.First();//Se toma la 1ra hoja de excel
+                var workSheet = package.Workbook.Worksheets["Productores"];//Se toma la 1ra hoja de excel
+                var noOfCol = workSheet.Dimension.End.Column;//Se determina el ancho de la tabla en no. columnas
+                var noOfRow = workSheet.Dimension.End.Row;//El alto de la tabla en numero de renglores
+
+                ExcelTools.ExcelParseError error = new ExcelTools.ExcelParseError();
+                //Se recorre cada renglon de la hoja
+                for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
+                {
+                    //Se toma renglon
+                    var rowProductor = workSheet.Cells[rowIterator, 1, rowIterator, noOfCol];
+                    //Se convierte renglon en registro para DB con registro de errores
+                    var productorReg = new Productor(rowProductor, ref error);
+
+                    if (!error.isError)
+                    {
+                        var recepcionDB = db.Productores.ToList()
+                            .FirstOrDefault(rp => rp.numProductor == productorReg.numProductor);
+                        //Si el registro no existe, se agrega
+                        if (recepcionDB == null)
+                            db.Productores.Add(productorReg);
+                    }
+                    else
+                        errores.Add(error);
+                }
+                
+                regsSaved = db.SaveChanges();
+            }
+            return regsSaved;
         }
 
         /// <summary>
@@ -154,7 +248,5 @@ namespace CampanasDelDesierto_v1.Models
 
             return m;
         }
-
-
     }
 }

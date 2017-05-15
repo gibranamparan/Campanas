@@ -64,13 +64,23 @@ namespace CampanasDelDesierto_v1.Models
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
 
+        /// <summary>
+        /// Almancena en base de datos todos los registros de ingreso de productos 
+        /// capturados en un archivo Excel dado.
+        /// </summary>
+        /// <param name="xlsFile">Archivo excel proveniente de una forma desde el explorador.</param>
+        /// <param name="db">Contexto de la base de datos.</param>
+        /// <param name="errores">Lista de errores donde sobre la cual se iran almacenando los 
+        /// errores de interpretación de datos en caso de suceder.</param>
+        /// <param name="errorPrecios">Reporta errores generales de la importación.</param>
+        /// <returns></returns>
         public int importarIngresoDeProductos(HttpPostedFileBase xlsFile,ApplicationDbContext db,
-            out List<RecepcionDeProducto.VMRecepcionProductoError> errores, out RecepcionDeProducto.VMRecepcionProductoError errorPrecios)
+            out List<ExcelTools.ExcelParseError> errores, out ExcelTools.ExcelParseError errorPrecios)
         {
             int regsSaved = 0;
             //Lista para recoleccion de errores
-            errores = new List<RecepcionDeProducto.VMRecepcionProductoError>();
-            errorPrecios = new RecepcionDeProducto.VMRecepcionProductoError();
+            errores = new List<ExcelTools.ExcelParseError>();
+            errorPrecios = new ExcelTools.ExcelParseError();
             //Se verifica la validez del archivo recibido
             if ((xlsFile != null) && (xlsFile.ContentLength > 0) && !string.IsNullOrEmpty(xlsFile.FileName))
             {
@@ -82,15 +92,15 @@ namespace CampanasDelDesierto_v1.Models
                 
                 //Se crea el archivo Excel procesable
                 var package = new ExcelPackage(xlsFile.InputStream);
-                var currentSheet = package.Workbook.Worksheets;
-                var workSheet = currentSheet.First();//Se toma la 1ra hoja de excel
+                //var workSheet = currentSheet.First();//Se toma la 1ra hoja de excel
+                var workSheet = package.Workbook.Worksheets["Datos"];//Se toma la 1ra hoja de excel
                 var noOfCol = workSheet.Dimension.End.Column;//Se determina el ancho de la tabla en no. columnas
                 var noOfRow = workSheet.Dimension.End.Row;//El alto de la tabla en numero de renglores
 
-                RecepcionDeProducto.VMRecepcionProductoError error = new RecepcionDeProducto.VMRecepcionProductoError();
+                ExcelTools.ExcelParseError error = new ExcelTools.ExcelParseError();
                 //Se recorre cada renglon de la hoja
                 //for (int rowIterator = 5; rowIterator <= noOfRow; rowIterator++)
-                for (int rowIterator = 5; rowIterator <= 10; rowIterator++)
+                for (int rowIterator = 5; rowIterator <= noOfRow; rowIterator++)
                 {
                     //Se toma renglon
                     var rowRecepcion = workSheet.Cells[rowIterator, 1, rowIterator, noOfCol];
@@ -106,8 +116,11 @@ namespace CampanasDelDesierto_v1.Models
                         else {
                             //Si ya existe, se identifica con el mismo ID y se marca como modificado
                             recepcion.recepcionID = recepcionDB.recepcionID;
-                            this.recepcionesDeProducto.Remove(recepcionDB);
-                            this.recepcionesDeProducto.Add(recepcion);
+                            /*this.recepcionesDeProducto.Remove(recepcionDB);
+                            this.recepcionesDeProducto.Add(recepcion);*/
+                            //db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
+                            db.RecepcionesDeProducto.Remove(recepcionDB);
+                            db.RecepcionesDeProducto.Add(recepcion);
                         }
                     }else
                         errores.Add(error);

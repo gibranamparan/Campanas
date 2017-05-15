@@ -251,6 +251,7 @@
     </Compile>
     <Compile Include="HerramientasGenerales\BaxicoWebService.cs" />
     <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
+    <Compile Include="HerramientasGenerales\ExcelTools.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="HerramientasGenerales\VMConfirmModalAttributes.cs" />
@@ -630,6 +631,10 @@
     <Content Include="Views\PrestamosActivos\Index.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Pagare.cshtml" />
     <Content Include="Views\Shared\Partial_ConfirmationModal.cshtml" />
+    <Content Include="Views\Shared\Partial_ExcelErrors.cshtml" />
+    <Content Include="Views\PagosPorProductos\IngresoProducto.cshtml" />
+    <Content Include="Views\PagosPorProductos\Partial_ListaIngresosProducto.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

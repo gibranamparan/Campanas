@@ -24,6 +24,7 @@ div#main {
     text-align: right;
     box-shadow: 0.1em 0.2em 2em grey;
     border-radius: 0 0 0em 1em;
+    z-index: 5;
 }
 ul.usrPanel li a {
     color: white;

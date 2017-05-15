@@ -106,6 +106,64 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(mov);
         }
 
+        public ActionResult IngresoProducto(int? id = 0, int? temporada = 0)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var productor = db.Productores.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+
+            var mov = prepararVistaIngresoProducto(productor, temporada.Value);
+
+            mov.introducirMovimientoEnPeriodo(temporada, db);
+
+            return View(mov);
+        }
+
+        private PagoPorProducto prepararVistaIngresoProducto(Productor productor, int temporadaID)
+        {
+            PagoPorProducto mov = prepararVistaCrear(productor);
+            var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == productor.numProductor
+            && rec.TemporadaDeCosechaID == temporadaID).ToList();
+            ViewBag.ingresosProducto = ingresos;
+            return mov;
+        }
+
+        [HttpPost]
+        public ActionResult IngresoProducto([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")] PagoPorProducto pagoPorProducto)
+        {
+            if (ModelState.IsValid)
+            {
+                //Ajuste de movimiento para entrar dentro de la lista de balances
+                pagoPorProducto.ajustarMovimiento();
+
+                //Guardar cambios
+                db.MovimientosFinancieros.Add(pagoPorProducto);
+                int numReg = db.SaveChanges();
+
+                if (numReg > 0)
+                {
+                    //Se calcula el movimiento anterior al que se esta registrando
+                    var prod = db.Productores.Find(pagoPorProducto.idProductor);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db);
+
+                    return RedirectToAction("Details", "Productores",
+                        new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
+                }
+            }
+            var mov = prepararVistaIngresoProducto(db.Productores.Find(pagoPorProducto.idProductor), pagoPorProducto.TemporadaDeCosechaID);
+            return View(mov);
+        }
+
         // GET: PagosPorProductos/Edit/5
         public ActionResult Edit(int? id)
         {

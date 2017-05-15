@@ -1,0 +1,65 @@
+﻿@using CampanasDelDesierto_v1.HerramientasGenerales
+@model List<CampanasDelDesierto_v1.HerramientasGenerales.ExcelTools.ExcelParseError>
+
+@{ 
+    string erroresModalID = "";
+    string errorMsgPrimario = "";
+    if (ViewData["erroresModalID"] != null) {
+        erroresModalID = (string)ViewData["erroresModalID"] ;
+        errorMsgPrimario = (string)ViewData["errorMsgPrimario"];
+    }
+    VMConfirmModalAttributes importExcelErrorOptions = new VMConfirmModalAttributes()
+    {
+        modalID = erroresModalID,
+        modalTitle = "Errores en la importación",
+        primaryMessage = errorMsgPrimario,
+        javascriptFunction = "removeGuest",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.WARNING),
+        callType = VMConfirmModalAttributes.CallType.NONE
+
+    };
+}
+<div class="panel">
+    <div class="panel-heading alert-warning">
+        <h2 class="panel-title" onclick="changeIcon(this)"
+            data-toggle="collapse" data-target="#pnlTablaErrores">
+            <span>Errores al importar documento Excel</span>
+            <i class="pull-right fa fa-window-minimize"></i>
+        </h2>
+    </div>
+    <div class="panel-body in" id="pnlTablaErrores">
+        <div class="alert alert-info">
+            Los demás registros han sido cargados satisfactoriamente. Los registros aquí mostrados presentaron problemas
+            para ser procesados. Sí los registros en esta tabla de errores son relevantes,
+            corrija los datos dentro Excel y vuelva a subir la información.
+            Si el error persiste, consulte al admnistrador.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th width="50%">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().errorMsg)
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td width="50%">
+                            @Html.Raw(item.errorMsg)
+                            @Html.Raw(item.errorDetails)
+                        </td>
+                        <td>
+                            @item.registro.ToString()
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("../Shared/Partial_ConfirmationModal", importExcelErrorOptions)

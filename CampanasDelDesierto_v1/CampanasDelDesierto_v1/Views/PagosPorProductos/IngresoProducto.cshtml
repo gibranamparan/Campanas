@@ -1,0 +1,69 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.PagoPorProducto
+
+@{
+    ViewBag.Title = "IngresoProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Productor productor = ViewBag.productor;
+    List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto;
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("productor", productor);
+    vdd.Add("temporada", Model.temporadaDeCosecha);
+}
+
+<p>
+    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor,
+            temporada = Model.TemporadaDeCosechaID })">
+        <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este productor
+    </a>
+</p>
+@Html.Partial("../Productores/Partial_InfoProductor", productor)
+
+@Html.Partial("../TemporadaDeCosechas/Partial_DetailsTemporada", Model.temporadaDeCosecha)
+
+@Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
+
+
+<h3>Ingreso de Producto</h3>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model=>model.idProductor)
+    @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.cantidadProducto, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cantidadProducto, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.cantidadProducto, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.montoMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <div class="col-md-10">
+                <button class="btn btn-primary">Registrar</button>
+            </div>
+        </div>
+    </div>
+}
