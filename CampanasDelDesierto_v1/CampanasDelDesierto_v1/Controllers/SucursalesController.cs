@@ -135,7 +135,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-             ViewBag.EnAlmacen= Sucursales.GetActivosEnAlmacen(id);
+            
             return View(Sucursales);
         }
     }

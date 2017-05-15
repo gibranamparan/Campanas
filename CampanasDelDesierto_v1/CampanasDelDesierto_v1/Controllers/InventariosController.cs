@@ -19,7 +19,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Inventarios
         public async Task<ActionResult> Index()
         {
-            var inventarios = db.Inventarios.Include(i => i.Sucursal);
+            var inventarios = db.Inventarios.Include(i => i.Sucursal);           
             return View(await inventarios.ToListAsync());
         }
 
