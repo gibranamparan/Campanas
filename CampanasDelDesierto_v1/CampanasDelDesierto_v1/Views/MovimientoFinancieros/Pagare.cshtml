@@ -199,11 +199,9 @@
                     </p>
                     <br />
                     <h6>NOMBRE Y DATOS DEL DEUDOR</h6>
-                    <p>Nombre: @Model.proveedor. </p>
-                    <p>Domicilio:_______</p>         <p>Tel:_____</p>
-                    <p>Poblacion:_______</p>
-
-
+                    <p>Nombre: @(((MovimientoFinanciero)Model).Productor.nombreProductor) </p>
+                    <p>Domicilio: @(((MovimientoFinanciero)Model).Productor.domicilio)</p>         <p>Tel:__________</p>
+                    <p>Poblacion:@(((MovimientoFinanciero)Model).Productor.zona)</p>
 
                    <h6>Acepto(amos):_________________________________</h6> 
 
@@ -213,9 +211,10 @@
 
 
                     <h6>Concepto:</h6>
-
-                    <p>Orden de Compra:_____</p>   <p>CH.@Model.cheque</p>
-                    <p>Pozo:________________</p>            <p>t.c.@Model.precioDelDolar</p>
+                    <p>Orden de Compra:_____</p>
+                    <p>Pozo:_________</p>
+                    <p>CH.@(((PrestamoYAbonoCapital)Model).cheque)</p>
+                    <p>t.c @(((PrestamoYAbonoCapital)Model).precioDelDolar)</p>
                 </td>
             </tr>
         </table>
