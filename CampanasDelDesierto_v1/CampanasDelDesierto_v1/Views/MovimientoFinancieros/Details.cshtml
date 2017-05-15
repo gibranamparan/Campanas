@@ -13,28 +13,25 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
+        @Html.DisplayNameFor(model => model.Productor.nombreProductor)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Productor.nombreProductor)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.montoMovimiento)
         </dt>
+      <dd>
+          @Html.DisplayFor(model => model.montoMovimiento)
+      </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.montoMovimiento)
-        </dd>
+       <dt>
+           @Html.DisplayNameFor(model => model.fechaMovimiento)
+       </dt>
+       <dd>
+           @Html.DisplayFor(model => model.fechaMovimiento)
+       </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaMovimiento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaMovimiento)
-        </dd>
 
         @*Panel para detalles de registro de cosecha*@
         @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
@@ -104,3 +101,38 @@
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
     </a>
 </p>
+
+
+
+    <input class="hidden-print btn btn-info" type="button"
+           onclick="Partial_Pagare()"
+           value="imprimir" />
+
+    @section Scripts{
+        <script>
+    $(document).ready(function(){
+        window.print();
+    })
+
+
+  @*  function Partial_Pagare() {
+        var laURLDeLaVista = '@Url.Action("Detalles", "MovimientosFinancieros")';
+        $.ajax({
+            cache: false,
+            async: true,
+            type: "GET",
+            url: laURLDeLaVista,
+            data: {},
+            success: function (response) {
+                $('#resultado').html('');
+                $('#resultado').html(response);
+            }
+        });
+    }
+      *@
+        </script>
+    }
+
+
+
+

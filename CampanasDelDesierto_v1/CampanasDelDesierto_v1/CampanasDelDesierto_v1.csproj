@@ -630,6 +630,7 @@
     <Content Include="Views\PrestamosActivos\Index.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Pagare.cshtml" />
     <Content Include="Views\Shared\Partial_ConfirmationModal.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

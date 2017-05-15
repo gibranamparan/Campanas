@@ -1,0 +1,109 @@
+﻿@model CampanasDelDesierto_v1.Models.MovimientoFinanciero
+    @using CampanasDelDesierto_v1.Models;
+
+@*<div>
+    <h4>MovimientoFinanciero</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Productor.numProductor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Productor.numProductor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.temporadaDeCosecha.TemporadaDeCosechaID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.temporadaDeCosecha.TemporadaDeCosechaID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.montoMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.montoMovimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.balance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.balance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaMovimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaMovimiento)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idMovimiento }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>*@
+
+
+<div id="PagareTexto">
+    <table class="tabla1">
+        <tr>
+            <td class="tdTabla1">
+                <h3>PAGARE No._______</h3>
+                <h5>IMPORTE DEL PAGARE: @Model.montoMovimiento</h5>
+                <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
+                <br>
+                <p>
+                    POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA <br />
+                    ORDEN DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y<br />
+                    MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong>@Model.fechaMovimiento.Day</strong> DE <br />
+                    <strong> @Model.fechaMovimiento.Month </strong> DE<strong> @Model.fechaMovimiento.Year</strong> CANTIDAD DE: <strong>$ @Model.montoMovimiento</strong>
+                    VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.<br />
+                </p>
+                <p>
+                    EL IMPORTE DE ESTE PAGARE CAUSARA INTERESES ORDINARIOS SOBRE SALDOS INSOLUTOS A RAZON
+                    DE <strong>10 %</strong>  ANUAL. ESTE PAGARE FORMA PARTE DE UNA SERIE NUMERADA DE 1 AL __________ Y
+                    TODOS ESTAN SUJETOS A LA CONDICCION DE QUE, AL NO PAGARSE CUALQUIERA DE ELLOS A SU
+                    VENCIMIENTO,SERAN EXIGIBLES TODOS LOS QUE LE SIGAN EN NUMERO,ADEMAS DE LOS YA VENCIDOS,
+                    DESDE LA FECHA DE VENCIMIENTO DE ESTE DOCUMENTO HASTA EL DIA DE SU LIQUIDACION,CAUSARA
+                    INTERESES MORATORIOS A UNA TASA  MORATORIA ANUAL DE _____ VECES LA TASA ORDINARIA,
+                    PAGADEROS EN ESTA CIUDAD  JUNTAMENTE  CON EL PRINCIPAL.
+                </p>
+                <p>
+                    PARA TODO LO RELACIONADO CON LA INTERPRETACION Y CUMPLIMIENTO  DEL PRESENTE TITULO.
+                    DECLARO(AMOS) SOMETERME(NOS) A LAS LEYES Y JURIDICCION  DE LOS TRUBUNALES COMPETENTES
+                    QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
+                    ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
+                </p>
+                <br />
+                <h6>NOMBRE Y DATOS DEL DEUDOR</h6>
+                <p>Nombre: @(((MovimientoFinanciero)Model).Productor.nombreProductor) </p>
+                <p>Domicilio: @(((MovimientoFinanciero)Model).Productor.domicilio)</p>         <p>Tel:__________</p>
+                <p>Poblacion:@(((MovimientoFinanciero)Model).Productor.zona)</p>
+
+
+
+                <P><strong> Acepto(amos):_________________________________</strong></P>
+
+
+
+                <p>Firma(s):_____________________________________</p>
+
+
+                <h6>Concepto:</h6>
+                <p>Orden de Compra:_____</p>
+                <p>Pozo:_________</p>
+                <p>CH.@(((PrestamoYAbonoCapital)Model).cheque)</p>
+                <p>t.c @(((PrestamoYAbonoCapital)Model).precioDelDolar)</p>
+            </td>
+        </tr>
+    </table>
+</div>

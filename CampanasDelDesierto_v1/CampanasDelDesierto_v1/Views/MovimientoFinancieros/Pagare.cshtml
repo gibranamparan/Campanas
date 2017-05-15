@@ -1,11 +1,12 @@
 ﻿@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
+    @using CampanasDelDesierto_v1.Models;
 
 @{
     ViewBag.Title = "Pagare";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Pagare</h2>
+@*<h2>Pagare</h2>
 
 <div>
     <h4>PrestamoYAbonoCapital</h4>
@@ -120,4 +121,114 @@
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.idMovimiento }) |
     @Html.ActionLink("Back to List", "Index")
-</p>
+</p>*@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="utf-8">
+<head>
+    <style>
+                .tdTabla1 {
+                    /*   float: left;
+           margin: 10px;
+           padding: 10px;
+           max-width: 300px;
+           height: 300px;*/
+                    border: 1px solid black;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+                /* .pagares{
+           float: right;
+           margin: 10px;
+           padding: 10px;
+           max-width: 300px;
+           height: 300px;
+
+        } */
+
+                #PagareTexto {
+                    display: inline;
+                }
+
+                #firmas {
+                    display: inline;
+                    float: left;
+                    margin: 0 60px;
+                }
+
+                #tablaFirmas {
+                    float: right;
+                }
+
+                .tdTabla2 {
+                }
+    </style>
+</head>
+<body>
+
+    <div id="PagareTexto">
+        <table class="tabla1">
+            <tr>
+                <td class="tdTabla1">
+                    <h3>PAGARE No._______</h3>
+                                                           <h5>IMPORTE DEL PAGARE: @Model.montoMovimiento</h5>
+                                                       <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
+                    <br>
+                    <p>POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA ORDEN
+                       DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y 
+                       MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA @Model.fechaMovimiento.Day DE
+                       @Model.fechaMovimiento.Month DE @Model.fechaMovimiento.Year,LA CANTIDAD DE: @Model.montoMovimiento 
+                       VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.
+                    </p>
+                    <p>EL IMPORTE DE ESTE PAGARE CAUSARA INTERESES ORDINARIOS SOBRE SALDOS INSOLUTOS A RAZON
+                       DE 10% ANUAL. ESTE PAGARE FORMA PARTE DE UNA SERIE NUMERADA DE 1 AL __________ Y
+                       TODOS ESTAN SUJETOS A LA CONDICCION DE QUE, AL NO PAGARSE CUALQUIERA DE ELLOS A SU
+                       VENCIMIENTO,SERAN EXIGIBLES TODOS LOS QUE LE SIGAN EN NUMERO,ADEMAS DE LOS YA VENCIDOS,
+                       DESDE LA FECHA DE VENCIMIENTO DE ESTE DOCUMENTO HASTA EL DIA DE SU LIQUIDACION,CAUSARA
+                       INTERESES MORATORIOS A UNA TASA  MORATORIA ANUAL DE _____ VECES LA TASA ORDINARIA,
+                       PAGADEROS EN ESTA CIUDAD  JUNTAMENTE  CON EL PRINCIPAL.
+                    </p>
+                    <p>PARA TODO LO RELACIONADO CON LA INTERPRETACION Y CUMPLIMIENTO  DEL PRESENTE TITULO.
+                       DECLARO(AMOS) SOMETERME(NOS) A LAS LEYES Y JURIDICCION  DE LOS TRUBUNALES COMPETENTES 
+                       QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
+                       ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
+                    </p>
+                    <br />
+                    <h6>NOMBRE Y DATOS DEL DEUDOR</h6>
+                    <p>Nombre: @Model.proveedor. </p>
+                    <p>Domicilio:_______</p>         <p>Tel:_____</p>
+                    <p>Poblacion:_______</p>
+
+
+
+                   <h6>Acepto(amos):_________________________________</h6> 
+
+
+
+                    <p>Firma(s):_____________________________________</p>
+
+
+                    <h6>Concepto:</h6>
+
+                    <p>Orden de Compra:_____</p>   <p>CH.@Model.cheque</p>
+                    <p>Pozo:________________</p>            <p>t.c.@Model.precioDelDolar</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!-- 			<div class"pagares">
+                 <p>Concepto:</p>
+
+                  <p>Orden de Compra:_____</p>  <p>CH._____</p>
+                  <p>Pozo:_______</p>   <p>t.c._____</p>
+                </div> -->
+
+</body>
+</html>
