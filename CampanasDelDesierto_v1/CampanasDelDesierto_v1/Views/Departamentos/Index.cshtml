@@ -38,6 +38,9 @@
             </a><br />
             <a href="@Url.Action("Delete","Departamentos",new { id = item.departamentoID })">
                 <i class="glyphicon glyphicon-remove"></i> Eliminar
+            </a><br />
+            <a href="@Url.Action("Inventarios","Departamentos",new { id = item.departamentoID })">
+                <i class="fa fa-folder-o"></i> Inventarios
             </a>
         </td>
     </tr>

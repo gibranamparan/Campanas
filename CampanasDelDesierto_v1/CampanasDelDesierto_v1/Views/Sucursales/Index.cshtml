@@ -41,7 +41,7 @@
                     @item.Departamentos.Count()
                 </td>
                 <td>
-                    @item.Inventarios.Count()
+                    @item.Departamentos.Count()
                 </td>
                 <td>
                     <a href="@Url.Action("Edit", "Sucursales", new { id = item.idSucursal })">
@@ -56,7 +56,7 @@
 
                 </td>
                 <td>
-                    @Html.ActionLink("Inventarios", "Inventarios", new { id = item.idSucursal },new{ @class = "btn btn-primary"})
+                    @Html.ActionLink("Departamentos", "Departamentos", new { id = item.idSucursal },new{ @class = "btn btn-primary"})
                 </td>
             </tr>
        

@@ -124,7 +124,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             base.Dispose(disposing);
         }
-        public ActionResult Inventarios(int? id)
+        public ActionResult Departamentos(int? id)
         {
             if (id == null)
             {

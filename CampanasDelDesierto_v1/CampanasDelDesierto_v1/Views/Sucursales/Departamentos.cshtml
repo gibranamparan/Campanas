@@ -1,0 +1,39 @@
+﻿@model CampanasDelDesierto_v1.Models.Sucursal
+
+@{
+    ViewBag.Title = "Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<h2>Departamentos</h2>
+   
+        <table class="table datablejs">
+            <thead>
+                <tr>
+                    <th>Nombre departamento</th>                   
+                    <th>Nombre sucursal </th>                    
+                    <th>Inventarios</th>
+                    <th>Empleados</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var departamento in Model.Departamentos)
+            {
+                    <tr>
+                        <td>@(departamento.nombreDepartamento)</td>
+                        <td>@departamento.Sucursal.nombreSucursal</td>
+                        <td>@departamento.Inventarios.Count()</td>                        
+                        <td>@departamento.Empleados.Count()</td>
+                        <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
+                        <td>@Html.ActionLink("Ver Empleados", "Details", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+<div>
+    @Html.ActionLink("Crear Departamento", "Create", "Departamentos", new { id = Model.idSucursal }, new { @class = "btn btn-primary" })
+</div>

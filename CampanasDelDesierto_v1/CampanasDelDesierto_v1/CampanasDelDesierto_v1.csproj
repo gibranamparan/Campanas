@@ -387,6 +387,10 @@
     <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.Designer.cs">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.cs" />
+    <Compile Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.Designer.cs">
+      <DependentUpon>201705171928019_Cambio en relacion de modelos de inventarios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -623,7 +627,7 @@
     <Content Include="Views\EmisionDeCheques\Details.cshtml" />
     <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
     <Content Include="Views\EmisionDeCheques\Index.cshtml" />
-    <Content Include="Views\Sucursales\Inventarios.cshtml" />
+    <Content Include="Views\Sucursales\Departamentos.cshtml" />
     <Content Include="Views\PrestamosActivos\Create.cshtml" />
     <Content Include="Views\PrestamosActivos\Delete.cshtml" />
     <Content Include="Views\PrestamosActivos\Details.cshtml" />
@@ -635,6 +639,7 @@
     <Content Include="Views\PagosPorProductos\IngresoProducto.cshtml" />
     <Content Include="Views\PagosPorProductos\Partial_ListaIngresosProducto.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
+    <Content Include="Views\Departamentos\Inventarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -744,6 +749,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.resx">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.resx">
+      <DependentUpon>201705171928019_Cambio en relacion de modelos de inventarios.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

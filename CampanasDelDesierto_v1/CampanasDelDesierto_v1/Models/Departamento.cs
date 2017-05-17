@@ -16,6 +16,8 @@ namespace CampanasDelDesierto_v1.Models
 
         //En un departamento trabajan varios empleados
         public virtual ICollection<Empleado> Empleados { get; set; }
+        //Un departamento tiene muchos inventarios
+        public virtual ICollection<Inventario> Inventarios { get; set; }
 
         //Un departamento tiene una sucursal
         public int idSucursal { get; set; }

@@ -27,11 +27,11 @@ namespace CampanasDelDesierto_v1.Models
         public virtual ICollection<Activo> Activos { get; set; }
 
         //Un inventario tiene una sucursal
-        public virtual Sucursal Sucursal { get; set; }                
-        public int idSucursal { get; set; }
+        public virtual Departamento Departamento { get; set; }                
+        public int departamentoID { get; set; }
 
         //Obtener Activos disponibles del inventario
-        public int GetActivosDisponibles(int? id)
+        public int GetActivosDisponibles(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             List<int> activo = new List<int>();
