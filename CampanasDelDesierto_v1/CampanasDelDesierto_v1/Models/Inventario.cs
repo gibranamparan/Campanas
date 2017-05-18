@@ -26,9 +26,9 @@ namespace CampanasDelDesierto_v1.Models
         //Un inventario tiene muchos activos
         public virtual ICollection<Activo> Activos { get; set; }
 
-        //Un inventario tiene una sucursal
-        public virtual Departamento Departamento { get; set; }                
-        public int departamentoID { get; set; }
+        //Un inventario tiene una sucursal              
+        public int? departamentoID { get; set; }
+        public virtual Departamento Departamento { get; set; }  
 
         //Obtener Activos disponibles del inventario
         public int GetActivosDisponibles(int id)

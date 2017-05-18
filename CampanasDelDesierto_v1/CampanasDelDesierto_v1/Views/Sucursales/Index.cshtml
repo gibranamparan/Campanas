@@ -18,9 +18,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.nombreSucursal)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.domicilioSucursal)
-            </th>
             <th>Departamentos</th>
             <th>Inventarios</th>
             <th></th>
@@ -33,9 +30,6 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.nombreSucursal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.domicilioSucursal)
                 </td>
                 <td>
                     @item.Departamentos.Count()

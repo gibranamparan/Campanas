@@ -14,6 +14,9 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Nombre del departamento")]
         public string nombreDepartamento { get; set; }
 
+        [Display(Name = "Domicilio de Sucursal")]
+        public string domicilio { get; set; }
+
         //En un departamento trabajan varios empleados
         public virtual ICollection<Empleado> Empleados { get; set; }
         //Un departamento tiene muchos inventarios

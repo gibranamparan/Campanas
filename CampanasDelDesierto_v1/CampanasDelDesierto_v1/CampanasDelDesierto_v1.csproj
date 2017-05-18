@@ -387,9 +387,9 @@
     <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.Designer.cs">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.cs" />
-    <Compile Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.Designer.cs">
-      <DependentUpon>201705171928019_Cambio en relacion de modelos de inventarios.cs</DependentUpon>
+    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.cs" />
+    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.Designer.cs">
+      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -750,8 +750,8 @@
     <EmbeddedResource Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.resx">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705171928019_Cambio en relacion de modelos de inventarios.resx">
-      <DependentUpon>201705171928019_Cambio en relacion de modelos de inventarios.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705180107076_relacion_inventario_departamento.resx">
+      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

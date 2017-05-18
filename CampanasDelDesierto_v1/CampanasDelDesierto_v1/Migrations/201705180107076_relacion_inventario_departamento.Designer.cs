@@ -7,13 +7,13 @@ namespace CampanasDelDesierto_v1.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Cambioenrelaciondemodelosdeinventarios : IMigrationMetadata
+    public sealed partial class relacion_inventario_departamento : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Cambioenrelaciondemodelosdeinventarios));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(relacion_inventario_departamento));
         
         string IMigrationMetadata.Id
         {
-            get { return "201705171928019_Cambio en relacion de modelos de inventarios"; }
+            get { return "201705180107076_relacion_inventario_departamento"; }
         }
         
         string IMigrationMetadata.Source
