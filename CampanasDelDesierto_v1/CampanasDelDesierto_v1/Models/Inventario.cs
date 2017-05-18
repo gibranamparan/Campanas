@@ -28,31 +28,16 @@ namespace CampanasDelDesierto_v1.Models
 
         //Un inventario tiene una sucursal              
         public int? departamentoID { get; set; }
-        public virtual Departamento Departamento { get; set; }  
+        public virtual Departamento Departamento { get; set; }
 
-        //Obtener Activos disponibles del inventario
-        public int GetActivosDisponibles(int id)
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-            List<int> activo = new List<int>();
-            Activo ac = new Activo();
-            var inventarioEncontrado = db.Inventarios.Find(id);
-            var activos = inventarioEncontrado.Activos.ToList();
-            for (int i = 0; i < activos.Count(); i++)
+        /// <summary>
+        /// Cuenta la cantidad de activos disponibles en este inventario
+        /// </summary>
+        public int cantidadActivosDisponibles { get
             {
-               
-                activo.Add(activos.Single().idActivo);
+                var noPrestados = this.Activos.ToList().Where(act => !act.prestado);
+                return noPrestados.Count();
             }
-            foreach (var idActivo in activo)
-            {
-                if (ac.estaPrestado(idActivo))
-                {
-                    int disponibles = 0;
-                    disponibles = disponibles++;
-                    return disponibles;
-                }
-            }
-            return 0;
         }
     }
 }

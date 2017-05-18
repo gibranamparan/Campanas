@@ -24,28 +24,17 @@ namespace CampanasDelDesierto_v1.Models
         public int inventarioID { get; set; }
         public virtual Inventario inventario { get; set; }
 
-        //ultimo prestamo actual relacionado
-        public bool estaPrestado(int id)
-        {
-           
-            ApplicationDbContext db = new ApplicationDbContext();
-            Activo activoEncontrado = db.Activos.Find(id);
-            List<PrestamoActivo> prestamo = activoEncontrado.PrestamosActivos.ToList();
-            if (prestamo.Count()>0)
-            {
-                if (prestamo.Last().fechaDevolucion == null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+        [Display(Name = "Actualmente Prestado")]
+        public bool prestado {
+            get {
+                bool prestado = false;
+                List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
+
+                if (prestamo.Count() > 0)
+                    prestado = prestamo.Last().fechaDevolucion == null;
+
+                return prestado;
             }
-            else
-            {
-                return false;
-            }           
         }
     }
 }
