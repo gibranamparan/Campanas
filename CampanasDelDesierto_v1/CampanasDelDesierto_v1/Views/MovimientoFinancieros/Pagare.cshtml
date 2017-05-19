@@ -49,7 +49,7 @@
                 <td class="tdTabla1">
                     <h3>PAGARE No._______</h3>
                                                         <h5>IMPORTE DEL PAGARE:<strong>$ @Model.montoMovimiento</strong></h5>
-                                                       <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
+                                                        <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
                     <p>
                         POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA 
                         ORDEN DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y
@@ -72,13 +72,10 @@
                         QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
                         ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
                     </p>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+
                     <h6><strong> NOMBRE Y DATOS DEL DEUDOR</strong></h6>
                     <p>Nombre: <strong>@(((MovimientoFinanciero)Model).Productor.nombreProductor) </strong></p>
-                    <p>Domicilio: <strong> @(((MovimientoFinanciero)Model).Productor.domicilio)</strong></p>         <p>Tel:__________</p>
+                    <p>Domicilio: <strong> @(((MovimientoFinanciero)Model).Productor.domicilio)</strong></p>         <p>Tel:________</p>
                     <p>Poblacion: <strong>@(((MovimientoFinanciero)Model).Productor.zona)</strong></p>
 
                 
@@ -86,21 +83,24 @@
 
 
 
-                    <p>Firma(s):_____________________________________</p>
+                    <p>Firma(s):_________________________________</p>
 
 
                     <h6><strong>Concepto:</strong></h6>
-                    <p>Orden de Compra:_____</p>
-                    <p>Pozo:_________</p>
+                    <p>Orden de Compra:_________</p>
+                    <p>Pozo:___________</p>
                     <p>CH.<strong>@(((PrestamoYAbonoCapital)Model).cheque)</strong></p>
                     <p>t.c <strong>@(((PrestamoYAbonoCapital)Model).precioDelDolar)</strong></p>
                 </td>
             </tr>
         </table>
     </div>
-    <input class="hidden-print btn btn-info" type="button"
+    @Html.ActionLink("Imprimir", "GeneratePDF", null, htmlAttributes: new { @class = "btn btn-info" })
+
+  @*<input class="hidden-print btn btn-info" type="button"
            onClick="window.print()"
            value="Imprimir" />
+
 
     @section Scripts{
         <script>
@@ -108,10 +108,11 @@
             window.print();
         })
         </script>
+
     }
 
 
-
+*@
 
 
 
