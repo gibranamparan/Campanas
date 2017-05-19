@@ -59,13 +59,13 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Create([Bind(Include = "departamentoID,domicilionombreDepartamento,idSucursal")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Departamentos.Add(departamento);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Departamentos/" + departamento.idSucursal, "Sucursales");
             }
 
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
@@ -93,13 +93,13 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal,domicilio")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(departamento).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Departamentos/" + departamento.idSucursal, "Sucursales");
             }
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
             return View(departamento);
@@ -128,7 +128,7 @@ namespace CampanasDelDesierto_v1.Controllers
             Departamento departamento = await db.Departamentos.FindAsync(id);
             db.Departamentos.Remove(departamento);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Departamentos/" + departamento.idSucursal, "Sucursales");
         }
         public ActionResult Inventarios(int? id)
         {

@@ -22,11 +22,10 @@ namespace CampanasDelDesierto_v1.Models
         //Un departamento tiene muchos inventarios
         public virtual ICollection<Inventario> Inventarios { get; set; }
 
-        public int activosDisponibles {
-            get
-            {
-                return this.Inventarios.ToList().Sum(inv => inv.cantidadActivosDisponibles);
-            }
+        public int activosDisponibles() {
+            
+                return this.Inventarios.ToList().Sum(inv => inv.cantidadActivosDisponibles());
+            
         }
 
         //Un departamento tiene una sucursal

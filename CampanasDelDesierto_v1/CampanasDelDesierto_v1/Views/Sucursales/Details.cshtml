@@ -4,8 +4,27 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
+<div class="col-md-6">
+    <a href="@Url.Action("Edit","Sucursales",new { id = Model.idSucursal })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+    <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
+        <i class="glyphicon glyphicon-arrow-left"></i> Volver
+    </a>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><Strong>Departamento: </Strong>@(Model.nombreSucursal)</h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt>Numero de Departamentos</dt>
+                <dd>@Html.DisplayFor(model => model.Departamentos.Count()) </dd>
+            </dl>
+        </div>
+    </div>
+</div>
 
 <div>
     <h4>Sucursal</h4>
@@ -17,15 +36,7 @@
 
         <dd>
             @Html.DisplayFor(model => model.nombreSucursal)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.domicilioSucursal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.domicilioSucursal)
-        </dd>
+        </dd>      
 
     </dl>
 </div>
@@ -41,7 +52,8 @@
             <thead>
                 <tr>
                     <th>Nombre del Departamento</th>
-                    <th>Numero de Empleados</th>
+                    <th>Domicilio</th>
+                    <th>Activos disponibles</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -51,7 +63,8 @@
             {
                     <tr>
                         <td>@(departamento.nombreDepartamento)</td>
-                        <td>@departamento.Empleados.Count()</td>
+                        <td>@departamento.domicilio</td>
+                        <td>@departamento.activosDisponibles()</td>
                         <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                         <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                     </tr>

@@ -25,8 +25,8 @@ namespace CampanasDelDesierto_v1.Models
         public virtual Inventario inventario { get; set; }
 
         [Display(Name = "Actualmente Prestado")]
-        public bool prestado {
-            get {
+        public bool prestado() {
+            
                 bool prestado = false;
                 List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
 
@@ -34,7 +34,7 @@ namespace CampanasDelDesierto_v1.Models
                     prestado = prestamo.Last().fechaDevolucion == null;
 
                 return prestado;
-            }
+           
         }
     }
 }
