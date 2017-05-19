@@ -27,6 +27,12 @@ namespace CampanasDelDesierto_v1.Models
                 return this.Inventarios.ToList().Sum(inv => inv.cantidadActivosDisponibles());
             
         }
+        public int activosPrestados()
+        {
+
+            return this.Inventarios.ToList().Sum(inv => inv.Activos.Count() - inv.cantidadActivosDisponibles());
+
+        }
 
         //Un departamento tiene una sucursal
         public int idSucursal { get; set; }
