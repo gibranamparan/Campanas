@@ -33,11 +33,12 @@ namespace CampanasDelDesierto_v1.Models
         /// <summary>
         /// Cuenta la cantidad de activos disponibles en este inventario
         /// </summary>
-        public int cantidadActivosDisponibles()
+        public int CantidadActivosDisponibles()
+        {
             {
-                var noPrestados = this.Activos.ToList().Where(act => !act.prestado());
+                var noPrestados = this.Activos.ToList().Where(act => !act.prestado);
                 return noPrestados.Count();
             }
-        
+        }
     }
 }

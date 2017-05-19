@@ -18,7 +18,6 @@
         <th>
             @Html.DisplayNameFor(model => model.nombreDepartamento)
         </th>
-        <th>@Html.DisplayNameFor(model => model.domicilio)</th>
         <th></th>
     </tr>
 
@@ -29,9 +28,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.nombreDepartamento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.domicilio)
         </td>
         <td>
             <a href="@Url.Action("Edit","Departamentos",new { id = item.departamentoID })">

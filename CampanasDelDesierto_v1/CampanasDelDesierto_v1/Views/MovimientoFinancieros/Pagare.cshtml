@@ -9,121 +9,83 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <meta charset="utf-8">
-<head>
-    <style>
-                .tdTabla1 {
-          
-                    border: 1px solid black;
-                    padding-left: 5px;
-                    padding-right: 5px;
-                }
-       
-                .h5{
-                    float:right;
-                }
+    <head>
+        <style>
+                    .tdTabla1 {
+                        border: 1px solid black;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                    }
+                    .h5{
+                        float:right;
+                    }
+                    #PagareTexto {
+                        display: inline;
+                    }
+                    #firmas {
+                        display: inline;
+                        float: left;
+                        margin: 0 60px;
+                    }
+                    #tablaFirmas {
+                        float: right;
+                    }
+                    .tdTabla2 {
+                    }              
+        </style>
+    </head>
+            <body>
 
-                #PagareTexto {
-                    display: inline;
-                }
+                <div id="PagareTexto">
+                    <table class="tabla1">
+                        <tr>
+                            <td class="tdTabla1">
+                                <h3>PAGARE No.       </h3>
+                                                                    <h5>IMPORTE DEL PAGARE:<strong><u>$ @Model.montoMovimiento</u></strong></h5>
+                                                                    <h5>Puerto Peñasco,Son.,a <u>@DateTime.Now </u></h5>
+                                <p>
+                                    POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA ORDEN 
+                                    DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y
+                                    MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong><u>@Model.fechaMovimiento.Day</u></strong> DE 
+                                    <strong><u>@Model.fechaMovimiento.Month</u></strong> DE<strong><u>@Model.fechaMovimiento.Year</u></strong> CANTIDAD DE: <strong>$ @Model.montoMovimiento</u></strong>
+                                    VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.<br />
+                                </p>
+                                <p>
+                                    EL IMPORTE DE ESTE PAGARE CAUSARA INTERESES ORDINARIOS SOBRE SALDOS INSOLUTOS A RAZON
+                                    DE <strong><u>10 %</u></strong>  ANUAL. ESTE PAGARE FORMA PARTE DE UNA SERIE NUMERADA DE 1 AL<u>__________</u>Y
+                                    TODOS ESTAN SUJETOS A LA CONDICCION DE QUE, AL NO PAGARSE CUALQUIERA DE ELLOS A SU
+                                    VENCIMIENTO,SERAN EXIGIBLES TODOS LOS QUE LE SIGAN EN NUMERO,ADEMAS DE LOS YA VENCIDOS,
+                                    DESDE LA FECHA DE VENCIMIENTO DE ESTE DOCUMENTO HASTA EL DIA DE SU LIQUIDACION,CAUSARA
+                                    INTERESES MORATORIOS A UNA TASA  MORATORIA ANUAL DE<u>______</u>VECES LA TASA ORDINARIA,
+                                    PAGADEROS EN ESTA CIUDAD  JUNTAMENTE  CON EL PRINCIPAL.
+                                </p>
+                                <p>
+                                    PARA TODO LO RELACIONADO CON LA INTERPRETACION Y CUMPLIMIENTO  DEL PRESENTE TITULO.
+                                    DECLARO(AMOS) SOMETERME(NOS) A LAS LEYES Y JURIDICCION  DE LOS TRUBUNALES COMPETENTES
+                                    QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
+                                    ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
+                                </p>
 
-                #firmas {
-                    display: inline;
-                    float: left;
-                    margin: 0 60px;
-                }
-
-                #tablaFirmas {
-                    float: right;
-                }
-
-                .tdTabla2 {
-                }
-              
-    </style>
-</head>
-<body>
-
-    <div id="PagareTexto">
-        <table class="tabla1">
-            <tr>
-                <td class="tdTabla1">
-                    <h3>PAGARE No._______</h3>
-                                                        <h5>IMPORTE DEL PAGARE:<strong>$ @Model.montoMovimiento</strong></h5>
-                                                        <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
-                    <p>
-                        POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA 
-                        ORDEN DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y
-                        MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong>@Model.fechaMovimiento.Day</strong> DE 
-                        <strong> @Model.fechaMovimiento.Month </strong> DE<strong> @Model.fechaMovimiento.Year</strong> CANTIDAD DE: <strong>$ @Model.montoMovimiento</strong>
-                        VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.<br />
-                    </p>
-                    <p>
-                        EL IMPORTE DE ESTE PAGARE CAUSARA INTERESES ORDINARIOS SOBRE SALDOS INSOLUTOS A RAZON
-                        DE <strong>10 %</strong>  ANUAL. ESTE PAGARE FORMA PARTE DE UNA SERIE NUMERADA DE 1 AL __________ Y
-                        TODOS ESTAN SUJETOS A LA CONDICCION DE QUE, AL NO PAGARSE CUALQUIERA DE ELLOS A SU
-                        VENCIMIENTO,SERAN EXIGIBLES TODOS LOS QUE LE SIGAN EN NUMERO,ADEMAS DE LOS YA VENCIDOS,
-                        DESDE LA FECHA DE VENCIMIENTO DE ESTE DOCUMENTO HASTA EL DIA DE SU LIQUIDACION,CAUSARA
-                        INTERESES MORATORIOS A UNA TASA  MORATORIA ANUAL DE _____ VECES LA TASA ORDINARIA,
-                        PAGADEROS EN ESTA CIUDAD  JUNTAMENTE  CON EL PRINCIPAL.
-                    </p>
-                    <p>
-                        PARA TODO LO RELACIONADO CON LA INTERPRETACION Y CUMPLIMIENTO  DEL PRESENTE TITULO.
-                        DECLARO(AMOS) SOMETERME(NOS) A LAS LEYES Y JURIDICCION  DE LOS TRUBUNALES COMPETENTES
-                        QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
-                        ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
-                    </p>
-
-                    <h6><strong> NOMBRE Y DATOS DEL DEUDOR</strong></h6>
-                    <p>Nombre: <strong>@(((MovimientoFinanciero)Model).Productor.nombreProductor) </strong></p>
-                    <p>Domicilio: <strong> @(((MovimientoFinanciero)Model).Productor.domicilio)</strong></p>         <p>Tel:________</p>
-                    <p>Poblacion: <strong>@(((MovimientoFinanciero)Model).Productor.zona)</strong></p>
+                                <h6><strong> NOMBRE Y DATOS DEL DEUDOR</strong></h6>
+                                <p>Nombre: <strong><u>@(((MovimientoFinanciero)Model).Productor.nombreProductor) </u></strong></p>
+                                <p>Domicilio: <strong> <u>@(((MovimientoFinanciero)Model).Productor.domicilio)</u></strong></p>         <p>Tel.<u>________</u></p>
+                                <p>Poblacion: <strong><u>@(((MovimientoFinanciero)Model).Productor.zona)</u></strong></p>
 
                 
-                   <h6>Acepto(amos):_________________________________</h6> 
+                               <h6>Acepto(amos):_________________________________</h6> 
 
 
 
-                    <p>Firma(s):_________________________________</p>
+                                <p>Firma(s):_________________________________</p>
 
 
-                    <h6><strong>Concepto:</strong></h6>
-                    <p>Orden de Compra:_________</p>
-                    <p>Pozo:___________</p>
-                    <p>CH.<strong>@(((PrestamoYAbonoCapital)Model).cheque)</strong></p>
-                    <p>t.c <strong>@(((PrestamoYAbonoCapital)Model).precioDelDolar)</strong></p>
-                </td>
-            </tr>
-        </table>
-    </div>
-    @Html.ActionLink("Imprimir", "GeneratePDF", null, htmlAttributes: new { @class = "btn btn-info" })
-
-  @*<input class="hidden-print btn btn-info" type="button"
-           onClick="window.print()"
-           value="Imprimir" />
-
-
-    @section Scripts{
-        <script>
-        $(document).ready(function () {
-            window.print();
-        })
-        </script>
-
-    }
-
-
-*@
-
-
-
-
-
-    <!-- 			<div class"pagares">
-                 <p>Concepto:</p>
-
-                  <p>Orden de Compra:_____</p>  <p>CH._____</p>
-                  <p>Pozo:_______</p>   <p>t.c._____</p>
-                </div> -->
-
-</body>
+                                <h6><strong>Concepto:</strong></h6>
+                                <p>Orden de Compra:<u>_________</u></p>       <p>CH.<strong><u>@(((PrestamoYAbonoCapital)Model).cheque)</u></strong></p>
+                                <p>Pozo:<u>___________</u></p>                <p>t.c <strong><u>@(((PrestamoYAbonoCapital)Model).precioDelDolar)</u></strong></p>
+                            </td>
+                        </tr>
+                    </table>
+              </div>
+                @Html.ActionLink("Imprimir", "GeneratePDF", null, htmlAttributes: new { @class = "btn btn-info" })
+     </body>
 </html>
