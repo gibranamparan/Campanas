@@ -19,7 +19,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Inventarios
         public async Task<ActionResult> Index()
         {
-            var inventarios = db.Inventarios.Include(i => i.Sucursal);           
+            var inventarios = db.Inventarios.Include(i => i.Departamento);           
             return View(await inventarios.ToListAsync());
         }
 
@@ -43,12 +43,12 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (id==null)
             {
-                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
             }
             else
             {
-                Sucursal Sucursal = db.Sucursales.Find(id);
-                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", Sucursal.idSucursal);
+                Departamento Departamento = db.Departamentos.Find(id);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
             }
             
             return View();
@@ -81,7 +81,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
             return View(inventario);
         }
 
@@ -97,7 +97,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
             return View(inventario);
         }
 
@@ -114,7 +114,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.idSucursal);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
             return View(inventario);
         }
 

@@ -38,3 +38,47 @@
     </div>
 
 </p>
+<div class="">
+    <legend>Empleados</legend>
+
+
+    <div>
+        <table class="table datablejs">
+            <thead>
+                <tr>
+                    <th>Nombre Empleado</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Prestamos</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var empleado in Model.Empleados)
+            {
+                    <tr>
+                        <td>@(empleado.nombre)</td>
+                        <td>@empleado.apellidoPaterno</td>
+                        <td>@empleado.apellidoMaterno</td>
+                        <td>@empleado.PrestamosActivos.Count()</td>
+                        <td>@Html.ActionLink("Eliminar", "Delete", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
+                        <td>@Html.ActionLink("Detalles", "Details", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
+                        <td>@Html.ActionLink("Editar", "Edit", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
+                        <td>@Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { id = empleado.idEmpleado }, new { @class = "btn btn-primary" })</td>
+                    </tr>
+                }
+            </tbody>
+
+
+        </table>
+
+
+
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Crear Empleado", "Create", "Empleados", new { id = Model.departamentoID }, new { @class = "btn btn-primary" })
+</div>

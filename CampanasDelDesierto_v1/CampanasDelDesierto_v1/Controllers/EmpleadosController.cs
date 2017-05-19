@@ -39,8 +39,18 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Empleados/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
+            if (id == null)
+            {
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
+            }
+            else
+            {
+                Departamento Departamento = db.Departamentos.Find(id);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
+                
+            }
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
             return View();
         }

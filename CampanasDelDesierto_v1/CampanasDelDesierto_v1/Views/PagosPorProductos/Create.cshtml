@@ -20,7 +20,7 @@
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
-        <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
+        <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este productor
     </a>
 </p>
 @Html.Partial("../Productores/Partial_InfoProductor", productor)
@@ -29,7 +29,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.idProductor)
-    @Html.HiddenFor(mode=>mode.TemporadaDeCosechaID)
+    @Html.HiddenFor(model=>model.TemporadaDeCosechaID)
     <div class="form-horizontal">
         <h4>Pago por producto</h4>
         <div class="alert alert-info">

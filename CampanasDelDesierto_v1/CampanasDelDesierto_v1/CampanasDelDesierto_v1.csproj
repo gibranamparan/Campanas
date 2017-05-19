@@ -255,6 +255,7 @@
     </Compile>
     <Compile Include="HerramientasGenerales\BaxicoWebService.cs" />
     <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
+    <Compile Include="HerramientasGenerales\ExcelTools.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="HerramientasGenerales\VMConfirmModalAttributes.cs" />
@@ -389,6 +390,10 @@
     <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.cs" />
     <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.Designer.cs">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.cs" />
+    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.Designer.cs">
+      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -628,7 +633,7 @@
     <Content Include="Views\EmisionDeCheques\Details.cshtml" />
     <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
     <Content Include="Views\EmisionDeCheques\Index.cshtml" />
-    <Content Include="Views\Sucursales\Inventarios.cshtml" />
+    <Content Include="Views\Sucursales\Departamentos.cshtml" />
     <Content Include="Views\PrestamosActivos\Create.cshtml" />
     <Content Include="Views\PrestamosActivos\Delete.cshtml" />
     <Content Include="Views\PrestamosActivos\Details.cshtml" />
@@ -636,7 +641,11 @@
     <Content Include="Views\PrestamosActivos\Index.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Pagare.cshtml" />
     <Content Include="Views\Shared\Partial_ConfirmationModal.cshtml" />
-    <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
+    <Content Include="Views\Shared\Partial_ExcelErrors.cshtml" />
+    <Content Include="Views\PagosPorProductos\IngresoProducto.cshtml" />
+    <Content Include="Views\PagosPorProductos\Partial_ListaIngresosProducto.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
+    <Content Include="Views\Departamentos\Inventarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -746,6 +755,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.resx">
       <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705180107076_relacion_inventario_departamento.resx">
+      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

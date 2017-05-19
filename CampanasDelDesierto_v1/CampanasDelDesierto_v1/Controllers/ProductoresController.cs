@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -18,6 +19,24 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Productores
         public ActionResult Index()
         {
+            return View(db.Productores.ToList());
+        }
+
+        // Post: INDEX
+        [HttpPost, ActionName("Index")]
+        public ActionResult ImportProductoresFromExcel(HttpPostedFileBase xlsFile)
+        {
+            //Lista para recoleccion de errores
+            List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
+            ExcelTools.ExcelParseError errorGeneral = new ExcelTools.ExcelParseError();
+            //Se importan los datos de recepcion de producto desde el excel recibido
+            int regsSaved = Productor.importarProductores(xlsFile, db, out errores, out errorGeneral);
+            
+            if(errores.Count()>0)
+                ViewBag.erroresExcel = errores;
+            if(errorGeneral.isError)
+                ViewBag.errorGeneral = errorGeneral;
+
             return View(db.Productores.ToList());
         }
 

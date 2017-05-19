@@ -11,7 +11,6 @@ namespace CampanasDelDesierto_v1.Models
         [Key]        
         public int idPrestamoActivo { get; set; }
 
-        
         [Display(Name = "Fecha de prestamo")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]

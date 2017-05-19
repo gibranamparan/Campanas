@@ -5,26 +5,18 @@
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<RecepcionDeProducto.VMRecepcionProductoError> erroresExcel = ViewBag.erroresExcel;
-    RecepcionDeProducto.VMRecepcionProductoError errorPrecios = ViewBag.errorPrecios;
+    List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
+    ExcelTools.ExcelParseError errorPrecios = ViewBag.errorPrecios;
 
-    VMConfirmModalAttributes importExcelErrorOptions = new VMConfirmModalAttributes();
-    if (erroresExcel != null) {
-        importExcelErrorOptions = new VMConfirmModalAttributes()
-        {
-            modalID = "importExcelErrorMessage",
-            modalTitle = "Errores en la importación",
-            primaryMessage = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
-            + " Revise la tabla de errores de importación en la parte inferior.",
-            javascriptFunction = "removeGuest",
-            modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.WARNING),
-            callType = VMConfirmModalAttributes.CallType.NONE
-
-        };
+    string errorMsgPrimario = "";
+    string erroresModalID = "";
+    if (erroresExcel != null && erroresExcel.Count()>0) {
+        errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+            + " Revise la tabla de errores de importación en la parte inferior.";
     }
     if (errorPrecios != null && errorPrecios.isError)
     {
-        importExcelErrorOptions.primaryMessage = errorPrecios+"<br>" + importExcelErrorOptions.primaryMessage;
+        errorMsgPrimario = errorPrecios+"<br>" + errorMsgPrimario;
     }
 }
 <p>
@@ -100,7 +92,7 @@
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().semana)
                     </th>
-                    <th>
+                    <th width="20%">
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().nombreProductor)
                     </th>
                     <th>
@@ -131,7 +123,7 @@
                         <td>
                             @Html.DisplayFor(model => recepcion.semana)
                         </td>
-                        <td>
+                        <td width="20%">
                             @Html.DisplayFor(model => recepcion.nombreProductor)
                         </td>
                         <td>
@@ -150,71 +142,21 @@
     </div>
 </div>
 
-@if (erroresExcel!=null && erroresExcel.Count() > 0)
+@if (!String.IsNullOrEmpty(errorMsgPrimario))
 {
-    <div class="panel">
-        <div class="panel-heading alert-warning">
-            <h2 class="panel-title" onclick="changeIcon(this)"
-                data-toggle="collapse" data-target="#pnlTablaErrores">
-                <span>Errores al importar documento Excel</span>
-                <i class="pull-right fa fa-window-minimize"></i>
-            </h2>
-        </div>
-        <div class="panel-body in" id="pnlTablaErrores">
-            <div class="alert alert-info">
-                Los demás registros han sido cargados satisfactoriamente. Los registros aquí mostrados presentaron problemas
-                para ser procesados. Sí los registros mostros en esta tabla de errores son relevantes, 
-                corrija los datos dentro Excel y vuelva a subir la información. 
-                Si el error persiste, consulte al admnistrador.
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th width="50%">
-                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().errorMsg)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.numeroRecibo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.numProductor)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => erroresExcel.FirstOrDefault().registro.nombreProductor)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var item in erroresExcel)
-                    {
-                        <tr>
-                            <td width="50%">
-                                @Html.Raw(item.errorMsg)
-                                @Html.Raw(item.errorDetails)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.registro.numeroRecibo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.registro.numProductor)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.registro.nombreProductor)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+    erroresModalID = "importExcelErrorMessage";
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("erroresModalID", erroresModalID);
+    vdd.Add("errorMsgPrimario", errorMsgPrimario);
+    <div>
+        @Html.Partial("../Shared/Partial_ExcelErrors", erroresExcel, vdd);
     </div>
-
-    @Html.Partial("../Shared/Partial_ConfirmationModal", importExcelErrorOptions)
-
 }
+
 @section Scripts{
     @if (erroresExcel != null && erroresExcel.Count() > 0) {
         <script>
-            $('@("#"+ importExcelErrorOptions.modalID)').modal();
+            $('@("#"+ erroresModalID)').modal();
         </script>
     }
 }

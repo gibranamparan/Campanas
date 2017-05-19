@@ -130,7 +130,20 @@ namespace CampanasDelDesierto_v1.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+        public ActionResult Inventarios(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Departamento Departamentos = db.Departamentos.Find(id);
+            if (Departamentos == null)
+            {
+                return HttpNotFound();
+            }
 
+            return View(Departamentos);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

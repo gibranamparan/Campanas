@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.Data.OleDb;
 using OfficeOpenXml;
 
@@ -52,8 +53,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             //Lista para recoleccion de errores
-            List<RecepcionDeProducto.VMRecepcionProductoError> errores = new List<RecepcionDeProducto.VMRecepcionProductoError>();
-            RecepcionDeProducto.VMRecepcionProductoError errorPrecios = new RecepcionDeProducto.VMRecepcionProductoError();
+            List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
+            ExcelTools.ExcelParseError errorPrecios = new ExcelTools.ExcelParseError();
             //Se importan los datos de recepcion de producto desde el excel recibido
             int regsSaved = temporadaDeCosecha.importarIngresoDeProductos(xlsFile,db, out errores, out errorPrecios);
 

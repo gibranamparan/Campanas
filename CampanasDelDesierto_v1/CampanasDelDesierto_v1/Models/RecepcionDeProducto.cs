@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 using ExcelNums = CampanasDelDesierto_v1.Models.RecepcionDeProducto.ExcelCols;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -32,15 +33,15 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Nombre de Productor")]
         public string nombreProductor { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "(ton.)")]
         [DisplayFormat(DataFormatString ="{0:0.000}")]
         public double cantidadTonsProd1 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + "(ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd2 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + "(ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd3 { get; set; }
 
@@ -52,11 +53,11 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayName("Temporada")]
         public int? TemporadaDeCosechaID { get; set; }
-        public TemporadaDeCosecha temporada { get; set; }
+        public virtual TemporadaDeCosecha temporada { get; set; }
 
         [DisplayName("Productor")]
         public int? idProductor { get; set; }
-        public Productor productor { get; set; }
+        public virtual Productor productor { get; set; }
 
         public RecepcionDeProducto() { }
         /// <summary>
@@ -64,18 +65,18 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="excelRange">Rango de excel que representa un renglon.</param>
         /// <param name="temporadaID">Temporada a la que corresponde el ingreso</param>
-        public RecepcionDeProducto(ExcelRange excelRange, int temporadaID, ref VMRecepcionProductoError error)
+        public RecepcionDeProducto(ExcelRange excelRange, int temporadaID, ref ExcelTools.ExcelParseError error)
         {
-            error = new VMRecepcionProductoError();
+            error = new ExcelTools.ExcelParseError();
             int rowNum = excelRange.Start.Row;
             try
             {
-                this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString());
+                this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString().Trim());
                 this.fecha = DateTime.Parse(excelRange.ElementAt((int)ExcelCols.DIA).Value.ToString());
                 this.semana = int.Parse(excelRange.ElementAt((int)ExcelCols.SEMANA).Value.ToString());
-                this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString());
+                this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString().Trim());
                 this.numProductor = excelRange.ElementAt((int)ExcelCols.NOMBRE_PRODUCTOR).Value.ToString();
-                this.nombreProductor = excelRange.ElementAt((int)ExcelCols.PROD_NOMBRE).Value.ToString();
+                this.nombreProductor = excelRange.ElementAt((int)ExcelCols.PROD_NOMBRE).Value.ToString().Trim();
                 this.cantidadTonsProd1 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MANZANA).Value.ToString());
                 this.cantidadTonsProd2 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_OBLISSA).Value.ToString());
                 this.cantidadTonsProd3 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MISION).Value.ToString());
@@ -84,15 +85,18 @@ namespace CampanasDelDesierto_v1.Models
             }
             catch (NullReferenceException exc)
             {
-                error = errorFromException(exc, excelRange);
+                error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
+                error.registro = new RecepcionDeProducto(this);
             }
             catch (FormatException exc)
             {
-                error = errorFromException(exc, excelRange);
+                error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
+                error.registro = new RecepcionDeProducto(this);
             }
             catch (Exception exc)
             {
-                error = errorFromException(exc, excelRange);
+                error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
+                error.registro = new RecepcionDeProducto(this);
             }
         }
 
@@ -103,37 +107,9 @@ namespace CampanasDelDesierto_v1.Models
             this.nombreProductor = otro.nombreProductor;
         }
 
-        public VMRecepcionProductoError errorFromException(Exception exc, ExcelRange excelRang)
+        public override string ToString()
         {
-            VMRecepcionProductoError error = new VMRecepcionProductoError();
-            error.isError = true;
-            error.errorDetails = exc.Message;
-            error.registro = new RecepcionDeProducto(this);
-            string errorMsg = "";
-            if (exc is NullReferenceException)
-                errorMsg = "No contiene información.";
-            else if (exc is FormatException)
-                errorMsg = "Contiene un dato que no es posible transformar.";
-            else if(exc is Exception)
-                errorMsg = "Error inesperado, favor de ver los detalles.";
-
-            error.errorMsg = String.Format("Renglon : <strong>{0}</strong>. Error: {1}", excelRang.Address, errorMsg);
-
-            return error;
-        }
-
-        public class VMRecepcionProductoError
-        {
-            public RecepcionDeProducto registro { get; set; }
-            [DisplayName("Error")]
-            public string errorMsg { get; set; }
-            public bool isError = false;
-            public string errorDetails;
-
-            public override string ToString()
-            {
-                return this.errorMsg;
-            }
+            return String.Format("#Recibo: {0} - {1}: {2}",this.numeroRecibo, this.numProductor, this.nombreProductor);
         }
 
         public class VMCostosDeProducto {
@@ -151,9 +127,9 @@ namespace CampanasDelDesierto_v1.Models
                 this.costo = costo;
             }
 
-            internal static TemporadaDeCosecha tomarCostosProducto(ref ExcelWorksheet workSheet, ref VMRecepcionProductoError error)
+            internal static TemporadaDeCosecha tomarCostosProducto(ref ExcelWorksheet workSheet, ref ExcelTools.ExcelParseError error)
             {
-                error = new VMRecepcionProductoError();
+                error = new ExcelTools.ExcelParseError();
                 TemporadaDeCosecha tc = new TemporadaDeCosecha();
 
                 int rowNum = (int)ExcelNums.ROW_COSTOS;
