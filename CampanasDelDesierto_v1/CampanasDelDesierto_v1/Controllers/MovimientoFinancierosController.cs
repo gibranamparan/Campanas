@@ -12,12 +12,13 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
+   
     public class MovimientoFinancierosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: MovimientoFinancieros
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Index()
         {
             var movimientosFinancieros = db.MovimientosFinancieros.Include(m => m.Productor);
@@ -25,6 +26,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: MovimientoFinancieros/Details/5
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -40,6 +42,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: MovimientoFinancieros/Details/5
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Pagare(int? id)
         {
             if (id == null)
@@ -52,9 +55,28 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             return View(movimientoFinanciero);
+
+
+        }
+        
+        public ActionResult GeneratePDF()
+        {
+            if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+            {
+                return new Rotativa.ActionAsPdf("Pagare");
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+
         }
 
+
+
+
         // GET: MovimientoFinancieros/Create
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Create()
         {
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
@@ -66,6 +88,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor")] MovimientoFinanciero movimientoFinanciero)
         {
             if (ModelState.IsValid)
@@ -79,7 +102,7 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", movimientoFinanciero.idProductor);
             return View(movimientoFinanciero);
         }
-
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         // GET: MovimientoFinancieros/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -100,6 +123,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor")] MovimientoFinanciero movimientoFinanciero)
         {
@@ -116,6 +140,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
 
         // GET: MovimientoFinancieros/Delete/5
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -133,6 +158,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // POST: MovimientoFinancieros/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult DeleteConfirmed(int id)
         {
             MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
@@ -156,6 +182,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [HttpPost, ValidateHeaderAntiForgeryToken]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public JsonResult getCambioDolar()
         {
             String errorMsg = "";
@@ -172,5 +199,6 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             base.Dispose(disposing);
         }
+       
     }
 }
