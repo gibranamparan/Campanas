@@ -57,15 +57,15 @@
     <table class="tabla1">
         <tr>
             <td class="tdTabla1">
-                <h3>PAGARE No._______</h3>
-                <h5>IMPORTE DEL PAGARE: @Model.montoMovimiento</h5>
+                <h3>PAGARE No.       </h3>
+                <h5>IMPORTE DEL PAGARE:<strong><u>@Model.montoMovimiento</u> </strong></h5>
                 <h5>Puerto Peñasco,Son.,a @DateTime.Now </h5>
                 <br>
                 <p>
                     POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA <br />
                     ORDEN DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y<br />
-                    MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong>@Model.fechaMovimiento.Day</strong> DE <br />
-                    <strong> @Model.fechaMovimiento.Month </strong> DE<strong> @Model.fechaMovimiento.Year</strong> CANTIDAD DE: <strong>$ @Model.montoMovimiento</strong>
+                    MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong><u>@Model.fechaMovimiento.Day</u></strong> DE <br />
+                    <strong><u> @Model.fechaMovimiento.Month </u></strong> DE<strong><u> @Model.fechaMovimiento.Year</u></strong> CANTIDAD DE: <strong><u>$ @Model.montoMovimiento</u></strong>
                     VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.<br />
                 </p>
                 <p>
@@ -85,9 +85,9 @@
                 </p>
                 <br />
                 <h6>NOMBRE Y DATOS DEL DEUDOR</h6>
-                <p>Nombre: @(((MovimientoFinanciero)Model).Productor.nombreProductor) </p>
-                <p>Domicilio: @(((MovimientoFinanciero)Model).Productor.domicilio)</p>         <p>Tel:__________</p>
-                <p>Poblacion:@(((MovimientoFinanciero)Model).Productor.zona)</p>
+                <p>Nombre:<u>@(((MovimientoFinanciero)Model).Productor.nombreProductor)</u></p>
+                <p>Domicilio:<u> @(((MovimientoFinanciero)Model).Productor.domicilio)</u></p>         <p>Tel:__________</p>
+                <p>Poblacion:<u>@(((MovimientoFinanciero)Model).Productor.zona)</u></p>
 
 
 
@@ -101,8 +101,8 @@
                 <h6>Concepto:</h6>
                 <p>Orden de Compra:_____</p>
                 <p>Pozo:_________</p>
-                <p>CH.@(((PrestamoYAbonoCapital)Model).cheque)</p>
-                <p>t.c @(((PrestamoYAbonoCapital)Model).precioDelDolar)</p>
+                <p>CH. <u>@(((PrestamoYAbonoCapital)Model).cheque)</u></p>
+                <p>t.c <u>@(((PrestamoYAbonoCapital)Model).precioDelDolar)</u></p>
             </td>
         </tr>
     </table>

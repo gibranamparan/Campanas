@@ -41,30 +41,17 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Inventarios/Create
         public ActionResult Create(int? id)
         {
-            if (id == null)
+            if (id==null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
             }
-            var departamento = db.Departamentos.Find(id);
-            if (departamento == null)
+            else
             {
-                return HttpNotFound();
-
+                Departamento Departamento = db.Departamentos.Find(id);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
             }
-            Inventario emp = prepararVistaCrear(departamento);
-            return View(emp);
-
-        }
-        private Inventario prepararVistaCrear(Departamento departamento)
-        {
-            ViewBag.departamento = departamento;
-            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
-
-            Inventario emp = new Inventario();
-            emp.departamentoID = departamento.departamentoID;
-
-
-            return emp;
+            
+            return View();
         }
 
         // POST: Inventarios/Create
@@ -72,7 +59,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,departamentoID")] Inventario inventario)
+        public async Task<ActionResult> Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,idSucursal")] Inventario inventario)
         {
             if (ModelState.IsValid)
             {
@@ -91,10 +78,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
                 db.Inventarios.Add(inventario);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Inventarios/"+inventario.departamentoID,"Departamentos",inventario.departamentoID);
+                return RedirectToAction("Index");
             }
 
-            ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", inventario.departamentoID);
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
             return View(inventario);
         }
 

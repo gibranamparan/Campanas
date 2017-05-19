@@ -5,27 +5,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <a href="@Url.Action("Edit","Sucursales",new { id = Model.idSucursal })">
-        <i class="glyphicon glyphicon-pencil"></i> Editar
-    </a><br />
-    <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
-        <i class="glyphicon glyphicon-arrow-left"></i> Volver
-    </a><br />
+<h2>Details</h2>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2 class="panel-title"><Strong>Sucursal: </Strong>@(Model.nombreSucursal)</h2>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <dl class="dl-horizontal col-md-6">
-                <dt>Numero de Departamentos</dt>
-                <dd>@Model.Departamentos.Count()</dd>
-            </dl>
-        </div>
-    </div>
+<div>
+    <h4>Sucursal</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreSucursal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombreSucursal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.domicilioSucursal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.domicilioSucursal)
+        </dd>
+
+    </dl>
 </div>
-
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idSucursal }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
 
     <legend>Departamentos</legend>
     
@@ -34,21 +41,17 @@
             <thead>
                 <tr>
                     <th>Nombre del Departamento</th>
-                    <th>Domicilio</th>
-                    <th>Activos disponibles</th>
-                    <th>Activos Prestados</th>
+                    <th>Numero de Empleados</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var departamento in Model.Departamentos)
-            {                    
+            {
                     <tr>
                         <td>@(departamento.nombreDepartamento)</td>
-                        <td>@departamento.domicilio</td>
-                        <td>@departamento.activosDisponibles()</td>
-                        <td>@departamento.activosPrestados()</td>
+                        <td>@departamento.Empleados.Count()</td>
                         <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                         <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                     </tr>

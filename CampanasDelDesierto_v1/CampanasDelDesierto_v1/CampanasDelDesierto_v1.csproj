@@ -633,6 +633,7 @@
     <Content Include="Views\EmisionDeCheques\Details.cshtml" />
     <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
     <Content Include="Views\EmisionDeCheques\Index.cshtml" />
+    <Content Include="Views\Sucursales\Departamentos.cshtml" />
     <Content Include="Views\PrestamosActivos\Create.cshtml" />
     <Content Include="Views\PrestamosActivos\Delete.cshtml" />
     <Content Include="Views\PrestamosActivos\Details.cshtml" />

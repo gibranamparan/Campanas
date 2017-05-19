@@ -41,30 +41,18 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Empleados/Create
         public ActionResult Create(int? id)
         {
-            if (id==null)
+            if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
             }
-            var departamento = db.Departamentos.Find(id);
-            if(departamento==null)
+            else
             {
-                return HttpNotFound();
+                Departamento Departamento = db.Departamentos.Find(id);
+                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
                 
             }
-            Empleado emp = prepararVistaCrear(departamento);
-            return View(emp);
-
-        }
-        private Empleado prepararVistaCrear(Departamento departamento)
-        {
-            ViewBag.departamento = departamento;
-            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
-
-            Empleado emp = new Empleado();
-            emp.departamentoID = departamento.departamentoID;
-           
-
-            return emp;
+            ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
+            return View();
         }
 
         // POST: Empleados/Create
@@ -78,7 +66,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Empleados.Add(empleado);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details/"+empleado.departamentoID,"Departamentos");
+                return RedirectToAction("Index");
             }
 
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
@@ -112,7 +100,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Entry(empleado).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details/" + empleado.departamentoID, "Departamentos");
+                return RedirectToAction("Index");
             }
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
             return View(empleado);
@@ -141,7 +129,7 @@ namespace CampanasDelDesierto_v1.Controllers
             Empleado empleado = await db.Empleados.FindAsync(id);
             db.Empleados.Remove(empleado);
             await db.SaveChangesAsync();
-            return RedirectToAction("Details/" + empleado.departamentoID, "Departamentos");
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
