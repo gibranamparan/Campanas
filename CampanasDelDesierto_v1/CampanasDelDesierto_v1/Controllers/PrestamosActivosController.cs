@@ -83,11 +83,8 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var activo = new Activo();
-
-                activo = db.Activos.Find(prestamoActivo.idActivo);
-                var ac = activo.prestado();                
-  
+                var activo = new Activo();                
+                var ac = activo.estaPrestado(prestamoActivo.idActivo);
                 if (ac==true)
                 {
                     ViewBag.Mensaje = "El prestamo no se pudo realizar";
