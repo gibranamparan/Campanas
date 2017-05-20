@@ -69,7 +69,7 @@ namespace CampanasDelDesierto_v1.Models
                 if (tom == TypeOfMovements.CAPITAL)
                     return ((PrestamoYAbonoCapital)this).proveedor;
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
-                    return ((PagoPorProducto)this).tipoProducto;
+                    return "INGRESO DE PRODUCTO";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return ((VentaACredito)this).cantidadMaterial
                         +" "+((VentaACredito)this).Producto.nombreProducto;

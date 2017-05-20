@@ -5,9 +5,13 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
+    </a>
+</div>
 <h2>Editar</h2>
-
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -92,11 +96,6 @@
     </div>
 }
 
-<div>
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-    </a>
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
