@@ -45,30 +45,33 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: PrestamosActivos/Create
-        public ActionResult Create(int? id, int? idEmpleado)
+        public ActionResult Create(int? id)
         {
             if (id == null)
             {
-                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
-                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+            var empleado = db.Empleados.Find(id);
+            if (empleado == null)
             {
-                Activo activo = db.Activos.Find(id);
-                ViewBag.idActivo = new SelectList(db.Empleados, "idEmpleado", "nombre", activo.idActivo);
-            }
-            if (idEmpleado==null)
-            {
-                ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
-                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre");
-            }
-            else
-            {
-                Empleado empleado = db.Empleados.Find(idEmpleado);
-                ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre", empleado.idEmpleado);
-            }
+                return HttpNotFound();
 
-            return View();
+            }
+            ViewBag.idActivo = new SelectList(db.Activos.ToList(), "idActivo", "nombreActivo", null);
+            PrestamoActivo prestamo = prepararVistaCrear(empleado);
+            return View(prestamo);
+
+        }
+        private PrestamoActivo prepararVistaCrear(Empleado empleado)
+        {
+            ViewBag.empleado = empleado;
+            ViewBag.idEmpleado = new SelectList(db.Empleados.ToList(), "idEmpleado", "nombre", null);
+
+            PrestamoActivo prestamo = new PrestamoActivo();
+            prestamo.idEmpleado = empleado.idEmpleado;
+
+
+            return prestamo;
         }
 
         // POST: PrestamosActivos/Create
@@ -80,8 +83,11 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var activo = new Activo();                
-                var ac = activo.prestado;
+                var activo = new Activo();
+
+                activo = db.Activos.Find(prestamoActivo.idActivo);
+                var ac = activo.prestado();                
+  
                 if (ac==true)
                 {
                     ViewBag.Mensaje = "El prestamo no se pudo realizar";

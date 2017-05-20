@@ -163,12 +163,12 @@ namespace CampanasDelDesierto_v1.Models
         public int anioCosecha
         {
             get
-            {
-                int anioCosecha = this.fechaMovimiento.Year;
-                if (this.fechaMovimiento > new DateTime(this.fechaMovimiento.Year,
-                        this.MES_PERIODO, this.DIA_INICIO_PERIODO))
-                    anioCosecha++;
-                return anioCosecha;
+          {
+               int anioCosecha = this.fechaMovimiento.Year;
+               if (this.fechaMovimiento > new DateTime(this.fechaMovimiento.Year,
+                      this.MES_PERIODO, this.DIA_INICIO_PERIODO))
+                  anioCosecha++;
+               return anioCosecha;
             }
         }
 
