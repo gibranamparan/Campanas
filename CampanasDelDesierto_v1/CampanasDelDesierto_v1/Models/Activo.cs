@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idActivo { get; set; }
 
-        [Display(Name ="Nombre de Activo")]
+        [Display(Name = "Nombre de Activo")]
         public string nombreActivo { get; set; }
 
         [Display(Name = "Estado de Activo")]
@@ -25,16 +25,17 @@ namespace CampanasDelDesierto_v1.Models
         public virtual Inventario inventario { get; set; }
 
         [Display(Name = "Actualmente Prestado")]
-        public bool prestado {
-            get {
+        public bool prestado() {
+
+
                 bool prestado = false;
-                List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
+        List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
 
                 if (prestamo.Count() > 0)
                     prestado = prestamo.Last().fechaDevolucion == null;
 
                 return prestado;
-            }
+          
         }
     }
 }

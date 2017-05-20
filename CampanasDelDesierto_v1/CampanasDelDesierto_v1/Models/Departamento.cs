@@ -25,13 +25,13 @@ namespace CampanasDelDesierto_v1.Models
         public int activosDisponibles {
             get
             {
-                return this.Inventarios.ToList().Sum(inv => inv.cantidadActivosDisponibles);
+                return this.Inventarios.ToList().Sum(inv => inv.CantidadActivosDisponibles());
             }
         }
         public int activosPrestados()
         {
 
-            return this.Inventarios.ToList().Sum(inv => inv.Activos.Count() - inv.cantidadActivosDisponibles());
+            return this.Inventarios.ToList().Sum(inv => inv.Activos.Count() - inv.CantidadActivosDisponibles());
 
         }
 
