@@ -1,19 +1,24 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model IEnumerable<RecepcionDeProducto>
-@{ /*
+@{ 
     bool selectMode = false;
     if (ViewData["selectMode"] != null)
     {
         selectMode = (bool)ViewData["selectMode"];
-    }*/
+    }
 }
 
 <h3>Acumulado de recepción de aceituna</h3>
 <table id="tblIngresoAcumulado" class="table table-hover table-striped">
     <thead>
         <tr>
-            <th>
+            @if (selectMode) {
+                <th>
 
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.recepcionID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.numeroRecibo)
@@ -39,15 +44,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                @*if (selectMode)
+                @if (selectMode)
                 {
                     <td>
-                        <input type="checkbox" value="@item.numeroRecibo" onchange="selectChange(this)"
-                                cant-prod1 ='@item.cantidadTonsProd1' cant-prod2 ='@item.cantidadTonsProd2'
-                                cant-prod3 ='@item.cantidadTonsProd3'/>
+
                     </td>
-                }*@
-                <td></td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.recepcionID)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.numeroRecibo)
                 </td>

@@ -29,7 +29,6 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (USD)")]
         public double pagoProducto3 { get; set; }
 
-        [Display(Name = "Numero de la semana")]
-        public int numeroSemana { get; set; }
+        public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
     }
 }

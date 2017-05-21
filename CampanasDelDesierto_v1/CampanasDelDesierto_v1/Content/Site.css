@@ -25,11 +25,13 @@ div#main {
     box-shadow: 0.1em 0.2em 2em grey;
     border-radius: 0 0 0em 1em;
     z-index: 5;
+    width: 25em;
 }
 ul.usrPanel li a {
     color: white;
     border: none;
     z-index: 5;
+    display: inline-block !important;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
@@ -200,6 +202,11 @@ footer{
 
  .form-group img{
      height: 2em;
+ }
+
+ #logoutForm{
+     padding: 0;
+     margin: 0;
  }
 
 .datatablejs {

@@ -49,14 +49,12 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MovimientoFinanciero movimientoFinanciero = db.MovimientosFinancieros.Find(id);
+            PrestamoYAbonoCapital movimientoFinanciero = db.PrestamosYAbonosCapital.Find(id);
             if (movimientoFinanciero == null)
             {
                 return HttpNotFound();
             }
             return View(movimientoFinanciero);
-
-
         }
         
         public ActionResult GeneratePDF()
