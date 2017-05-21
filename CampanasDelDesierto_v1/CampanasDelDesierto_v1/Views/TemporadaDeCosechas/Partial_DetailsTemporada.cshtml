@@ -1,30 +1,89 @@
 ﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
+@{ 
+    bool editable = false;
+    string funcionAlReestablecer = "";
+    if (ViewData["editable"] != null)
+    {
+        editable = (bool)ViewData["editable"];
+    }
+    if (ViewData["funcionAlReestablecer"] != null)
+    {
+        funcionAlReestablecer = (string)ViewData["funcionAlReestablecer"];
+    }
+}
 
 <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title"><strong>Temporada: </strong>@Model.rangoTiempo</h3>
     </div>
     <div class="panel-body">
-        <div class="form-inline">
+        <div class="form-inline" id="formCostosProducto">
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto1: </label>
-                @Html.DisplayFor(model => model.precioProducto1)
+                @Html.LabelFor(model => model.precioProducto1)
+                @Html.EditorFor(model => model.precioProducto1, new { htmlAttributes = new { disabled= "disabled",
+                   @class = "form-control",
+                   data_mask = "###0.00",
+                   data_mask_reverse = "true"
+               } })
             </div>
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto2: </label>
-                @Html.DisplayFor(model => model.precioProducto2)
+                @Html.LabelFor(model => model.precioProducto2)
+                @Html.EditorFor(model => model.precioProducto2, new { htmlAttributes = new { disabled = "disabled",
+                   @class = "form-control",
+                   data_mask = "###0.00",
+                   data_mask_reverse = "true"
+               } })
             </div>
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto3: </label>
-                @Html.DisplayFor(model => model.precioProducto3)
+                @Html.LabelFor(model => model.precioProducto3)
+                @Html.EditorFor(model => model.precioProducto3, new { htmlAttributes = new { disabled= "disabled",
+                   @class = "form-control",
+                   data_mask = "###0.00",
+                   data_mask_reverse = "true"
+               } })
             </div>
             <div class="form-group col-md-3">
-                <label>@Model.tipoProductoOtro: </label>
-                @Html.DisplayFor(model => model.precioProductoOtro)
+                @Html.LabelFor(model => model.precioProductoOtro)
+                @Html.EditorFor(model => model.precioProductoOtro, new { htmlAttributes = new { disabled= "disabled",
+                   @class = "form-control",
+                   data_mask = "###0.00",
+                   data_mask_reverse = "true"
+               } })
             </div>
         </div>
-        <a href="@Url.Action("Edit", new { id = Model.TemporadaDeCosechaID })">
-            <i class="fa fa-pencil"></i> Editar
+        <a href="@Url.Action("Edit","TemporadaDeCosechas", new { id = Model.TemporadaDeCosechaID })">
+            <i class="fa fa-pencil"></i> Editar temporada
         </a>
+        @if (editable)
+        {
+            <span> | </span>
+            <input type="checkbox" id="cbEditarCostos" name="cbEditarCostos" 
+                   class="hidden" onchange="cbChangeEditarCostos(this)"/>
+            <label for="cbEditarCostos">Editar costos para este registro</label>
+        }
     </div>
 </div>
+
+<script>
+    var costoOriginalProducto1 = @Model.precioProducto1;
+    var costoOriginalProducto2 = @Model.precioProducto2;
+    var costoOriginalProducto3 = @Model.precioProducto3;
+    var selector = "#formCostosProducto input";
+
+    function cbChangeEditarCostos(cb){
+        var val = $(cb).is(':checked');
+        $(selector).attr("disabled",!val)
+
+        if(!val){
+            $(selector+"#precioProducto1").val(numeral(costoOriginalProducto1).format('0.00')).trigger('input');
+            $(selector+"#precioProducto2").val(numeral(costoOriginalProducto2).format('0.00')).trigger('input');
+            $(selector+"#precioProducto3").val(numeral(costoOriginalProducto3).format('0.00')).trigger('input');
+            @if (!String.IsNullOrEmpty(funcionAlReestablecer))
+            {
+                @Html.Raw(funcionAlReestablecer+"()")
+            }
+        }
+
+    }
+</script>
+
