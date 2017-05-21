@@ -395,6 +395,10 @@
     <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.Designer.cs">
       <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705200926484_Cambios_En_Movimientos.cs" />
+    <Compile Include="Migrations\201705200926484_Cambios_En_Movimientos.Designer.cs">
+      <DependentUpon>201705200926484_Cambios_En_Movimientos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -758,6 +762,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705180107076_relacion_inventario_departamento.resx">
       <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705200926484_Cambios_En_Movimientos.resx">
+      <DependentUpon>201705200926484_Cambios_En_Movimientos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

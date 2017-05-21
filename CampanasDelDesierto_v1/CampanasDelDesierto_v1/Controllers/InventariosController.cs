@@ -41,17 +41,35 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Inventarios/Create
         public ActionResult Create(int? id)
         {
-            if (id==null)
+            if (id == null)
             {
-                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+            Departamento Departamento = db.Departamentos.Find(id);
+            if (Departamento == null)
             {
-                Departamento Departamento = db.Departamentos.Find(id);
-                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
+                return HttpNotFound();
             }
-            
-            return View();
+            Inventario inv = prepararVistaCrear(Departamento);
+
+            return View(inv);
+        }
+
+        private Inventario prepararVistaCrear(Departamento Departamento)
+        {
+            ViewBag.Departamento = Departamento;
+            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
+
+            Inventario inv = new Inventario();
+            inv.departamentoID = Departamento.departamentoID;
+            //emp.Departamento.nombreDepartamento = departamento.nombreDepartamento;
+            //emp.Departamento.domicilio = departamento.domicilio;
+            //emp.Departamento.Sucursal.nombreSucursal = departamento.Sucursal.nombreSucursal;
+            inv.Departamento = Departamento;
+
+
+
+            return inv;
         }
 
         // POST: Inventarios/Create
@@ -59,7 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,idSucursal")] Inventario inventario)
+        public async Task<ActionResult> Create([Bind(Include = "inventarioID,nombreInventario,modeloInventario,costo,cantidad,departamentoID")] Inventario inventario)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +96,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
                 db.Inventarios.Add(inventario);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+inventario.departamentoID,"Departamentos");
             }
 
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);

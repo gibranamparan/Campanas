@@ -14,7 +14,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Nombre del departamento")]
         public string nombreDepartamento { get; set; }
 
-        [Display(Name = "Domicilio de Sucursal")]
+        [Display(Name = "Domicilio de Departamento")]
         public string domicilio { get; set; }
 
         //En un departamento trabajan varios empleados
@@ -22,11 +22,10 @@ namespace CampanasDelDesierto_v1.Models
         //Un departamento tiene muchos inventarios
         public virtual ICollection<Inventario> Inventarios { get; set; }
 
-        public int activosDisponibles {
-            get
-            {
+        public int activosDisponibles() {
+            
                 return this.Inventarios.ToList().Sum(inv => inv.CantidadActivosDisponibles());
-            }
+           
         }
         public int activosPrestados()
         {

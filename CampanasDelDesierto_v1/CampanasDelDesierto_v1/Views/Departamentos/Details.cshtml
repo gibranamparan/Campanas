@@ -4,56 +4,55 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Detalles</h2>
-
-<div>
-    <h4>Departamento</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Sucursal.nombreSucursal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Sucursal.nombreSucursal)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreDepartamento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.nombreDepartamento)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.departamentoID }) |
-    <div>
-        <a href="@Url.Action("Index")">
-            <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-        </a>
-    </div>
-
+    <a href="@Url.Action("Index","Departamentos",new { id = Model.departamentoID })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
+    <a href="@Url.Action("Edit","Departamentos",new { id = Model.departamentoID })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+    
 </p>
-<div class="">
-    <legend>Empleados</legend>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Departamento:</strong> @(Model.nombreDepartamento)</h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt>@Html.DisplayNameFor(model => model.Sucursal.nombreSucursal)</dt>
+                <dd>@Html.DisplayFor(model => model.Sucursal.nombreSucursal) </dd>
 
+                <dt> @Html.DisplayNameFor(model => model.domicilio)</dt>
+                <dd> @Html.DisplayFor(model => model.domicilio) </dd>
+            </dl>          
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayName("Activos Disponibles")</dt>
+                <dd> @(Model.activosDisponibles()) </dd>
 
-    <div>
-        <table class="table datablejs">
+                <dt> @Html.DisplayName("Activos Prestados")</dt>
+                <dd> @(Model.activosPrestados())  </dd>
+            </dl>
+        </div>       
+    </div>
+</div>
+
+    <h2>Empleados</h2>
+
+    <p>   
+        <a href="@Url.Action("Create","Empleados",new { id = Model.departamentoID })">
+            <i class="glyphicon glyphicon-plus"></i> Crear Empleado
+        </a>
+    </p>
+   
+        <table class="table table-striped table-hover datatablejs">
             <thead>
                 <tr>
                     <th>Nombre Empleado</th>
                     <th>Apellido Paterno</th>
                     <th>Apellido Materno</th>
                     <th>Prestamos</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th></th>                    
                 </tr>
             </thead>
             <tbody>
@@ -64,21 +63,63 @@
                         <td>@empleado.apellidoPaterno</td>
                         <td>@empleado.apellidoMaterno</td>
                         <td>@empleado.PrestamosActivos.Count()</td>
-                        <td>@Html.ActionLink("Eliminar", "Delete", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
-                        <td>@Html.ActionLink("Detalles", "Details", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
-                        <td>@Html.ActionLink("Editar", "Edit", "Empleados", new { id = empleado.idEmpleado }, null)  </td>
-                        <td>@Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { id = empleado.idEmpleado }, new { @class = "btn btn-primary" })</td>
+                        <td>
+                            <a href="@Url.Action("Delete","Empleados",new { id = empleado.idEmpleado })">
+                                <i class="glyphicon glyphicon glyphicon-remove"></i> Eliminar
+                            </a><br />
+                            <a href="@Url.Action("Details","Empleados",new { id = empleado.idEmpleado })">
+                                <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
+                            </a><br />
+                            <a href="@Url.Action("Editar","Empleados",new { id = empleado.idEmpleado })">
+                                <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
+                            </a><br />
+                            <a href="@Url.Action("Create","PrestamosActivos",new { id = empleado.idEmpleado })">
+                                <i class="glyphicon glyphicon glyphicon-plus"></i> Crear Prestamo
+                            </a>
+                        </td>                       
                     </tr>
                 }
             </tbody>
+        </table>    
+   
 
 
-        </table>
+<h2>Inventarios</h2>
+<p>
+    <a href="@Url.Action("Create","Inventarios",new { id = Model.departamentoID })">
+        <i class="glyphicon glyphicon-plus"></i> Crear Inventario
+    </a>
+</p>
 
+<table class="table table-striped table-hover datatablejs">
+    <thead>
+        <tr>
+            <th>Nombre Inventario</th>
+            <th>Nombre Departamento </th>
+            <th>Activos Disponibles</th>
+            <th>Activos Prestados</th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inventario in Model.Inventarios)
+            {
+            <tr>
+                <td>@(inventario.nombreInventario)</td>
+                <td>@inventario.Departamento.nombreDepartamento</td>
+                <td>@inventario.CantidadActivosDisponibles()</td>
+                <td>@(inventario.Activos.Count() - inventario.CantidadActivosDisponibles())</td>
+                <td>
+                    <a href="@Url.Action("Delete","Inventarios",new { id = inventario.inventarioID })">
+                        <i class="glyphicon glyphicon-remove"></i> Eliminar
+                    </a><br />
+                    <a href="@Url.Action("Details","Inventarios",new { id = inventario.inventarioID })">
+                        <i class="glyphicon glyphicon-eye-open"></i> Activos
+                    </a>
+                </td>               
+            </tr>
+        }
+    </tbody>
 
-
-    </div>
-</div>
-<div>
-    @Html.ActionLink("Crear Empleado", "Create", "Empleados", new { id = Model.departamentoID }, new { @class = "btn btn-primary" })
-</div>
+</table>

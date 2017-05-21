@@ -41,31 +41,50 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Departamentos/Create
         public ActionResult Create(int? id)
         {
-            if (id==null)
+            if (id == null)
             {
-                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+            Sucursal Sucursal = db.Sucursales.Find(id);
+            if (Sucursal == null)
             {
-                Sucursal Sucursal =  db.Sucursales.Find(id);
-                ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal",Sucursal.idSucursal);
+                return HttpNotFound();
             }
-            
-            return View();
+            Departamento dep = prepararVistaCrear(Sucursal);
+
+            return View(dep);
         }
+
+        private Departamento prepararVistaCrear(Sucursal Sucursal)
+        {
+            ViewBag.Sucursal = Sucursal;
+            ViewBag.idSucursal = new SelectList(db.Sucursales.ToList(), "idSucursal", "nombreSucursal", null);
+
+            Departamento dep = new Departamento();
+            dep.idSucursal = Sucursal.idSucursal;
+            //emp.Departamento.nombreDepartamento = departamento.nombreDepartamento;
+            //emp.Departamento.domicilio = departamento.domicilio;
+            //emp.Departamento.Sucursal.nombreSucursal = departamento.Sucursal.nombreSucursal;
+            dep.Sucursal = Sucursal;
+
+
+
+            return dep;
+        }
+
 
         // POST: Departamentos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Create([Bind(Include = "departamentoID,nombreDepartamento,idSucursal, domicilio")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Departamentos.Add(departamento);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+departamento.idSucursal, "Sucursales");
             }
 
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);

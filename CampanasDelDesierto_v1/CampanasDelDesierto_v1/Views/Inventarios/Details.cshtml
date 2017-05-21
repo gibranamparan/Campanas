@@ -4,73 +4,57 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>Inventario</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Departamento.nombreDepartamento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreInventario)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.nombreInventario)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.modeloInventario)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.modeloInventario)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.costo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.costo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.cantidad)
-        </dt>
-
-        <dd>
-            @Model.Activos.Count()
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.inventarioID }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Index","Departamentos",new { id = Model.departamentoID })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
+    <a href="@Url.Action("Edit","Departamentos",new { id = Model.departamentoID })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+
 </p>
-<div class="">
-    <legend>Inventarios</legend>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Inventario:</strong> @(Model.nombreInventario)</h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt>@Html.DisplayNameFor(model => model.Departamento.Sucursal.nombreSucursal)</dt>
+                <dd>@Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal) </dd>
 
+                <dt>@Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)</dt>
+                <dd>@Html.DisplayFor(model => model.Departamento.nombreDepartamento) </dd>
 
-    <div>
+                <dt> @Html.DisplayNameFor(model => model.modeloInventario)</dt>
+                <dd> @Html.DisplayFor(model => model.modeloInventario) </dd>
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.costo)</dt>
+                <dd> @Html.DisplayFor(model => model.costo) </dd>
+
+                <dt> @Html.DisplayName("Activos Disponibles")</dt>
+                <dd> @(Model.CantidadActivosDisponibles())  </dd>
+
+                <dt> @Html.DisplayName("Activos Prestados")</dt>
+                <dd> @(Model.CantidadActivosPrestados())  </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+    <legend>Activos</legend>
+
+    <a href="@Url.Action("Create","Activo",new { id = Model.inventarioID})">
+         <i class="glyphicon glyphicon-plus"></i> Crear Activo
+    </a><br />
+
         <table class="table datablejs">
             <thead>
                 <tr>
                     <th>Nombre del Activo</th>
                     <th>Estado del Activo</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th></th>                    
                 </tr>
             </thead>
             <tbody>
@@ -79,21 +63,23 @@
                     <tr>
                         <td>@(activo.nombreActivo)</td>
                         <td>@activo.estadoActivo</td>
-                        <td>@Html.ActionLink("Eliminar", "Delete", "Activos", new { id = activo.idActivo }, null)  </td>
-                        <td>@Html.ActionLink("Detalles", "Details", "Activos", new { id = activo.idActivo }, null)  </td>
-                        <td>@Html.ActionLink("Editar", "Edit", "Activos", new { id = activo.idActivo }, null)  </td>
-                        <td>@Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { id = activo.idActivo }, new { @class = "btn btn-primary" })</td>
+                        <td>
+                            <a href="@Url.Action("Delete","Activos",new { id = activo.idActivo })">
+                                <i class="glyphicon glyphicon-remove"></i> Eliminar
+                            </a><br />
+                            <a href="@Url.Action("Details","Activos",new { id = activo.idActivo })">
+                                <i class="glyphicon glyphicon-pencil"></i> Detalles
+                            </a><br />
+                            <a href="@Url.Action("Edit","Activos",new { id = activo.idActivo })">
+                                <i class="glyphicon glyphicon-pencil"></i> Editar
+                            </a><br />
+                            <a href="@Url.Action("Create","PrestamosActivos",new { id = activo.idActivo })">
+                                <i class="glyphicon glyphicon-plus"></i> Crear Prestamo
+                            </a><br />
+                        </td>                       
                     </tr>
                 }
             </tbody>
-
-
         </table>
 
 
-
-    </div>
-</div>
-<div>
-    @Html.ActionLink("Crear Activo", "Create", "Activos", new { id = Model.inventarioID }, new { @class = "btn btn-primary" })
-</div>

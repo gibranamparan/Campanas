@@ -43,16 +43,33 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (id == null)
             {
-                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+            Departamento Departamento = db.Departamentos.Find(id);
+            if (Departamento == null)
             {
-                Departamento Departamento = db.Departamentos.Find(id);
-                ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", Departamento.departamentoID);
-                
+                return HttpNotFound();
             }
-            ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento");
-            return View();
+            Empleado emp = prepararVistaCrear(Departamento);            
+
+            return View(emp);
+        }
+
+        private Empleado prepararVistaCrear(Departamento Departamento)
+        {
+            ViewBag.Departamento = Departamento;
+            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
+
+            Empleado emp = new Empleado();
+            emp.departamentoID = Departamento.departamentoID;
+            //emp.Departamento.nombreDepartamento = departamento.nombreDepartamento;
+            //emp.Departamento.domicilio = departamento.domicilio;
+            //emp.Departamento.Sucursal.nombreSucursal = departamento.Sucursal.nombreSucursal;
+            emp.Departamento = Departamento;
+            
+            
+
+            return emp;
         }
 
         // POST: Empleados/Create
@@ -66,7 +83,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Empleados.Add(empleado);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+empleado.departamentoID, "Departamentos");
             }
 
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);

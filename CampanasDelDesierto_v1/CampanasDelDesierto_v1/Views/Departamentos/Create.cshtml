@@ -5,13 +5,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<p>
+    <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
+</p>
+<p>
+    <a href="@Url.Action("Details","Sucursales",new { id = Model.idSucursal })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+</p>
 
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Sucursal:</strong> @(Model.Sucursal.nombreSucursal)</h2>
+    </div>
+</div>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.idSucursal)
     <div class="form-horizontal">
         <h4>Departamento</h4>
         <hr />
@@ -22,15 +36,15 @@
                 @Html.EditorFor(model => model.nombreDepartamento, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.nombreDepartamento, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>       
 
         <div class="form-group">
-            @Html.LabelFor(model => model.idSucursal, "idSucursal", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.domicilio, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("idSucursal", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.idSucursal, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.domicilio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.domicilio, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div> 
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

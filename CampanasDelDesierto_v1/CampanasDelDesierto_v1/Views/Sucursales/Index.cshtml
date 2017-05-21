@@ -5,11 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<h2>Tabla de Sucursales</h2>
+<legend>Sucursales</legend>
 
 <p>
-    @Html.ActionLink("Crear Nuevo", "Create")
+    <a href="@Url.Action("Create")">
+        <i class="glyphicon glyphicon-plus"></i> Crear Sucursal
+    </a>
 </p>
 
 <table class="table datablejs">
@@ -42,21 +43,14 @@
                         <i class="glyphicon glyphicon-pencil"></i> Editar
                     </a><br />
                     <a href="@Url.Action("Details", "Sucursales", new { id = item.idSucursal })">
-                        <i class="glyphicon glyphicon-eye-open"></i> Detalles
+                        <i class="glyphicon glyphicon-eye-open"></i> Departamentos
                     </a><br />
                     <a href="@Url.Action("Delete", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-remove"></i> Eliminar
                     </a>
 
-                </td>
-                <td>
-                    @Html.ActionLink("Departamentos", "Departamentos", new { id = item.idSucursal },new{ @class = "btn btn-primary"})
-                </td>
-            </tr>
-       
-        
-            
-        
+                </td>               
+            </tr>        
         }
     </tbody>
 </table>

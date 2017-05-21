@@ -5,34 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Inventarios</h2>
-<div>@Html.ActionLink("Crear Inventario", "Create", "Inventarios", new { id = Model.departamentoID }, new { @class = "" })</div>
-<table class="table datablejs">
-    <thead>
-        <tr>
-            <th>Nombre Inventario</th>
-            <th>Nombre Departamento </th>
-            <th>Activos Disponibles</th>            
-            <th>Activos Prestados</th> 
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var inventario in Model.Inventarios)
-            {
-            <tr>
-                <td>@(inventario.nombreInventario)</td>
-                <td>@inventario.Departamento.nombreDepartamento</td>
-                <td>@inventario.CantidadActivosDisponibles()</td> 
-                <td>@(inventario.Activos.Count() - inventario.CantidadActivosDisponibles())</td>                 
-                <td>@Html.ActionLink("Eliminar", "Delete", "Inventarios", new { id = inventario.inventarioID }, null)  </td>
-                <td>@Html.ActionLink("Ver Activos", "Details", "Inventarios", new { id = inventario.inventarioID }, null)  </td>               
-            </tr>
-        }
-    </tbody>
 
-</table>
 <div>
     
 </div>

@@ -4,44 +4,38 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>Sucursal</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreSucursal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.nombreSucursal)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.domicilioSucursal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.domicilioSucursal)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idSucursal }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
 </p>
+<p>
+    <a href="@Url.Action("Edit","Sucursales",new { id = Model.idSucursal })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+</p>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Sucursal:</strong> @(Model.nombreSucursal)</h2>
+    </div>   
+</div>
 
     <legend>Departamentos</legend>
     
+<p>
+    <a href="@Url.Action("Create","Departamentos",new { id = Model.idSucursal })">
+        <i class="glyphicon glyphicon-plus"></i> Crear Departamento
+    </a>
+</p>
         
      <table class="table datablejs">
             <thead>
                 <tr>
                     <th>Nombre del Departamento</th>
-                    <th>Numero de Empleados</th>
+                    <th>Domicilio</th>
+                    <th>Activos Disponibles</th>
+                    <th>Activos Prestados</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -51,7 +45,9 @@
             {
                     <tr>
                         <td>@(departamento.nombreDepartamento)</td>
-                        <td>@departamento.Empleados.Count()</td>
+                        <td>@departamento.domicilio</td>
+                        <td>@departamento.activosDisponibles()</td>
+                        <td>@departamento.activosPrestados()</td>
                         <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                         <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = departamento.departamentoID }, null)  </td>
                     </tr>
@@ -61,6 +57,4 @@
 
         </table>
                     
-<div>    
-    @Html.ActionLink("Crear Departamento", "Create", "Departamentos", new { id = Model.idSucursal }, new { @class = "btn btn-primary" })
-</div>
+

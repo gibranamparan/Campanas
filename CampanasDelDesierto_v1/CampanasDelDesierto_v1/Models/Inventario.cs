@@ -39,5 +39,11 @@ namespace CampanasDelDesierto_v1.Models
                 return noPrestados.Count();
            
         }
+        public int CantidadActivosPrestados()
+        {
+            var noPrestados = this.Activos.ToList().Where(act => !act.prestado());
+            return this.Activos.Count()-noPrestados.Count();
+
+        }
     }
 }
