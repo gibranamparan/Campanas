@@ -20,6 +20,15 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (tons.)")]
         public double cantidadProducto3 { get; set; }
 
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (USD)")]
+        public double pagoProducto1 { get; set; }
+
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (USD)")]
+        public double pagoProducto2 { get; set; }
+
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (USD)")]
+        public double pagoProducto3 { get; set; }
+
         [Display(Name = "Numero de la semana")]
         public int numeroSemana { get; set; }
     }

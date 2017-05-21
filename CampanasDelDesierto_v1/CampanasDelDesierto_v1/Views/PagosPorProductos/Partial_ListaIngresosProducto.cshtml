@@ -1,16 +1,15 @@
 ﻿@using CampanasDelDesierto_v1.Models
-@model IEnumerable<CampanasDelDesierto_v1.Models.RecepcionDeProducto>
-@{ 
-    Productor productor = null;
-    TemporadaDeCosecha temporada = null;
-    if (ViewData["productor"]!=null && ViewData["temporada"] != null) {
-        productor = (Productor)ViewData["productor"];
-        temporada = (TemporadaDeCosecha)ViewData["temporada"];
-    }
+@model IEnumerable<RecepcionDeProducto>
+@{ /*
+    bool selectMode = false;
+    if (ViewData["selectMode"] != null)
+    {
+        selectMode = (bool)ViewData["selectMode"];
+    }*/
 }
 
 <h3>Acumulado de recepción de aceituna</h3>
-<table class="table table-hover table-striped datatablejs">
+<table id="tblIngresoAcumulado" class="table table-hover table-striped">
     <thead>
         <tr>
             <th>
@@ -40,11 +39,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <input type="checkbox" value="@item.numeroRecibo" onchange="selectChange(this)"
-                           cant-prod1 ='@item.cantidadTonsProd1' cant-prod2 ='@item.cantidadTonsProd2'
-                           cant-prod3 ='@item.cantidadTonsProd3'/>
-                </td>
+                @*if (selectMode)
+                {
+                    <td>
+                        <input type="checkbox" value="@item.numeroRecibo" onchange="selectChange(this)"
+                                cant-prod1 ='@item.cantidadTonsProd1' cant-prod2 ='@item.cantidadTonsProd2'
+                                cant-prod3 ='@item.cantidadTonsProd3'/>
+                    </td>
+                }*@
+                <td></td>
                 <td>
                     @Html.DisplayFor(modelItem => item.numeroRecibo)
                 </td>
@@ -72,48 +75,3 @@
         }
     </tbody>
 </table>
-
-<script>
-    var checkedList = new Array();
-    var precioProd1 = @temporada.precioProducto1;
-    var precioProd2 = @temporada.precioProducto2;
-    var precioProd3 = @temporada.precioProducto3;
-    function selectChange(cb) {
-        //Item added to the selected list items
-        if ($(cb).is(":checked")) {
-            checkedList.push({
-                numeroRecibo: $(cb).val(),
-                cantProd1: Number($(cb).attr("cant-prod1")),
-                cantProd2: Number($(cb).attr("cant-prod2")),
-                cantProd3: Number($(cb).attr("cant-prod3")),
-            })
-        }
-        else {
-            //If unchecked, item is removed from the selected list items
-            var id = $(cb).val();
-            checkedList = $.grep(checkedList, function (e) {
-                return e.numeroRecibo != id;
-            });
-        }
-        recalcularMontos();
-
-        //$("#btnRegister").prop('disabled', checkedList.length == 0);
-
-        console.log(JSON.stringify(checkedList));
-    }
-
-    function recalcularMontos() {
-        var totalCant1 = 0;
-        var totalCant2 = 0;
-        var totalCant3 = 0;
-        var montoTotal = 0;
-        checkedList.forEach(function (item, index) {
-            totalCant1 += item.cantProd1*precioProd1;
-            totalCant2 += item.cantProd2*precioProd2;
-            totalCant3 += item.cantProd3*precioProd3;
-            montoTotal = totalCant1+totalCant2+totalCant3;
-        })
-        console.log(totalCant1);        
-        $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input');
-    }
-</script>

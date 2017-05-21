@@ -5,10 +5,15 @@
     ViewBag.Title = "IngresoProducto";
     Layout = "~/Views/Shared/_Layout.cshtml";
     Productor productor = ViewBag.productor;
+    TemporadaDeCosecha temporada = Model.temporadaDeCosecha;
     List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto;
+
     ViewDataDictionary vdd = new ViewDataDictionary();
-    vdd.Add("productor", productor);
-    vdd.Add("temporada", Model.temporadaDeCosecha);
+    vdd.Add("selectMode", true);
+
+    ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
+    vddDetailsTemporada.Add("editable", true);
+    vddDetailsTemporada.Add("funcionAlReestablecer", "recalcularMontos");
 }
 
 <p>
@@ -18,68 +23,229 @@
     </a>
 </p>
 @Html.Partial("../Productores/Partial_InfoProductor", productor)
-
-@Html.Partial("../TemporadaDeCosechas/Partial_DetailsTemporada", Model.temporadaDeCosecha)
-
 @Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
 
-<h3>Ingreso de Producto</h3>
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model=>model.idProductor)
-    @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+    <div>
+        @Html.Partial("../TemporadaDeCosechas/Partial_DetailsTemporada", Model.temporadaDeCosecha, vddDetailsTemporada)
+    </div>
 
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
-            </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span>Ingreso de Producto</span>
         </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.numeroSemana, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.numeroSemana, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.numeroSemana, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.cantidadProducto1, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidadProducto1, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cantidadProducto1, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.cantidadProducto2, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidadProducto2, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cantidadProducto2, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.cantidadProducto3, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidadProducto3, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cantidadProducto3, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.idProductor)
+                @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group col-md-6">
-            @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.montoMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.montoMovimiento, new
+                   {
+                       htmlAttributes = new
+                       {
+                           @class = "form-control",
+                           data_mask = "###0.00",
+                           data_mask_reverse = "true"
+                       }
+                   })
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group col-md-12">
-            <div class="col-md-10">
-                <button class="btn btn-primary">Registrar</button>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.numeroSemana, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.numeroSemana, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.numeroSemana, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <fieldset class="col-md-12">
+                    <legend></legend>
+                    @***PRODUCTO 1***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto1, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto1, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto1, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto1, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @***PRODUCTO 2***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto2, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto2, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto2, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto2, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @***PRODUCTO 3***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto3, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto3, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto3, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto3, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto3, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto3, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group col-md-12">
+                    <div class="col-md-10">
+                        <button class="btn btn-success" id="btnRegistrar" @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>Registrar</button>
+                        <button class="btn btn-default" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
+                        <button class="btn btn-default" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+}
+@section Scripts{
+@Scripts.Render("~/bundles/dataTables.select")
+@Styles.Render("~/Content/dataTables.select")
+<script>
+    var selectorInputsPrecios = "#formCostosProducto input#precioProducto";
+
+    var PROD_ENUM = Object.freeze({PROD1: 2, PROD2: 3, PROD3: 4})
+    var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable( {
+        columnDefs: [ {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+        } ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        order: [[ 1, 'asc' ]]
+    } )
+    tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
+        recalcularMontos();
+    })
+    .on('deselect',function(){
+        recalcularMontos();
+    });
+
+    function recalcularMontos() {
+        var selectedRows = tblIngresoAcumulado.rows({selected:true});
+        var data = selectedRows.data();
+        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, montoNeto = 0;
+
+        @*Se toman los costos por tipo de producto marcado para esta temporada*@
+        var precioProducto1 = $(selectorInputsPrecios+1).val();
+        var precioProducto2 = $(selectorInputsPrecios+2).val();
+        var precioProducto3 = $(selectorInputsPrecios+3).val();
+
+        for(var c=0;c<data.length;c++){
+            totalCant1 += Number(data[c][PROD_ENUM.PROD1]);
+            totalCant2 += Number(data[c][PROD_ENUM.PROD2]);
+            totalCant3 += Number(data[c][PROD_ENUM.PROD3]);
+        }
+        var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, pp3 = totalCant3*precioProducto3;
+        $("#cantidadProducto1").val(numeral(totalCant1).format('0.000')).trigger('input');
+        $("#cantidadProducto2").val(numeral(totalCant2).format('0.000')).trigger('input');
+        $("#cantidadProducto3").val(numeral(totalCant3).format('0.000')).trigger('input');
+        $("#pagoProducto1").val(numeral(pp1).format('0.00')).trigger('input');
+        $("#pagoProducto2").val(numeral(pp2).format('0.00')).trigger('input');
+        $("#pagoProducto3").val(numeral(pp3).format('0.00')).trigger('input');
+        $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3).format('0.00')).trigger('input');
+
+        $("#btnRegistrar").attr('disabled', data.length == 0)
+    }
+
+    function limpiarSeleccionIngresos(){
+        $('#tblIngresoAcumulado').DataTable().table().rows().deselect();
+    }
+
+    function seleccionarTodosIngresos(){
+        $('#tblIngresoAcumulado').DataTable().table().rows().select();
+    }
+
+    $("#formCostosProducto input").keyup(function(){
+        recalcularMontos();
+    })
+</script>
 }

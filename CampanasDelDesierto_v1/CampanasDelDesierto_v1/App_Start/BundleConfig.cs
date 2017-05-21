@@ -8,6 +8,10 @@ namespace CampanasDelDesierto_v1
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            /*Other Bundles*/
+            bundles.Add(new ScriptBundle("~/bundles/dataTables.select").Include(
+                        "~/Scripts/dataTables.select.min.js"));
+
             /*SCRIPTS BUNDLES*/
             bundles.Add(new ScriptBundle("~/bundles/template").Include(
                         "~/Scripts/skel.min.js",
@@ -43,6 +47,10 @@ namespace CampanasDelDesierto_v1
             bundles.Add(new StyleBundle("~/Content/icons").Include(
                       "~/Content/font-awesome.min.css",
                       "~/Content/icomoon.css"));
+
+            /*Other styles*/
+            bundles.Add(new StyleBundle("~/Content/dataTables.select").Include(
+                      "~/Content/select.dataTables.min.css"));
         }
     }
 }

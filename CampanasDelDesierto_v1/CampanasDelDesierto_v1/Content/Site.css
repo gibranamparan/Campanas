@@ -43,6 +43,10 @@ input[readonly='readonly']{
     background-color: dimgray;
 }
 
+input[disabled]{
+    background-color:lightgrey;
+}
+
 /*Centers logo*/
     header.major {
     

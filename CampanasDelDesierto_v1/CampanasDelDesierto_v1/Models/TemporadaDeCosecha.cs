@@ -2,6 +2,7 @@
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
@@ -38,25 +39,38 @@ namespace CampanasDelDesierto_v1.Models
             } }
 
         //Tipos de producto
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "(ton.)")]
         public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
+
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
         public decimal precioProducto1 { get; set; }
 
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2+ "(ton.)")]
         public string tipoProducto2 { get { return TiposDeProducto.PRODUCTO2; } }
+
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
         public decimal precioProducto2 { get; set; }
 
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + "(ton.)")]
         public string tipoProducto3 { get { return TiposDeProducto.PRODUCTO3; } }
+
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
         public decimal precioProducto3 { get; set; }
 
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.OTRO + "(ton.)")]
         public string tipoProductoOtro { get { return TiposDeProducto.OTRO; } }
+
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.OTRO)]
         public decimal precioProductoOtro { get; set; }
+        
 
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
