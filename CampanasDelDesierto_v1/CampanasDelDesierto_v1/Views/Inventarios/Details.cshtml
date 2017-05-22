@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <p>
-    <a href="@Url.Action("Index","Departamentos",new { id = Model.departamentoID })">
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.departamentoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
     <a href="@Url.Action("Edit","Departamentos",new { id = Model.departamentoID })">

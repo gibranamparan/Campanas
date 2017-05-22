@@ -112,13 +112,13 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal")] Departamento departamento)
+        public async Task<ActionResult> Edit([Bind(Include = "departamentoID,nombreDepartamento,idSucursal,domicilio")] Departamento departamento)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(departamento).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+departamento.departamentoID);
             }
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
             return View(departamento);

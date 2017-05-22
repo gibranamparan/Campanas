@@ -51,7 +51,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var empleado = db.Empleados.Find(id);
+            Empleado empleado = db.Empleados.Find(id);
             if (empleado == null)
             {
                 return HttpNotFound();
@@ -69,6 +69,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
             PrestamoActivo prestamo = new PrestamoActivo();
             prestamo.idEmpleado = empleado.idEmpleado;
+            prestamo.Empleado = empleado;
+            prestamo.fechaPrestamoActivo = DateTime.Today;
 
 
             return prestamo;
