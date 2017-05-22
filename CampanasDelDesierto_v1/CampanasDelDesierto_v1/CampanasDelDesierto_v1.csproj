@@ -403,6 +403,14 @@
     <Compile Include="Migrations\201705210425198_costos_pagoProductos_PagoPorProducto.Designer.cs">
       <DependentUpon>201705210425198_costos_pagoProductos_PagoPorProducto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.cs" />
+    <Compile Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.Designer.cs">
+      <DependentUpon>201705211928407_removed_numeroSemana_PAgoPorProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs" />
+    <Compile Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.Designer.cs">
+      <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -782,6 +790,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705210425198_costos_pagoProductos_PagoPorProducto.resx">
       <DependentUpon>201705210425198_costos_pagoProductos_PagoPorProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.resx">
+      <DependentUpon>201705211928407_removed_numeroSemana_PAgoPorProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.resx">
+      <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

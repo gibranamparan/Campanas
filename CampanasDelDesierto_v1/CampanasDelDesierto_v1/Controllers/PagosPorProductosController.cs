@@ -76,7 +76,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")]
+            "TemporadaDeCosechaID")]
             PagoPorProducto pagoPorProducto)
         {
             if (ModelState.IsValid)
@@ -126,30 +126,31 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(mov);
         }
 
-        private PagoPorProducto prepararVistaIngresoProducto(Productor productor, int temporadaID)
-        {
-            PagoPorProducto mov = prepararVistaCrear(productor);
-            var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == productor.numProductor
-            && rec.TemporadaDeCosechaID == temporadaID).ToList();
-            ViewBag.ingresosProducto = ingresos;
-            return mov;
-        }
-
         [HttpPost]
-        public ActionResult IngresoProducto([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")] PagoPorProducto pagoPorProducto)
+        public ActionResult IngresoProducto(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
+            int[] ingresosID = selectedIngresos.Trim('[').Trim(']').Split(',').Select(int.Parse).ToArray();
+
             if (ModelState.IsValid)
             {
                 //Ajuste de movimiento para entrar dentro de la lista de balances
                 pagoPorProducto.ajustarMovimiento();
 
-                //Guardar cambios
-                db.MovimientosFinancieros.Add(pagoPorProducto);
+                //Pago por producto
+                db.PagosPorProductos.Add(pagoPorProducto);
                 int numReg = db.SaveChanges();
 
                 if (numReg > 0)
                 {
+                    //Recepcion de productos
+                    foreach(int id in ingresosID)
+                    {
+                        var recepcion = db.RecepcionesDeProducto.Find(id);
+                        recepcion.movimientoID = pagoPorProducto.idMovimiento;
+                        db.Entry(recepcion).State = EntityState.Modified;
+                    }
+                    db.SaveChanges();
+
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(pagoPorProducto.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
@@ -160,8 +161,20 @@ namespace CampanasDelDesierto_v1.Controllers
                         new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
                 }
             }
-            var mov = prepararVistaIngresoProducto(db.Productores.Find(pagoPorProducto.idProductor), pagoPorProducto.TemporadaDeCosechaID);
+
+            var productor = db.Productores.Find(pagoPorProducto.idProductor);
+            var mov = prepararVistaIngresoProducto(productor, pagoPorProducto.TemporadaDeCosechaID);
+
             return View(mov);
+        }
+
+        private PagoPorProducto prepararVistaIngresoProducto(Productor productor, int temporadaID)
+        {
+            PagoPorProducto mov = prepararVistaCrear(productor);
+            var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == productor.numProductor
+            && rec.TemporadaDeCosechaID == temporadaID).ToList();
+            ViewBag.ingresosProducto = ingresos;
+            return mov;
         }
 
         // GET: PagosPorProductos/Edit/5

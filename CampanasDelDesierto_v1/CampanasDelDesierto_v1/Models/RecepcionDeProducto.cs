@@ -59,6 +59,11 @@ namespace CampanasDelDesierto_v1.Models
         public int? idProductor { get; set; }
         public virtual Productor productor { get; set; }
 
+        [DisplayName("Pago")]
+        [ForeignKey("pago")]
+        public int? movimientoID { get; set; }
+        public virtual PagoPorProducto pago { get; set;}
+
         public RecepcionDeProducto() { }
         /// <summary>
         /// Crea un registro de ingreso de producto basado de la importación de un excel.

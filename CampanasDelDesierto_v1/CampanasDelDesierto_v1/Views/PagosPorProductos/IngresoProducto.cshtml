@@ -40,6 +40,7 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.idProductor)
                 @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+                @Html.Hidden("selectedIngresos")
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-6">
                     @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -58,18 +59,11 @@
                        {
                            @class = "form-control",
                            data_mask = "###0.00",
-                           data_mask_reverse = "true"
+                           data_mask_reverse = "true",
+                           @readonly = "readonly"
                        }
                    })
                         @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    @Html.LabelFor(model => model.numeroSemana, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.numeroSemana, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.numeroSemana, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <fieldset class="col-md-12">
@@ -100,7 +94,8 @@
                            {
                                @class = "form-control",
                                data_mask = "###0.00",
-                               data_mask_reverse = "true"
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
                            }
                        })
                             @Html.ValidationMessageFor(model => model.pagoProducto1, "", new { @class = "text-danger" })
@@ -132,7 +127,8 @@
                            {
                                @class = "form-control",
                                data_mask = "###0.00",
-                               data_mask_reverse = "true"
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
                            }
                        })
                             @Html.ValidationMessageFor(model => model.pagoProducto2, "", new { @class = "text-danger" })
@@ -165,7 +161,8 @@
                            {
                                @class = "form-control",
                                data_mask = "###0.00",
-                               data_mask_reverse = "true"
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
                            }
                        })
                             @Html.ValidationMessageFor(model => model.pagoProducto3, "", new { @class = "text-danger" })
@@ -188,14 +185,19 @@
 @Styles.Render("~/Content/dataTables.select")
 <script>
     var selectorInputsPrecios = "#formCostosProducto input#precioProducto";
+    var selectedIngresosIDs = new Array();
 
-    var PROD_ENUM = Object.freeze({PROD1: 2, PROD2: 3, PROD3: 4})
+    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5})
     var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable( {
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
             targets:   0
-        } ],
+        }, {
+            targets: 1,
+            visible: false,
+            searchable: false
+        }],
         select: {
             style:    'os',
             selector: 'td:first-child'
@@ -205,11 +207,12 @@
     tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
         recalcularMontos();
     })
-    .on('deselect',function(){
+    .on('deselect',function(e, dt, type, indexes){
         recalcularMontos();
     });
 
     function recalcularMontos() {
+        selectedIngresosIDs = new Array();
         var selectedRows = tblIngresoAcumulado.rows({selected:true});
         var data = selectedRows.data();
         var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, montoNeto = 0;
@@ -220,9 +223,10 @@
         var precioProducto3 = $(selectorInputsPrecios+3).val();
 
         for(var c=0;c<data.length;c++){
-            totalCant1 += Number(data[c][PROD_ENUM.PROD1]);
-            totalCant2 += Number(data[c][PROD_ENUM.PROD2]);
-            totalCant3 += Number(data[c][PROD_ENUM.PROD3]);
+            totalCant1 += Number(data[c][COLS_ENUM.PROD1]);
+            totalCant2 += Number(data[c][COLS_ENUM.PROD2]);
+            totalCant3 += Number(data[c][COLS_ENUM.PROD3]);
+            selectedIngresosIDs.push(Number(data[c][COLS_ENUM.ID]));
         }
         var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, pp3 = totalCant3*precioProducto3;
         $("#cantidadProducto1").val(numeral(totalCant1).format('0.000')).trigger('input');
@@ -234,6 +238,9 @@
         $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3).format('0.00')).trigger('input');
 
         $("#btnRegistrar").attr('disabled', data.length == 0)
+
+        console.log(JSON.stringify(selectedIngresosIDs))
+        $('#selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
     }
 
     function limpiarSeleccionIngresos(){

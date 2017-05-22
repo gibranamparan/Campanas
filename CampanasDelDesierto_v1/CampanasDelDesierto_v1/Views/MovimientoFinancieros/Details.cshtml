@@ -7,127 +7,162 @@
 }
 
 <h2>Detalles</h2>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>@(Model.nombreDeMovimiento)</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-group col-md-6">
+            @Html.LabelFor(model => model.Productor.nombreProductor,new { @class= "control-label col-md-2" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.Productor.nombreProductor)</p>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            @Html.LabelFor(model => model.montoMovimiento, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.montoMovimiento)</p>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            @Html.LabelFor(model => model.fechaMovimiento, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.fechaMovimiento)</p>
+            </div>
+        </div>
 
-<div>   
-    <h4>Movimiento Financiero</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-        @Html.DisplayNameFor(model => model.Productor.nombreProductor)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Productor.nombreProductor)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.montoMovimiento)
-        </dt>
-      <dd>
-          @Html.DisplayFor(model => model.montoMovimiento)
-      </dd>
-
-       <dt>
-           @Html.DisplayNameFor(model => model.fechaMovimiento)
-       </dt>
-       <dd>
-           @Html.DisplayFor(model => model.fechaMovimiento)
-       </dd>
-
-
-        @*Panel para detalles de registro de cosecha*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
-        {
-            @(((PagoPorProducto)Model).nombreDeMovimiento)
-        }
-        else if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+        @*Panel para detalles movimentos de capital (Prestamos o abonos)*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
         {
             PrestamoYAbonoCapital movAnticipo = (PrestamoYAbonoCapital)Model;
-            @*Panel para detalles movimentos de capital (Prestamos o abonos)*@
-            <dt>
-                @Html.DisplayNameFor(model => movAnticipo.cheque)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => movAnticipo.cheque)
-            </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => movAnticipo.concepto)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => movAnticipo.concepto)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => movAnticipo.proveedor)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => movAnticipo.proveedor)
-                </dd>
-                @*
-                    <dt>
-                        @Html.DisplayNameFor(model => model.pagare)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.pagare)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.fechaPagar)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.fechaPagar)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.nota)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.nota)
-                    </dd>*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movAnticipo.cheque, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movAnticipo.cheque)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movAnticipo.concepto, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movAnticipo.concepto)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movAnticipo.proveedor, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movAnticipo.proveedor)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movAnticipo.fechaPagar, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movAnticipo.fechaPagar)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movAnticipo.pagare, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movAnticipo.pagare)</p>
+                </div>
+            </div>
         }
 
         @*Panel para detalles para ventas a credito*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+        {
+            VentaACredito movCredito = (VentaACredito)Model;
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movCredito.cantidadMaterial, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movCredito.cantidadMaterial)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movCredito.Producto.nombreProducto, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movCredito.Producto.nombreProducto)</p>
+                </div>
+            </div>
+        }
 
-    </dl>
+        @*Panel para detalles para ventas a credito*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+        {
+            PagoPorProducto movPago = (PagoPorProducto)Model;
+            @*Producto 1*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.cantidadProducto1, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.cantidadProducto1)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.pagoProducto1, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.pagoProducto1)</p>
+                </div>
+            </div>
+
+            @*Producto 2*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.cantidadProducto2, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.cantidadProducto2)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.pagoProducto2, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.pagoProducto2)</p>
+                </div>
+            </div>
+
+            @*Producto 3*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.cantidadProducto3, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.cantidadProducto3)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => movPago.pagoProducto3, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => movPago.pagoProducto3)</p>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<p class="hidden-print">
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
 
-    @if(Model.conceptoProveedor != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) { 
+@*Panel para detalles de registro de cosecha*@
+@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+            {
+    @Html.Partial("../PagosPorProductos/Partial_ListaIngresosProducto", ((PagoPorProducto)Model).Recepciones)
+}
+
+<p class="hidden-print">
+    <a href="@Url.Action("Edit", new { id = Model.idMovimiento })">
+        <i class="fa fa-pencil"></i> Editar
+    </a>
+     | 
+
+    @if(Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL &&
+        Model.conceptoProveedor != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) {
         <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
-            <i class="glyphicon glyphicon-print"></i> Pagare
+            <i class="glyphicon glyphicon-print"></i> Imprimir Pagaré
         </a> @(" | ")
     }
+
     <a href="@Url.Action("Details","Productores", new { id=Model.idProductor })">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a movimientos del productor
     </a>
 </p>
 
-
-
-
-
-  @*  function Partial_Pagare() {
-        var laURLDeLaVista = '@Url.Action("Detalles", "MovimientosFinancieros")';
-        $.ajax({
-            cache: false,
-            async: true,
-            type: "GET",
-            url: laURLDeLaVista,
-            data: {},
-            success: function (response) {
-                $('#resultado').html('');
-                $('#resultado').html(response);
-            }
-        });
+@section Scripts{
+    @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+    {
+        <script>
+            $('#tblIngresoAcumulado').DataTable();
+        </script>
     }
-      *@
-        
-
-
-
-
+}
