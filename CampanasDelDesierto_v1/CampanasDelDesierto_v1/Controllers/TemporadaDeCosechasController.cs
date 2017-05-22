@@ -79,7 +79,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1,"+
-            "precioProducto2,precioProducto3,precioProductoOtro")]
+            "precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6")]
             TemporadaDeCosecha temporadaDeCosecha)
         {
             if (ModelState.IsValid)
@@ -93,7 +93,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: TemporadaDeCosechas/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, int? pagoPorProductoID, int? productorID, int? temporadaID)
         {
             if (id == null)
             {
@@ -104,6 +104,11 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            
+            ViewBag.pagoPorProductoID = pagoPorProductoID;
+            ViewBag.productorID = productorID;
+            ViewBag.temporadaID = temporadaID;
+
             return View(temporadaDeCosecha);
         }
 
@@ -112,8 +117,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TemporadaDeCosechaID,fechaInicio,fechaFin,"+
-            "precioProducto1,precioProducto2,precioProducto3,precioProductoOtro")]
+        public ActionResult Edit([Bind(Include = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1,"+
+            " precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6")]
             TemporadaDeCosecha temporadaDeCosecha)
         {
             if (ModelState.IsValid)

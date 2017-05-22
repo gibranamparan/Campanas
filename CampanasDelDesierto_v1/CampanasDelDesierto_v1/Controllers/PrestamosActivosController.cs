@@ -92,13 +92,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
                 else
                 {
-
                     db.PrestamoActivos.Add(prestamoActivo);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                
-                
             }
 
             ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", prestamoActivo.idActivo);

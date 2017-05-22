@@ -12,22 +12,28 @@ namespace CampanasDelDesierto_v1.Models
     public class PagoPorProducto : MovimientoFinanciero
     {
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto1 { get; set; }
 
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto2 { get; set; }
 
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto3 { get; set; }
 
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (USD)")]
-        public double pagoProducto1 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto1 { get; set; }
 
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (USD)")]
-        public double pagoProducto2 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto2 { get; set; }
 
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (USD)")]
-        public double pagoProducto3 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto3 { get; set; }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
     }

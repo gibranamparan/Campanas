@@ -138,13 +138,6 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-12">
-            @Html.LabelFor(model => model.nota, htmlAttributes: new { @class = "control-label" })
-            <div class="">
-                @Html.TextAreaFor(model => model.nota, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.nota, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-md-10">
@@ -154,10 +147,8 @@
     </div>
 }
 
-
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    
+@Scripts.Render("~/bundles/jqueryval")
 <script>
     var setPrecioDolar;
     var restaurarPrecioDolar;

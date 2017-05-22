@@ -411,6 +411,14 @@
     <Compile Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.Designer.cs">
       <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.cs" />
+    <Compile Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.Designer.cs">
+      <DependentUpon>201705220237363_removed_nota_PrestamoYAbonoCapitals.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705220553393_temporadas_nuevosPrecios.cs" />
+    <Compile Include="Migrations\201705220553393_temporadas_nuevosPrecios.Designer.cs">
+      <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -599,12 +607,10 @@
     <Content Include="Views\VentaACreditos\Edit.cshtml" />
     <Content Include="Views\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
-    <Content Include="Views\PrestamoYAbonoCapitals\Delete.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Index.cshtml" />
-    <Content Include="Views\PagosPorProductos\Edit.cshtml" />
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
     <Content Include="Views\PagosPorProductos\Create.cshtml" />
@@ -672,6 +678,7 @@
     <Content Include="Views\PagosPorProductos\Partial_ListaIngresosProducto.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
     <Content Include="Views\Departamentos\Inventarios.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -796,6 +803,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.resx">
       <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.resx">
+      <DependentUpon>201705220237363_removed_nota_PrestamoYAbonoCapitals.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705220553393_temporadas_nuevosPrecios.resx">
+      <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

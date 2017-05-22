@@ -39,6 +39,7 @@ namespace CampanasDelDesierto_v1.Models
             } }
 
         //Tipos de producto
+        /*MANZANITA CABORCA*/
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "(ton.)")]
         public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
 
@@ -47,6 +48,7 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
         public decimal precioProducto1 { get; set; }
 
+        /*OBLIZA CABORCA*/
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2+ "(ton.)")]
         public string tipoProducto2 { get { return TiposDeProducto.PRODUCTO2; } }
 
@@ -55,6 +57,7 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
         public decimal precioProducto2 { get; set; }
 
+        /*MISSION CABORCA*/
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + "(ton.)")]
         public string tipoProducto3 { get { return TiposDeProducto.PRODUCTO3; } }
 
@@ -63,14 +66,34 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
         public decimal precioProducto3 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.OTRO + "(ton.)")]
-        public string tipoProductoOtro { get { return TiposDeProducto.OTRO; } }
+        /*MANZANITA BAJA*/
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " BAJA (ton.)")]
+        public string tipoProducto4 { get { return TiposDeProducto.PRODUCTO1 + " BAJA"; } }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.OTRO)]
-        public decimal precioProductoOtro { get; set; }
-        
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " BAJA")]
+        public decimal precioProducto4 { get; set; }
+
+        /*OBLIZA BAJA*/
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " BAJA (ton.)")]
+        public string tipoProducto5 { get { return TiposDeProducto.PRODUCTO2 + " BAJA"; } }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " BAJA")]
+        public decimal precioProducto5 { get; set; }
+
+
+        /*MISSION BAJA*/
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " BAJA (ton.)")]
+        public string tipoProducto6 { get { return TiposDeProducto.PRODUCTO3 + " BAJA"; } }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " BAJA")]
+        public decimal precioProducto6 { get; set; }
+
 
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
@@ -146,7 +169,6 @@ namespace CampanasDelDesierto_v1.Models
                     this.precioProducto1 = tc.precioProducto1;
                     this.precioProducto2 = tc.precioProducto2;
                     this.precioProducto3 = tc.precioProducto3;
-                    this.precioProductoOtro = tc.precioProductoOtro;
                 }
                 errorPrecios = error;
 
@@ -207,7 +229,6 @@ namespace CampanasDelDesierto_v1.Models
                 new VMTipoProducto(this.precioProducto1, this.tipoProducto1),
                 new VMTipoProducto(this.precioProducto2, this.tipoProducto2),
                 new VMTipoProducto(this.precioProducto3, this.tipoProducto3),
-                new VMTipoProducto(this.precioProductoOtro, this.tipoProductoOtro),
             };
             return opciones;
         }
@@ -224,5 +245,46 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        public class VMPreciosProductos
+        {
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
+            public decimal precioManzanita { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
+            public decimal precioObliza { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
+            public decimal precioMission { get; set; }
+
+            [DisplayName("Zona")]
+            public string zona { get; set; }
+
+            public TemporadaDeCosecha temporada { get; set; }
+
+            public VMPreciosProductos() { this.zona = Productor.Zonas.ZONA1; }
+            public VMPreciosProductos(TemporadaDeCosecha temporada, string zona)
+            {
+                if(zona == Productor.Zonas.ZONA1)
+                {
+                    this.precioManzanita = temporada.precioProducto1;
+                    this.precioObliza= temporada.precioProducto2;
+                    this.precioMission = temporada.precioProducto3;
+                }
+                else if(zona == Productor.Zonas.ZONA2)
+                {
+                    this.precioManzanita = temporada.precioProducto4;
+                    this.precioObliza = temporada.precioProducto5;
+                    this.precioMission = temporada.precioProducto6;
+                }
+                this.zona = zona;
+                this.temporada = temporada;
+            }
+        }
     }
 }

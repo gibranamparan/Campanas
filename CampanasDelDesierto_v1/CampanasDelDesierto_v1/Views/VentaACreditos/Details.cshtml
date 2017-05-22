@@ -1,59 +1,14 @@
 ﻿@model CampanasDelDesierto_v1.Models.VentaACredito
 
-@{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h2>Detalles</h2>
-
-<div>
-    <h4>Venta a credito</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Productor.nombreProductor)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Productor.nombreProductor)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.montoMovimiento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.montoMovimiento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaMovimiento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaMovimiento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.cantidadMaterial)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.cantidadMaterial)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Producto.nombreProducto)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Producto.nombreProducto)
-        </dd>
-
-    </dl>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.cantidadMaterial, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.cantidadMaterial)</p>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idMovimiento }) |
-    @Html.ActionLink("volver a la lista", "Index")
-</p>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.Producto.nombreProducto, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.Producto.nombreProducto)</p>
+    </div>
+</div>

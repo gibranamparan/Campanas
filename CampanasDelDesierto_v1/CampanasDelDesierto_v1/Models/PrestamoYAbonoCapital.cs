@@ -27,10 +27,6 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Proveedor")]
         public string proveedor { get; set; }
 
-        //public int intereses { get; set; }
-        [Display(Name = "Nota")]
-        public string nota { get; set; }
-
         [Display(Name = "Precio del dólar")]
         [DisplayFormat(DataFormatString = "{0:C4}",
         ApplyFormatInEditMode = true)]

@@ -155,7 +155,6 @@ namespace CampanasDelDesierto_v1.Models
                     tc.precioProducto1 = p1.costo;
                     tc.precioProducto2 = p2.costo;
                     tc.precioProducto3 = p3.costo;
-                    tc.precioProductoOtro = p4.costo;
                 }catch(Exception exc)
                 {
                     error.errorMsg = "Se presentaron problemas al tomar los costos del producto";

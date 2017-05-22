@@ -1,19 +1,39 @@
 ﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Temporada";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int? pagoPorProductoID = ViewBag.pagoPorProductoID;
+    int? productorID = ViewBag.productorID;
+    int? temporadaID = ViewBag.temporadaID;
 }
 
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas 
+    </a>
+    @if (pagoPorProductoID != null)
+    {
+        <span> | </span>
+        <a href="@Url.Action("Edit","PagosPorProductos", new { id = pagoPorProductoID})">
+            <i class="fa fa-money"></i> Volver a Edición de Pago por Producto
+        </a>
+    }
+    else if (productorID != null)
+    {
+        <span> | </span>
+        <a href="@Url.Action("IngresoProducto","PagosPorProductos", new { id = productorID, temporada = temporadaID})">
+            <i class="fa fa-money"></i> Volver Nuevo Registro de Pago por Producto
+        </a>
+    }
+</div>
 <h2>Editar</h2>
-
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>TemporadaDeCosecha</h4>
+        <h4>Temporada De Cosecha</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.TemporadaDeCosechaID)
@@ -36,6 +56,7 @@
         </div>
         <fieldset>
             <legend>Precio por tonelada</legend>
+            @*MANZANITAS*@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto1</label>
                 <div class="col-md-10">
@@ -53,6 +74,23 @@
             </div>
 
             <div class="form-group col-md-6">
+                <label class="control-label col-md-2">@Model.tipoProducto4</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto4, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto4, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*OBLIZAS*@
+            <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto2</label>
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto2, new
@@ -68,6 +106,23 @@
                 </div>
             </div>
 
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">@Model.tipoProducto5</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto5, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto5, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*MISIONES*@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto3</label>
                 <div class="col-md-10">
@@ -85,9 +140,9 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProductoOtro</label>
+                <label class="control-label col-md-2">@Model.tipoProducto6</label>
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.precioProductoOtro, new
+                    @Html.EditorFor(model => model.precioProducto6, new
                {
                    htmlAttributes = new
                    {
@@ -96,7 +151,7 @@
                        data_mask_reverse = "true"
                    }
                })
-                    @Html.ValidationMessageFor(model => model.precioProductoOtro, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.precioProducto6, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>
@@ -108,9 +163,6 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

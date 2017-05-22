@@ -2,9 +2,12 @@
 @model CampanasDelDesierto_v1.Models.PagoPorProducto
 
 @{
-    ViewBag.Title = "IngresoProducto";
+    bool editMode = Model.idMovimiento > 0;
+    ViewBag.Title = (editMode ? "Editar" : "Nuevo") + " Pago por Producto";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    Productor productor = ViewBag.productor;
+
+    Productor productor = ViewBag.productor == null? Model.Productor: ViewBag.productor;
+
     TemporadaDeCosecha temporada = Model.temporadaDeCosecha;
     List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto;
 
@@ -14,6 +17,11 @@
     ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddDetailsTemporada.Add("editable", true);
     vddDetailsTemporada.Add("funcionAlReestablecer", "recalcularMontos");
+    if (editMode)
+    {
+        vddDetailsTemporada.Add("pagoPorProducto", Model);
+    }
+    vddDetailsTemporada.Add("productorID", productor.idProductor);
 }
 
 <p>
@@ -22,13 +30,41 @@
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este productor
     </a>
 </p>
-@Html.Partial("../Productores/Partial_InfoProductor", productor)
-@Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
 
+@*Panel de informacion general del productor*@
+@Html.Partial("../Productores/Partial_InfoProductor", productor)
+
+@*Tabla donde se encuentran todos los ingresos de producto reportados*@
+<h4>Acumulado de recepción de aceituna <i class="fa fa-question-circle helpIcon" 
+                                          onclick='$("#msgAcumuladoRecepcion").slideToggle();
+                                                    $(this).toggleClass("clicked")'
+                                          style="cursor:pointer"></i></h4>
+<div id="msgAcumuladoRecepcion" class="alert alert-info" style="display:none">
+    En esta tabla se muestran los <strong>registros de recepción de aceituna</strong> que no han sido asociados a un pago.
+    <ul>
+        <li>Haga <strong>click en las cajas de selección</strong> de la primera columna para seleccionar una recepción a la cual quiera reportar su pago.</li>
+        <li>
+            Para <strong>seleccionar más de una</strong>, presione la tecla <strong>CTRL</strong> 
+            mientras hace click sobre cada una de las recepciones que desea agrupar sobre un mismo pago.
+        </li>
+        <li>
+            Para seleccionar un <strong>rango de registros</strong> de recepción, seleccione un registro y mientras presiona la tecla <strong>SHIFT</strong>,
+            seleccione el último elemento del rango.
+        </li>
+        <li>
+            Puede utilizar los botones de <strong>"Seleccionar Todos"</strong> o <strong>"Limpiar"</strong> 
+            que se encuentran en la forma de registro de la parte inferior.
+        </li>
+    </ul>
+</div>
+
+@Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
+<br />
 @using (Html.BeginForm())
 {
     <div>
-        @Html.Partial("../TemporadaDeCosechas/Partial_DetailsTemporada", Model.temporadaDeCosecha, vddDetailsTemporada)
+        @Html.Partial("../TemporadaDeCosechas/Partial_DetailsTemporada", 
+       new TemporadaDeCosecha.VMPreciosProductos(Model.temporadaDeCosecha,productor.zona), vddDetailsTemporada)
     </div>
 
     <div class="panel panel-primary">
@@ -38,6 +74,7 @@
         <div class="panel-body">
             <div class="form-horizontal">
                 @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.idMovimiento)
                 @Html.HiddenFor(model => model.idProductor)
                 @Html.HiddenFor(model => model.TemporadaDeCosechaID)
                 @Html.Hidden("selectedIngresos")
@@ -171,7 +208,9 @@
                 </fieldset>
                 <div class="form-group col-md-12">
                     <div class="col-md-10">
-                        <button class="btn btn-success" id="btnRegistrar" @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>Registrar</button>
+                        <button class="btn btn-success" id="btnRegistrar" @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>
+                            @(editMode?"Guardar" : "Registrar")
+                        </button>
                         <button class="btn btn-default" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
                         <button class="btn btn-default" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
                     </div>
@@ -183,8 +222,9 @@
 @section Scripts{
 @Scripts.Render("~/bundles/dataTables.select")
 @Styles.Render("~/Content/dataTables.select")
+
 <script>
-    var selectorInputsPrecios = "#formCostosProducto input#precioProducto";
+    var selectorInputsPrecios = "#formCostosProducto input#precio";
     var selectedIngresosIDs = new Array();
 
     var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5})
@@ -194,7 +234,7 @@
             className: 'select-checkbox',
             targets:   0
         }, {
-            targets: 1,
+            targets: COLS_ENUM.ID,
             visible: false,
             searchable: false
         }],
@@ -218,9 +258,9 @@
         var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, montoNeto = 0;
 
         @*Se toman los costos por tipo de producto marcado para esta temporada*@
-        var precioProducto1 = $(selectorInputsPrecios+1).val();
-        var precioProducto2 = $(selectorInputsPrecios+2).val();
-        var precioProducto3 = $(selectorInputsPrecios+3).val();
+        var precioProducto1 = $(selectorInputsPrecios+"Manzanita").val();
+        var precioProducto2 = $(selectorInputsPrecios+"Obliza").val();
+        var precioProducto3 = $(selectorInputsPrecios+"Mission").val();
 
         for(var c=0;c<data.length;c++){
             totalCant1 += Number(data[c][COLS_ENUM.PROD1]);
@@ -255,4 +295,13 @@
         recalcularMontos();
     })
 </script>
+
+
+@if (editMode)
+{
+    <script>
+        $('#tblIngresoAcumulado').DataTable().table().rows('[default-selected]').select();
+    </script>
+}
+
 }

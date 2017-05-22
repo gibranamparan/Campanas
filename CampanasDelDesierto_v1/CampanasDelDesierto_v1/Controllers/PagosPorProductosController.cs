@@ -127,6 +127,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult IngresoProducto(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
             int[] ingresosID = selectedIngresos.Trim('[').Trim(']').Split(',').Select(int.Parse).ToArray();
@@ -172,7 +173,7 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             PagoPorProducto mov = prepararVistaCrear(productor);
             var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == productor.numProductor
-            && rec.TemporadaDeCosechaID == temporadaID).ToList();
+            && rec.TemporadaDeCosechaID == temporadaID && (rec.movimientoID == 0 || rec.movimientoID == null)).ToList();
             ViewBag.ingresosProducto = ingresos;
             return mov;
         }
@@ -184,50 +185,88 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PagoPorProducto pagoPorProducto = db.PagosPorProductos.Find(id);
-            if (pagoPorProducto == null)
+
+            var ppp = db.PagosPorProductos.Find(id);
+
+            if (ppp == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.productor = pagoPorProducto.Productor;
+            prepararVistaEditarPagoProducto(ppp);
 
-            return View(pagoPorProducto);
+            return View("IngresoProducto", ppp);
         }
 
+        /// <summary>
+        /// Prepara la vista de edicion de pago por producto
+        /// </summary>
+        /// <param name="ppp">Pago por producto en cuestion.</param>
+        private void prepararVistaEditarPagoProducto(PagoPorProducto ppp)
+        {
+            //Para editar, deben de mostrarse todas recepciones de producto de esta temporada de este productor
+            //y que hayan sido pagadas por el movimiento editado
+            var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == ppp.Productor.numProductor
+            && rec.TemporadaDeCosechaID == ppp.TemporadaDeCosechaID && (rec.movimientoID == null || rec.movimientoID == 0 
+            || rec.movimientoID == ppp.idMovimiento)).ToList();
+            ViewBag.ingresosProducto = ingresos;
+        }
 
         // POST: PagosPorProductos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadProducto,numeroSemana,tipoProducto,TemporadaDeCosechaID")]
-            PagoPorProducto pagoPorProducto)
+        public ActionResult Edit(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
+            int[] ingresosID = selectedIngresos.Trim('[').Trim(']').Split(',').Select(int.Parse).ToArray();
+
             if (ModelState.IsValid)
             {
+                //Ajuste de movimiento para entrar dentro de la lista de balances
                 pagoPorProducto.ajustarMovimiento();
-                db.Entry(pagoPorProducto).State = EntityState.Modified;
-                int numreg = db.SaveChanges();
 
-                if (numreg > 0)
+                //Pago por producto
+                db.Entry(pagoPorProducto).State = EntityState.Modified;
+                int numReg = db.SaveChanges();
+
+                if (numReg > 0)
                 {
+                    //Se desasocian todos los registros de recepcion que habia
+                    var recepciones = db.RecepcionesDeProducto.Where(rec=>rec.movimientoID == pagoPorProducto.idMovimiento);
+                    foreach (var rec in recepciones)
+                    {
+                        rec.movimientoID = null;
+                        db.Entry(rec).State = EntityState.Modified;
+                    }
+
+                    //se asocian los nuevos
+                    foreach (int id in ingresosID)
+                    {
+                        var recepcion = db.RecepcionesDeProducto.Find(id);
+                        recepcion.movimientoID = pagoPorProducto.idMovimiento;
+                        db.Entry(recepcion).State = EntityState.Modified;
+                    }
+
+                    db.SaveChanges();
+
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(pagoPorProducto.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
-                    return RedirectToAction("Details", "Productores", new { id = pagoPorProducto.idProductor,
-                        temporada = pagoPorProducto.TemporadaDeCosechaID });
+
+                    return RedirectToAction("Details", "Productores",
+                        new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
                 }
             }
 
-            ViewBag.productor = pagoPorProducto.Productor;
+            var productor = db.Productores.Find(pagoPorProducto.idProductor);
+            var mov = prepararVistaIngresoProducto(productor, pagoPorProducto.TemporadaDeCosechaID);
 
-            return View(pagoPorProducto);
+            return View(mov);
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

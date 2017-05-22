@@ -18,16 +18,22 @@
                 @Html.DisplayNameFor(model => model.rangoTiempo)
             </th>
             <th>
-                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO1
+                @Html.DisplayNameFor(model => model.precioProducto1)
             </th>
             <th>
-                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO2
+                @Html.DisplayNameFor(model => model.precioProducto2)
             </th>
             <th>
-                @TemporadaDeCosecha.TiposDeProducto.PRODUCTO3
+                @Html.DisplayNameFor(model => model.precioProducto3)
             </th>
             <th>
-                @TemporadaDeCosecha.TiposDeProducto.OTRO
+                @Html.DisplayNameFor(model => model.precioProducto4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto6)
             </th>
             <th></th>
         </tr>
@@ -49,7 +55,13 @@
                     @Html.DisplayFor(modelItem => item.precioProducto3)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.precioProductoOtro)
+                    @Html.DisplayFor(modelItem => item.precioProducto4)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto5)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto6)
                 </td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = item.TemporadaDeCosechaID })">

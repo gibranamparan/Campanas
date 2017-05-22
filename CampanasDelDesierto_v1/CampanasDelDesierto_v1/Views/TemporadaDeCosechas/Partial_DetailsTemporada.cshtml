@@ -1,7 +1,14 @@
-﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha.VMPreciosProductos
 @{ 
     bool editable = false;
     string funcionAlReestablecer = "";
+
+    decimal precioOriginal1 = Model.precioManzanita;
+    decimal precioOriginal2 = Model.precioObliza;
+    decimal precioOriginal3 = Model.precioMission;
+
+
     if (ViewData["editable"] != null)
     {
         editable = (bool)ViewData["editable"];
@@ -10,64 +17,84 @@
     {
         funcionAlReestablecer = (string)ViewData["funcionAlReestablecer"];
     }
+
+    int? movimientoID = null;
+    bool preciosProductosEditados = false;
+    if (ViewData["pagoPorProducto"] != null)
+    {
+        PagoPorProducto pagoPorProducto = (PagoPorProducto)ViewData["pagoPorProducto"];
+        movimientoID = pagoPorProducto.idMovimiento;
+
+        decimal precioProducto1 = pagoPorProducto.pagoProducto1 == 0 ? Model.precioManzanita :
+            (decimal)Math.Round((double)pagoPorProducto.pagoProducto1 / pagoPorProducto.cantidadProducto1);
+        decimal precioProducto2 = pagoPorProducto.pagoProducto2 == 0 ? Model.precioObliza :
+    (decimal)Math.Round((double)pagoPorProducto.pagoProducto2 / pagoPorProducto.cantidadProducto2);
+        decimal precioProducto3 = pagoPorProducto.pagoProducto3 == 0 ? Model.precioMission :
+    (decimal)Math.Round((double)pagoPorProducto.pagoProducto3 / pagoPorProducto.cantidadProducto3);
+
+        preciosProductosEditados = precioProducto1 != Model.precioManzanita
+            || precioProducto2 != Model.precioObliza || precioProducto3 != Model.precioMission;
+
+        Model.precioManzanita = precioProducto1;
+        Model.precioObliza = precioProducto2;
+        Model.precioMission = precioProducto3;
+    }
+
+    int? productorID = (int)ViewData["productorID"];
 }
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Temporada: </strong>@Model.rangoTiempo</h3>
+        <h3 class="panel-title">
+            <span><strong>Temporada: </strong>@Model.temporada.rangoTiempo</span>
+            <span><strong>Zona: </strong>@Model.zona</span>
+        </h3>
     </div>
     <div class="panel-body">
         <div class="form-inline" id="formCostosProducto">
-            <div class="form-group col-md-3">
-                @Html.LabelFor(model => model.precioProducto1)
-                @Html.EditorFor(model => model.precioProducto1, new { htmlAttributes = new { disabled= "disabled",
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.precioManzanita)
+                @Html.EditorFor(model => model.precioManzanita, new { htmlAttributes = new { disabled= "disabled",
                    @class = "form-control",
                    data_mask = "###0.00",
                    data_mask_reverse = "true"
                } })
             </div>
-            <div class="form-group col-md-3">
-                @Html.LabelFor(model => model.precioProducto2)
-                @Html.EditorFor(model => model.precioProducto2, new { htmlAttributes = new { disabled = "disabled",
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.precioObliza)
+                @Html.EditorFor(model => model.precioObliza, new { htmlAttributes = new { disabled = "disabled",
                    @class = "form-control",
                    data_mask = "###0.00",
                    data_mask_reverse = "true"
                } })
             </div>
-            <div class="form-group col-md-3">
-                @Html.LabelFor(model => model.precioProducto3)
-                @Html.EditorFor(model => model.precioProducto3, new { htmlAttributes = new { disabled= "disabled",
-                   @class = "form-control",
-                   data_mask = "###0.00",
-                   data_mask_reverse = "true"
-               } })
-            </div>
-            <div class="form-group col-md-3">
-                @Html.LabelFor(model => model.precioProductoOtro)
-                @Html.EditorFor(model => model.precioProductoOtro, new { htmlAttributes = new { disabled= "disabled",
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.precioMission)
+                @Html.EditorFor(model => model.precioMission, new { htmlAttributes = new { disabled= "disabled",
                    @class = "form-control",
                    data_mask = "###0.00",
                    data_mask_reverse = "true"
                } })
             </div>
         </div>
-        <a href="@Url.Action("Edit","TemporadaDeCosechas", new { id = Model.TemporadaDeCosechaID })">
+        <a class="pull-right" href="@Url.Action("Edit","TemporadaDeCosechas",
+                                   new { id = Model.temporada.TemporadaDeCosechaID, pagoPorProductoID = movimientoID,
+                                       productorID =productorID, temporadaID = Model.temporada.TemporadaDeCosechaID })">
             <i class="fa fa-pencil"></i> Editar temporada
         </a>
         @if (editable)
         {
-            <span> | </span>
             <input type="checkbox" id="cbEditarCostos" name="cbEditarCostos" 
-                   class="hidden" onchange="cbChangeEditarCostos(this)"/>
+                   class="hidden" onchange="cbChangeEditarCostos(this)" @(preciosProductosEditados?"checked":"")/>
             <label for="cbEditarCostos">Editar costos para este registro</label>
         }
     </div>
 </div>
 
 <script>
-    var costoOriginalProducto1 = @Model.precioProducto1;
-    var costoOriginalProducto2 = @Model.precioProducto2;
-    var costoOriginalProducto3 = @Model.precioProducto3;
+    var costoOriginalProducto1 = @precioOriginal1;
+    var costoOriginalProducto2 = @precioOriginal2;
+    var costoOriginalProducto3 = @precioOriginal3;
     var selector = "#formCostosProducto input";
 
     function cbChangeEditarCostos(cb){
@@ -75,15 +102,14 @@
         $(selector).attr("disabled",!val)
 
         if(!val){
-            $(selector+"#precioProducto1").val(numeral(costoOriginalProducto1).format('0.00')).trigger('input');
-            $(selector+"#precioProducto2").val(numeral(costoOriginalProducto2).format('0.00')).trigger('input');
-            $(selector+"#precioProducto3").val(numeral(costoOriginalProducto3).format('0.00')).trigger('input');
+            $(selector+"#precioManzanita").val(numeral(costoOriginalProducto1).format('0.00')).trigger('input');
+            $(selector+"#precioObliza").val(numeral(costoOriginalProducto2).format('0.00')).trigger('input');
+            $(selector+"#precioMission").val(numeral(costoOriginalProducto3).format('0.00')).trigger('input');
             @if (!String.IsNullOrEmpty(funcionAlReestablecer))
             {
                 @Html.Raw(funcionAlReestablecer+"()")
             }
         }
-
     }
 </script>
 
