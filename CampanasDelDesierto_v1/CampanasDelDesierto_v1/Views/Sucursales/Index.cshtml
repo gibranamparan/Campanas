@@ -47,6 +47,9 @@
                     </a><br />
                     <a href="@Url.Action("Delete", "Sucursales", new { id = item.idSucursal })">
                         <i class="glyphicon glyphicon-remove"></i> Eliminar
+                    </a> <br />
+                    <a href="@Url.Action("Create", "Departamentos", new { id = item.idSucursal })">
+                        <i class="glyphicon glyphicon-plus"></i> Crear Departamento
                     </a>
 
                 </td>               

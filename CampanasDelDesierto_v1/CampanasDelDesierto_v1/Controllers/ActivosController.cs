@@ -100,7 +100,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Entry(activo).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+activo.inventarioID,"Inventarios");
             }
             ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
             return View(activo);

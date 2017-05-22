@@ -28,13 +28,20 @@ namespace CampanasDelDesierto_v1.Models
         public bool prestado() {
 
 
-                bool prestado = false;
-        List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
+            bool prestado = false;
+            if (this.PrestamosActivos.Count() == 0)
+            {
+                return prestado;
+            }
+            else
+            {
+                List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
 
                 if (prestamo.Count() > 0)
                     prestado = prestamo.Last().fechaDevolucion == null;
 
                 return prestado;
+            }                        
           
         }
     }

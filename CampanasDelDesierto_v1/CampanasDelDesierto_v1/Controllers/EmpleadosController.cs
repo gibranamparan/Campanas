@@ -117,7 +117,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Entry(empleado).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+empleado.departamentoID, "Departamentos");
             }
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
             return View(empleado);

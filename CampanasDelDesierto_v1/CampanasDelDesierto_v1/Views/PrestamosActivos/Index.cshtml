@@ -6,12 +6,6 @@
 }
 
 <h2>Prestamos de Activos</h2>
-<div class="container row">
-    <div class=" form-group">
-        @Html.ActionLink("Realizar prestamo", "Create", null, new { @class = "btn btn-primary" })
-    </div>
-    
-</div>
 @using (Html.BeginForm("Index","PrestamosActivos",FormMethod.Post, new { id="formulario"}))
 {
 
@@ -27,15 +21,14 @@
                 </a><br />
             </h4>
         </div>
-</div>
-    <div id="mensajes" class="form-group col-md-4">
-
     </div>
-
-
-
+    <div id="mensajes" class="form-group col-md-4"></div><br />
 }
-
+<p>
+    <a href="@Url.Action("Create")">
+        <i class="glyphicon glyphicon-plus"></i> Crear Prestamo
+    </a>
+</p>
 <table class="table">
     <tr>
         <th>
@@ -74,9 +67,15 @@
             @Html.DisplayFor(modelItem => item.fechaDevolucion)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idPrestamoActivo }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idPrestamoActivo }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idPrestamoActivo })
+            <a href="@Url.Action("Edit", new { id=item.idPrestamoActivo })">
+                <i class="glyphicon glyphicon-pencil"></i> Editar
+            </a> <br />
+            <a href="@Url.Action("Details", new { id=item.idPrestamoActivo })">
+                <i class="glyphicon glyphicon-eye-open"></i> Detalles
+            </a> <br />
+            <a href="@Url.Action("Delete", new { id=item.idPrestamoActivo })">
+                <i class="glyphicon glyphicon-remove"></i> Eliminar
+            </a>            
         </td>
     </tr>
 }

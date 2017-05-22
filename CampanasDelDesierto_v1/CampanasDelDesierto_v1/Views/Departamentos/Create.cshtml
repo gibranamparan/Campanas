@@ -9,8 +9,6 @@
     <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
-</p>
-<p>
     <a href="@Url.Action("Details","Sucursales",new { id = Model.idSucursal })">
         <i class="glyphicon glyphicon-pencil"></i> Editar
     </a>
@@ -48,7 +46,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="submit" class="btn btn-success">Crear</button>
             </div>
         </div>
     </div>
