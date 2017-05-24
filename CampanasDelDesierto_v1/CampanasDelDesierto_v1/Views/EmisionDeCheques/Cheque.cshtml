@@ -1,0 +1,93 @@
+﻿@using CampanasDelDesierto_v1.HerramientasGenerales
+@using System.Globalization;
+@model CampanasDelDesierto_v1.Models.EmisionDeCheque
+@{
+    Model.montoMovimiento *= -1;
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Impresion de Cheque - Campanas del Desierto</title>
+</head>
+<body>
+    <div>
+
+        <div id="pnlCheque">
+            <img src="/images/cheque.jpg" />
+            <span id="nombreCheque">
+                @Html.DisplayFor(model => model.Productor.nombreCheque)
+            </span>
+            <span id="montoMovimiento">
+                @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
+            </span>
+            <span id="fechaMovimiento">
+                @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy",CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="cheque">
+                @Html.DisplayFor(model => model.cheque)
+            </span>
+        </div>
+
+        <style>
+            #pnlCheque {
+                /*background-image: url("/images/cheque.jpg");*/
+                background-repeat: no-repeat;
+                height: 500px;
+            }
+
+                #pnlCheque img {
+                    position: absolute;
+                    left: 0;
+                    z-index: 0;
+                }
+
+                #pnlCheque span {
+                    position: absolute;
+                    font-size: 18px;
+                }
+
+            span#nombreCheque {
+                left: 3.7cm;
+                top: 3.8cm;
+            }
+
+            span#montoMovimiento {
+                top: 4.8cm;
+                left: 4.1cm;
+            }
+
+            span#fechaMovimiento {
+                top: 6.6cm;
+                left: 2.5cm;
+            }
+
+            span#cheque {
+                left: 15cm;
+                top: .8cm;
+            }
+
+            @@page {
+                size: A4;
+                margin: 0;
+            }
+
+            @@media print {
+                html, body {
+                    width: 210mm;
+                    height: 297mm;
+                }
+                #pnlCheque img {
+                    display:none;
+                }
+            }
+        </style>
+    </div>
+</body>
+</html>
+

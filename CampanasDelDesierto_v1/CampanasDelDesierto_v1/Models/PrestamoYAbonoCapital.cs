@@ -48,6 +48,8 @@ namespace CampanasDelDesierto_v1.Models
             public static readonly string USD = "USD";
         }
 
+        public PrestamoYAbonoCapital() { }
+
         /// <summary>
         /// Para los movimientos de capital, se ajusta la hora de la fecha de movimiento y el signo del monto
         /// segun el concepto (Prestamo o Abono), esto para preparse para ser mostrado en la lsita de balances

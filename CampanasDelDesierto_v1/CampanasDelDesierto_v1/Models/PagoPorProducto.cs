@@ -36,5 +36,20 @@ namespace CampanasDelDesierto_v1.Models
         public decimal pagoProducto3 { get; set; }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
+
+        public int eliminarAsociacionConRecepciones(ApplicationDbContext db)
+        {
+            int numRegs = 0;
+            if (this.Recepciones!=null && this.Recepciones.Count() > 0)
+            {
+                foreach(var rec in Recepciones.ToList())
+                {
+                    rec.movimientoID = null;
+                    db.Entry(rec).State = System.Data.Entity.EntityState.Modified;
+                }
+                numRegs = db.SaveChanges();
+            }
+            return numRegs;
+        }
     }
 }

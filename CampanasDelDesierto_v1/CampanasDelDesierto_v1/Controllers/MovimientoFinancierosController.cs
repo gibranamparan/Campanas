@@ -164,7 +164,10 @@ namespace CampanasDelDesierto_v1.Controllers
             //Se calcula el ultimo movimiento anterior al que se desea eliminar
             var prod = db.Productores.Find(mov.idProductor);
             MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento);
-            
+
+            if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+                ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
+
             //se elimina el movimiento
             db.MovimientosFinancieros.Remove(mov);
             int numReg = db.SaveChanges();

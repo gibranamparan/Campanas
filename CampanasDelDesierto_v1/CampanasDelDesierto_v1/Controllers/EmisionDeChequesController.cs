@@ -34,15 +34,39 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+
+
             return View(emisionDeCheque);
         }
 
         // GET: EmisionDeCheques/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id, int? temporada)
         {
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor");
-            ViewBag.TemporadaDeCosechaID = new SelectList(db.TemporadaDeCosechas, "TemporadaDeCosechaID", "TemporadaDeCosechaID");
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Productor productor = db.Productores.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.productor = productor;
+            EmisionDeCheque mov = prepararVistaCrear(productor);
+            mov.introducirMovimientoEnPeriodo(temporada);
+
+            return View(mov);
+        }
+
+        private EmisionDeCheque prepararVistaCrear(Productor productor)
+        {
+            ViewBag.productor = productor;
+            ViewBag.balanceActual = productor.balanceActual;
+            EmisionDeCheque mov = new EmisionDeCheque();
+            mov.idProductor = productor.idProductor;
+            return mov;
         }
 
         // POST: EmisionDeCheques/Create
@@ -50,18 +74,62 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,balance,fechaMovimiento,idProductor,TemporadaDeCosechaID,cheque,abonoAnticipo,garantiaLimpieza")] EmisionDeCheque emisionDeCheque)
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,balance,fechaMovimiento,idProductor,"+
+            "TemporadaDeCosechaID,cheque,abonoAnticipo,garantiaLimpieza,retenciones.abonoAnticipo,retenciones.garantiaLimpieza")]
+            EmisionDeCheque emisionDeCheque, EmisionDeCheque.VMRetenciones retenciones)
         {
             if (ModelState.IsValid)
             {
-                db.MovimientosFinancieros.Add(emisionDeCheque);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                //Se crean los registros de retenciones
+                RetencionLimpieza limpieza = new RetencionLimpieza(emisionDeCheque, retenciones.garantiaLimpieza);
+                int numReg = 0;
+
+                //Ajuste de movimiento para entrar dentro de la lista de balances
+                emisionDeCheque.ajustarMovimiento();
+
+                //Solamente se agregara deposito para limpieza si fue introducida una cantidad mayor a 0
+                if (limpieza.montoMovimiento != 0)
+                {
+                    //Se le establecen fechas con horas diferentes para mantener la integridad del balance
+                    //Las retenciones apareceran primero
+                    limpieza.ajustarMovimiento();
+                    limpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
+
+                    db.RetencionesDeLimpieza.Add(limpieza);
+                    numReg = db.SaveChanges();
+                    if (numReg > 0)
+                        numReg = introducirMovimientoAlBalance(limpieza);
+                }
+
+                db.EmisionDeCheques.Add(emisionDeCheque);
+                numReg = db.SaveChanges();
+                if (numReg > 0)
+                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
+
+
+                if (numReg > 0)
+                {
+                    return RedirectToAction("Details", "Productores", new
+                    { id = emisionDeCheque.idProductor, temporada = emisionDeCheque.TemporadaDeCosechaID });
+                }
             }
 
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", emisionDeCheque.idProductor);
-            ViewBag.TemporadaDeCosechaID = new SelectList(db.TemporadaDeCosechas, "TemporadaDeCosechaID", "TemporadaDeCosechaID", emisionDeCheque.TemporadaDeCosechaID);
+            Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
+            ViewBag.productor = productor;
+            prepararVistaCrear(productor);
+
             return View(emisionDeCheque);
+        }
+
+        private int introducirMovimientoAlBalance(MovimientoFinanciero mov)
+        {
+            Productor productor = db.Productores.Find(mov.idProductor);
+
+            //Se calcula el movimiento anterior al que se esta registrando
+            var ultimoMovimiento = productor.getUltimoMovimiento(mov.fechaMovimiento);
+
+            //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+            return productor.ajustarBalances(ultimoMovimiento, db);
         }
 
         // GET: EmisionDeCheques/Edit/5
@@ -123,6 +191,20 @@ namespace CampanasDelDesierto_v1.Controllers
             db.MovimientosFinancieros.Remove(emisionDeCheque);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult PrintCheque(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            if (emisionDeCheque == null)
+            {
+                return HttpNotFound();
+            }
+            return View("Cheque", emisionDeCheque);
         }
 
         protected override void Dispose(bool disposing)

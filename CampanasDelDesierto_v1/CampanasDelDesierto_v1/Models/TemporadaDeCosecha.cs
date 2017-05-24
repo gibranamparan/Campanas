@@ -233,6 +233,11 @@ namespace CampanasDelDesierto_v1.Models
             return opciones;
         }
 
+        public override string ToString()
+        {
+            return this.periodo.ToString();
+        }
+
         public class VMTipoProducto
         {
             public decimal Value { get; set; }

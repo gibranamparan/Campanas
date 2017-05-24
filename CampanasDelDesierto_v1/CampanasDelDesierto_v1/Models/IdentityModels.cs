@@ -44,6 +44,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<EmisionDeCheque> EmisionDeCheques { get; set; }
         public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
+        public DbSet<RetencionLimpieza> RetencionesDeLimpieza { get; set; }
         public System.Data.Entity.DbSet<CampanasDelDesierto_v1.Models.TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
 
         public ApplicationDbContext()

@@ -50,17 +50,19 @@ namespace CampanasDelDesierto_v1.Models
                         return "ANTICIPO";
                 }
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
-                    return "COSECHA";
+                    return "PAGO POR COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return "VENTA A CREDITO";
                 else if (tom == TypeOfMovements.CHEQUE)
                     return "CHEQUE";
+                else if (tom == TypeOfMovements.LIMPIEZA)
+                    return "RETENCION DE LIMPIEZA";
                 else
                     return "";
             }
         }
 
-        [Display(Name = "Tipo")]
+        [Display(Name = "Proveedor / Concepto")]
         public string conceptoProveedor
         {
             get
@@ -72,7 +74,11 @@ namespace CampanasDelDesierto_v1.Models
                     return "INGRESO DE PRODUCTO";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return ((VentaACredito)this).cantidadMaterial
-                        +" "+((VentaACredito)this).Producto.nombreProducto;
+                        + " " + ((VentaACredito)this).Producto.nombreProducto;
+                else if (tom == TypeOfMovements.CHEQUE)
+                    return this.nombreDeMovimiento + " " + ((EmisionDeCheque)this).cheque;
+                else if (tom == TypeOfMovements.LIMPIEZA)
+                    return this.nombreDeMovimiento;
                 else
                     return "";
             }
@@ -84,8 +90,11 @@ namespace CampanasDelDesierto_v1.Models
             PAGO_POR_PRODUCTO,
             CAPITAL,
             VENTA_A_CREDITO,
-            CHEQUE
+            CHEQUE, 
+            LIMPIEZA
         };
+
+        public MovimientoFinanciero() { }
 
         public TypeOfMovements getTypeOfMovement()
         {
@@ -97,6 +106,8 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.VENTA_A_CREDITO;
             else if (this is EmisionDeCheque)
                 return TypeOfMovements.CHEQUE;
+            else if (this is RetencionLimpieza)
+                return TypeOfMovements.LIMPIEZA;
             else
                 return TypeOfMovements.NONE;
         }
@@ -171,7 +182,5 @@ namespace CampanasDelDesierto_v1.Models
                return anioCosecha;
             }
         }
-
-
     }
 }

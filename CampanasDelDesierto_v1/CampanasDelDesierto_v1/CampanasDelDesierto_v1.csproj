@@ -257,6 +257,7 @@
     <Compile Include="HerramientasGenerales\DecimalPrecision.cs" />
     <Compile Include="HerramientasGenerales\ExcelTools.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
+    <Compile Include="HerramientasGenerales\NumbersTools.cs" />
     <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="HerramientasGenerales\VMConfirmModalAttributes.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
@@ -419,6 +420,14 @@
     <Compile Include="Migrations\201705220553393_temporadas_nuevosPrecios.Designer.cs">
       <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705222104202_edicion_EmisionDeCheques.cs" />
+    <Compile Include="Migrations\201705222104202_edicion_EmisionDeCheques.Designer.cs">
+      <DependentUpon>201705222104202_edicion_EmisionDeCheques.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.cs" />
+    <Compile Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.Designer.cs">
+      <DependentUpon>201705230043381_addTable_RetencionesDeLimpieza.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -435,6 +444,7 @@
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedores.cs" />
     <Compile Include="Models\RecepcionDeProducto.cs" />
+    <Compile Include="Models\RetencionLimpieza.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\TemporadaDeCosecha.cs" />
     <Compile Include="Models\VentaACredito.cs" />
@@ -463,6 +473,7 @@
     <Content Include="fonts\icomoon.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\cheque.jpg" />
     <Content Include="images\loading.gif" />
     <Content Include="images\LogoCamp.png" />
     <Content Include="images\pic01.jpg" />
@@ -679,6 +690,7 @@
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
     <Content Include="Views\Departamentos\Inventarios.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
+    <Content Include="Views\EmisionDeCheques\Cheque.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -809,6 +821,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705220553393_temporadas_nuevosPrecios.resx">
       <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705222104202_edicion_EmisionDeCheques.resx">
+      <DependentUpon>201705222104202_edicion_EmisionDeCheques.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.resx">
+      <DependentUpon>201705230043381_addTable_RetencionesDeLimpieza.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

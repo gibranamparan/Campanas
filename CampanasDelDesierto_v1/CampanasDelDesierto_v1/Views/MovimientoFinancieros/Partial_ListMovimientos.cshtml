@@ -12,6 +12,7 @@
         @Html.ActionLink("Anticipos y Abonos", "Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
         @Html.ActionLink("Ingreso de producto", "IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
         @Html.ActionLink("Venta de Material", "Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Emisión de Cheques", "Create", "EmisionDeCheques", new { id = Model.idProductor, temporada = temporada }, new { @class = "btn btn-primary" })
     </div>
     <div class="col-md-4">
         @using (Html.BeginForm())
@@ -40,7 +41,7 @@
                 @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
             </th>
             <th>
-                Proveedor / Concepto
+                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().conceptoProveedor)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
@@ -54,14 +55,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.fechaMovimiento)
                 </td>
-                <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
+                <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE?"style=color:green":"")>
                     @Html.DisplayFor(modelItem => item.montoMovimiento)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                 </td>
                 <td>
-                     @item.conceptoProveedor
+                    @Html.DisplayFor(modelItem => item.conceptoProveedor)
                 </td>
                 <td class='@(item.balance<0?"montoNegativo":"")'>
                     @Html.DisplayFor(modelItem => item.balance)

@@ -11,14 +11,18 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Cheque / Folio")]
         public string cheque { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:C}",
-        ApplyFormatInEditMode = true)]
-        [Display(Name = "Abono de anticipo (USD)")]
-        public decimal abonoAnticipo { get; set; }
+        public new void ajustarMovimiento()
+        {
+            this.montoMovimiento *= -1;
+            base.ajustarMovimiento();
+        }
 
-        [DisplayFormat(DataFormatString = "{0:C}",
-        ApplyFormatInEditMode = true)]
-        [Display(Name = "Pago de garantia de la limpieza (USD)")]
-        public decimal garantiaLimpieza { get; set; }
+        public class VMRetenciones
+        {
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Garantia de la limpieza (USD)")]
+            public decimal garantiaLimpieza { get; set; }
+        }
     }
 }
