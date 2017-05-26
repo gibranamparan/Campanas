@@ -115,7 +115,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
+            ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", inventario.departamentoID);
             return View(inventario);
         }
 
@@ -130,7 +130,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Entry(inventario).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/"+inventario.departamentoID,"Departamentos");
             }
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", inventario.departamentoID);
             return View(inventario);
@@ -159,7 +159,7 @@ namespace CampanasDelDesierto_v1.Controllers
             Inventario inventario = await db.Inventarios.FindAsync(id);
             db.Inventarios.Remove(inventario);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details/" + inventario.departamentoID, "Departamentos");
         }
 
         protected override void Dispose(bool disposing)

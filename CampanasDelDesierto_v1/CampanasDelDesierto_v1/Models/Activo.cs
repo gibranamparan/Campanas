@@ -29,7 +29,7 @@ namespace CampanasDelDesierto_v1.Models
 
 
             bool prestado = false;
-            if (this.PrestamosActivos.Count() == 0)
+            if (this.PrestamosActivos == null)
             {
                 return prestado;
             }
