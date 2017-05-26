@@ -1,11 +1,10 @@
 ﻿@using CampanasDelDesierto_v1.HerramientasGenerales
 @using System.Globalization;
 @model CampanasDelDesierto_v1.Models.EmisionDeCheque
-@{
-    Model.montoMovimiento *= -1;
-}
+
 @{
     Layout = null;
+    Model.montoMovimiento *= -1;
 }
 
 <!DOCTYPE html>
@@ -41,16 +40,16 @@
                 height: 500px;
             }
 
-                #pnlCheque img {
-                    position: absolute;
-                    left: 0;
-                    z-index: 0;
-                }
+            #pnlCheque img {
+                position: absolute;
+                left: 0;
+                z-index: 0;
+            }
 
-                #pnlCheque span {
-                    position: absolute;
-                    font-size: 18px;
-                }
+            #pnlCheque span {
+                position: absolute;
+                font-size: 18px;
+            }
 
             span#nombreCheque {
                 left: 3.7cm;
