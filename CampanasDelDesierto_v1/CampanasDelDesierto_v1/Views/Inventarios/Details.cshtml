@@ -45,7 +45,7 @@
 
     <legend>Activos</legend>
 
-    <a href="@Url.Action("Create","Activo",new { id = Model.inventarioID})">
+    <a href="@Url.Action("Create","Activos",new { id = Model.inventarioID})">
          <i class="glyphicon glyphicon-plus"></i> Crear Activo
     </a><br />
 
@@ -68,7 +68,7 @@
                                 <i class="glyphicon glyphicon-remove"></i> Eliminar
                             </a><br />
                             <a href="@Url.Action("Details","Activos",new { id = activo.idActivo })">
-                                <i class="glyphicon glyphicon-pencil"></i> Detalles
+                                <i class="fa fa-list-alt"></i> Historial
                             </a><br />
                             <a href="@Url.Action("Edit","Activos",new { id = activo.idActivo })">
                                 <i class="glyphicon glyphicon-pencil"></i> Editar

@@ -6,11 +6,8 @@
 }
 
 <p>
-    <a href="@Url.Action("Details","Departamentos",new { id = Model.idEmpleado })">
-        <i class="fa fa-arrow-circle-left"></i> Regresar
-    </a>
-    <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
-        <i class="glyphicon glyphicon-pencil"></i> Editar
+    <a href="@Url.Action("Index","Empleados")">
+        <i class="fa fa-arrow-circle-left"></i> Regresar a lista de Empleados
     </a>
 
 </p>
@@ -28,13 +25,16 @@
                 <dd> @Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal) </dd>
             </dl>           
         </div>
+        <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
+            <i class="glyphicon glyphicon-pencil"></i> Editar
+        </a>
     </div>
 </div>
 
 
 <h2>Prestamos</h2>
 <p>
-    <a href="@Url.Action("Create", "PrestamosActivos", new { idEmpleado = Model.idEmpleado })">
+    <a href="@Url.Action("Create", "PrestamosActivos", new { id = Model.idEmpleado })">
         <i class="glyphicon glyphicon-plus"></i> Crear Prestamo
     </a>    
 
