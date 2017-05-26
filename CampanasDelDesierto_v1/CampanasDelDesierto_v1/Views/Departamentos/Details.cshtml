@@ -6,12 +6,8 @@
 }
 <p>
     <a href="@Url.Action("Index","Departamentos",new { id = Model.departamentoID })">
-        <i class="fa fa-arrow-circle-left"></i> Regresar
-    </a>
-    <a href="@Url.Action("Edit","Departamentos",new { id = Model.departamentoID })">
-        <i class="glyphicon glyphicon-pencil"></i> Editar
-    </a>
-    
+        <i class="glyphicon glyphicon-arrow-left"></i> Regresar a lista de Departamentos
+    </a>    
 </p>
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -33,7 +29,11 @@
                 <dt> @Html.DisplayName("Activos Prestados")</dt>
                 <dd> @(Model.activosPrestados())  </dd>
             </dl>
-        </div>       
+        </div> 
+
+        <a href="@Url.Action("Edit","Departamentos",new { id = Model.departamentoID })">
+            <i class="glyphicon glyphicon-pencil"></i> Editar
+        </a>      
     </div>
 </div>
 
@@ -70,7 +70,7 @@
                             <a href="@Url.Action("Details","Empleados",new { id = empleado.idEmpleado })">
                                 <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
                             </a><br />
-                            <a href="@Url.Action("Editar","Empleados",new { id = empleado.idEmpleado })">
+                            <a href="@Url.Action("Editar","Empleados",new { idEmpleado = empleado.idEmpleado, id = empleado.Departamento.departamentoID })">
                                 <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
                             </a><br />
                             <a href="@Url.Action("Create","PrestamosActivos",new { id = empleado.idEmpleado })">
@@ -113,6 +113,9 @@
                 <td>
                     <a href="@Url.Action("Delete","Inventarios",new { id = inventario.inventarioID })">
                         <i class="glyphicon glyphicon-remove"></i> Eliminar
+                    </a><br />
+                    <a href="@Url.Action("Edit","Inventarios",new { id = inventario.inventarioID })">
+                        <i class="glyphicon glyphicon-pencil"></i> Editar
                     </a><br />
                     <a href="@Url.Action("Details","Inventarios",new { id = inventario.inventarioID })">
                         <i class="glyphicon glyphicon-eye-open"></i> Activos

@@ -57,7 +57,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
 
             }
-            ViewBag.idActivo = new SelectList(db.Activos.ToList(), "idActivo", "nombreActivo", null);
+            ViewBag.idActivo = new SelectList(db.Activos.ToList().Where(a=>a.prestado()==false), "idActivo", "nombreActivo", null);
             PrestamoActivo prestamo = prepararVistaCrear(empleado);
             return View(prestamo);
 

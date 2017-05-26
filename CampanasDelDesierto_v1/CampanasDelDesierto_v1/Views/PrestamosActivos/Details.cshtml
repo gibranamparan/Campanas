@@ -5,55 +5,41 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>PrestamoActivo</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Activo.nombreActivo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Activo.nombreActivo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Empleado.nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Empleado.nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaPrestamoActivo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaPrestamoActivo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaEntregaActivo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaEntregaActivo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaDevolucion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaDevolucion)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idPrestamoActivo }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Details","Empleados",new { id = Model.idEmpleado })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
+    <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+
 </p>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Empleado:</strong> @(Model.Empleado.nombre + " " + Model.Empleado.apellidoPaterno + " " + Model.Empleado.apellidoMaterno)</h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.Empleado.Departamento.Sucursal.nombreSucursal):</dt>
+                <dd> @Html.DisplayFor(model => model.Empleado.Departamento.Sucursal.nombreSucursal) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.Empleado.Departamento.nombreDepartamento):</dt>
+                <dd> @Html.DisplayFor(model => model.Empleado.Departamento.nombreDepartamento) </dd>
+
+                <dt>Activo Prestado:</dt>
+                <dd>@Html.DisplayFor(model => model.Activo.nombreActivo) </dd>                
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.fechaPrestamoActivo):</dt>
+                <dd> @Html.DisplayFor(model => model.fechaPrestamoActivo) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.fechaEntregaActivo):</dt>
+                <dd> @Html.DisplayFor(model => model.fechaEntregaActivo) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.fechaDevolucion):</dt>
+                <dd> @Html.DisplayFor(model => model.fechaDevolucion) </dd>
+            </dl>
+        </div>
+    </div>
+</div>

@@ -98,10 +98,14 @@ namespace CampanasDelDesierto_v1.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Empleado empleado = await db.Empleados.FindAsync(id);
-            if (empleado == null)
+            Departamento Departamento = empleado.Departamento;
+
+            if (Departamento == null || empleado==null)
             {
                 return HttpNotFound();
             }
+
+            empleado = prepararVistaCrear(Departamento);                                  
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
             return View(empleado);
         }
