@@ -30,12 +30,12 @@
         <th>
             @Html.DisplayNameFor(model => model.cheque)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.abonoAnticipo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.garantiaLimpieza)
-        </th>
+        @*<th>
+        @Html.DisplayNameFor(model => model.abonoAnticipo)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.garantiaLimpieza)
+    </th>*@
         <th></th>
     </tr>
 
@@ -59,12 +59,13 @@
         <td>
             @Html.DisplayFor(modelItem => item.cheque)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.abonoAnticipo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.garantiaLimpieza)
-        </td>
+       @* <td>
+        @Html.DisplayFor(modelItem => item.abonoAnticipo)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.garantiaLimpieza)
+    </td>
+    *@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.idMovimiento }) |
             @Html.ActionLink("Details", "Details", new { id=item.idMovimiento }) |

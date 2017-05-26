@@ -1,91 +1,152 @@
-﻿@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
-    @using CampanasDelDesierto_v1.Models;
+﻿@using CampanasDelDesierto_v1.HerramientasGenerales
+@using System.Globalization;
+@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
+@using CampanasDelDesierto_v1.Models;
 
 @{
-    ViewBag.Title = "Pagare";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en-us">
-<meta charset="utf-8">
-    <head>
-        <style>
-                    .tdTabla1 {
-                        border: 1px solid black;
-                        padding-left: 5px;
-                        padding-right: 5px;
-                    }
-                    .h5{
-                        float:right;
-                    }
-                    #PagareTexto {
-                        display: inline;
-                    }
-                    #firmas {
-                        display: inline;
-                        float: left;
-                        margin: 0 60px;
-                    }
-                    #tablaFirmas {
-                        float: right;
-                    }
-                    .tdTabla2 {
-                    }              
-        </style>
-    </head>
-            <body>
 
-                <div id="PagareTexto">
-                    <table class="tabla1">
-                        <tr>
-                            <td class="tdTabla1">
-                                <h3>PAGARE No.       </h3>
-                                                                    <h5>IMPORTE DEL PAGARE:<strong><u>$ @Model.montoMovimiento</u></strong></h5>
-                                                                    <h5>Puerto Peñasco,Son.,a <u>@DateTime.Now </u></h5>
-                                <p>
-                                    POR EL IMPORTE DE ESTE PAGARE ME(NOS) OBLIGO(AMOS) A PAGAR INCONDICIONALMENTE A LA ORDEN 
-                                    DE CAMPANAS DEL DESIERTO,S.A. DE C.V., EN SUS OFICINAS UBICADAS EN BLVD. LAS CONCHAS Y
-                                    MARSELLAS No.432, FRACC. BRISAS DEL GOLFO,EN PUERTO PEÑASCO,SONORA,EL DIA <strong><u>@Model.fechaMovimiento.Day</u></strong> DE 
-                                    <strong><u>@Model.fechaMovimiento.Month</u></strong> DE<strong><u>@Model.fechaMovimiento.Year</u></strong> CANTIDAD DE: <strong>$ @Model.montoMovimiento</u></strong>
-                                    VALOR RECIBIDO A NUESTRA ENTERA SATISFACCION.<br />
-                                </p>
-                                <p>
-                                    EL IMPORTE DE ESTE PAGARE CAUSARA INTERESES ORDINARIOS SOBRE SALDOS INSOLUTOS A RAZON
-                                    DE <strong><u>10 %</u></strong>  ANUAL. ESTE PAGARE FORMA PARTE DE UNA SERIE NUMERADA DE 1 AL<u>__________</u>Y
-                                    TODOS ESTAN SUJETOS A LA CONDICCION DE QUE, AL NO PAGARSE CUALQUIERA DE ELLOS A SU
-                                    VENCIMIENTO,SERAN EXIGIBLES TODOS LOS QUE LE SIGAN EN NUMERO,ADEMAS DE LOS YA VENCIDOS,
-                                    DESDE LA FECHA DE VENCIMIENTO DE ESTE DOCUMENTO HASTA EL DIA DE SU LIQUIDACION,CAUSARA
-                                    INTERESES MORATORIOS A UNA TASA  MORATORIA ANUAL DE<u>______</u>VECES LA TASA ORDINARIA,
-                                    PAGADEROS EN ESTA CIUDAD  JUNTAMENTE  CON EL PRINCIPAL.
-                                </p>
-                                <p>
-                                    PARA TODO LO RELACIONADO CON LA INTERPRETACION Y CUMPLIMIENTO  DEL PRESENTE TITULO.
-                                    DECLARO(AMOS) SOMETERME(NOS) A LAS LEYES Y JURIDICCION  DE LOS TRUBUNALES COMPETENTES
-                                    QUE EXIJA EL ACREEDOR ,RENUNCIANDO A CUALQUIER OTRA LEY,COMPETENCIA Y JURISDICCION QUE
-                                    ME(NOS) PUDIERA CORRESPONDER EN VIRTUD DE MI(NTRO.) DOMICILIO(S) PRESENTE(S)O FUTURO(S).
-                                </p>
-
-                                <h6><strong> NOMBRE Y DATOS DEL DEUDOR</strong></h6>
-                                <p>Nombre: <strong><u>@(((MovimientoFinanciero)Model).Productor.nombreProductor) </u></strong></p>
-                                <p>Domicilio: <strong> <u>@(((MovimientoFinanciero)Model).Productor.domicilio)</u></strong></p>         <p>Tel.<u>________</u></p>
-                                <p>Poblacion: <strong><u>@(((MovimientoFinanciero)Model).Productor.zona)</u></strong></p>
-
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Impresion de Pagare - Campanas del Desierto</title>
+</head>
+<body>
+    <div>
+        <div id="pnlPagare">
+            <img src="/images/Pagare.jpg"Width="1275" Heigth="3507" important!/>
+            <span id="ImportePagare">
+                @Html.DisplayFor(model => model.montoMovimiento)
+            </span>
+            <span id="Dia">
+                @Html.DisplayFor(model => model.fechaMovimiento.Day)
+            </span>
+            <span id="mes">
+                @Html.DisplayFor(model => model.fechaMovimiento.Month)
+            </span>
+            <span id="año">
+                @Html.DisplayFor(model => model.fechaMovimiento.Year)
+            </span>
+            <span id="montoMovimiento">
+                @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
+            </span>
+            <span id="diafechaMovimiento">
+                @Model.fechaMovimiento.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="mesfechaMovimiento">
+                @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="añofechaMovimiento">
+                @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="NombreProductor">
+                @Html.DisplayFor(model => model.Productor.nombreProductor)
+            </span>
+            <span id="DomicilioProductor">
+                @Html.DisplayFor(model => model.Productor.domicilio)
+            </span>
+            <span id="PoblacionProductor">
+                @Html.DisplayFor(model => model.Productor.zona)
+            </span>    
                 
-                               <h6>Acepto(amos):_________________________________</h6> 
+            <span id="cheque">
+                @Html.DisplayFor(model => model.cheque)
+            </span>
+            <span id="precio">
+                @Html.DisplayFor(model => model.precioDelDolar)
+            </span>
+        </div>
+        <style>
+            #pnlPagare {
+                /*background-image: url("/images/cheque.jpg");*/
+                background-repeat: no-repeat;
+             
+            }
+                
+                #pnlPagare img {
+                    position: absolute;
+                    left: 0;
+                    z-index: 0;
+                }
 
+                #pnlPagare span {
+                    position: absolute;
+                    font-size: 18px;
+                }
 
+            span#ImportePagare {
+                left: 25.7cm;
+                top: 3.2cm;
+            }
+            span#Dia {
+                left: 27.9cm;
+                top: 6.9cm;
+            }
+            span#mes {
+               left: 6.5cm;
+                top: 7.8cm;
+            } 
+            span#año {
+                left: 9.9cm;
+                top: 7.8cm;
+            }
+            span#montoMovimiento {
+                top: 7.8cm;
+                left: 18.1cm;
+            }
+            span#diafechaMovimiento {
+                top: 4.3cm;
+                left:  20.3cm;
+            }
+            span#mesfechaMovimiento {
+                top: 4.3cm;
+                left:23.5cm;
+            }
+            span#añofechaMovimiento {
+                top: 4.3cm;
+                left: 28.8cm;
+            }
+            span#NombreProductor {
+                top:  19.5cm;
+                left: 5.1cm;
+            }
+            span#DomicilioProductor {
+                top:  20.5cm;
+                left: 5.2cm;                
+            }
+            span#PoblacionProductor {
+                 top:  21.5cm;
+                left: 5.4cm;
+            }
+             span#cheque {
+                 top:  26.7cm;
+                left: 19.6cm;
+            }
+              span#precio {
+                 top:  28.3cm;
+                left: 19.6cm;
+              
+            }
 
-                                <p>Firma(s):_________________________________</p>
+            @@page {
+                size: A4;
+                margin: 0;
+            }
 
+            @@media print {
+                html, body {
+                    width: 210mm;
+                    height: 297mm;
+                }
 
-                                <h6><strong>Concepto:</strong></h6>
-                                <p>Orden de Compra:<u>_________</u></p>       <p>CH.<strong><u>@(((PrestamoYAbonoCapital)Model).cheque)</u></strong></p>
-                                <p>Pozo:<u>___________</u></p>                <p>t.c <strong><u>@(((PrestamoYAbonoCapital)Model).precioDelDolar)</u></strong></p>
-                            </td>
-                        </tr>
-                    </table>
-              </div>
-                @Html.ActionLink("Imprimir", "GeneratePDF", null, htmlAttributes: new { @class = "btn btn-info" })
-     </body>
+                #pnlPagare img {
+                    display: none;
+                }
+            }
+        </style>
+    </div>
+</body>
 </html>

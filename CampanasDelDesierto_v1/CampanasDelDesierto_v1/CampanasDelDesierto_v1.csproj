@@ -473,9 +473,10 @@
     <Content Include="fonts\icomoon.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="images\cheque.jpg" />
+    <Content Include="images\Cheque.jpg" />
     <Content Include="images\loading.gif" />
     <Content Include="images\LogoCamp.png" />
+    <Content Include="images\Pagare.jpg" />
     <Content Include="images\pic01.jpg" />
     <Content Include="images\pic02.jpg" />
     <Content Include="images\pic03.jpg" />

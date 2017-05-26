@@ -57,18 +57,17 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(movimientoFinanciero);
         }
         
-        public ActionResult GeneratePDF()
-        {
-            if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
-            {
-                return new Rotativa.ActionAsPdf("Pagare");
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-
-        }
+       // public ActionResult GeneratePDF()
+        //{
+          //  if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+            //{
+              //  return new Rotativa.ActionAsPdf("Pagare");
+            //}
+            //else
+            //{
+              //  return RedirectToAction("Index");
+            //}
+        //}
 
 
 
