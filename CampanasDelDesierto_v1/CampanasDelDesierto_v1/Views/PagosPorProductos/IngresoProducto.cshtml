@@ -22,6 +22,11 @@
         vddDetailsTemporada.Add("pagoPorProducto", Model);
     }
     vddDetailsTemporada.Add("productorID", productor.idProductor);
+
+    RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto();
+    nuevaRecepcion.TemporadaDeCosechaID = Model.TemporadaDeCosechaID;
+    nuevaRecepcion.idProductor = Model.idProductor;
+    nuevaRecepcion.numProductor = productor.numProductor;
 }
 
 <p>
@@ -35,10 +40,16 @@
 @Html.Partial("../Productores/Partial_InfoProductor", productor)
 
 @*Tabla donde se encuentran todos los ingresos de producto reportados*@
-<h4>Acumulado de recepción de aceituna <i class="fa fa-question-circle helpIcon" 
-                                          onclick='$("#msgAcumuladoRecepcion").slideToggle();
-                                                    $(this).toggleClass("clicked")'
-                                          style="cursor:pointer"></i></h4>
+<h4>Acumulado de recepción de aceituna 
+    <i class="fa fa-question-circle helpIcon" 
+            onclick='$("#msgAcumuladoRecepcion").slideToggle();
+                    $(this).toggleClass("clicked")'
+            style="cursor:pointer">
+    </i>
+</h4>
+
+@Html.Partial("Partial_CreateRecepcionProducto", nuevaRecepcion)
+
 <div id="msgAcumuladoRecepcion" class="alert alert-info" style="display:none">
     En esta tabla se muestran los <strong>registros de recepción de aceituna</strong> que no han sido asociados a un pago.
     <ul>

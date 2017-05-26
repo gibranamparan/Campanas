@@ -13,10 +13,10 @@ namespace CampanasDelDesierto_v1.Models
 {
     public class RecepcionDeProducto
     {
-        public enum ExcelCols{
-            NUM_RECIBO=0, DIA = 4, SEMANA = 5,
-            NOMBRE_PRODUCTOR =6,PROD_NOMBRE=8,
-            TONS_MANZANA=10, TONS_OBLISSA=11, TONS_MISION=12,
+        public enum ExcelCols {
+            NUM_RECIBO = 0, DIA = 4, SEMANA = 5,
+            NOMBRE_PRODUCTOR = 6, PROD_NOMBRE = 8,
+            TONS_MANZANA = 10, TONS_OBLISSA = 11, TONS_MISION = 12,
             ROW_COSTOS = 2, PRECIO_PROD1 = 12, PRECIO_PROD2 = 13,
             PRECIO_PROD3 = 14, PRECIO_PROD_OTRO = 15,
         }
@@ -33,19 +33,22 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Nombre de Productor")]
         public string nombreProductor { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "(ton.)")]
-        [DisplayFormat(DataFormatString ="{0:0.000}")]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (ton.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd1 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + "(ton.)")]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd2 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + "(ton.)")]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd3 { get; set; }
 
         [DisplayName("Fecha")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "yyyy-MM-dd",
+            ApplyFormatInEditMode = true)]
         public DateTime fecha { get; set; }
 
         [DisplayName("Semana")]
