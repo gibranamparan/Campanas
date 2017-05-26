@@ -91,17 +91,19 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: Empleados/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id, int? idEmpleado)
         {
-            if (id == null)
+            if (id == null|| idEmpleado==null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Empleado empleado = await db.Empleados.FindAsync(id);
-            if (empleado == null)
+            Empleado empleado = await db.Empleados.FindAsync(idEmpleado);
+            Departamento Departamento = db.Departamentos.Find(id);
+            if (Departamento == null || empleado==null)
             {
                 return HttpNotFound();
             }
+            empleado = prepararVistaCrear(Departamento);                                  
             ViewBag.departamentoID = new SelectList(db.Departamentos, "departamentoID", "nombreDepartamento", empleado.departamentoID);
             return View(empleado);
         }

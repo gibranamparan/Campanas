@@ -5,55 +5,42 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Empleado</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Departamento.nombreDepartamento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.apellidoPaterno)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.apellidoPaterno)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.apellidoMaterno)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.apellidoMaterno)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idEmpleado }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.idEmpleado })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>
+    <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
+    </a>
+
+</p>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Empleado:</strong> @(Model.nombre+" "+Model.apellidoPaterno+" "+Model.apellidoMaterno)</h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-3">
+                <dt>@Html.DisplayNameFor(model => model.Departamento.nombreDepartamento):</dt>
+                <dd>@Html.DisplayFor(model => model.Departamento.nombreDepartamento) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.Departamento.Sucursal.nombreSucursal):</dt>
+                <dd> @Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal) </dd>
+            </dl>           
+        </div>
+    </div>
+</div>
+
+
+<h2>Prestamos</h2>
+<p>
+    <a href="@Url.Action("Create", "PrestamosActivos", new { idEmpleado = Model.idEmpleado })">
+        <i class="glyphicon glyphicon-plus"></i> Crear Prestamo
+    </a>    
+
 </p>
 
-<legend>Prestamos</legend>
-
-
-<table class="table datablejs">
+<table class="table datatablejs">
     <thead>
         <tr>
             <th>Inventario</th>
@@ -61,8 +48,7 @@
             <th>Fecha de Prestamo</th>
             <th>Fecha de Entrega</th>
             <th>Fecha de Devolucion</th>
-            <th></th>
-            <th></th>
+            <th></th>            
         </tr>
     </thead>
     <tbody>
@@ -74,15 +60,13 @@
                 <td>@Prestamo.fechaPrestamoActivo</td>
                 <td>@Prestamo.fechaEntregaActivo</td>
                 <td>@Prestamo.fechaDevolucion</td>
-                <td>@Html.ActionLink("Eliminar", "Delete", "Departamentos", new { id = Prestamo.idPrestamoActivo }, null)  </td>
-                <td>@Html.ActionLink("Detalles", "Details", "Departamentos", new { id = Prestamo.idPrestamoActivo }, null)  </td>
+                <td>
+                    <a href="@Url.Action("Details", "PrestamosActivos", new { id = Prestamo.idPrestamoActivo})">
+                        <i class="glyphicon glyphicon-eye-open"></i> Detalles Prestamos 
+                    </a> <br />
+
+                </td>                
             </tr>
         }
     </tbody>
-
-
 </table>
-
-<div>
-    @Html.ActionLink("Crear Prestamo", "Create", "PrestamosActivos", new { idEmpleado = Model.idEmpleado }, new { @class = "btn btn-primary" })
-</div>

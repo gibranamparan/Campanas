@@ -43,18 +43,25 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (id == null)
             {
-                ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+            Inventario inventario = db.Inventarios.Find(id);
+            if (inventario == null)
             {
-                Inventario Inventario = db.Inventarios.Find(id);
-                ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario",Inventario.inventarioID);
+                return HttpNotFound();
             }
-                
-
-            return View();
+            Activo ac = prepararVistaCrear(inventario);
+            return View(ac);                 
         }
-
+        private Activo prepararVistaCrear(Inventario inventario)
+        {
+            ViewBag.inventario = inventario;
+            ViewBag.inventarioID = new SelectList(db.Inventarios.ToList(), "inventarioID", "nombreInventario", null);
+            Activo ac = new Activo();
+            ac.inventarioID = inventario.inventarioID;            
+            ac.inventario = inventario;            
+            return ac;
+        }
         // POST: Activos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -66,7 +73,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 db.Activos.Add(activo);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details/" + activo.inventarioID, "Inventarios");
             }
 
             ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
@@ -129,7 +136,7 @@ namespace CampanasDelDesierto_v1.Controllers
             Activo activo = await db.Activos.FindAsync(id);
             db.Activos.Remove(activo);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details/" + activo.inventarioID, "Inventarios");
         }
 
         protected override void Dispose(bool disposing)
