@@ -25,7 +25,7 @@
                 @Html.DisplayFor(model => model.fechaMovimiento.Day)
             </span>
             <span id="mes">
-                @Html.DisplayFor(model => model.fechaMovimiento.Month)
+                @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
             </span>
             <span id="año">
                 @Html.DisplayFor(model => model.fechaMovimiento.Year)
@@ -43,11 +43,14 @@
                 @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
             </span>
             <span id="NombreProductor">
-                @Html.DisplayFor(model => model.Productor.nombreProductor)
+                @Html.DisplayFor(model => model.Productor.nombreCheque)
             </span>
             <span id="DomicilioProductor">
                 @Html.DisplayFor(model => model.Productor.domicilio)
             </span>
+            @*<span id="TelefonoProductor">
+                @Html.DisplayFor(model => model.Productor.telefono)
+            </span>*@
             <span id="PoblacionProductor">
                 @Html.DisplayFor(model => model.Productor.zona)
             </span>    
@@ -86,12 +89,12 @@
                 top: 6.9cm;
             }
             span#mes {
-               left: 6.5cm;
+               left: 5.5cm;
                 top: 7.8cm;
             } 
             span#año {
-                left: 9.9cm;
                 top: 7.8cm;
+                left: 11.0cm;       
             }
             span#montoMovimiento {
                 top: 7.8cm;
@@ -99,7 +102,7 @@
             }
             span#diafechaMovimiento {
                 top: 4.3cm;
-                left:  20.3cm;
+                left:  20.0cm;
             }
             span#mesfechaMovimiento {
                 top: 4.3cm;
@@ -107,7 +110,7 @@
             }
             span#añofechaMovimiento {
                 top: 4.3cm;
-                left: 28.8cm;
+                left: 28.7cm;
             }
             span#NombreProductor {
                 top:  19.5cm;
