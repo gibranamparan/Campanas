@@ -1,0 +1,124 @@
+﻿@model CampanasDelDesierto_v1.Models.RecepcionDeProducto
+@{
+    string funcionRespuesta = "";
+    if (ViewData["funcionRespuesta"] != null)
+    {
+        funcionRespuesta = (string)ViewData["funcionRespuesta"];
+    }
+}
+@using (Html.BeginForm("Create","RecepcionDeProductos", FormMethod.Post, new { @class="row" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.idProductor)
+    @Html.HiddenFor(model => model.movimientoID)
+    @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.numeroRecibo, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.numeroRecibo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.numeroRecibo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.fecha, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.fecha, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.fecha, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.cantidadTonsProd1, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.cantidadTonsProd1, new
+           {
+               htmlAttributes = new
+               {
+                   @class = "form-control",
+                   data_mask = "###0.000",
+                   data_mask_reverse = "true"
+               }
+           })
+                @Html.ValidationMessageFor(model => model.cantidadTonsProd1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.cantidadTonsProd2, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.cantidadTonsProd2, new
+           {
+               htmlAttributes = new
+               {
+                   @class = "form-control",
+                   data_mask = "###0.000",
+                   data_mask_reverse = "true"
+               }
+           })
+                @Html.ValidationMessageFor(model => model.cantidadTonsProd2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.cantidadTonsProd3, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.cantidadTonsProd3, new
+           {
+               htmlAttributes = new
+               {
+                   @class = "form-control",
+                   data_mask = "###0.000",
+                   data_mask_reverse = "true"
+               }
+           })
+                @Html.ValidationMessageFor(model => model.cantidadTonsProd3, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <button class="btn btn-success" onclick="crearNuevaRecepcion(this)">Registrar</button>
+        </div>
+    </div>
+}
+
+<script>
+    function crearNuevaRecepcion(btnRegistrar) {
+        var forma = $(btnRegistrar).parent("form");
+
+        //Se toma la informacion de la forma
+        //TODO: Tomar todos los datos
+        //TODO: Crear el AJAX Function para hacer la llamada
+        //TODO: Probar llamada
+        //TODO: Reflejar el resultado en la tabla
+        var token = $("input[name=__RequestVerificationToken]").val()
+        var nuevaRecepcion = {
+            numeroRecibo: forma.find("numeroRecibo").val(), numProductor: forma.find("numProductor").val(),
+            cantidadTonsProd1: forma.find("cantidadTonsProd1").val(), cantidadTonsProd2: forma.find("cantidadTonsProd2").val(),
+            cantidadTonsProd3: forma.find("cantidadTonsProd3").val(), fecha: forma.find("fecha").val(),
+            semana: forma.find("semana").val(), TemporadaDeCosechaID: forma.find("TemporadaDeCosechaID").val(),
+            idProductor: forma.find("idProductor").val(),
+        }
+
+        //Se envia al servidor
+        jQuery.postJSON("/RecepcionDeProductos/Create",nuevaRecepcion,"JSON",
+        function (res) {
+            @(funcionRespuesta)(res);
+        },
+        function (res) {
+            console.log(res);
+        }, null, token)
+
+        //Se procesa la respuesta desde la vista principal
+    }
+</script>

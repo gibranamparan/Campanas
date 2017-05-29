@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace CampanasDelDesierto_v1.HerramientasGenerales
 {
     public class VMConfirmModalAttributes
     {
-        public string controller, action, javascriptFunction, primaryMessage, modalTitle, modalID;
+        public string controller, action, javascriptFunction, primaryMessage, modalTitle, modalID, partialViewURL;
         public dynamic routeVals, confirmButtonHtmlAttributes;
+        public object modelForPartial;
+        public ViewDataDictionary datosDeVista;
         public Style modalStyle;
+        public Size size;
         public CallType callType = CallType.NONE;
 
         public class Style
@@ -44,9 +48,35 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
                 return res;
             }
         }
+        public class Size
+        {
+            private const string LARGE = "modal-lg";
+            private const string SMALL = "modal-sm";
+
+            public enum ModalSize
+            { LARGE, SMALL }
+
+            public ModalSize size { get; set; }
+
+            public Size() { }
+            public Size(ModalSize size)
+            {
+                this.size = size;
+            }
+
+            public override string ToString()
+            {
+                string res = "";
+                if (this.size == ModalSize.LARGE)
+                    res = LARGE;
+                if (this.size == ModalSize.SMALL)
+                    res = SMALL;
+                return res;
+            }
+        }
         public enum CallType
         {
-            NONE, JAVASCRIPT, POSTBACK
+            NONE, JAVASCRIPT, POSTBACK, PARTIAL_VIEW
         }
     }
 }

@@ -24,10 +24,11 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int recepcionID { get; set; }
 
-        [DisplayName("# Recibo")]
+        [DisplayName("Num. Recibo")]
+        [Required]
         public int numeroRecibo { get; set; }
 
-        [DisplayName("# Productor")]
+        [DisplayName("Num. Productor")]
         public string numProductor { get; set; }
 
         [DisplayName("Nombre de Productor")]
@@ -45,6 +46,7 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd3 { get; set; }
 
+        [Required]
         [DisplayName("Fecha")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "yyyy-MM-dd",
@@ -166,6 +168,45 @@ namespace CampanasDelDesierto_v1.Models
                 }
 
                 return tc;
+            }
+        }
+
+        public class VMRecepcionProducto{
+            public int recepcionID { get; set; }
+
+            [DisplayName("# Recibo")]
+            public int numeroRecibo { get; set; }
+            
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (ton.)")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            public double cantidadTonsProd1 { get; set; }
+
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (ton.)")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            public double cantidadTonsProd2 { get; set; }
+
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (ton.)")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            public double cantidadTonsProd3 { get; set; }
+
+            [DisplayName("Fecha")]
+            [DataType(DataType.Date)]
+            [DisplayFormat(DataFormatString = "yyyy-MM-dd",
+                ApplyFormatInEditMode = true)]
+            public DateTime fecha { get; set; }
+
+            [DisplayName("Semana")]
+            public int semana { get; set; }
+
+            public VMRecepcionProducto() { }
+            public VMRecepcionProducto(RecepcionDeProducto rdp)
+            {
+                this.numeroRecibo = rdp.numeroRecibo;
+                this.cantidadTonsProd1 = rdp.cantidadTonsProd1;
+                this.cantidadTonsProd2 = rdp.cantidadTonsProd2;
+                this.cantidadTonsProd3 = rdp.cantidadTonsProd3;
+                this.fecha = rdp.fecha;
+                this.semana = rdp.semana;
             }
         }
     }

@@ -1,5 +1,6 @@
-﻿@using CampanasDelDesierto_v1.Models
-@model CampanasDelDesierto_v1.Models.PagoPorProducto
+﻿@model CampanasDelDesierto_v1.Models.PagoPorProducto
+@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.HerramientasGenerales
 
 @{
     bool editMode = Model.idMovimiento > 0;
@@ -7,13 +8,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Productor productor = ViewBag.productor == null? Model.Productor: ViewBag.productor;
-
     TemporadaDeCosecha temporada = Model.temporadaDeCosecha;
     List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto;
 
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
 
+    /*Datos para partial de detalles de temporada*/
     ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddDetailsTemporada.Add("editable", true);
     vddDetailsTemporada.Add("funcionAlReestablecer", "recalcularMontos");
@@ -23,10 +24,25 @@
     }
     vddDetailsTemporada.Add("productorID", productor.idProductor);
 
-    RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto();
-    nuevaRecepcion.TemporadaDeCosechaID = Model.TemporadaDeCosechaID;
-    nuevaRecepcion.idProductor = Model.idProductor;
-    nuevaRecepcion.numProductor = productor.numProductor;
+    /*Modelo para la forma de creacion de nueva recepcion*/
+    RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
+        TemporadaDeCosechaID = temporada.TemporadaDeCosechaID, numProductor = productor.numProductor };
+    ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
+    vddPartialCreacion.Add("funcionRespuesta", "procesarRespuestaCreacion");
+    VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
+    {
+        modalTitle = "Nuevo Registro de Recepcion de Producto",
+        action = "create",
+        controller = "RecepcionDeProductos",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalID = "mdlCreateRecepcion",
+        primaryMessage = "Rellena la forma para crear ingresar manualmente un nuevo registro de recepcion de producto",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.INFO),
+        size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.LARGE),
+        partialViewURL = "../RecepcionDeProductos/Partial_CreateRecepcionProducto",
+        modelForPartial = nuevaRecepcion,
+        datosDeVista = vddPartialCreacion
+    };
 }
 
 <p>
@@ -47,9 +63,6 @@
             style="cursor:pointer">
     </i>
 </h4>
-
-@Html.Partial("Partial_CreateRecepcionProducto", nuevaRecepcion)
-
 <div id="msgAcumuladoRecepcion" class="alert alert-info" style="display:none">
     En esta tabla se muestran los <strong>registros de recepción de aceituna</strong> que no han sido asociados a un pago.
     <ul>
@@ -68,6 +81,14 @@
         </li>
     </ul>
 </div>
+
+<div>
+    <button class="btn btn-info" data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
+    <button class="btn btn-info">Editar</button>
+    <button class="btn btn-danger">Eliminar</button>
+</div>
+
+@Html.Partial("Partial_ConfirmationModal", modalOptsnuevaRecepcion)
 
 @Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
 <br />
@@ -89,6 +110,7 @@
                 @Html.HiddenFor(model => model.idProductor)
                 @Html.HiddenFor(model => model.TemporadaDeCosechaID)
                 @Html.Hidden("selectedIngresos")
+
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-6">
                     @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -222,8 +244,8 @@
                         <button class="btn btn-success" id="btnRegistrar" @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>
                             @(editMode?"Guardar" : "Registrar")
                         </button>
-                        <button class="btn btn-default" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
-                        <button class="btn btn-default" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
+                        <button class="btn btn-info" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
+                        <button class="btn btn-info" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
                     </div>
                 </div>
             </div>
@@ -231,30 +253,28 @@
     </div>
 }
 @section Scripts{
-@Scripts.Render("~/bundles/dataTables.select")
-@Styles.Render("~/Content/dataTables.select")
-
 <script>
     var selectorInputsPrecios = "#formCostosProducto input#precio";
     var selectedIngresosIDs = new Array();
 
     var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5})
-    var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable( {
-        columnDefs: [ {
+    var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable({
+        columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
-            targets:   0
+            targets: 0
         }, {
             targets: COLS_ENUM.ID,
             visible: false,
             searchable: false
         }],
         select: {
-            style:    'os',
+            style: 'os',
             selector: 'td:first-child'
         },
-        order: [[ 1, 'asc' ]]
-    } )
+        order: [[1, 'asc']]
+    });
+
     tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
         recalcularMontos();
     })
@@ -309,10 +329,9 @@
 
 
 @if (editMode)
-{
-    <script>
-        $('#tblIngresoAcumulado').DataTable().table().rows('[default-selected]').select();
-    </script>
-}
-
+    {
+        <script>
+            $('#tblIngresoAcumulado').DataTable().table().rows('[default-selected]').select();
+        </script>
+    }
 }

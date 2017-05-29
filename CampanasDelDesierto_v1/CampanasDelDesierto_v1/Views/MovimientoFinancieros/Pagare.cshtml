@@ -11,142 +11,181 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Impresion de Pagare - Campanas del Desierto</title>
 </head>
 <body>
-    <div>
-        <div id="pnlPagare">
-            <img src="/images/Pagare.jpg"Width="1275" Heigth="3507" important!/>
-            <span id="ImportePagare">
-                @Html.DisplayFor(model => model.montoMovimiento)
-            </span>
-            <span id="Dia">
-                @Html.DisplayFor(model => model.fechaMovimiento.Day)
-            </span>
-            <span id="mes">
-                @Html.DisplayFor(model => model.fechaMovimiento.Month)
-            </span>
-            <span id="año">
-                @Html.DisplayFor(model => model.fechaMovimiento.Year)
-            </span>
-            <span id="montoMovimiento">
-                @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
-            </span>
-            <span id="diafechaMovimiento">
-                @Model.fechaMovimiento.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="mesfechaMovimiento">
-                @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="añofechaMovimiento">
-                @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="NombreProductor">
-                @Html.DisplayFor(model => model.Productor.nombreProductor)
-            </span>
-            <span id="DomicilioProductor">
-                @Html.DisplayFor(model => model.Productor.domicilio)
-            </span>
-            <span id="PoblacionProductor">
-                @Html.DisplayFor(model => model.Productor.zona)
-            </span>    
-                
-            <span id="cheque">
-                @Html.DisplayFor(model => model.cheque)
-            </span>
-            <span id="precio">
-                @Html.DisplayFor(model => model.precioDelDolar)
-            </span>
-        </div>
-        <style>
-            #pnlPagare {
-                /*background-image: url("/images/cheque.jpg");*/
-                background-repeat: no-repeat;
-             
-            }
-                
-                #pnlPagare img {
-                    position: absolute;
-                    left: 0;
-                    z-index: 0;
-                }
+    <div id="pnlPagare" style="width:100%">
+        <img src="/images/Pagare.jpg" />
+        <span id="ImportePagare">
+            @Html.DisplayFor(model => model.montoMovimiento)
+        </span>
+        <span id="Dia">
+            @Html.DisplayFor(model => model.fechaMovimiento.Day)
+        </span>
+        <span id="mes">
+            @Html.DisplayFor(model => model.fechaMovimiento.Month)
+        </span>
+        <span id="año">
+            @Html.DisplayFor(model => model.fechaMovimiento.Year)
+        </span>
+        <span id="montoMovimiento">
+            @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
+        </span>
+        <span id="diafechaMovimiento">
+            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="mesfechaMovimiento">
+            @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="añofechaMovimiento">
+            @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="NombreProductor">
+            @Html.DisplayFor(model => model.Productor.nombreProductor)
+        </span>
+        <span id="DomicilioProductor">
+            @Html.DisplayFor(model => model.Productor.domicilio)
+        </span>
+        <span id="PoblacionProductor">
+            @Html.DisplayFor(model => model.Productor.zona)
+        </span>
 
-                #pnlPagare span {
-                    position: absolute;
-                    font-size: 18px;
-                }
+        <span id="cheque">
+            @Html.DisplayFor(model => model.cheque)
+        </span>
+        <span id="precio">
+            @Html.DisplayFor(model => model.precioDelDolar)
+        </span>
+    </div>
+    <div id="controls" class="pull-right" style="position:absolute; right: 0">
+        <label for="px">PX:</label><input id="px" />
+        <label for="py">PY:</label><input id="py" />
+    </div>
+    <style>
+        #pnlPagare {
+            background-repeat: no-repeat;
+            padding-top: 4mm;
+        }
+                
+        #pnlPagare img {
+            position: absolute;
+            z-index: 0;
+            width: 216mm;
+            height: 279mm;
+        }
 
-            span#ImportePagare {
-                left: 25.7cm;
-                top: 3.2cm;
+        #pnlPagare span {
+            position: absolute;
+            font-size: 18px;
+        }
+
+        span#ImportePagare {
+            left: 156mm;
+            top: 19mm;
+        }
+
+        span#diafechaMovimiento {
+            top: 26mm;
+            left: 129mm;
+        }
+
+        span#mesfechaMovimiento {
+            top: 26mm;
+            left: 146mm;
+        }
+
+        span#añofechaMovimiento {
+            top: 26mm;
+            left: 184mm;
+        }
+
+        span#Dia {
+            left: 181mm;
+            top: 43mm;
+        }
+
+        span#mes {
+            left: 0;
+            top: 20mm;
+        } 
+
+        span#año {
+            left: 0mm;
+            top: 30mm;
+        }
+
+        span#montoMovimiento {
+            left: 0;
+            top: 40mm;
+        }
+
+        span#NombreProductor {
+            left:0 ;
+            top:  50mm;
+        }
+        span#DomicilioProductor { 
+            left:  0; 
+            top: 60mm;              
+        }
+
+        span#PoblacionProductor {
+            left: 0;
+            top:  80mm;
+        }
+
+        span#cheque {
+            left: 0;
+            top:  70mm;
+        }
+
+        span#precio {
+            left: 0;
+            top:  60mm;
+        }
+
+        html, body {
+            width: 216mm;
+            height: 279mm;
+            margin: 0;
+            padding: 0;
+        }
+
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        @@media print {
+
+            #pnlPagare img {
+                /*display: none;*/
             }
-            span#Dia {
-                left: 27.9cm;
-                top: 6.9cm;
-            }
-            span#mes {
-               left: 6.5cm;
-                top: 7.8cm;
-            } 
-            span#año {
-                left: 9.9cm;
-                top: 7.8cm;
-            }
-            span#montoMovimiento {
-                top: 7.8cm;
-                left: 18.1cm;
-            }
-            span#diafechaMovimiento {
-                top: 4.3cm;
-                left:  20.3cm;
-            }
-            span#mesfechaMovimiento {
-                top: 4.3cm;
-                left:23.5cm;
-            }
-            span#añofechaMovimiento {
-                top: 4.3cm;
-                left: 28.8cm;
-            }
-            span#NombreProductor {
-                top:  19.5cm;
-                left: 5.1cm;
-            }
-            span#DomicilioProductor {
-                top:  20.5cm;
-                left: 5.2cm;                
-            }
-            span#PoblacionProductor {
-                 top:  21.5cm;
-                left: 5.4cm;
-            }
-             span#cheque {
-                 top:  26.7cm;
-                left: 19.6cm;
-            }
-              span#precio {
-                 top:  28.3cm;
-                left: 19.6cm;
-              
+
+            #controls{
+                display: none;
             }
 
             @@page {
-                size: A4;
+                size: letter;
                 margin: 0;
+                padding: 0;
             }
+        }
 
-            @@media print {
-                html, body {
-                    width: 210mm;
-                    height: 297mm;
-                }
+        @@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }
+    </style>
 
-                #pnlPagare img {
-                    display: none;
-                }
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $("#pnlPagare").draggable()
+        $("#pnlPagare").draggable({
+            drag: function (event, ui) {
+                $("#px").val(ui.position.left);
+                $("#py").val(ui.position.top);
             }
-        </style>
-    </div>
+        });
+
+    </script>
 </body>
 </html>
