@@ -434,6 +434,10 @@
     <Compile Include="Migrations\201705290223236_requiered_Fecha_NumRecibo_Recepciones.Designer.cs">
       <DependentUpon>201705290223236_requiered_Fecha_NumRecibo_Recepciones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.cs" />
+    <Compile Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.Designer.cs">
+      <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activo.cs" />
@@ -886,6 +890,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705290223236_requiered_Fecha_NumRecibo_Recepciones.resx">
       <DependentUpon>201705290223236_requiered_Fecha_NumRecibo_Recepciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.resx">
+      <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

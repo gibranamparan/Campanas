@@ -7,6 +7,7 @@ using CampanasDelDesierto_v1.Models;
 using System.Web.Mvc;
 using OfficeOpenXml;
 using CampanasDelDesierto_v1.HerramientasGenerales;
+using System.ComponentModel;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -21,7 +22,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Nombre Productor ")]
         public string nombreProductor { get; set; }
 
-        [Display(Name ="Domicilio")]
+        [Display(Name = "Domicilio")]
         public string domicilio { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
@@ -33,11 +34,17 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "RFC ")]
         public string RFC { get; set; }
 
-        [Display(Name ="Zona")]
+        [Display(Name = "Zona")]
         public string zona { get; set; }
+
+        [Display(Name = "Población")]
+        public string poblacion { get; set; }
 
         [Display(Name ="Nombre del Cheque")]
         public string nombreCheque { get; set; }
+
+        [DisplayName("Teléfono")]
+        public string telefono { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]

@@ -11,82 +11,98 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Impresion de Cheque - Campanas del Desierto</title>
 </head>
 <body>
-    <div>
-
-        <div id="pnlCheque">
-            <img src="~/images/Cheque.jpg"Width="1275" Heigth="3507" important! />
-            <span id="nombreCheque">
-                @Html.DisplayFor(model => model.Productor.nombreCheque)
-            </span>
-            <span id="montoMovimiento">
-                @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
-            </span>
-            <span id="fechaMovimiento">
-                @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy",CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="cheque">
-                @Html.DisplayFor(model => model.cheque)
-            </span>
-        </div>
-
-        <style>
-            #pnlCheque {
-                /*background-image: url("/images/cheque.jpg");*/
-                background-repeat: no-repeat;
-                height: 500px;
-            }
-
-            #pnlCheque img {
-                position: absolute;
-                left: 0;
-                z-index: 0;
-            }
-
-            #pnlCheque span {
-                position: absolute;
-                font-size: 18px;
-            }
-
-            span#nombreCheque {
-                left: 3.7cm;
-                top: 3.8cm;
-            }
-
-            span#montoMovimiento {
-                top: 4.8cm;
-                left: 4.1cm;
-            }
-
-            span#fechaMovimiento {
-                top: 6.6cm;
-                left: 2.5cm;
-            }
-
-            span#cheque {
-                left: 15cm;
-                top: .8cm;
-            }
-
-            @@page {
-                size: A4;
-                margin: 0;
-            }
-
-            @@media print {
-                html, body {
-                    width: 210mm;
-                    height: 297mm;
-                }
-                #pnlCheque img {
-                    display:none;
-                }
-            }
-        </style>
+    <div id="pnlCheque">
+        <img src="~/images/Cheque.jpg"Width="1275" Heigth="3507" important! />
+        <span id="nombreCheque">
+            @Html.DisplayFor(model => model.Productor.nombreCheque)
+        </span>
+        <span id="montoMovimiento">
+            @(Model.montoMovimiento.ToString("C"))
+        </span>
+        <span id="montoLetra">
+            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento))
+        </span>
+        <span id="fechaMovimiento">
+            @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy",CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="cheque">
+            @Html.DisplayFor(model => model.cheque)
+        </span>
     </div>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        #pnlCheque span {
+            position: absolute;
+            font-size: 18px;
+        }
+
+        #pnlCheque img {
+            position: absolute;
+            left: 0;
+            z-index: 0;
+        }
+
+        span#nombreCheque {
+            left: 18mm;
+            top: 36mm;
+        }
+
+        span#montoMovimiento {
+            top: 35mm;
+            left: 161mm;
+        }
+
+        span#montoLetra{
+            top: 45mm;
+            left: 17mm;
+        }
+
+        span#fechaMovimiento {
+            top: 17mm;
+            left: 152mm;
+        }
+
+        span#cheque {
+            left: 165mm;
+            top: 5mm;
+        }
+
+        #pnlCheque {
+            position: relative;
+            left: 1mm;
+            top: 2mm;
+            width: 8.5in;
+            height: 11in;
+        }
+
+        #pnlCheque img {
+            position: absolute;
+            z-index: 0;
+            width: 8.31in; /*Factor: */
+            height: 11in;/*Factor:*/
+        }
+
+        @@page {
+            size: letter;
+            margin: 0;
+            padding: 0;
+        }
+
+        @@media print {
+            #pnlCheque img {
+                display:none;
+            }
+        }
+    </style>
 </body>
 </html>
 

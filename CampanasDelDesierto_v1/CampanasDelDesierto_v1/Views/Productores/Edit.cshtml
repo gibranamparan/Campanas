@@ -8,10 +8,10 @@
 
 <div>
     <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
+        <i class="glyphicon glyphicon-arrow-left"></i> Volver a la lista de productores
     </a> | 
     <a href="@Url.Action("Details",new { id = Model.idProductor})">
-        <i class="fa fa-money"></i>Movimientos financieros
+        <i class="fa fa-money"></i> Movimientos financieros
     </a>
 </div>
 <h2></h2>
@@ -67,6 +67,25 @@
                     </div>
 
                 </div>
+                <div class="row">
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.telefono, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.telefono, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.poblacion, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.poblacion, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.poblacion, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="form-group col-md-6">
@@ -80,7 +99,7 @@
                         @Html.LabelFor(model => model.zona, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownListFor(model => model.zona, Productor.getZonasSelectList(),
-                           new { htmlAttributes = new { @class = "form-control" } })
+                        new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.zona, "", new { @class = "text-danger" })
                         </div>
                     </div>

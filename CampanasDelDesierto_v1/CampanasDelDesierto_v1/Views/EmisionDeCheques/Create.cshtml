@@ -4,19 +4,29 @@
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool editMode = Model.idMovimiento>0;
+
     EmisionDeCheque.VMRetenciones retenciones = new EmisionDeCheque.VMRetenciones();
 
-    Productor productor = ViewBag.productor;
-    decimal balanceActual = ViewBag.balanceActual;
-    Model.montoMovimiento = balanceActual;
+    Productor productor;  decimal balanceActual;
+    if (!editMode) {
+        productor = ViewBag.productor;
+        balanceActual = ViewBag.balanceActual;
+        Model.montoMovimiento = balanceActual;
 
-    /*Just for test*/
-    Random random = new Random();
-    // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
+        /*Just for test*/
+        Random random = new Random();
+        // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
 
-    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    Model.cheque = new string(Enumerable.Repeat(chars, 5)
-      .Select(s => s[random.Next(s.Length)]).ToArray());
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Model.cheque = new string(Enumerable.Repeat(chars, 5)
+          .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+    else
+    {
+        productor = Model.Productor;
+    }
+
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
@@ -27,7 +37,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title">Emision de Cheque</h3>
+        <h2 class="panel-title"><strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong> <span class="panel-title">Emision de Cheque</span></h2>
     </div>
     <div class="panel-body">
         <div class="alert alert-info col-md-12">
@@ -36,6 +46,7 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(model=>model.idMovimiento)
             @Html.HiddenFor(model => model.idProductor)
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
 
@@ -73,25 +84,27 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-4">
-                    @Html.LabelFor(model => retenciones.garantiaLimpieza, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => retenciones.garantiaLimpieza, new
-                       {
-                           htmlAttributes = new
+                @if (!editMode) { 
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => retenciones.garantiaLimpieza, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => retenciones.garantiaLimpieza, new
                            {
-                               @class = "form-control",
-                               data_mask = "###0.00",
-                               data_mask_reverse = "true",
-                               onkeyup = "recalcularMonto(this)"
-                           }
-                       })
-                        @Html.ValidationMessageFor(model => retenciones.garantiaLimpieza, "", new { @class = "text-danger" })
+                               htmlAttributes = new
+                               {
+                                   @class = "form-control",
+                                   data_mask = "###0.00",
+                                   data_mask_reverse = "true",
+                                   onkeyup = "recalcularMonto(this)"
+                               }
+                           })
+                            @Html.ValidationMessageFor(model => retenciones.garantiaLimpieza, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
+                }
                 <div class="form-group">
                     <div class="col-md-12">
-                        <button class="btn btn-success">Crear</button>
+                        <button class="btn btn-success">@(editMode?"Guardar": "Crear")</button>
                     </div>
                 </div>
             </div>

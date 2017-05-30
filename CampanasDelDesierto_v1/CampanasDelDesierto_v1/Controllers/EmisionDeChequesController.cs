@@ -53,7 +53,6 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.productor = productor;
             EmisionDeCheque mov = prepararVistaCrear(productor);
             mov.introducirMovimientoEnPeriodo(temporada);
 
@@ -74,8 +73,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,balance,fechaMovimiento,idProductor,"+
-            "TemporadaDeCosechaID,cheque,abonoAnticipo,garantiaLimpieza,retenciones.abonoAnticipo,retenciones.garantiaLimpieza")]
+        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza")]
             EmisionDeCheque emisionDeCheque, EmisionDeCheque.VMRetenciones retenciones)
         {
             if (ModelState.IsValid)
@@ -103,14 +102,12 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 db.EmisionDeCheques.Add(emisionDeCheque);
                 numReg = db.SaveChanges();
-                if (numReg > 0)
-                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
-
 
                 if (numReg > 0)
                 {
-                    return RedirectToAction("Details", "Productores", new
-                    { id = emisionDeCheque.idProductor, temporada = emisionDeCheque.TemporadaDeCosechaID });
+                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
+                    return RedirectToAction("Details", "Productores", new { id = emisionDeCheque.idProductor,
+                        temporada = emisionDeCheque.TemporadaDeCosechaID });
                 }
             }
 
@@ -144,9 +141,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", emisionDeCheque.idProductor);
-            ViewBag.TemporadaDeCosechaID = new SelectList(db.TemporadaDeCosechas, "TemporadaDeCosechaID", "TemporadaDeCosechaID", emisionDeCheque.TemporadaDeCosechaID);
-            return View(emisionDeCheque);
+            
+            return View("Create",emisionDeCheque);
         }
 
         // POST: EmisionDeCheques/Edit/5
@@ -154,16 +150,28 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,balance,fechaMovimiento,idProductor,TemporadaDeCosechaID,cheque,abonoAnticipo,garantiaLimpieza")] EmisionDeCheque emisionDeCheque)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,"+
+            "idProductor,TemporadaDeCosechaID,cheque")]
+            EmisionDeCheque emisionDeCheque)
         {
+            //Ajuste de movimiento para entrar dentro de la lista de balances
+            emisionDeCheque.ajustarMovimiento();
+            int numReg = 0;
             if (ModelState.IsValid)
             {
                 db.Entry(emisionDeCheque).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                numReg = db.SaveChanges();
+                if (numReg > 0)
+                {
+                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
+                    return RedirectToAction("Details", "Productores", new
+                    {
+                        id = emisionDeCheque.idProductor,
+                        temporada = emisionDeCheque.TemporadaDeCosechaID
+                    });
+                }
             }
-            ViewBag.idProductor = new SelectList(db.Productores, "idProductor", "nombreProductor", emisionDeCheque.idProductor);
-            ViewBag.TemporadaDeCosechaID = new SelectList(db.TemporadaDeCosechas, "TemporadaDeCosechaID", "TemporadaDeCosechaID", emisionDeCheque.TemporadaDeCosechaID);
+
             return View(emisionDeCheque);
         }
 

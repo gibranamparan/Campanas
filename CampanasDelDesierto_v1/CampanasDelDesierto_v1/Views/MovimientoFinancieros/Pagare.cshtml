@@ -5,6 +5,7 @@
 
 @{
     Layout = null;
+    Model.montoMovimiento *= -1;
 }
 
 <!DOCTYPE html>
@@ -15,62 +16,64 @@
     <title>Impresion de Pagare - Campanas del Desierto</title>
 </head>
 <body>
-    <div>
-        <div id="pnlPagare">
-            <img src="/images/Pagare.jpg"Width="1275" Heigth="3507" important!/>
-            <span id="ImportePagare">
-                @Html.DisplayFor(model => model.montoMovimiento)
-            </span>
-            <span id="Dia">
-                @Html.DisplayFor(model => model.fechaMovimiento.Day)
-            </span>
-            <span id="mes">
-                @Html.DisplayFor(model => model.fechaMovimiento.Month)
-            </span>
-            <span id="año">
-                @Html.DisplayFor(model => model.fechaMovimiento.Year)
-            </span>
-            <span id="montoMovimiento">
-                @(String.Format("{0} ({1})", Model.montoMovimiento.ToString("C"), NumbersTools.NumberToText.Convert(Model.montoMovimiento)))
-            </span>
-            <span id="diafechaMovimiento">
-                @Model.fechaMovimiento.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="mesfechaMovimiento">
-                @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="añofechaMovimiento">
-                @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
-            </span>
-            <span id="NombreProductor">
-                @Html.DisplayFor(model => model.Productor.nombreProductor)
-            </span>
-            <span id="DomicilioProductor">
-                @Html.DisplayFor(model => model.Productor.domicilio)
-            </span>
-            <span id="PoblacionProductor">
-                @Html.DisplayFor(model => model.Productor.zona)
-            </span>    
+    <div id="pnlPagare">
+        <img src="/images/Pagare.jpg"/>
+        <span id="ImportePagare">
+            @Html.DisplayFor(model => model.montoMovimiento) dólares
+        </span>
+        <span id="Dia">
+            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="mes">
+            @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="año">
+            @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="montoMovimiento">
+            @Html.DisplayFor(model => model.montoMovimiento) dólares
+        </span>
+        <span id="diafechaMovimiento">
+            @Model.fechaMovimiento.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="mesfechaMovimiento">
+            @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="añofechaMovimiento">
+            @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+        </span>
+        <span id="NombreProductor">
+            @Html.DisplayFor(model => model.Productor.nombreCheque)
+        </span>
+        <span id="DomicilioProductor">
+            @Html.DisplayFor(model => model.Productor.domicilio)
+        </span>  
                 
-            <span id="cheque">
-                @Html.DisplayFor(model => model.cheque)
-            </span>
-            <span id="precio">
-                @Html.DisplayFor(model => model.precioDelDolar)
-            </span>
-        </div>
-        <style>
-            #pnlPagare {
-                /*background-image: url("/images/cheque.jpg");*/
-                background-repeat: no-repeat;
-             
-            }
-                
-        #pnlPagare img {
-            position: absolute;
-            z-index: 0;
-            width: 216mm;
-            height: 279mm;
+        <span id="cheque">
+            @Html.DisplayFor(model => model.cheque)
+        </span>
+        <span id="telefonoProductor">
+            @Html.DisplayFor(model => model.Productor.telefono)
+        </span>
+        <span id="PoblacionProductor">
+            @Html.DisplayFor(model => model.Productor.poblacion)
+        </span>
+
+        @*CAMPOS EDITABLES*@
+        <span id="tasaAnual">
+            <input id="inputTasaAnual" type="number" value="10" style="width: 30px" />
+        </span>
+        <span id="serieNumerada">
+            <input id="inputSerieNumerada" type="number" value="0000" style="width: 4em" />
+        </span>
+        <span id="tasaMoratoria">
+            <input id="inputTasaMoratoria" type="number" value="10" style="width: 30px" />
+        </span>
+    </div>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
         }
 
         #pnlPagare span {
@@ -78,85 +81,120 @@
             font-size: 18px;
         }
 
-            span#ImportePagare {
-                left: 25.7cm;
-                top: 3.2cm;
-            }
-            span#Dia {
-                left: 27.9cm;
-                top: 6.9cm;
-            }
-            span#mes {
-               left: 6.5cm;
-                top: 7.8cm;
-            } 
-            span#año {
-                left: 9.9cm;
-                top: 7.8cm;
-            }
-            span#montoMovimiento {
-                top: 7.8cm;
-                left: 18.1cm;
-            }
-            span#diafechaMovimiento {
-                top: 4.3cm;
-                left:  20.3cm;
-            }
-            span#mesfechaMovimiento {
-                top: 4.3cm;
-                left:23.5cm;
-            }
-            span#añofechaMovimiento {
-                top: 4.3cm;
-                left: 28.8cm;
-            }
-            span#NombreProductor {
-                top:  19.5cm;
-                left: 5.1cm;
-            }
-            span#DomicilioProductor {
-                top:  20.5cm;
-                left: 5.2cm;                
-            }
-            span#PoblacionProductor {
-                 top:  21.5cm;
-                left: 5.4cm;
-            }
-             span#cheque {
-                 top:  26.7cm;
-                left: 19.6cm;
-            }
-              span#precio {
-                 top:  28.3cm;
-                left: 19.6cm;
-              
-            }
+        span#ImportePagare {
+            left: 153mm;
+            top: 16mm;
+        }
+        span#Dia {
+            left: 179mm;
+            top: 40mm;
+        }
+        span#mes {
+            left: 20mm;
+            top: 46mm;
+        } 
+        span#año {
+            left: 67mm;
+            top: 46mm;
+        }
+        span#montoMovimiento {
+            left: 115mm;
+            top: 46mm;
+        }
+        span#diafechaMovimiento {
+            left: 127mm;
+            top: 23mm;
+        }
+        span#mesfechaMovimiento {
+            left: 144mm;
+            top: 23mm;
+        }
+        span#añofechaMovimiento {
+            left: 181mm;
+            top: 23mm;
+        }
+        span#NombreProductor {
+            left: 33mm;
+            top: 121mm;
+        }
+        span#DomicilioProductor {
+            left: 34mm;
+            top: 127mm;      
+        }
+        span#PoblacionProductor {
+            left: 35mm;
+            top: 133mm;
+        }
 
-        *{
-            margin: 0;
-            padding: 0;
+        span#telefonoProductor{
+            left: 83mm;
+            top: 127mm;
+        }
+
+        span#cheque {
+            left: 128mm;
+            top: 166mm;
+        }
+        
+        span#tasaAnual{
+            left: 28mm;
+            top: 60mm;
+        }
+
+        span#serieNumerada{
+            left: 172mm;
+            top: 60mm;
+        }
+
+        span#tasaMoratoria{
+            left: 128mm;
+            top: 80mm;
+        }
+
+        /*Calibracion de margen*/
+        #pnlPagare{
+            position: relative;
+            left: 2mm;
+            top: 4mm;
+            width: 8.5in;
+            height: 11in;
+        }
+
+        #pnlPagare img {
+            position: absolute;
+            z-index: 0;
+            width: 8.40in; /*Factor: .9788*/
+            height: 11.64in;/*Factor: 1.042*/
         }
 
         @@media print {
-
-            #pnlPagare img {
-                /*display: none;*/
-            }
-
-            #controls{
-                display: none;
-            }
-
             @@page {
                 size: letter;
                 margin: 0;
                 padding: 0;
             }
+
+            #pnlPagare img {
+                display: none;
+                /*border: 1px solid black;*/
+            }
+
+            span input{
+                background: none;
+                border: none;
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                /* display: none; <- Crashes Chrome on hover */
+                -webkit-appearance: none;
+                margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+            }
         }
 
-        @@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }
+        /*@@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }*/
     </style>
-
+    @*
     @Scripts.Render("~/bundles/jquery")
     <script>
         $("#pnlPagare").draggable()
@@ -167,6 +205,6 @@
             }
         });
 
-    </script>
+    </script>*@
 </body>
 </html>
