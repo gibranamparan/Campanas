@@ -130,7 +130,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult IngresoProducto(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
-            int[] ingresosID = selectedIngresos.Trim('[').Trim(']').Split(',').Select(int.Parse).ToArray();
+            int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
 
             if (ModelState.IsValid)
             {
@@ -219,7 +219,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
-            int[] ingresosID = selectedIngresos.Trim('[').Trim(']').Split(',').Select(int.Parse).ToArray();
+            int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
 
             if (ModelState.IsValid)
             {

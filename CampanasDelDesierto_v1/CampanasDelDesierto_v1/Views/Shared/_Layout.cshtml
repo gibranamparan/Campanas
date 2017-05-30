@@ -7,6 +7,7 @@
     <title>@ViewBag.Title - Campanas del Desierto</title>
     @Styles.Render("~/Content/template")
     @Styles.Render("~/Content/icons")
+    @Styles.Render("~/Content/dataTables")
 </head>
 
 <body>
@@ -52,11 +53,7 @@
                     @if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
                     {
                         <ul>
-                            <!--<li><a href="~/Home/Index">Homepage</a></li>-->
                             <li><a href="~/Productores">Productores</a></li>
-                            @*<li><a href="~/VentaACreditos">Ventas de Material</a></li>*@
-                            @*<li><a href="~/PrestamoYAbonoCapitals">Anticipos</a></li>*@
-                            @*<li><a href="~/PagosPorProductos">Cosechas</a></li>*@
                             <li><a href="~/Productos/">Productos</a></li>
                             <li><a href="~/Proveedores">Proveedores</a></li>
                             <li><a href="~/TemporadaDeCosechas">Temporadas</a></li>
@@ -69,9 +66,7 @@
                     <nav id="menu">
                         <ul>
                             <li><a href="~/PrestamosActivos/">Prestamos de Activos</a></li>
-                            <li><a href="~/Sucursales/">Sucursales</a></li>
-                            @*<li><a href="~/Inventarios/">Inventarios</a></li>
-                            <li><a href="~/Activos/">Activos</a></li>*@                                                                                    
+                            <li><a href="~/Sucursales/">Sucursales</a></li>                                                                                 
                             <li><a href="~/Departamentos/">Departamentos</a></li>
                             <li><a href="~/Empleados/">Empleados</a></li>
                         </ul>
@@ -85,6 +80,7 @@
     @Scripts.Render("~/bundles/template")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/dataTables")
     @RenderSection("scripts", required: false)
 </body>
 </html>

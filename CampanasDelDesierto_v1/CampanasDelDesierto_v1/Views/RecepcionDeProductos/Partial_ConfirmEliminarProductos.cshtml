@@ -1,0 +1,21 @@
+﻿@model CampanasDelDesierto_v1.Models.RecepcionDeProducto
+@{ 
+    int productorID = 0;
+    int temporadaID = 0;
+    if (ViewData["productorID"]!=null)
+    {
+        productorID = (int)ViewData["productorID"];
+    }
+    if (ViewData["temporadaID"] != null)
+    {
+        temporadaID = (int)ViewData["temporadaID"];
+    }
+}
+@using (Html.BeginForm("Delete", "RecepcionDeProductos", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("selectedIngresos")
+    @Html.HiddenFor(model=>model.idProductor)
+    @Html.HiddenFor(model=>model.TemporadaDeCosechaID)
+    <button class="btn btn-danger">Eliminar</button>
+}

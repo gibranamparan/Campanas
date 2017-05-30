@@ -8,10 +8,6 @@ namespace CampanasDelDesierto_v1
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            /*Other Bundles*/
-            bundles.Add(new ScriptBundle("~/bundles/dataTables.select").Include(
-                        "~/Scripts/dataTables.select.min.js"));
-
             /*SCRIPTS BUNDLES*/
             bundles.Add(new ScriptBundle("~/bundles/template").Include(
                         "~/Scripts/skel.min.js",
@@ -20,10 +16,16 @@ namespace CampanasDelDesierto_v1
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.mask.js",
-                        "~/Scripts/jquery.dataTables.min.js",
                         "~/Scripts/numeral.min.js",
                         "~/Scripts/customFunctions.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
+                        "~/Scripts/jquery.dataTables.min.js",
+                        "~/Scripts/dataTables.buttons.min.js",
+                        "~/Scripts/dataTables.editor.min.js",
+                        "~/Scripts/dataTables.select.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -42,14 +44,16 @@ namespace CampanasDelDesierto_v1
                       "~/Content/main.css",
                       "~/Content/bootstrap.css",
                       "~/Content/Site.css",
-                      "~/Content/jquery.dataTables.min.css"));
+                      "~/Content/jquery-ui.css"));
 
             bundles.Add(new StyleBundle("~/Content/icons").Include(
                       "~/Content/font-awesome.min.css",
                       "~/Content/icomoon.css"));
-
-            /*Other styles*/
-            bundles.Add(new StyleBundle("~/Content/dataTables.select").Include(
+            
+            bundles.Add(new StyleBundle("~/Content/dataTables").Include(
+                      "~/Content/jquery.dataTables.min.css",
+                      "~/Content/editor.dataTables.min.css",
+                      "~/Content/buttons.dataTables.min.css",
                       "~/Content/select.dataTables.min.css"));
         }
     }

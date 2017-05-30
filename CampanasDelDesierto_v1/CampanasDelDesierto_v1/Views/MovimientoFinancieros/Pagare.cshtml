@@ -11,7 +11,7 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Impresion de Pagare - Campanas del Desierto</title>
 </head>
 <body>
@@ -66,16 +66,17 @@
              
             }
                 
-                #pnlPagare img {
-                    position: absolute;
-                    left: 0;
-                    z-index: 0;
-                }
+        #pnlPagare img {
+            position: absolute;
+            z-index: 0;
+            width: 216mm;
+            height: 279mm;
+        }
 
-                #pnlPagare span {
-                    position: absolute;
-                    font-size: 18px;
-                }
+        #pnlPagare span {
+            position: absolute;
+            font-size: 18px;
+        }
 
             span#ImportePagare {
                 left: 25.7cm;
@@ -131,22 +132,41 @@
               
             }
 
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        @@media print {
+
+            #pnlPagare img {
+                /*display: none;*/
+            }
+
+            #controls{
+                display: none;
+            }
+
             @@page {
-                size: A4;
+                size: letter;
                 margin: 0;
+                padding: 0;
             }
+        }
 
-            @@media print {
-                html, body {
-                    width: 210mm;
-                    height: 297mm;
-                }
+        @@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }
+    </style>
 
-                #pnlPagare img {
-                    display: none;
-                }
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $("#pnlPagare").draggable()
+        $("#pnlPagare").draggable({
+            drag: function (event, ui) {
+                $("#px").val(ui.position.left);
+                $("#py").val(ui.position.top);
             }
-        </style>
-    </div>
+        });
+
+    </script>
 </body>
 </html>
