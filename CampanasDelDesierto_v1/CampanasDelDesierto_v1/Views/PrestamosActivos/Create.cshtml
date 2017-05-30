@@ -1,9 +1,14 @@
-﻿@model CampanasDelDesierto_v1.Models.PrestamoActivo
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.PrestamoActivo
 
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Message = "";
+    List<Activo> Activos = ViewBag.idActivo;
+
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("selectMode", true);
 }
 <p>
     <a href="@Url.Action("Details","Departamentos", new { id = Model.Empleado.departamentoID})">
@@ -35,6 +40,8 @@
         </a>    
     </div>
 </div>
+@Html.Partial("Partial_ListaActivos", Activos, vdd)
+
 <div id="mensajes" class="container"></div><br />
 
 <div class="panel panel-primary">
@@ -44,22 +51,23 @@
     <div class="panel-body">
         @using (Html.BeginForm())
         {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.idEmpleado)
+            @Html.AntiForgeryToken()<br />
+            @Html.HiddenFor(model => model.idEmpleado)<br />
+            @Html.Hidden("idActivo")
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
                     @Html.LabelFor(model => model.fechaPrestamoActivo, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.fechaPrestamoActivo, new { htmlAttributes = new { @class = "form-control", id = "FechaI" } })
+                        @Html.EditorFor(model => model.fechaPrestamoActivo, new { htmlAttributes = new { @class = "form-control", id = "FechaI", onchange = "validacionFechas()" } })
                         @Html.ValidationMessageFor(model => model.fechaPrestamoActivo, "", new { @class = "text-danger" })
                     </div>
-                </div>
+                </div>                
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.fechaEntregaActivo, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.fechaEntregaActivo, new { htmlAttributes = new { @class = "form-control", id = "FechaF" } })
+                        @Html.EditorFor(model => model.fechaEntregaActivo, new { htmlAttributes = new { @class = "form-control", id = "FechaF", onchange = "validacionFechas2()" } })
                         @Html.ValidationMessageFor(model => model.fechaEntregaActivo, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -71,23 +79,7 @@
                         @Html.ValidationMessageFor(model => model.fechaDevolucion, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                @*<div class="form-group">
-                    @Html.LabelFor(model => model.idEmpleado, "idEmpleado", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("idEmpleado", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.idEmpleado, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.idActivo, "Activo", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("idActivo", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.idActivo, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
+               
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button disabled type="submit" id="Buscar" class="btn btn-success">Crear</button>
@@ -100,67 +92,167 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/dataTables.select")
+    @Styles.Render("~/Content/dataTables.select")   
 
     <script>
 
-     //Validacion texbox llenados y habilitacion de boton buscar
-     $("#FechaI").change(function () {
-         var fech1 = document.getElementById("FechaI").value;
-         var fech2 = document.getElementById("FechaF").value;
+        //Validacion texbox llenados y habilitacion de boton buscar
+        function validacionFechas(){
+             
+                 var fech1 = document.getElementById("FechaI").value;
+                 var fech2 = document.getElementById("FechaF").value;
 
-         if (fech2 == "") {
-             $('#Buscar').attr('disabled', true)
-         }
-         else
-         {
-             $('#Buscar').attr('disabled', false)
-         }
-         //Valida los rangos
-         if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-             $('#mensaje').remove();
-             $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
-             if ($('#Buscar').attr('disabled', true)) {
+                 if (fech2 == "") {
+                     $('#Buscar').attr('disabled', true)
+                 }
+                 else
+                 {
+                     var body = $('#Activos').children('tbody');
+                     var renglon = body.children('tr');
+                     if ($(renglon).hasClass('selected')) {
+                         $('#Buscar').attr('disabled', false)
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                     }
+                     else {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                     }
+             
+                 }
+                 //Valida los rangos
+                 if ((Date.parse(fech1)) > (Date.parse(fech2))) {
+                     $('#mensaje').remove();
+                     $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
+                     if ($('#Buscar').attr('disabled', true)) {
 
-             }
-             else {
-                 $('#Buscar').attr('disabled', true)
-             }
-         }
-         else
-         {
-             $('#mensaje').remove();
-             $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-         }
-     });
-     $("#FechaF").change(function () {
-         var fech1 = document.getElementById("FechaI").value;
-         var fech2 = document.getElementById("FechaF").value;
-         if (fech1 == "") {
-             $('#Buscar').attr('disabled', true)
-         }
-         else
-         {
-             $('#Buscar').attr('disabled', false)
-         }
-         //Valida los rangos
-         if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-             $('#mensaje').remove();
-             $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
-             if ($('#Buscar').attr('disabled', true)) {
+                     }
+                     else {
+                         $('#Buscar').attr('disabled', true)
+                     }
+                 }
+                 else
+                 {
+                     var body = $('#Activos').children('tbody');
+                     var renglon = body.children('tr');
+                     if ($(renglon).hasClass('selected')) {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                     }
+                     else {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                     }
+                 }
+               
+        }
+        function validacionFechas2(){
+           
+                 var fech1 = document.getElementById("FechaI").value;
+                 var fech2 = document.getElementById("FechaF").value;
+                 if (fech1 == "") {
+                     $('#Buscar').attr('disabled', true)
+                 }
+                 else
+                 {
+                     var body = $('#Activos').children('tbody');
+                     var renglon = body.children('tr');
+                     if ($(renglon).hasClass('selected')) {                         
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                     }
+                     else {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                     }
+                 }
+                 //Valida los rangos
+                 if ((Date.parse(fech1)) > (Date.parse(fech2))) {
+                     $('#mensaje').remove();
+                     $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
+                     if ($('#Buscar').attr('disabled', true)) {
 
-             }
-             else {
+                     }
+                     else {  
+                 
+                         $('#Buscar').attr('disabled', true)
+                     }
+                 }
+                 else
+                 {
+                     var body = $('#Activos').children('tbody');
+                     var renglon = body.children('tr');
+                     if ($(renglon).hasClass('selected')) {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                     }
+                     else
+                     {
+                         $('#mensaje').remove();
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                     }
+            
+                 }
+                
+        }
 
-                 $('#Buscar').attr('disabled', true)
-             }
-         }
-         else
-         {
-             $('#mensaje').remove();
-             $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-         }
-     });
 
+        //Data table select sigle row
+        var COLS_ENUM = Object.freeze({ ID: 1})
+        var table = $('#Activos').DataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }, {                
+                visible: false,
+                searchable: false
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']]
+        });
+        //Al Seleccionar un activo
+        $('#Activos tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected'))
+            {
+                $(this).removeClass('selected');      
+                $('#idActivo').val('');
+                $('#Buscar').attr('disabled', true);
+                $('#mensaje').remove();
+                $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+               
+            }
+            else
+            {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                validacionFechas();
+                validacionFechas2();
+                var row = $(this).closest('tr')[0];
+                var rowData = table.row(row).data();
+                if (rowData) {
+                    var rowId = rowData[1];
+                    $('#idActivo').val(rowId);
+                }  
+
+            }
+        });
+
+        $('#button').click(function () {
+            table.row('.selected').remove().draw(false);
+        });
+        function input() {
+            if ($('#idActivo').val() >= 0) {
+
+            } else {
+                $('#Buscar').attr('disabled', true)
+            }
+        }
+        setInterval(input(), 500);
     </script>
 }
 

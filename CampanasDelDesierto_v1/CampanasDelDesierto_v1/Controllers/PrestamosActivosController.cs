@@ -52,14 +52,18 @@ namespace CampanasDelDesierto_v1.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Empleado empleado = db.Empleados.Find(id);
+            var activo = db.Activos.ToList();
             if (empleado == null)
             {
                 return HttpNotFound();
 
             }
-            ViewBag.idActivo = new SelectList(db.Activos.ToList().Where(a=>a.prestado()==false), "idActivo", "nombreActivo", null);
-            PrestamoActivo prestamo = prepararVistaCrear(empleado);
-            return View(prestamo);
+            var Activos = db.Activos.ToList();
+            ViewBag.idActivo = Activos;
+            //ViewBag.idActivo = new SelectList(db.Activos.ToList().Where(a=>a.prestado()==false), "idActivo", "nombreActivo", null);
+            PrestamoActivo prestamo = prepararVistaCrear(empleado);            
+            return View(prestamo);             
+            
 
         }
         private PrestamoActivo prepararVistaCrear(Empleado empleado)

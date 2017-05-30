@@ -20,22 +20,23 @@
         <th>
             @Html.DisplayNameFor(model => model.fechaMovimiento)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.cantidadProducto)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.numeroSemana)
+        </th>*@
+                @*<th>
+            @Html.DisplayNameFor(model => model.cheque)
         </th>
-        @*<th>
-        @Html.DisplayNameFor(model => model.cheque)
-    </th>
-    <th>
-        @Html.DisplayNameFor(model => model.abonoAnticipo)
-    </th>
-        *@
         <th>
-            @Html.DisplayNameFor(model => model.tipoProducto)
+            @Html.DisplayNameFor(model => model.abonoAnticipo)
         </th>
+                <th>
+                @Html.DisplayNameFor(model => model.tipoProducto)
+            </th>
+                *@
+        
        @* <th>
         @Html.DisplayNameFor(model => model.garantiaLimpieza)
     </th>
@@ -57,12 +58,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.fechaMovimiento)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.cantidadProducto)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.numeroSemana)
-        </td>
+        </td>*@
         @*<td>
             @Html.DisplayFor(modelItem => item.cheque)
         </td>
@@ -70,9 +71,9 @@
             @Html.DisplayFor(modelItem => item.abonoAnticipo)
         </td>
         *@
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.tipoProducto)
-        </td>
+        </td>*@
         @*<td>
         @Html.DisplayFor(modelItem => item.garantiaLimpieza)
     </td>

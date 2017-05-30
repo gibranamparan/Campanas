@@ -35,7 +35,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.cantidadDePrestamosActivos)
                 </td><td>
-                    <a href="@Url.Action("Edit",new { idEmpleado = item.idEmpleado, id= item.Departamento.departamentoID })">
+                    <a href="@Url.Action("Edit",new { id = item.idEmpleado })">
                         <i class="glyphicon glyphicon-pencil"></i> Editar
                     </a><br />
                     <a href="@Url.Action("Delete",new { id = item.idEmpleado })">
@@ -49,3 +49,4 @@
         }
     </tbody>
 </table>
+
