@@ -71,14 +71,6 @@
                         @Html.ValidationMessageFor(model => model.fechaEntregaActivo, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.fechaDevolucion, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.fechaDevolucion, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.fechaDevolucion, "", new { @class = "text-danger" })
-                    </div>
-                </div>
                
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -108,16 +100,16 @@
                  }
                  else
                  {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {
+                     var valorInput =$('#idActivo').val()
+                     if (valorInput>=0) {
                          $('#Buscar').attr('disabled', false)
                          $('#mensaje').remove();
                          $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
                      }
                      else {
                          $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                         $('#Buscar').attr('disabled', true);
                      }
              
                  }
@@ -134,15 +126,16 @@
                  }
                  else
                  {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {
+                     var valorInput = $('#idActivo').val()
+                     if (valorInput > 0) {
+                         $('#Buscar').attr('disabled', false)
                          $('#mensaje').remove();
                          $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
                      }
                      else {
                          $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                         $('#Buscar').attr('disabled', true);
                      }
                  }
                
@@ -156,15 +149,16 @@
                  }
                  else
                  {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {                         
+                     var valorInput = $('#idActivo').val()
+                     if (valorInput > 0) {
+                         $('#Buscar').attr('disabled', false)
                          $('#mensaje').remove();
                          $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
                      }
                      else {
                          $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                         $('#Buscar').attr('disabled', true);
                      }
                  }
                  //Valida los rangos
@@ -181,16 +175,16 @@
                  }
                  else
                  {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {
+                     var valorInput = $('#idActivo').val()
+                     if (valorInput > 0) {
+                         $('#Buscar').attr('disabled', false)
                          $('#mensaje').remove();
                          $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
                      }
-                     else
-                     {
+                     else {
                          $('#mensaje').remove();
                          $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                         $('#Buscar').attr('disabled', true);
                      }
             
                  }
@@ -242,17 +236,9 @@
             }
         });
 
-        $('#button').click(function () {
-            table.row('.selected').remove().draw(false);
-        });
-        function input() {
-            if ($('#idActivo').val() >= 0) {
-
-            } else {
-                $('#Buscar').attr('disabled', true)
-            }
-        }
-        setInterval(input(), 500);
+        //$('#button').click(function () {
+        //    table.row('.selected').remove().draw(false);
+        //});        
     </script>
 }
 

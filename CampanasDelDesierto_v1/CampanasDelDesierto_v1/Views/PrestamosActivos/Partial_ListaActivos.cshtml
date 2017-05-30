@@ -1,6 +1,6 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model IEnumerable<Activo>
-@{ 
+@{
 
     bool selectMode = false;
     if (ViewData["selectMode"] != null)
@@ -11,16 +11,16 @@
 
 <table id="Activos" class="table table-hover">
     <thead>
-            <tr>
-                @if (selectMode)
-                {
-                    <th>
+        <tr>
+            @if (selectMode)
+            {
+                <th>
 
-                    </th>
-                }         
-               <th class="hidden">
-                   @Html.DisplayNameFor(model=> model.idActivo)
-               </th>
+                </th>
+            }
+            <th class="hidden">
+                @Html.DisplayNameFor(model => model.idActivo)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.inventario.nombreInventario)
             </th>
@@ -29,16 +29,16 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.estadoActivo)
-            </th>           
+            </th>
         </tr>
     </thead>
-   
+
     <tbody>
         @foreach (var item in Model)
         {
 
-            <tr  @*@((item.inventarioID!=null && item.inventarioID>0)?"default-selected":"")*@>
-             
+            <tr @*@((item.inventarioID!=null && item.inventarioID>0)?"default-selected":"")*@>
+
                 @if (selectMode)
                 {
                     <td></td>
