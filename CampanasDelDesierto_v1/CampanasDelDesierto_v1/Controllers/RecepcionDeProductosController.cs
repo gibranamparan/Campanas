@@ -87,17 +87,24 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(recepcionDeProducto);
         }
         
+        */
         // POST: RecepcionDeProductos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Delete(int id)
+        public ActionResult Delete(string selectedIngresos, int idProductor, int TemporadaDeCosechaID)
         {
-            RecepcionDeProducto recepcionDeProducto = db.RecepcionesDeProducto.Find(id);
-            db.RecepcionesDeProducto.Remove(recepcionDeProducto);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
+            int numReg = 0;
+            foreach (int id in ingresosID)
+            {
+                var recepcionDeProducto = db.RecepcionesDeProducto.Find(id);
+                db.RecepcionesDeProducto.Remove(recepcionDeProducto);
+            }
+            numReg = db.SaveChanges();
+            return RedirectToAction("IngresoProducto","PagosPorProductos", 
+                new { id= idProductor, temporada = TemporadaDeCosechaID });
         }
-        */
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

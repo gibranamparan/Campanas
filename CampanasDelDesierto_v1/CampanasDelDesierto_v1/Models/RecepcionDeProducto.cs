@@ -25,6 +25,7 @@ namespace CampanasDelDesierto_v1.Models
         public int recepcionID { get; set; }
 
         [DisplayName("Num. Recibo")]
+        [Range(1,int.MaxValue)]
         [Required]
         public int numeroRecibo { get; set; }
 
@@ -49,7 +50,7 @@ namespace CampanasDelDesierto_v1.Models
         [Required]
         [DisplayName("Fecha")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "yyyy-MM-dd",
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
             ApplyFormatInEditMode = true)]
         public DateTime fecha { get; set; }
 

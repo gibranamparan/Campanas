@@ -12,7 +12,7 @@
                 <p>@Html.Raw(Model.primaryMessage)</p>
                 @if (Model.callType != VMConfirmModalAttributes.CallType.NONE &&
                     Model.callType != VMConfirmModalAttributes.CallType.PARTIAL_VIEW) {
-                    <p><strong>Are you sure?</strong></p>
+                    <p><strong>¿Estás seguro?</strong></p>
                 }
                 @if (Model.callType == VMConfirmModalAttributes.CallType.PARTIAL_VIEW)
                 {
@@ -28,7 +28,7 @@
                         Url.Action(Model.action,Model.controller,Model.routeVals):"#")"
                         onclick="@(Model.callType == VMConfirmModalAttributes.CallType.JAVASCRIPT?
                         Model.javascriptFunction+"()":"")">
-                            <i class="glyphicon glyphicon-ok"></i> Yes
+                            <i class="glyphicon glyphicon-ok"></i> Si
                     </a>
                 }
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

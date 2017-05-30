@@ -259,6 +259,7 @@
     <Compile Include="HerramientasGenerales\ExcelTools.cs" />
     <Compile Include="HerramientasGenerales\FiltrosDeSolicitudes.cs" />
     <Compile Include="HerramientasGenerales\NumbersTools.cs" />
+    <Compile Include="HerramientasGenerales\StringTools.cs" />
     <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="HerramientasGenerales\VMConfirmModalAttributes.cs" />
     <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
@@ -745,10 +746,10 @@
     <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
     <Content Include="Views\EmisionDeCheques\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
+    <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\RecepcionesProducto\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Project_Readme.html" />

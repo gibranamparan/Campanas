@@ -1,10 +1,14 @@
 ﻿@model CampanasDelDesierto_v1.Models.RecepcionDeProducto
+@using System.Globalization
 @{
     string funcionRespuesta = "";
     if (ViewData["funcionRespuesta"] != null)
     {
         funcionRespuesta = (string)ViewData["funcionRespuesta"];
     }
+    Model.fecha = DateTime.Now;
+    CultureInfo cul = new CultureInfo("MX-es");
+    Model.semana = cul.Calendar.GetWeekOfYear(Model.fecha,CalendarWeekRule.FirstDay,DayOfWeek.Monday);
 }
 @using (Html.BeginForm("Create","RecepcionDeProductos", FormMethod.Post, new { @class="row" }))
 {
@@ -12,6 +16,8 @@
     @Html.HiddenFor(model => model.idProductor)
     @Html.HiddenFor(model => model.movimientoID)
     @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+    @Html.HiddenFor(model => model.numProductor)
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group col-md-4">
@@ -87,27 +93,28 @@
         </div>
 
         <div class="form-group col-md-12">
-            <button class="btn btn-success" onclick="crearNuevaRecepcion(this)">Registrar</button>
+            <button class="btn btn-success" type="button"
+                     onclick="crearNuevaRecepcion(this)">Registrar</button>
         </div>
     </div>
 }
 
 <script>
     function crearNuevaRecepcion(btnRegistrar) {
-        var forma = $(btnRegistrar).parent("form");
+        var forma = $(btnRegistrar).closest("form");
 
         //Se toma la informacion de la forma
         //TODO: Tomar todos los datos
         //TODO: Crear el AJAX Function para hacer la llamada
         //TODO: Probar llamada
         //TODO: Reflejar el resultado en la tabla
-        var token = $("input[name=__RequestVerificationToken]").val()
+        var token = forma.find("input[name=__RequestVerificationToken]").val()
         var nuevaRecepcion = {
-            numeroRecibo: forma.find("numeroRecibo").val(), numProductor: forma.find("numProductor").val(),
-            cantidadTonsProd1: forma.find("cantidadTonsProd1").val(), cantidadTonsProd2: forma.find("cantidadTonsProd2").val(),
-            cantidadTonsProd3: forma.find("cantidadTonsProd3").val(), fecha: forma.find("fecha").val(),
-            semana: forma.find("semana").val(), TemporadaDeCosechaID: forma.find("TemporadaDeCosechaID").val(),
-            idProductor: forma.find("idProductor").val(),
+            numeroRecibo: forma.find("#numeroRecibo").val(), numProductor: forma.find("#numProductor").val(),
+            cantidadTonsProd1: forma.find("#cantidadTonsProd1").val(), cantidadTonsProd2: forma.find("#cantidadTonsProd2").val(),
+            cantidadTonsProd3: forma.find("#cantidadTonsProd3").val(), fecha: forma.find("#fecha").val(),
+            semana: forma.find("#semana").val(), TemporadaDeCosechaID: forma.find("#TemporadaDeCosechaID").val(),
+            idProductor: forma.find("#idProductor").val(),
         }
 
         //Se envia al servidor

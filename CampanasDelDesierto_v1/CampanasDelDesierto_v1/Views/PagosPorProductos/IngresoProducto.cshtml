@@ -17,7 +17,8 @@
     /*Datos para partial de detalles de temporada*/
     ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddDetailsTemporada.Add("editable", true);
-    vddDetailsTemporada.Add("funcionAlReestablecer", "recalcularMontos");
+    string funcionRecalcularMontos = "recalcularMontos";
+    vddDetailsTemporada.Add("funcionAlReestablecer", funcionRecalcularMontos);
     if (editMode)
     {
         vddDetailsTemporada.Add("pagoPorProducto", Model);
@@ -28,7 +29,8 @@
     RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
         TemporadaDeCosechaID = temporada.TemporadaDeCosechaID, numProductor = productor.numProductor };
     ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
-    vddPartialCreacion.Add("funcionRespuesta", "procesarRespuestaCreacion");
+    string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
+    vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
     VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
     {
         modalTitle = "Nuevo Registro de Recepcion de Producto",
@@ -42,6 +44,17 @@
         partialViewURL = "../RecepcionDeProductos/Partial_CreateRecepcionProducto",
         modelForPartial = nuevaRecepcion,
         datosDeVista = vddPartialCreacion
+    };
+    VMConfirmModalAttributes modalOptsEliminarRecepcion = new VMConfirmModalAttributes
+    {
+        modalTitle = "Eliminar Registros Seleccionados",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalID = "mdlDeleteRecepcion",
+        primaryMessage = "Al confirmar este mensaje, eliminará todos los elementos seleccionados en la tabla.",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
+        size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.SMALL),
+        partialViewURL = "../RecepcionDeProductos/Partial_ConfirmEliminarProductos",
+        modelForPartial = nuevaRecepcion,
     };
 }
 
@@ -82,15 +95,21 @@
     </ul>
 </div>
 
+@if(!editMode){ 
 <div>
     <button class="btn btn-info" data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
-    <button class="btn btn-info">Editar</button>
-    <button class="btn btn-danger">Eliminar</button>
+    <button id="btnEliminarRecepciones" class="btn btn-danger"
+            data-toggle="modal" data-target="#@modalOptsEliminarRecepcion.modalID"
+            disabled>
+        Eliminar
+    </button>
 </div>
+}
 
 @Html.Partial("Partial_ConfirmationModal", modalOptsnuevaRecepcion)
-
+@Html.Partial("Partial_ConfirmationModal", modalOptsEliminarRecepcion)
 @Html.Partial("Partial_ListaIngresosProducto", ingresos, vdd)
+
 <br />
 @using (Html.BeginForm())
 {
@@ -101,7 +120,7 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <span>Ingreso de Producto</span>
+            <strong style="color: white">@(editMode ? "Edición" : "Creación")</strong><span> de Registro Ingreso de Producto</span>
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
@@ -276,13 +295,13 @@
     });
 
     tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
-        recalcularMontos();
+        @(funcionRecalcularMontos)();
     })
     .on('deselect',function(e, dt, type, indexes){
-        recalcularMontos();
+        @(funcionRecalcularMontos)();
     });
 
-    function recalcularMontos() {
+    function @(funcionRecalcularMontos)() {
         selectedIngresosIDs = new Array();
         var selectedRows = tblIngresoAcumulado.rows({selected:true});
         var data = selectedRows.data();
@@ -309,6 +328,7 @@
         $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3).format('0.00')).trigger('input');
 
         $("#btnRegistrar").attr('disabled', data.length == 0)
+        $("#btnEliminarRecepciones").attr('disabled', data.length == 0)
 
         console.log(JSON.stringify(selectedIngresosIDs))
         $('#selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
@@ -323,8 +343,12 @@
     }
 
     $("#formCostosProducto input").keyup(function(){
-        recalcularMontos();
+        @(funcionRecalcularMontos)();
     })
+
+    function @(funcionProcesarRespuestaCreacion)(res){
+        location.reload();
+    }
 </script>
 
 
