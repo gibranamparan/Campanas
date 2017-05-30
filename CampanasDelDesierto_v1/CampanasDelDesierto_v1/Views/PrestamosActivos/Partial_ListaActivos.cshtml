@@ -1,0 +1,64 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model IEnumerable<Activo>
+@{ 
+
+    bool selectMode = false;
+    if (ViewData["selectMode"] != null)
+    {
+        selectMode = (bool)ViewData["selectMode"];
+    }
+}
+
+<table id="Activos" class="table table-hover">
+    <thead>
+            <tr>
+                @if (selectMode)
+                {
+                    <th>
+
+                    </th>
+                }         
+               <th class="hidden">
+                   @Html.DisplayNameFor(model=> model.idActivo)
+               </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inventario.nombreInventario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.estadoActivo)
+            </th>           
+        </tr>
+    </thead>
+   
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr  @*@((item.inventarioID!=null && item.inventarioID>0)?"default-selected":"")*@>
+             
+                @if (selectMode)
+                {
+                    <td></td>
+                }
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.idActivo)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.inventario.nombreInventario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.estadoActivo)
+                </td>
+            </tr>
+
+
+        }
+    </tbody>
+</table>
