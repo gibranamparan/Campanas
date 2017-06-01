@@ -3,7 +3,7 @@
 @model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Nuevo Anticipo O Abono";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Productor productor = ViewBag.productor;
@@ -42,30 +42,26 @@
                     <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
                 </div>
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.montoMovimiento, new
-               {
-                   htmlAttributes = new
-                   {
-                       @class = "form-control",
-                       data_mask = "###0.00",
-                       data_mask_reverse = "true",
-                       @readonly = "readonly"
-                   }
-               })
-                            @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.montoMovimiento, new{
+                            htmlAttributes = new
+                            {
+                                @class = "form-control",
+                                data_mask = "###0.00",
+                                data_mask_reverse = "true",
+                                @readonly = "readonly"
+                            }})
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
                     </div>
+                </div>
 
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
-                        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -79,15 +75,13 @@
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div id="divPrecioDelDolar" class="col-md-8">
-                            @Html.EditorFor(model => model.precioDelDolar, new
-               {
-                   htmlAttributes = new
-                   {
-                       @class = "form-control",
-                       data_mask_reverse = "true",
-                       data_mask = "###0.0000"
-                   }
-               })
+                            @Html.EditorFor(model => model.precioDelDolar, new{
+                               htmlAttributes = new
+                               {
+                                   @class = "form-control",
+                                   data_mask_reverse = "true",
+                                   data_mask = "###0.0000"
+                               }})
                             @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
                         </div>
                         <a class="satLogo" target="_blank"
@@ -98,39 +92,35 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
-                        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(x => x.concepto, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
-                    new { @class = "form-control" })
-                        </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.pagare, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
-                        </div>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.tipoDeMovimientoDeCapital, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(x => x.tipoDeMovimientoDeCapital, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
+                new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.pagare, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -144,12 +134,39 @@
                     </div>
 
                     <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model=>model.concepto, PrestamoYAbonoCapital.getConceptosSelectList(), 
+                                htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.concepto, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownList("proveedor", null, htmlAttributes: new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.proveedor, "", new { @class = "text-danger" })
                         </div>
                     </div>
+
+                    <div id="detallesCFE" class="form-group col-md-6" style="display:none">
+                        @Html.LabelFor(model => model.pozo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pozo, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.pozo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group row col-md-12">
+                        @Html.LabelFor(model => model.descripcionConcepto)
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.descripcionConcepto, 
+                           new { htmlAttributes = new { @class = "form-control col-md-12", style="resize:vertical" } })
+                            @Html.ValidationMessageFor(model => model.descripcionConcepto, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="form-group">
@@ -166,11 +183,13 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $().ready(function () {
-            $("#concepto").change(function () {
+            $("#tipoDeMovimientoDeCapital").change(function () {
                 if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO")
                     $("#formGroupDeuda").slideUp();
                 else
                     $("#formGroupDeuda").slideDown();
+
+                $("#proveedor").trigger("change");
             })
 
             $("#montoPesos").keyup(function () {
@@ -193,6 +212,11 @@
                     $('#conversionDivisa').slideUp();
                     $("#montoMovimiento").prop('readonly', false);
                 }
+            })
+
+            $("#proveedor").change(function () {
+                var prov = $(this).val();
+                $("#detallesCFE").slideToggle(prov == "CFE")
             })
 
             function setPrecioDolar() {

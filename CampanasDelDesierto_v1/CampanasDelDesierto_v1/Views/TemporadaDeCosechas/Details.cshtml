@@ -42,10 +42,6 @@
                 <label>@Model.tipoProducto3: </label>
                 @Html.DisplayFor(model => model.precioProducto3)
             </div>
-            <div class="form-group col-md-3">
-                <label>@Model.tipoProductoOtro: </label>
-                @Html.DisplayFor(model => model.precioProductoOtro)
-            </div>
         </div>
         <a href="@Url.Action("Edit", new { id = Model.TemporadaDeCosechaID })">
             <i class="fa fa-pencil"></i> Editar
@@ -71,6 +67,7 @@
         </div>
     </div>
 }
+<br />
 @*Panel que muestra la recepcion ingresada en el excel*@
 <div class="panel panel-primary">
     <div class="panel-heading">

@@ -148,53 +148,51 @@
                
         }
         function validacionFechas2(){
-           
-                 var fech1 = document.getElementById("FechaI").value;
-                 var fech2 = document.getElementById("FechaF").value;
-                 if (fech1 == "") {
-                     $('#Buscar').attr('disabled', true)
-                 }
-                 else
-                 {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {                         
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
-                     }
-                 }
-                 //Valida los rangos
-                 if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-                     $('#mensaje').remove();
-                     $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
-                     if ($('#Buscar').attr('disabled', true)) {
+            var fech1 = document.getElementById("FechaI").value;
+            var fech2 = document.getElementById("FechaF").value;
+            if (fech1 == "") {
+                $('#Buscar').attr('disabled', true)
+            }
+            else
+            {
+                var body = $('#Activos').children('tbody');
+                var renglon = body.children('tr');
+                if ($(renglon).hasClass('selected')) {                         
+                    $('#mensaje').remove();
+                    $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                }
+                else {
+                    $('#mensaje').remove();
+                    $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
+                }
+            }
+            //Valida los rangos
+            if ((Date.parse(fech1)) > (Date.parse(fech2))) {
+                $('#mensaje').remove();
+                $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
+                if ($('#Buscar').attr('disabled', true)) {
 
-                     }
-                     else {  
+                }
+                else {  
                  
-                         $('#Buscar').attr('disabled', true)
-                     }
-                 }
-                 else
-                 {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else
-                     {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
-                     }
+                    $('#Buscar').attr('disabled', true)
+                }
+            }
+            else
+            {
+                var body = $('#Activos').children('tbody');
+                var renglon = body.children('tr');
+                if ($(renglon).hasClass('selected')) {
+                    $('#mensaje').remove();
+                    $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
+                }
+                else
+                {
+                    $('#mensaje').remove();
+                    $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
+                }
             
-                 }
-                
+            }
         }
 
 

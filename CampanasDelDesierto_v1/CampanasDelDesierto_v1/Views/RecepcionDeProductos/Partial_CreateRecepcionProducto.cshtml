@@ -7,7 +7,7 @@
         funcionRespuesta = (string)ViewData["funcionRespuesta"];
     }
     Model.fecha = DateTime.Now;
-    CultureInfo cul = new CultureInfo("MX-es");
+    CultureInfo cul = new CultureInfo("es-MX");
     Model.semana = cul.Calendar.GetWeekOfYear(Model.fecha,CalendarWeekRule.FirstDay,DayOfWeek.Monday);
 }
 @using (Html.BeginForm("Create","RecepcionDeProductos", FormMethod.Post, new { @class="row" }))
