@@ -1,0 +1,63 @@
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Producto>
+
+@{
+    bool selectMode = false;
+    if (ViewData["selectMode"] != null)
+    {
+        selectMode = (bool)ViewData["selectMode"];
+    }
+}
+<table id="Productos" class="table table-hover table-striped">
+    <thead>
+        <tr>
+            @if (selectMode)
+            {
+                <th>
+
+                </th>
+            }
+            <th class="hidden">
+                @Html.DisplayNameFor(model => model.idProducto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreProducto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.costo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.descripcion)
+            </th>                        
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                @if (selectMode)
+                {
+                    <td></td>
+                }
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.idProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.costo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.descripcion)
+                </td>                        
+            </tr>
+        }
+    </tbody>
+</table>

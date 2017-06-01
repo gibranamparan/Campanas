@@ -763,8 +763,6 @@
     <Content Include="Views\EmisionDeCheques\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
-    <Content Include="Views\Proveedores\Partial_CreateConcepto.cshtml" />
-    <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
