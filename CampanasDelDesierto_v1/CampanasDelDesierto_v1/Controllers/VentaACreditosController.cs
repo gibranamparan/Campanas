@@ -52,6 +52,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             VentaACredito mov = prepararVistaCrear(productor);
             mov.introducirMovimientoEnPeriodo(temporada);
+            ViewBag.productos = db.Productos.ToList();
 
             return View(mov);
         }

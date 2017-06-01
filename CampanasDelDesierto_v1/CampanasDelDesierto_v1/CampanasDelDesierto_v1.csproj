@@ -752,6 +752,7 @@
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
     <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
+    <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
