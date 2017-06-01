@@ -58,6 +58,9 @@
         <span id="PoblacionProductor">
             @Html.DisplayFor(model => model.Productor.poblacion)
         </span>
+        <span id="RFCProductor">
+            @Html.DisplayFor(model => model.Productor.RFC)
+        </span>
 
         @*CAMPOS EDITABLES*@
         <span id="tasaAnual">
@@ -68,6 +71,15 @@
         </span>
         <span id="tasaMoratoria">
             <input id="inputTasaMoratoria" type="number" value="10" style="width: 30px" />
+        </span>
+        <span id="aceptamos">
+            <input id="inputAceptamos" type="text" value="Aceptamos" style="width: 200px" />
+        </span>
+        <span id="numReporte">
+            <input id="inputReporte" type="text" value="NA" style="width: 70px" />
+        </span>
+        <span id="OrdenCompra">
+            <input id="inputOrdenDeCompra" type="text" value="NA" style="width: 80px" />
         </span>
     </div>
     <style>
@@ -125,6 +137,10 @@
             left: 35mm;
             top: 133mm;
         }
+        span#RFCProductor {
+            left: 20mm;
+            top: 138mm;
+        }
 
         span#telefonoProductor{
             left: 83mm;
@@ -149,6 +165,18 @@
         span#tasaMoratoria{
             left: 128mm;
             top: 80mm;
+        }
+        span#aceptamos{
+            left: 135mm;
+            top: 120mm;
+        }
+        span#numReporte{
+            left: 58mm;
+            top: 166mm;
+        }
+        span#OrdenCompra{
+            left: 69mm;
+            top: 176mm;
         }
 
         /*Calibracion de margen*/
