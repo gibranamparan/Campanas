@@ -24,7 +24,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public static class RoleNames
         {
-            public const string SUCURSAL = "Sucursal";
+            public const string DEPARTAMENTO = "Departamento";
             public const string ADMIN = "Admin";
         }
     }

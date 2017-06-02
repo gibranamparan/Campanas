@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -10,9 +11,9 @@ namespace CampanasDelDesierto_v1.Controllers
     {
         public ActionResult Index()
         {
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
                 return RedirectToAction("Index", "Productores");
-            else if (User.IsInRole("Sucursal"))
+            else if (User.IsInRole(ApplicationUser.RoleNames.DEPARTAMENTO))
                 return RedirectToAction("Index", "Sucursales");
             else
                 return RedirectToAction("Login", "Account");
