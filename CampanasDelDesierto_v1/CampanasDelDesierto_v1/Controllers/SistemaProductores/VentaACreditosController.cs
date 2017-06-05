@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
@@ -76,24 +77,14 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
             "cantidadMaterial,TemporadaDeCosechaID")]
-            VentaACredito ventaACredito, string idProducto)
+            VentaACredito ventaACredito, string  compras)
         {
-            int[] IDProductos = HerramientasGenerales.StringTools.jsonStringToArray(idProducto);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
             if (ModelState.IsValid)
             {
-                List<CompraProducto> listaCompras = new List<CompraProducto>();
-                //Producto producto = db.Productos.Find(ventaACredito.idProducto);
                 ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-
-                foreach (var id in IDProductos)
-                {
-                    CompraProducto compra = new CompraProducto();                    
-                    compra.idProducto = id;
-                    compra.idMovimiento = ventaACredito.idMovimiento;                                       
-                    db.Entry(compra).State = EntityState.Added;
-
-                }
-                
+                ventaACredito.ComprasProductos = comprasList;
 
                 db.MovimientosFinancieros.Add(ventaACredito);
                 int numReg = db.SaveChanges();

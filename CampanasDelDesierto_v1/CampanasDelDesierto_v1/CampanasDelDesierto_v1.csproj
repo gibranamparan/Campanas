@@ -258,229 +258,17 @@
     <Compile Include="HerramientasGenerales\StringTools.cs" />
     <Compile Include="HerramientasGenerales\TimePeriod.cs" />
     <Compile Include="HerramientasGenerales\VMConfirmModalAttributes.cs" />
-    <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.cs" />
-    <Compile Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.Designer.cs">
-      <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
+    <Compile Include="Migrations\201706051818093_initialcommit.cs" />
+    <Compile Include="Migrations\201706051818093_initialcommit.Designer.cs">
+      <DependentUpon>201706051818093_initialcommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201703192208570_modificaciones.cs" />
-    <Compile Include="Migrations\201703192208570_modificaciones.Designer.cs">
-      <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703192220444_any.cs" />
-    <Compile Include="Migrations\201703192220444_any.Designer.cs">
-      <DependentUpon>201703192220444_any.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.cs" />
-    <Compile Include="Migrations\201703222344464_eliminacionde2atributos.Designer.cs">
-      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704051518104_proveedores.cs" />
-    <Compile Include="Migrations\201704051518104_proveedores.Designer.cs">
-      <DependentUpon>201704051518104_proveedores.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704061712104_productor_preciosADecimal.cs" />
-    <Compile Include="Migrations\201704061712104_productor_preciosADecimal.Designer.cs">
-      <DependentUpon>201704061712104_productor_preciosADecimal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs" />
-    <Compile Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.Designer.cs">
-      <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs" />
-    <Compile Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.Designer.cs">
-      <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.cs" />
-    <Compile Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.Designer.cs">
-      <DependentUpon>201704150532131_tiposDeDatos_PagoPorProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704160235530_correccion_tipoDato_CantidadProducto_PagoPorProducto.cs" />
-    <Compile Include="Migrations\201704160235530_correccion_tipoDato_CantidadProducto_PagoPorProducto.Designer.cs">
-      <DependentUpon>201704160235530_correccion_tipoDato_CantidadProducto_PagoPorProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704160355090_cambioDeDatosDinero_Decimal.cs" />
-    <Compile Include="Migrations\201704160355090_cambioDeDatosDinero_Decimal.Designer.cs">
-      <DependentUpon>201704160355090_cambioDeDatosDinero_Decimal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704162055161_correcionModeloProducto.cs" />
-    <Compile Include="Migrations\201704162055161_correcionModeloProducto.Designer.cs">
-      <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.cs" />
-    <Compile Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.Designer.cs">
-      <DependentUpon>201704170242425_campoAgregado_Producto_isArbolAceituna.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704172100027_tiposDeProductoYPrecio_Productor.cs" />
-    <Compile Include="Migrations\201704172100027_tiposDeProductoYPrecio_Productor.Designer.cs">
-      <DependentUpon>201704172100027_tiposDeProductoYPrecio_Productor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704172129535_productor_ModificadosCamposPrecios.cs" />
-    <Compile Include="Migrations\201704172129535_productor_ModificadosCamposPrecios.Designer.cs">
-      <DependentUpon>201704172129535_productor_ModificadosCamposPrecios.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704172152393_oblizaPrecio_Productores.cs" />
-    <Compile Include="Migrations\201704172152393_oblizaPrecio_Productores.Designer.cs">
-      <DependentUpon>201704172152393_oblizaPrecio_Productores.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704220124547_nuevos modelos inventario campanas.cs" />
-    <Compile Include="Migrations\201704220124547_nuevos modelos inventario campanas.Designer.cs">
-      <DependentUpon>201704220124547_nuevos modelos inventario campanas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704220244066_modificacion modelos.cs" />
-    <Compile Include="Migrations\201704220244066_modificacion modelos.Designer.cs">
-      <DependentUpon>201704220244066_modificacion modelos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704240448503_precioDolar_PrestamosYAbonos.cs" />
-    <Compile Include="Migrations\201704240448503_precioDolar_PrestamosYAbonos.Designer.cs">
-      <DependentUpon>201704240448503_precioDolar_PrestamosYAbonos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704240508106_divisa_PrestamosYAbonos.cs" />
-    <Compile Include="Migrations\201704240508106_divisa_PrestamosYAbonos.Designer.cs">
-      <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs" />
-    <Compile Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.Designer.cs">
-      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704251616255_fechaApagar_anticposAbonos_nulleable.cs" />
-    <Compile Include="Migrations\201704251616255_fechaApagar_anticposAbonos_nulleable.Designer.cs">
-      <DependentUpon>201704251616255_fechaApagar_anticposAbonos_nulleable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.cs" />
-    <Compile Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.Designer.cs">
-      <DependentUpon>201704262125563_creacionTabla_TemporadaDeCosecha.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704270924548_cambio en activos.cs" />
-    <Compile Include="Migrations\201704270924548_cambio en activos.Designer.cs">
-      <DependentUpon>201704270924548_cambio en activos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704281547158_migracionAbril28.cs" />
-    <Compile Include="Migrations\201704281547158_migracionAbril28.Designer.cs">
-      <DependentUpon>201704281547158_migracionAbril28.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704281802075_Cambios en modelos de inventario campanas.cs" />
-    <Compile Include="Migrations\201704281802075_Cambios en modelos de inventario campanas.Designer.cs">
-      <DependentUpon>201704281802075_Cambios en modelos de inventario campanas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.cs" />
-    <Compile Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.Designer.cs">
-      <DependentUpon>201704282158141_nuevaEntidad_EmisionDeCheques.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705120212444_productor_newField_numProductor.cs" />
-    <Compile Include="Migrations\201705120212444_productor_newField_numProductor.Designer.cs">
-      <DependentUpon>201705120212444_productor_newField_numProductor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.cs" />
-    <Compile Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.Designer.cs">
-      <DependentUpon>201705130652401_nuevaTabla_RecepcionAceituna.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.cs" />
-    <Compile Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.Designer.cs">
-      <DependentUpon>201705130721424_deshabilitado_autoincremento_recepcionProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.cs" />
-    <Compile Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.Designer.cs">
-      <DependentUpon>201705130733299_recepcionDeProducto_RecepcionID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.cs" />
-    <Compile Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.Designer.cs">
-      <DependentUpon>201705130802463_recepcionDeProducto_NulleableTemporadaID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.cs" />
-    <Compile Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.Designer.cs">
-      <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.cs" />
-    <Compile Include="Migrations\201705180107076_relacion_inventario_departamento.Designer.cs">
-      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705202117370_ingresp_producto_tipos.cs" />
-    <Compile Include="Migrations\201705202117370_ingresp_producto_tipos.Designer.cs">
-      <DependentUpon>201705202117370_ingresp_producto_tipos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705210425198_costos_pagoProductos_PagoPorProducto.cs" />
-    <Compile Include="Migrations\201705210425198_costos_pagoProductos_PagoPorProducto.Designer.cs">
-      <DependentUpon>201705210425198_costos_pagoProductos_PagoPorProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.cs" />
-    <Compile Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.Designer.cs">
-      <DependentUpon>201705211928407_removed_numeroSemana_PAgoPorProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs" />
-    <Compile Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.Designer.cs">
-      <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.cs" />
-    <Compile Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.Designer.cs">
-      <DependentUpon>201705220237363_removed_nota_PrestamoYAbonoCapitals.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705220553393_temporadas_nuevosPrecios.cs" />
-    <Compile Include="Migrations\201705220553393_temporadas_nuevosPrecios.Designer.cs">
-      <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705222104202_edicion_EmisionDeCheques.cs" />
-    <Compile Include="Migrations\201705222104202_edicion_EmisionDeCheques.Designer.cs">
-      <DependentUpon>201705222104202_edicion_EmisionDeCheques.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.cs" />
-    <Compile Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.Designer.cs">
-      <DependentUpon>201705230043381_addTable_RetencionesDeLimpieza.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705290223236_requiered_Fecha_NumRecibo_Recepciones.cs" />
-    <Compile Include="Migrations\201705290223236_requiered_Fecha_NumRecibo_Recepciones.Designer.cs">
-      <DependentUpon>201705290223236_requiered_Fecha_NumRecibo_Recepciones.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.cs" />
-    <Compile Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.Designer.cs">
-      <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.cs" />
-    <Compile Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.Designer.cs">
-      <DependentUpon>201705312110260_concepto_A_TipoDeMovimiento.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.cs" />
-    <Compile Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.Designer.cs">
-      <DependentUpon>201705312129148_prestamoYAbonoCApita_newField_Pozo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706010102231_nuevaTabla_Conceptos.cs" />
-    <Compile Include="Migrations\201706010102231_nuevaTabla_Conceptos.Designer.cs">
-      <DependentUpon>201706010102231_nuevaTabla_Conceptos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs" />
-    <Compile Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.Designer.cs">
-      <DependentUpon>201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs" />
-    <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.Designer.cs">
-      <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706022053424_addedField_nombreLegal_Productor.cs" />
-    <Compile Include="Migrations\201706022053424_addedField_nombreLegal_Productor.Designer.cs">
-      <DependentUpon>201706022053424_addedField_nombreLegal_Productor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706032109034_addedField_unidadMedida_producto.cs" />
-    <Compile Include="Migrations\201706032109034_addedField_unidadMedida_producto.Designer.cs">
-      <DependentUpon>201706032109034_addedField_unidadMedida_producto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.cs" />
-    <Compile Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.Designer.cs">
-      <DependentUpon>201706050131537_Tabla_Intermedia_CompraProducto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.cs" />
-    <Compile Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.Designer.cs">
-      <DependentUpon>201706050203238_rename_RetencionSAnidad_Deducciones.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.cs" />
-    <Compile Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.Designer.cs">
-      <DependentUpon>201706050204110_Cambio_Modelo_VentaACredito.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.cs" />
-    <Compile Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.Designer.cs">
-      <DependentUpon>201706050437328_Retenciones_TipoDeRetencion.cs</DependentUpon>
+    <Compile Include="Migrations\201706051916448_cantidad_ComprasProductos.cs" />
+    <Compile Include="Migrations\201706051916448_cantidad_ComprasProductos.Designer.cs">
+      <DependentUpon>201706051916448_cantidad_ComprasProductos.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CompraProducto.cs" />
+    <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
     <Compile Include="Models\SistemaProductores\EmisionDeCheque.cs" />
@@ -799,6 +587,8 @@
     <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
     <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_MovimientoDetails.cshtml" />
+    <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
+    <Content Include="Views\Proveedores\Partial_CreateConcepto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -810,174 +600,15 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703192142329_CreacionTablasConCamposNuevos.resx">
-      <DependentUpon>201703192142329_CreacionTablasConCamposNuevos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703192208570_modificaciones.resx">
-      <DependentUpon>201703192208570_modificaciones.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703192220444_any.resx">
-      <DependentUpon>201703192220444_any.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703222344464_eliminacionde2atributos.resx">
-      <DependentUpon>201703222344464_eliminacionde2atributos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704051518104_proveedores.resx">
-      <DependentUpon>201704051518104_proveedores.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704061712104_productor_preciosADecimal.resx">
-      <DependentUpon>201704061712104_productor_preciosADecimal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.resx">
-      <DependentUpon>201704132235140_Nuevo diseño base de datos, empleados, sucursal, activos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.resx">
-      <DependentUpon>201704132359104_cambio en modelo de activo, empleado, sucursal y prestamo activo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704150532131_tiposDeDatos_PagoPorProducto.resx">
-      <DependentUpon>201704150532131_tiposDeDatos_PagoPorProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704160235530_correccion_tipoDato_CantidadProducto_PagoPorProducto.resx">
-      <DependentUpon>201704160235530_correccion_tipoDato_CantidadProducto_PagoPorProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704160355090_cambioDeDatosDinero_Decimal.resx">
-      <DependentUpon>201704160355090_cambioDeDatosDinero_Decimal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704162055161_correcionModeloProducto.resx">
-      <DependentUpon>201704162055161_correcionModeloProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704170242425_campoAgregado_Producto_isArbolAceituna.resx">
-      <DependentUpon>201704170242425_campoAgregado_Producto_isArbolAceituna.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704172100027_tiposDeProductoYPrecio_Productor.resx">
-      <DependentUpon>201704172100027_tiposDeProductoYPrecio_Productor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704172129535_productor_ModificadosCamposPrecios.resx">
-      <DependentUpon>201704172129535_productor_ModificadosCamposPrecios.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704172152393_oblizaPrecio_Productores.resx">
-      <DependentUpon>201704172152393_oblizaPrecio_Productores.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704220124547_nuevos modelos inventario campanas.resx">
-      <DependentUpon>201704220124547_nuevos modelos inventario campanas.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704220244066_modificacion modelos.resx">
-      <DependentUpon>201704220244066_modificacion modelos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704240448503_precioDolar_PrestamosYAbonos.resx">
-      <DependentUpon>201704240448503_precioDolar_PrestamosYAbonos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704240508106_divisa_PrestamosYAbonos.resx">
-      <DependentUpon>201704240508106_divisa_PrestamosYAbonos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704250356289_precision_precioDolar_PrestamoYAbonoCapital.resx">
-      <DependentUpon>201704250356289_precision_precioDolar_PrestamoYAbonoCapital.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704251616255_fechaApagar_anticposAbonos_nulleable.resx">
-      <DependentUpon>201704251616255_fechaApagar_anticposAbonos_nulleable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704262125563_creacionTabla_TemporadaDeCosecha.resx">
-      <DependentUpon>201704262125563_creacionTabla_TemporadaDeCosecha.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704270924548_cambio en activos.resx">
-      <DependentUpon>201704270924548_cambio en activos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704281547158_migracionAbril28.resx">
-      <DependentUpon>201704281547158_migracionAbril28.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704281802075_Cambios en modelos de inventario campanas.resx">
-      <DependentUpon>201704281802075_Cambios en modelos de inventario campanas.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704282158141_nuevaEntidad_EmisionDeCheques.resx">
-      <DependentUpon>201704282158141_nuevaEntidad_EmisionDeCheques.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705120212444_productor_newField_numProductor.resx">
-      <DependentUpon>201705120212444_productor_newField_numProductor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705130652401_nuevaTabla_RecepcionAceituna.resx">
-      <DependentUpon>201705130652401_nuevaTabla_RecepcionAceituna.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705130721424_deshabilitado_autoincremento_recepcionProducto.resx">
-      <DependentUpon>201705130721424_deshabilitado_autoincremento_recepcionProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705130733299_recepcionDeProducto_RecepcionID.resx">
-      <DependentUpon>201705130733299_recepcionDeProducto_RecepcionID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705130802463_recepcionDeProducto_NulleableTemporadaID.resx">
-      <DependentUpon>201705130802463_recepcionDeProducto_NulleableTemporadaID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705140204278_fecha_semana_RecepcionDeProducto.resx">
-      <DependentUpon>201705140204278_fecha_semana_RecepcionDeProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705180107076_relacion_inventario_departamento.resx">
-      <DependentUpon>201705180107076_relacion_inventario_departamento.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705202117370_ingresp_producto_tipos.resx">
-      <DependentUpon>201705202117370_ingresp_producto_tipos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705210425198_costos_pagoProductos_PagoPorProducto.resx">
-      <DependentUpon>201705210425198_costos_pagoProductos_PagoPorProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705211928407_removed_numeroSemana_PAgoPorProducto.resx">
-      <DependentUpon>201705211928407_removed_numeroSemana_PAgoPorProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705211939490_relationShip_PagoPorProducto_RecpecionProducto.resx">
-      <DependentUpon>201705211939490_relationShip_PagoPorProducto_RecpecionProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705220237363_removed_nota_PrestamoYAbonoCapitals.resx">
-      <DependentUpon>201705220237363_removed_nota_PrestamoYAbonoCapitals.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705220553393_temporadas_nuevosPrecios.resx">
-      <DependentUpon>201705220553393_temporadas_nuevosPrecios.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705222104202_edicion_EmisionDeCheques.resx">
-      <DependentUpon>201705222104202_edicion_EmisionDeCheques.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705230043381_addTable_RetencionesDeLimpieza.resx">
-      <DependentUpon>201705230043381_addTable_RetencionesDeLimpieza.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705290223236_requiered_Fecha_NumRecibo_Recepciones.resx">
-      <DependentUpon>201705290223236_requiered_Fecha_NumRecibo_Recepciones.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.resx">
-      <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.resx">
-      <DependentUpon>201705312110260_concepto_A_TipoDeMovimiento.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.resx">
-      <DependentUpon>201705312129148_prestamoYAbonoCApita_newField_Pozo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706010102231_nuevaTabla_Conceptos.resx">
-      <DependentUpon>201706010102231_nuevaTabla_Conceptos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.resx">
-      <DependentUpon>201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.resx">
-      <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706022053424_addedField_nombreLegal_Productor.resx">
-      <DependentUpon>201706022053424_addedField_nombreLegal_Productor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706032109034_addedField_unidadMedida_producto.resx">
-      <DependentUpon>201706032109034_addedField_unidadMedida_producto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.resx">
-      <DependentUpon>201706050131537_Tabla_Intermedia_CompraProducto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.resx">
-      <DependentUpon>201706050203238_rename_RetencionSAnidad_Deducciones.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.resx">
-      <DependentUpon>201706050204110_Cambio_Modelo_VentaACredito.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.resx">
-      <DependentUpon>201706050437328_Retenciones_TipoDeRetencion.cs</DependentUpon>
-    </EmbeddedResource>
+    <WCFMetadataStorage Include="Service References\Banxico\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\Banxico\" />
+    <EmbeddedResource Include="Migrations\201706051818093_initialcommit.resx">
+      <DependentUpon>201706051818093_initialcommit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706051916448_cantidad_ComprasProductos.resx">
+      <DependentUpon>201706051916448_cantidad_ComprasProductos.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

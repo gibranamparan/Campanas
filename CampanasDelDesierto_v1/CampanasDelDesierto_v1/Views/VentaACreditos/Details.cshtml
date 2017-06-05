@@ -1,14 +1,18 @@
 ﻿@model CampanasDelDesierto_v1.Models.VentaACredito
 
-<div class="form-group col-md-4">
-    @Html.LabelFor(model => model.cantidadMaterial, new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.cantidadMaterial)</p>
-    </div>
-</div>
-<div class="form-group col-md-4">
-    @Html.LabelFor(model => model.Producto.nombreProducto, new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.Producto.nombreProducto)</p>
-    </div>
-</div>
+@*LISTA DE LOS PRODUCTOS COMPRADOS*@
+<table>
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var compra in Model.ComprasProductos)
+        {
+            <tr>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -14,12 +14,12 @@
             <i class="fa fa-handshake-o"></i> Anticipos y Abonos
         </a>
         <a class="btn btn-primary"
-           href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporada })">
-            <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
-        </a>
-        <a class="btn btn-primary"
            href="@Url.Action("Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporada })">
             <i class="fa fa-shopping-cart"></i> Venta de Material
+        </a>
+        <a class="btn btn-primary"
+           href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporada })">
+            <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
         </a>
         <a class="btn btn-primary"
            href="@Url.Action("Create", "EmisionDeCheques", new { id = Model.idProductor, temporada = temporada })">
