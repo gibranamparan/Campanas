@@ -1,32 +1,103 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Proveedores>
+﻿@model List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Proveedores>
+@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.HerramientasGenerales
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    VMConfirmModalAttributes modelOptionsConfirmDeleteProveedor = new VMConfirmModalAttributes
+    {
+        partialViewURL = "Partial_DeleteProveedor",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
+        modelForPartial = new PrestamoYAbonoCapital.Proveedores(),
+        modalID = "confirmDeleteProveedor",
+    };
+
+    PrestamoYAbonoCapital.Conceptos nuevoConcepto = new PrestamoYAbonoCapital.Conceptos();
+    VMConfirmModalAttributes modelOptionsConfirmDeleteConcepto= new VMConfirmModalAttributes
+    {
+        partialViewURL = "Partial_DeleteConcepto",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
+        modelForPartial = nuevoConcepto,
+        modalID = "confirmDeleteConcepto",
+    };
+
+    List<PrestamoYAbonoCapital.Conceptos> conceptos = ViewBag.conceptos;
 }
 
-<h2>Tabla proveedores</h2>
+<h2>Tabla de Proveedores</h2>
 
-<a href="@Url.Action("Create")">
-    <i class="fa fa-plus-circle"></i> Nuevo Proveedor
-</a>
+@Html.Partial("Partial_CreateProveedor", new PrestamoYAbonoCapital.Proveedores())
+
 <table class="table table-hover table-striped">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.nombreProveedor)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().nombreProveedor)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.nombreProveedor)
-        </td>
-        <td>            
-            @Html.ActionLink(" ", "Delete", new { id=item.id }, new { @class = "glyphicon glyphicon-trash" })
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombreProveedor)
+            </td>
+            <td>
+                <a data-toggle="modal" id="@item.id" entityName="@item.nombreProveedor"
+                   href='#@(modelOptionsConfirmDeleteProveedor.modalID)'
+                   onclick="prepareModalDelete(this)">
+                    <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
+                </a>
+            </td>
+        </tr>
+    }
 </table>
+
+@Html.Partial("Partial_ConfirmationModal", modelOptionsConfirmDeleteProveedor)
+
+<hr />
+
+@*ADMINISTRACION DE CONCEPTOS*@
+<h2>Tabla de Conceptos</h2>
+@Html.Partial("Partial_CreateConcepto", new PrestamoYAbonoCapital.Conceptos())
+
+<table class="table table-hover table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => conceptos.FirstOrDefault().nombreConcepto)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in conceptos)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombreConcepto)
+            </td>
+            <td>
+                <a data-toggle="modal" id="@item.id" entityName="@item.nombreConcepto" 
+                   href='#@(modelOptionsConfirmDeleteConcepto.modalID)'
+                   onclick="prepareModalDelete(this)">
+                    <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
+                </a>
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.Partial("Partial_ConfirmationModal", modelOptionsConfirmDeleteConcepto)
+
+@section Scripts{
+    <script>
+        function prepareModalDelete(link) {
+            var modalSelector = $(link).attr('href');
+            $(modalSelector).find('input#id').val($(link).attr('id'));
+            $(modalSelector).find('strong#entityName').html($(link).attr('entityName'))
+        }
+    </script>    
+}

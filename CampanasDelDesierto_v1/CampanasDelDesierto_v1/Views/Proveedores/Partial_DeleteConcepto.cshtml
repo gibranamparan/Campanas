@@ -1,0 +1,25 @@
+﻿@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Conceptos
+
+<h3>¿Estás seguro que quieres eliminar este registro?</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreConcepto)
+        </dt>
+
+        <dd>
+            <strong id="entityName">@Html.DisplayFor(model => model.nombreConcepto)</strong>
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("DeleteConcepto","Proveedores",FormMethod.Post,new { @class="row" })) {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model=>model.id)
+        <div class="form-group">
+            <div class="col-md-12">
+                <button class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    }
+</div>

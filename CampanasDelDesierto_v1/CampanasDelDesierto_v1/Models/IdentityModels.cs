@@ -5,6 +5,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using CampanasDelDesierto_v1.HerramientasGenerales;
+using Proveedores = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Proveedores;
+using Conceptos = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Conceptos;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -22,7 +24,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public static class RoleNames
         {
-            public const string SUCURSAL = "Sucursal";
+            public const string DEPARTAMENTO = "Departamento";
             public const string ADMIN = "Admin";
         }
     }
@@ -36,6 +38,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<VentaACredito> VentasACreditos { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Proveedores> Proveedores { get; set; }
+        public DbSet<Conceptos> Conceptos { get; set; }
         public DbSet<Activo> Activos { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }

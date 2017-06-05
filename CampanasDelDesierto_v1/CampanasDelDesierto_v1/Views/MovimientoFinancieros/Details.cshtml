@@ -14,7 +14,7 @@
     |
 
     @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL &&
-                Model.conceptoProveedor != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
     {
         <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
             <i class="glyphicon glyphicon-print"></i> Imprimir Pagaré

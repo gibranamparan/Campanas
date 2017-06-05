@@ -165,10 +165,6 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rotativa.1.6.4\lib\net40\Rotativa.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -233,24 +229,24 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ActivosController.cs" />
-    <Compile Include="Controllers\DepartamentosController.cs" />
-    <Compile Include="Controllers\EmisionDeChequesController.cs" />
-    <Compile Include="Controllers\EmpleadosController.cs" />
-    <Compile Include="Controllers\InventariosController.cs" />
-    <Compile Include="Controllers\PrestamosActivosController.cs" />
-    <Compile Include="Controllers\ProductosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\EmisionDeChequesController.cs" />
+    <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\InventariosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\PrestamosActivosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\ProductosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MovimientoFinancierosController.cs" />
-    <Compile Include="Controllers\PagosPorProductosController.cs" />
-    <Compile Include="Controllers\PrestamoYAbonoCapitalsController.cs" />
-    <Compile Include="Controllers\ProductoresController.cs" />
-    <Compile Include="Controllers\ProveedoresController.cs" />
-    <Compile Include="Controllers\RecepcionDeProductosController.cs" />
-    <Compile Include="Controllers\SucursalesController.cs" />
-    <Compile Include="Controllers\TemporadaDeCosechasController.cs" />
-    <Compile Include="Controllers\VentaACreditosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\MovimientoFinancierosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\PagosPorProductosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\PrestamoYAbonoCapitalsController.cs" />
+    <Compile Include="Controllers\SistemaProductores\ProductoresController.cs" />
+    <Compile Include="Controllers\SistemaProductores\ProveedoresController.cs" />
+    <Compile Include="Controllers\SistemaProductores\RecepcionDeProductosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\SucursalesController.cs" />
+    <Compile Include="Controllers\SistemaProductores\TemporadaDeCosechasController.cs" />
+    <Compile Include="Controllers\SistemaProductores\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -438,27 +434,46 @@
     <Compile Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.Designer.cs">
       <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.cs" />
+    <Compile Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.Designer.cs">
+      <DependentUpon>201705312110260_concepto_A_TipoDeMovimiento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.cs" />
+    <Compile Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.Designer.cs">
+      <DependentUpon>201705312129148_prestamoYAbonoCApita_newField_Pozo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706010102231_nuevaTabla_Conceptos.cs" />
+    <Compile Include="Migrations\201706010102231_nuevaTabla_Conceptos.Designer.cs">
+      <DependentUpon>201706010102231_nuevaTabla_Conceptos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs" />
+    <Compile Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.Designer.cs">
+      <DependentUpon>201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs" />
+    <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.Designer.cs">
+      <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Activo.cs" />
-    <Compile Include="Models\Departamento.cs" />
-    <Compile Include="Models\EmisionDeCheque.cs" />
-    <Compile Include="Models\Empleado.cs" />
-    <Compile Include="Models\Inventario.cs" />
-    <Compile Include="Models\PrestamoActivo.cs" />
+    <Compile Include="Models\SistemaActivos\Activo.cs" />
+    <Compile Include="Models\SistemaActivos\Departamento.cs" />
+    <Compile Include="Models\SistemaProductores\EmisionDeCheque.cs" />
+    <Compile Include="Models\SistemaActivos\Empleado.cs" />
+    <Compile Include="Models\SistemaActivos\Inventario.cs" />
+    <Compile Include="Models\SistemaActivos\PrestamoActivo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\MovimientoFinanciero.cs" />
-    <Compile Include="Models\PagoPorProducto.cs" />
-    <Compile Include="Models\PrestamoYAbonoCapital.cs" />
-    <Compile Include="Models\Producto.cs" />
-    <Compile Include="Models\Proveedores.cs" />
-    <Compile Include="Models\RecepcionDeProducto.cs" />
-    <Compile Include="Models\RetencionLimpieza.cs" />
-    <Compile Include="Models\Sucursal.cs" />
-    <Compile Include="Models\TemporadaDeCosecha.cs" />
-    <Compile Include="Models\VentaACredito.cs" />
-    <Compile Include="Models\Productor.cs" />
+    <Compile Include="Models\SistemaProductores\MovimientoFinanciero.cs" />
+    <Compile Include="Models\SistemaProductores\PagoPorProducto.cs" />
+    <Compile Include="Models\SistemaProductores\PrestamoYAbonoCapital.cs" />
+    <Compile Include="Models\SistemaProductores\Producto.cs" />
+    <Compile Include="Models\SistemaProductores\RecepcionDeProducto.cs" />
+    <Compile Include="Models\SistemaProductores\RetencionLimpieza.cs" />
+    <Compile Include="Models\SistemaActivos\Sucursal.cs" />
+    <Compile Include="Models\SistemaProductores\TemporadaDeCosecha.cs" />
+    <Compile Include="Models\SistemaProductores\VentaACredito.cs" />
+    <Compile Include="Models\SistemaProductores\Productor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\Banxico\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -591,9 +606,9 @@
     <Content Include="fonts\icomoon.ttf" />
     <Content Include="fonts\icomoon.woff" />
     <Content Include="App_Browsers\qt.browser" />
+    <None Include="Properties\PublishProfiles\Default Settings %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\customFunctions.js" />
@@ -683,13 +698,10 @@
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
     <Content Include="Views\PagosPorProductos\Create.cshtml" />
-    <Content Include="Views\MovimientoFinancieros\Create.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Delete.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Details.cshtml" />
-    <Content Include="Views\MovimientoFinancieros\Edit.cshtml" />
-    <Content Include="Views\MovimientoFinancieros\Index.cshtml" />
-    <Content Include="Views\Proveedores\Create.cshtml" />
-    <Content Include="Views\Proveedores\Delete.cshtml" />
+    <Content Include="Views\Proveedores\Partial_CreateProveedor.cshtml" />
+    <Content Include="Views\Proveedores\Partial_DeleteProveedor.cshtml" />
     <Content Include="Views\Proveedores\Index.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListMovimientos.cshtml" />
     <Content Include="Views\Productores\Partial_InfoProductor.cshtml" />
@@ -751,8 +763,6 @@
     <Content Include="Views\EmisionDeCheques\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
-    <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
-    <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -895,6 +905,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705300828040_addedFiedls_poblacion_telefono.resx">
       <DependentUpon>201705300828040_addedFiedls_poblacion_telefono.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705312110260_concepto_A_TipoDeMovimiento.resx">
+      <DependentUpon>201705312110260_concepto_A_TipoDeMovimiento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705312129148_prestamoYAbonoCApita_newField_Pozo.resx">
+      <DependentUpon>201705312129148_prestamoYAbonoCApita_newField_Pozo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706010102231_nuevaTabla_Conceptos.resx">
+      <DependentUpon>201706010102231_nuevaTabla_Conceptos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.resx">
+      <DependentUpon>201706010609020_campoAgregado_DescripcionConcepto_PrestamoAbonoCapital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.resx">
+      <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

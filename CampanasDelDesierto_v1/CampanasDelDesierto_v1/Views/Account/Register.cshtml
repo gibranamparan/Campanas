@@ -1,4 +1,5 @@
 ﻿@model CampanasDelDesierto_v1.Models.RegisterViewModel
+@using CampanasDelDesierto_v1.Models
 @{
     ViewBag.Title = "Register";
     
@@ -34,8 +35,8 @@
         @Html.LabelFor(m => m.rol, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             <select name="rol">
-                <option value="Admin">Admin</option>
-                <option value="Sucursal">Sucursal</option>               
+                <option value="@ApplicationUser.RoleNames.ADMIN">@ApplicationUser.RoleNames.ADMIN</option>
+                <option value="@ApplicationUser.RoleNames.DEPARTAMENTO">@ApplicationUser.RoleNames.DEPARTAMENTO</option>               
             </select>
         </div>
     </div>

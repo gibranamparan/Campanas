@@ -46,8 +46,9 @@
 
         <div class="form-actions no-color">
             <button class="btn btn-danger" >Eliminar</button> |
-            @Html.ActionLink("Volver a detalles del productor","Details","Productores"
-                ,new { id= Model.idProductor }, null)
+            <a href="@Url.Action("Details","Productores" ,new { id= Model.idProductor })">
+                <i class="glyphicon glyphicon-arrow-left"></i><span>Volver Movimientos de Productor</span>
+            </a>
         </div>
     }
 </div>

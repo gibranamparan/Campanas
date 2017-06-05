@@ -128,7 +128,7 @@
                 @Html.HiddenFor(model => model.idMovimiento)
                 @Html.HiddenFor(model => model.idProductor)
                 @Html.HiddenFor(model => model.TemporadaDeCosechaID)
-                @Html.Hidden("selectedIngresos")
+                @Html.Hidden("selectedIngresos","",new { @class= "selectedIngresos" })
 
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-6">
@@ -331,7 +331,7 @@
         $("#btnEliminarRecepciones").attr('disabled', data.length == 0)
 
         console.log(JSON.stringify(selectedIngresosIDs))
-        $('#selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
+        $('.selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
     }
 
     function limpiarSeleccionIngresos(){

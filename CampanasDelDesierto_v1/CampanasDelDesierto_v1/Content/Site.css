@@ -196,12 +196,20 @@ footer{
      margin-top: .5em;
  }
 
+ .searchPanel btn{
+     margin-bottom: .2em;
+ }
+
  .satLogo{
      line-height: 2.8em;
  }
 
  .form-group img{
      height: 2em;
+ }
+
+ .form-control{
+     height: 2.75em;
  }
 
  #logoutForm{
@@ -219,6 +227,11 @@ footer{
 
  .form-horizontal .control-label{
      padding-top:0px;
+ }
+
+ hr{
+     border: 1px;
+     border-top: 1px solid rgb(143, 132, 0);
  }
 
 .datatablejs {

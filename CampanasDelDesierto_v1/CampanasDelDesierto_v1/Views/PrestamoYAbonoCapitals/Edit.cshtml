@@ -13,223 +13,260 @@
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
-        <i class="glyphicon glyphicon-usd"></i> Ver Movimientos de este productor
+        <i class="fa fa-money"></i> Ver Movimientos de este productor
     </a>
 </p>
 
 @Html.Partial("../Productores/Partial_InfoProductor", productor)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.idProductor)
-    @Html.HiddenFor(model => model.idMovimiento)
-    @Html.HiddenFor(model => model.TemporadaDeCosechaID)
-    <div class="form-horizontal">
-        <h4>Editar Movimiento de Capital</h4>
-        <div class="alert alert-info">
-            <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo). 
-            <strong>@Html.DisplayNameFor(model => model.precioDelDolar) registrado: </strong><a onclick="restaurarPrecioDolar()" style="cursor:pointer">@Html.DisplayFor(model => model.precioDelDolar)</a>
-        </div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="row">
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.montoMovimiento, new
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Editar Movimiento de Capital
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.idProductor)
+            @Html.HiddenFor(model => model.idMovimiento)
+            @Html.HiddenFor(model => model.TemporadaDeCosechaID)
+
+            <div class="form-horizontal">
+                <div class="alert alert-info">
+                    <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
+                    <strong>@Html.DisplayNameFor(model => model.precioDelDolar) registrado: </strong><a onclick="restaurarPrecioDolar()" style="cursor:pointer">@Html.DisplayFor(model => model.precioDelDolar)</a>
+                </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.montoMovimiento, new
+                   {
+                       htmlAttributes = new
                        {
-                           htmlAttributes = new { @class = "form-control",
-                               data_mask = "###0.00",
+                           @class = "form-control",
+                           data_mask = "###0.00",
+                           data_mask_reverse = "true",
+                       }
+                   })
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="conversionDivisa" class="row" style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?"block":"none")">
+                    <div class="form-group col-md-6">
+                        <label class="control-label col-md-2">Monto (MXN)</label>
+                        <div class="col-md-10">
+                            <input id="montoPesos" class="form-control" value="@montoMovimientoPesos"
+                                   data-mask="###0.00" data-mask-reverse="true" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div id="divPrecioDelDolar" class="col-md-8">
+                            @Html.EditorFor(model => model.precioDelDolar, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
                                data_mask_reverse = "true",
+                               data_mask = "###0.0000"
                            }
                        })
-                    @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
+                        </div>
+                        <a class="satLogo" target="_blank"
+                           href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
+                            <img src="/images/sat_logo.png" />
+                        </a>
+                        <button id="refreshButton" class="glyphicon glyphicon-refresh btn btn-info" type="button" onclick="setPrecioDolar()"></button>
+                        <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.divisa, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(mode => Model.divisa, new SelectList(PrestamoYAbonoCapital.getDivisasArray(), "Text", "Value"), new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.divisa, "", new { @class = "text-danger" })
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div id="conversionDivisa" class="row" style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?"block":"none")">
-            <div class="form-group col-md-6">
-                <label class="control-label col-md-2">Monto (MXN)</label>
-                <div class="col-md-10">
-                    <input id="montoPesos" class="form-control" value="@montoMovimientoPesos"
-                           data-mask="###0.00" data-mask-reverse="true" />
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div id="divPrecioDelDolar" class="col-md-8">
-                    @Html.EditorFor(model => model.precioDelDolar, new
-               {
-                   htmlAttributes = new
-                   {
-                       @class = "form-control",
-                       data_mask_reverse = "true",
-                       data_mask = "###0.0000"
-                   }
-               })
-                    @Html.ValidationMessageFor(model => model.precioDelDolar, "", new { @class = "text-danger" })
-                </div>
-                <a class="satLogo" target="_blank"
-                   href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
-                    <img src="/images/sat_logo.png" />
-                </a>
-                <button id="refreshButton" class="glyphicon glyphicon-refresh btn btn-info" type="button" onclick="setPrecioDolar()"></button>
-                <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.tipoDeMovimientoDeCapital, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(x => x.tipoDeMovimientoDeCapital, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
+                new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.pagare, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="formGroupDeuda" class="row" style=@(Model.tipoDeMovimientoDeCapital==PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO?"display:none":"")>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fechaPagar, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.fechaPagar, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.concepto, PrestamoYAbonoCapital.getConceptosSelectList(),
+                                htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.concepto, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("proveedor", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.proveedor, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div id="detallesCFE" class="form-group col-md-6" style="display:@(Model.proveedor == "CFE"?"inline-block":"none")">
+                        @Html.LabelFor(model => model.pozo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pozo, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.pozo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group row col-md-12">
+                        @Html.LabelFor(model => model.descripcionConcepto)
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.descripcionConcepto,
+                           new { htmlAttributes = new { @class = "form-control col-md-12", style = "resize:vertical" } })
+                            @Html.ValidationMessageFor(model => model.descripcionConcepto, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <button type="submit" class="btn btn-success">Editar</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.concepto, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(x => x.concepto, new SelectList(PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(), "Value", "Text"),
-                        new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.pagare, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.pagare, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.pagare, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div id="formGroupDeuda" class="row" style=@(Model.concepto==PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO?"display:none":"")>
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.fechaPagar, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.fechaPagar, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div id="formGroupProveedor" class="form-group col-md-6" >
-                @Html.LabelFor(model => model.proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("proveedor", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.proveedor, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-10">
-                <button type="submit" class="btn btn-success">Editar</button>
-            </div>
-        </div>
+        }
     </div>
-}
+</div>
 
 @section Scripts {
-@Scripts.Render("~/bundles/jqueryval")
-<script>
-    var setPrecioDolar;
-    var restaurarPrecioDolar;
-    var precioDolarOriginal=@Model.precioDelDolar;
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var setPrecioDolar;
+        var restaurarPrecioDolar;
+        var precioDolarOriginal=@Model.precioDelDolar;
 
-    $().ready(function () {
-        var precioDolar = $('#precioDelDolar').val();
+        $().ready(function () {
+            var precioDolar = $('#precioDelDolar').val();
 
-        restaurarPrecioDolar = function (){
-            $("#precioDelDolar").val(numeral(precioDolarOriginal).format('0.0000')).trigger('input');
-            $('#precioDelDolar').attr('value', precioDolarOriginal);
-            recalcularMontoDolares();
-        }
-        $('#divisa').change(function () {
-            if ($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN') {
-                $('#conversionDivisa').slideDown();
-                $("#montoMovimiento").prop('readonly', true);
-            } else {
-                $('#conversionDivisa').slideUp();
-                $("#montoMovimiento").prop('readonly', false);
+            restaurarPrecioDolar = function (){
+                $("#precioDelDolar").val(numeral(precioDolarOriginal).format('0.0000')).trigger('input');
+                $('#precioDelDolar').attr('value', precioDolarOriginal);
+                recalcularMontoDolares();
             }
-        })
+            $('#divisa').change(function () {
+                if ($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN') {
+                    $('#conversionDivisa').slideDown();
+                    $("#montoMovimiento").prop('readonly', true);
+                } else {
+                    $('#conversionDivisa').slideUp();
+                    $("#montoMovimiento").prop('readonly', false);
+                }
+            })
 
-        $("#concepto").change(function () {
-            if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" ) {
-                $("#formGroupDeuda").slideUp();
-            } else {
-                $("#formGroupDeuda").slideDown();
+            $("#tipoDeMovimientoDeCapital").change(function () {
+                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" )
+                    $("#formGroupDeuda").slideUp();
+                else
+                    $("#formGroupDeuda").slideDown();
+
+                $("#proveedor").trigger("change");
+            })
+
+            $("#proveedor").change(function () {
+                var prov = $(this).val();
+                $("#detallesCFE").slideToggle(prov == "CFE")
+            })
+
+            $("#montoPesos").keyup(function () {
+                recalcularMontoDolares();
+            })
+
+            $("#precioDelDolar").keyup(function () {
+                recalcularMontoDolares();
+            })
+
+            $("#montoMovimiento").keyup(function () {
+                recalcularMontoPesos();
+            })
+
+            setPrecioDolar = function() {
+                var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+                $("#loadingImg").toggleClass('hidden');
+
+                //Se hace solicitud del precio del dolar al server
+                getTipoCambioAsync(
+                    function (res) {
+                        $("#precioDelDolar").val(res.precioDolar).trigger('input');
+                        $('#precioDelDolar').attr('value', res.precioDolar);
+                        precioDolar = res.precioDolar;
+                        recalcularMontoDolares();
+                    },
+                    function (err) { },
+                    function () {
+                        $("#loadingImg").toggleClass('hidden');
+                    }, antiForgeryToken)
             }
-        })
 
-        $("#montoPesos").keyup(function () {
-            recalcularMontoDolares();
-        })
+            function recalcularMontoDolares() {
+                var montoPesos = $("#montoPesos").val();
+                var precioDolar = $("#precioDelDolar").val()
+                var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
+                $('#montoMovimiento')
+                    .val(numeral(num).format('0.00')).trigger('input');
+                $('#montoMovimiento').attr('value', num);
+            }
 
-        $("#precioDelDolar").keyup(function () {
-            recalcularMontoDolares();
-        })
+            function recalcularMontoPesos() {
+                var montoDolares = $("#montoMovimiento").val();
+                var precioDolar = $("#precioDelDolar").val()
+                var num = Math.trunc(Math.round(montoDolares * precioDolar * 100)) / 100;
+                $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
+                $('#montoPesos').attr('value', num);
+            }
 
-        $("#montoMovimiento").keyup(function () {
             recalcularMontoPesos();
+            $('#divisa').trigger('change');
         })
 
-        setPrecioDolar = function() {
-            var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
-            $("#loadingImg").toggleClass('hidden');
-
-            //Se hace solicitud del precio del dolar al server
-            getTipoCambioAsync(
-                function (res) {
-                    $("#precioDelDolar").val(res.precioDolar).trigger('input');
-                    $('#precioDelDolar').attr('value', res.precioDolar);
-                    precioDolar = res.precioDolar;
-                    recalcularMontoDolares();
-                },
-                function (err) { },
-                function () {
-                    $("#loadingImg").toggleClass('hidden');
-                }, antiForgeryToken)
-        }
-
-        function recalcularMontoDolares() {
-            var montoPesos = $("#montoPesos").val();
-            var precioDolar = $("#precioDelDolar").val()
-            var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
-            $('#montoMovimiento')
-                .val(numeral(num).format('0.00')).trigger('input');
-            $('#montoMovimiento').attr('value', num);
-        }
-
-        function recalcularMontoPesos() {
-            var montoDolares = $("#montoMovimiento").val();
-            var precioDolar = $("#precioDelDolar").val()
-            var num = Math.trunc(Math.round(montoDolares * precioDolar * 100)) / 100;
-            $('#montoPesos').val(numeral(num).format('0.00')).trigger('input');
-            $('#montoPesos').attr('value', num);
-        }
-
-        recalcularMontoPesos();
-        $('#divisa').trigger('change');
-    })
-
-</script>
+    </script>
 }
