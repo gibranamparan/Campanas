@@ -509,7 +509,6 @@
     <Content Include="Views\VentaACreditos\Create.cshtml" />
     <Content Include="Views\VentaACreditos\Delete.cshtml" />
     <Content Include="Views\VentaACreditos\Details.cshtml" />
-    <Content Include="Views\VentaACreditos\Edit.cshtml" />
     <Content Include="Views\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />

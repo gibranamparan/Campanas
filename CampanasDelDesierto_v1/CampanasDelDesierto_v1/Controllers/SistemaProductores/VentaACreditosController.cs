@@ -123,7 +123,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             ViewBag.productor = ventaACredito.Productor;
             ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto"/*, ventaACredito.idProducto*/);
-            return View(ventaACredito);
+            return View("Create",ventaACredito);
         }
 
         // POST: VentaACreditos/Edit/5

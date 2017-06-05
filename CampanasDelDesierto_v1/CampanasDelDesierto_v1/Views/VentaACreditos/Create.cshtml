@@ -9,6 +9,8 @@
 
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
+
+    bool editMode = Model.idMovimiento > 0;
 }
 
 <p>
@@ -134,4 +136,10 @@
             funcionRecalcularMontos();
         });
     </script>
+
+    @(editMode){
+    <script>
+
+    </script>
+    }
 }
