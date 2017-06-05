@@ -59,7 +59,7 @@ namespace CampanasDelDesierto_v1.Models
             this.unidadMedida = this.unidadMedida;
         }
 
-        public Producto(){}
+        public Producto() { }
 
         [Key]
         public int idProducto { get; set; }
@@ -71,7 +71,7 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [Display(Name = "Costo")]
         public decimal costo { get; set; }
-        
+
         //Tipo de material que es.
         [Display(Name = "Descripción")]
         [DataType(DataType.MultilineText)]
@@ -82,7 +82,8 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "um.")]
         public UnidadDeMedida UnidadMedida
         {
-            get {
+            get
+            {
                 return UnidadDeMedida.GetByName(this.unidadMedida);
             }
             set
@@ -92,7 +93,7 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         [Display(Name = "Es árbol")]
-        public bool isArbolAceituna { get; set;}
+        public bool isArbolAceituna { get; set; }
 
         internal static int importarProductores(HttpPostedFileBase xlsFile,
             ApplicationDbContext db, out List<ExcelTools.ExcelParseError> errores,
@@ -232,4 +233,5 @@ namespace CampanasDelDesierto_v1.Models
                 };
             }
         }
+    }
 }
