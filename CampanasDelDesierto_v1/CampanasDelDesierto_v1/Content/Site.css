@@ -16,6 +16,24 @@ div#main {
 .dl-horizontal dt {
     white-space: normal;
 }
+
+/*Forms and Inputs*/
+ .form-group img{
+     height: 2em;
+ }
+
+ .form-control{
+     height: 2.75em;
+ }
+
+ form input.form-control[type="checkbox"] {
+    display: block;
+    /* margin: auto; */
+    border: none;
+    height: 2.75em;
+    width: 2.75em;
+}
+
 /*UserPanel*/
 .usrPanel {
     background: #6e460b;
@@ -25,7 +43,6 @@ div#main {
     box-shadow: 0.1em 0.2em 2em grey;
     border-radius: 0 0 0em 1em;
     z-index: 5;
-    width: 25em;
 }
 ul.usrPanel li a {
     color: white;
@@ -202,14 +219,6 @@ footer{
 
  .satLogo{
      line-height: 2.8em;
- }
-
- .form-group img{
-     height: 2em;
- }
-
- .form-control{
-     height: 2.75em;
  }
 
  #logoutForm{

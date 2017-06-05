@@ -24,7 +24,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // Post: INDEX
         [HttpPost, ActionName("Index")]
-        public ActionResult ImportProductoresFromExcel(HttpPostedFileBase xlsFile)
+        public ActionResult ImportFromExcel(HttpPostedFileBase xlsFile)
         {
             //Lista para recoleccion de errores
             List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
@@ -194,6 +194,15 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [AllowAnonymous]
+        public ActionResult borrarSinIngresos()
+        {
+            var productores = db.Productores.Where(prod => prod.recepcionesDeProducto.Count() == 0);
+            db.Productores.RemoveRange(productores);
+            int numRegs = db.SaveChanges();
+            return Json(new { registrosEliminados = numRegs });
         }
     }
 }
