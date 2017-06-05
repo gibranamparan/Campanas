@@ -81,9 +81,19 @@ namespace CampanasDelDesierto_v1.Controllers
             int[] IDProductos = HerramientasGenerales.StringTools.jsonStringToArray(idProducto);
             if (ModelState.IsValid)
             {
+                List<CompraProducto> listaCompras = new List<CompraProducto>();
                 //Producto producto = db.Productos.Find(ventaACredito.idProducto);
                 ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                //ventaACredito.ajustarMovimiento(producto); 
+
+                foreach (var id in IDProductos)
+                {
+                    CompraProducto compra = new CompraProducto();                    
+                    compra.idProducto = id;
+                    compra.idMovimiento = ventaACredito.idMovimiento;                                       
+                    db.Entry(compra).State = EntityState.Added;
+
+                }
+                
 
                 db.MovimientosFinancieros.Add(ventaACredito);
                 int numReg = db.SaveChanges();
