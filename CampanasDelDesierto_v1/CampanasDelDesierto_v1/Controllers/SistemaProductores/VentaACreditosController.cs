@@ -79,12 +79,14 @@ namespace CampanasDelDesierto_v1.Controllers
             "cantidadMaterial,TemporadaDeCosechaID")]
             VentaACredito ventaACredito, string  compras)
         {
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
             if (ModelState.IsValid)
             {
                 ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                ventaACredito.ComprasProductos = comprasList;
+                ventaACredito.ajustarMovimiento();
+
+                //Se deserializa la lista de compras en un objeto
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
 
                 db.MovimientosFinancieros.Add(ventaACredito);
                 int numReg = db.SaveChanges();

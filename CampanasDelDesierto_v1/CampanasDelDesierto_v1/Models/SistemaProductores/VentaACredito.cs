@@ -10,7 +10,7 @@ namespace CampanasDelDesierto_v1.Models
     {     
         public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
 
-        public void ajustarMovimiento(Producto producto)
+        public new void ajustarMovimiento()
         {
             this.montoMovimiento *= -1;
             base.ajustarMovimiento();
