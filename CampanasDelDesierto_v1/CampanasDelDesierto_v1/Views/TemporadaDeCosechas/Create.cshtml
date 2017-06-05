@@ -1,21 +1,26 @@
 ﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Registro de Nueva Temporada de Cosecha";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de temporadas
+    </a>
+</div>
+
 <h2>Nueva</h2>
-
-
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Temporada de Cosecha</h4>
+        <h4>Temporada De Cosecha</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.TemporadaDeCosechaID)
         <div class="row">
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.fechaInicio, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -35,22 +40,40 @@
         </div>
         <fieldset>
             <legend>Precio por tonelada</legend>
+            @*MANZANITAS*@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto1</label>
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto1, new
-                       {
-                           htmlAttributes = new
-                           {
-                               @class = "form-control",
-                               data_mask = "###0.00",
-                               data_mask_reverse = "true"
-                           }
-                       })
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
                     @Html.ValidationMessageFor(model => model.precioProducto1, "", new { @class = "text-danger" })
                 </div>
             </div>
 
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">@Model.tipoProducto4</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto4, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto4, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*OBLIZAS*@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto2</label>
                 <div class="col-md-10">
@@ -68,6 +91,23 @@
             </div>
 
             <div class="form-group col-md-6">
+                <label class="control-label col-md-2">@Model.tipoProducto5</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto5, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto5, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*MISIONES*@
+            <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto3</label>
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto3, new
@@ -84,9 +124,9 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProductoOtro</label>
+                <label class="control-label col-md-2">@Model.tipoProducto6</label>
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.precioProductoOtro, new
+                    @Html.EditorFor(model => model.precioProducto6, new
                {
                    htmlAttributes = new
                    {
@@ -95,23 +135,17 @@
                        data_mask_reverse = "true"
                    }
                })
-                    @Html.ValidationMessageFor(model => model.precioProductoOtro, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.precioProducto6, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>
         <div class="form-group">
             <div class="col-md-10">
-                <button class="btn btn-success">Crear</button>
+                <button class="btn btn-success">Registrar</button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    <a href="@Url.Action("Index")">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de temporadas
-    </a>
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

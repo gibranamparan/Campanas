@@ -144,6 +144,7 @@ namespace CampanasDelDesierto_v1.Models
                     //Se convierte renglon en registro para DB con registro de errores
                     var recepcion = new RecepcionDeProducto(rowRecepcion, this.TemporadaDeCosechaID,ref error);
 
+                    //Si la importacion contiene todos sus elementos validos
                     if (!error.isError) { 
                         var recepcionDB = this.recepcionesDeProducto.ToList()
                             .FirstOrDefault(rp => rp.numeroRecibo == recepcion.numeroRecibo);
@@ -153,13 +154,14 @@ namespace CampanasDelDesierto_v1.Models
                         else {
                             //Si ya existe, se identifica con el mismo ID y se marca como modificado
                             recepcion.recepcionID = recepcionDB.recepcionID;
-                            /*this.recepcionesDeProducto.Remove(recepcionDB);
-                            this.recepcionesDeProducto.Add(recepcion);*/
-                            //db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
+
                             db.RecepcionesDeProducto.Remove(recepcionDB);
-                            db.RecepcionesDeProducto.Add(recepcion);
+                            //Se deja de trackear el registro existente para poder ser modificado
+                            db.Entry(recepcionDB).State = System.Data.Entity.EntityState.Detached;
+                            //Se marca como modificado
+                            db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
                         }
-                    }else
+                    }else //Si existe algun error en la importacion de la columna
                         errores.Add(error);
                 }
 

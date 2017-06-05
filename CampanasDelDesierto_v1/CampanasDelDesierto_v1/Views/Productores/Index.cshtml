@@ -26,10 +26,14 @@
 <p>
     <a href="@Url.Action("Create")">
         <i class="fa fa-plus-circle"></i> Nuevo Productor
+    </a> | 
+    <a href="#" onclick="$('#formImportExcel').slideToggle()">
+        <i class="fa fa-file-excel-o"></i> Importar de Excel
     </a>
 </p>
 @using (Html.BeginForm(null, null, FormMethod.Post,
-                            new { enctype = "multipart/form-data", @class = "form-inline" }))
+    new { enctype = "multipart/form-data", @class = "form-inline",
+        id ="formImportExcel", style="display:none" }))
 {
     @Html.ValidationSummary()
     <div class="row">
@@ -40,6 +44,31 @@
             <button class="btn btn-success">
                 <i class="fa fa-upload"></i> Subir
             </button>
+            <i class="fa fa-question-circle helpIcon" 
+                 onclick="$('#msgAyudaImportacion').slideToggle();
+                 $(this).toggleClass('clicked')"
+                 style="cursor: pointer"></i>
+        </div>
+        <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
+            Para importar la información de los productores, cargue un archivo excel con la estructura
+            mostrada en la siguiente imagen, respete el orden de las columnas. No es necesario
+            que el nombre de las columnas sea el mismo. <br />
+            <div style="text-align: center">
+                <img style="border: 1px solid; margin: 1em auto" 
+                     src="~/images/productores/excel_ejemplo.png" /> <br />
+            </div>
+            El sistema buscará en la base de datos los productores con el mismo numero de productor 
+            que marque el archivo Excel.
+            <ul>
+                <li>
+                    <strong>En caso de encontrarlo</strong>, modificará la información almacenada
+                    en la base de datos por la informacion del registro Excel.
+                </li>
+                <li>
+                    <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de productor
+                     con las datos del archivo Excel.
+                </li> 
+            </ul>
         </div>
     </div>
 }

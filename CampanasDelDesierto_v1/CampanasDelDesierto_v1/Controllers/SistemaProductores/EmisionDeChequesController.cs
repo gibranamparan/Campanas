@@ -80,7 +80,8 @@ namespace CampanasDelDesierto_v1.Controllers
             if (ModelState.IsValid)
             {
                 //Se crean los registros de retenciones
-                RetencionLimpieza limpieza = new RetencionLimpieza(emisionDeCheque, retenciones.garantiaLimpieza);
+                Deduccion limpieza = new Deduccion(emisionDeCheque, retenciones.garantiaLimpieza,
+                    Deduccion.TipoDeduccion.SANIDAD);
                 int numReg = 0;
 
                 //Ajuste de movimiento para entrar dentro de la lista de balances
@@ -94,7 +95,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     limpieza.ajustarMovimiento();
                     limpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
 
-                    db.RetencionesDeLimpieza.Add(limpieza);
+                    db.Deducciones.Add(limpieza);
                     numReg = db.SaveChanges();
                     if (numReg > 0)
                         numReg = introducirMovimientoAlBalance(limpieza);

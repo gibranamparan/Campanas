@@ -5,50 +5,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<a href="@Url.Action("Details","Productores" ,new { id= Model.idProductor })">
+    <i class="glyphicon glyphicon-arrow-left"></i><span>Volver Movimientos de Productor</span>
+</a>
+
 <h3>¿Estás seguro que quieres eliminar este registro?</h3>
-<div>
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">Movimiento Financiero</h3>
-        </div>
-        <div class="panel-body">
-            <dl class="dl-horizontal">
-                <dt>
-                    @Html.DisplayNameFor(model => model.Productor.nombreProductor)
-                </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Productor.nombreProductor)
-                </dd>
+@Html.Partial("Partial_MovimientoDetails")
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.montoMovimiento)
-                </dt>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
 
-                <dd>
-                    @Html.DisplayFor(model => model.montoMovimiento)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.fechaMovimiento)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.fechaMovimiento)
-                </dd>
-
-            </dl>
-        </div>
+    <div class="form-actions no-color">
+        <button class="btn btn-danger" >Eliminar</button>
     </div>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <button class="btn btn-danger" >Eliminar</button> |
-            <a href="@Url.Action("Details","Productores" ,new { id= Model.idProductor })">
-                <i class="glyphicon glyphicon-arrow-left"></i><span>Volver Movimientos de Productor</span>
-            </a>
-        </div>
-    }
-</div>
+}

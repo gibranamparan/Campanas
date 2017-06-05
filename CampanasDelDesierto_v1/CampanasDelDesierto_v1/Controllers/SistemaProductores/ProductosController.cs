@@ -24,6 +24,24 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(db.Productos.ToList());
         }
 
+        // Post: INDEX
+        [HttpPost, ActionName("Index")]
+        public ActionResult ImportFromExcel(HttpPostedFileBase xlsFile)
+        {
+            //Lista para recoleccion de errores
+            List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
+            ExcelTools.ExcelParseError errorGeneral = new ExcelTools.ExcelParseError();
+            //Se importan los datos de recepcion de producto desde el excel recibido
+            int regsSaved = Producto.importarProductores(xlsFile, db, out errores, out errorGeneral);
+
+            if (errores.Count() > 0)
+                ViewBag.erroresExcel = errores;
+            if (errorGeneral.isError)
+                ViewBag.errorGeneral = errorGeneral;
+
+            return View(db.Productos.ToList());
+        }
+
         // GET: Activos/Details/5
         public ActionResult Details(int? id)
         {
@@ -50,18 +68,18 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,"+
-            "concepto,pagare,ordenDeCompra")]
-            Producto Producto)
+        public ActionResult Create([Bind(Include = "nombreProducto,costo,descripcion,concepto")]
+            Producto producto, string UnidadMedida)
         {
             if (ModelState.IsValid)
             {
-                db.Productos.Add(Producto);
+                producto.UnidadMedida = Producto.UnidadDeMedida.GetByName(UnidadMedida);
+                db.Productos.Add(producto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(Producto);
+            return View(producto);
         }
 
         // GET: Activos/Edit/5
@@ -76,6 +94,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.UnidadMedida = producto.UnidadMedida.nombre;
             return View(producto);
         }
 
@@ -84,12 +103,12 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,estado,fecha,"+
-            "concepto,pagare,ordenDeCompra")]
-            Producto producto)
+        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,descripcion,concepto")]
+            Producto producto, string UnidadMedida)
         {
             if (ModelState.IsValid)
             {
+                producto.UnidadMedida = Producto.UnidadDeMedida.GetByName(UnidadMedida);
                 db.Entry(producto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

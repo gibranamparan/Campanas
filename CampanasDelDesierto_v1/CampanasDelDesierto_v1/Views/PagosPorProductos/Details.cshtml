@@ -1,4 +1,5 @@
 ﻿@model CampanasDelDesierto_v1.Models.PagoPorProducto
+
 @{ 
     string costoTonelada1 = (Model.pagoProducto1 == 0 ? 0 : Math.Round((double)Model.pagoProducto1 / Model.cantidadProducto1)).ToString("C");
     string costoTonelada2 = (Model.pagoProducto2 == 0 ? 0 : Math.Round((double)Model.pagoProducto2 / Model.cantidadProducto2)).ToString("C");

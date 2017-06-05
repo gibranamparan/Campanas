@@ -1,0 +1,69 @@
+﻿@model CampanasDelDesierto_v1.Models.MovimientoFinanciero
+@using CampanasDelDesierto_v1.Models
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4><span>@(Model.nombreDeMovimiento)</span>. <strong>Temporada: </strong><span>@(Model.temporadaDeCosecha)</span></h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Productor.nombreProductor, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Productor.nombreProductor)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.montoMovimiento, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.montoMovimiento)</p>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.fechaMovimiento, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    <p class="form-control-static">@Model.fechaMovimiento.ToString("dd/MMMM/yyyy")</p>
+                </div>
+            </div>
+        </div>
+
+        @*Panel para detalles movimentos de capital (Prestamos o abonos)*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+        {
+            @Html.Partial("../PrestamoYAbonoCapitals/Details")
+        }
+
+        @*Panel para detalles para ventas a credito*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+        {
+            @Html.Partial("../VentaACreditos/Details")
+        }
+
+        @*Panel para detalles para ventas a credito*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+        {
+            @Html.Partial("../PagosPorProductos/Details")
+        }
+
+        @*Panel para detalles de cheque e impresion*@
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE)
+        {
+            @Html.Partial("../EmisionDeCheques/Details")
+        }
+    </div>
+</div>
+
+@*Panel para detalles de registro de cosecha*@
+@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+            {
+    @Html.Partial("../PagosPorProductos/Partial_ListaIngresosProducto", ((PagoPorProducto)Model).Recepciones)
+}
+
+@section Scripts{
+    @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+    {
+        <script>
+            $('#tblIngresoAcumulado').DataTable();
+        </script>
+    }
+}

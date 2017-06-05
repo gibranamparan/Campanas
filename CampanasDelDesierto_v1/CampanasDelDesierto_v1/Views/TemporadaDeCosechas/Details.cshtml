@@ -48,10 +48,6 @@
         </a> 
     </div>
 </div>
-<div class="alert alert-info">
-    Carga en la aplicación el archivo Excel de <strong>"Acumulados de recepción de Aceituna"</strong> correspondiente a esta temporada.
-    Hecho esto, los datos estarán disponibles para generar pagos semanales de producto y ser integrados al balance del productor.
-</div>
 @using (Html.BeginForm(null, null, FormMethod.Post,
                 new { enctype = "multipart/form-data", @class = "form-inline" }))
 {
@@ -64,6 +60,33 @@
             <button class="btn btn-success">
                 <i class="fa fa-upload"></i> Subir
             </button>
+            <i class="fa fa-question-circle helpIcon"
+               onclick="$('#msgAyudaImportacion').slideToggle();
+                    $(this).toggleClass('clicked')"
+               style="cursor: pointer"></i>
+        </div>
+        <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
+            Para importar la información de los productores, cargue en la aplicación el archivo Excel
+            de <strong>"Acumulados de recepción de Aceituna"</strong> correspondiente a esta temporada.
+            Hecho esto, los datos estarán disponibles para generar pagos semanales de producto y ser
+            integrados al balance del productor. La estructura del archivo Excel debe ser como
+            la mostrada en la siguiente imagen: <br />
+            <div style="text-align: center">
+                <img style="border: 1px solid; margin: 1em auto"
+                     src="~/images/recepciones/recepciones_excel.png" />
+            </div>
+            El sistema buscará en la base de datos los registros con el mismo numero de recibo
+            que marque el archivo Excel.
+            <ul>
+                <li>
+                    <strong>En caso de encontrarlo</strong>, modificará la información almacenada
+                    en la base de datos por la informacion del registro Excel.
+                </li>
+                <li>
+                    <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de ingreso
+                    de producto con las datos del archivo Excel.
+                </li>
+            </ul>
         </div>
     </div>
 }

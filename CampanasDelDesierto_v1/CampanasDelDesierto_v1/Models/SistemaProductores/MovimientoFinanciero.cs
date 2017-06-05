@@ -50,7 +50,7 @@ namespace CampanasDelDesierto_v1.Models
                         return "ANTICIPO";
                 }
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
-                    return "PAGO POR COSECHA";
+                    return "INGRESO DE COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return "VENTA A CREDITO";
                 else if (tom == TypeOfMovements.CHEQUE)
@@ -84,7 +84,7 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.VENTA_A_CREDITO;
             else if (this is EmisionDeCheque)
                 return TypeOfMovements.CHEQUE;
-            else if (this is RetencionLimpieza)
+            else if (this is Deduccion)
                 return TypeOfMovements.LIMPIEZA;
             else
                 return TypeOfMovements.NONE;

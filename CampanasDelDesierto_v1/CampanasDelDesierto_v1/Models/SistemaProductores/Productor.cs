@@ -40,8 +40,11 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Población")]
         public string poblacion { get; set; }
 
-        [Display(Name ="Nombre del Cheque")]
+        [Display(Name = "Nombre del Cheque")]
         public string nombreCheque { get; set; }
+
+        [Display(Name = "Representante Legal")]
+        public string nombreRepresentanteLegal { get; set; }
 
         [DisplayName("Teléfono")]
         public string telefono { get; set; }
@@ -69,12 +72,17 @@ namespace CampanasDelDesierto_v1.Models
 
         public Productor(ExcelRange rowProductor, ref ExcelTools.ExcelParseError error)
         {
+            error = new ExcelTools.ExcelParseError();
             try
             {
                 this.numProductor = rowProductor.ElementAt((int)ExcelColumns.NUM).Value.ToString().Trim();
                 this.nombreProductor = rowProductor.ElementAt((int)ExcelColumns.NOMBRE).Value.ToString();
+                this.domicilio = rowProductor.ElementAt((int)ExcelColumns.DIRECCION).Value.ToString();
+                this.RFC = rowProductor.ElementAt((int)ExcelColumns.RFC).Value.ToString();
                 this.zona = rowProductor.ElementAt((int)ExcelColumns.ZONA).Value.ToString();
                 this.zona = this.zona.Replace("Zona", "").Trim();
+                this.nombreCheque = rowProductor.ElementAt((int)ExcelColumns.NOMBRE_DEL_CHEQUE).Value.ToString();
+
                 this.fechaIntegracion = DateTime.Today;
             }
             catch (NullReferenceException exc)
@@ -94,6 +102,11 @@ namespace CampanasDelDesierto_v1.Models
             this.numProductor = otro.numProductor;
             this.nombreProductor = otro.nombreProductor;
             this.zona = otro.zona;
+            this.domicilio = otro.domicilio;
+            this.RFC = otro.RFC;
+            this.nombreCheque = otro.nombreCheque;
+            this.nombreRepresentanteLegal = otro.nombreRepresentanteLegal;
+            this.fechaIntegracion = otro.fechaIntegracion;
         }
 
         /// <summary>
@@ -161,7 +174,10 @@ namespace CampanasDelDesierto_v1.Models
 
         public enum ExcelColumns
         {
-            NUM = 0, NOMBRE=1, ZONA=2
+            NUM = 0, NOMBRE=1,
+            DIRECCION =2, RFC=3,
+            ZONA = 4, NOMBRE_DEL_CHEQUE=5,
+            REPRESENTANTE_LEGAL=6
         }
 
         public static int importarProductores(HttpPostedFileBase xlsFile, ApplicationDbContext db,
@@ -198,11 +214,18 @@ namespace CampanasDelDesierto_v1.Models
 
                     if (!error.isError)
                     {
-                        var recepcionDB = db.Productores.ToList()
+                        var productorDB = db.Productores.ToList()
                             .FirstOrDefault(rp => rp.numProductor == productorReg.numProductor);
                         //Si el registro no existe, se agrega
-                        if (recepcionDB == null)
+                        if (productorDB == null)
                             db.Productores.Add(productorReg);
+                        else
+                        {
+                            //Si ya existe, se identifica con el mismo ID y se marca como modificado
+                            productorReg.idProductor = productorDB.idProductor;
+                            db.Entry(productorDB).State = System.Data.Entity.EntityState.Detached;
+                            db.Entry(productorReg).State = System.Data.Entity.EntityState.Modified;
+                        }
                     }
                     else
                         errores.Add(error);
