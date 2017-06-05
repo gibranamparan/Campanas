@@ -28,9 +28,9 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Es árbol de aceituna")]
         public bool isArbolAceituna { get; set;}
-
-        public ICollection<VentaACredito> ventas { get; set; }
         
+        public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
+
         public static Object[] getEstadosDeProducto()
         {
             Object[] opciones = new Object[]{

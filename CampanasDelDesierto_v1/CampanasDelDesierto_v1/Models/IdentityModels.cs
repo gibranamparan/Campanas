@@ -49,6 +49,8 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
         public DbSet<RetencionLimpieza> RetencionesDeLimpieza { get; set; }
         public System.Data.Entity.DbSet<CampanasDelDesierto_v1.Models.TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
+        public DbSet<CompraProducto> ComprasProductos { get; set; }
+
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

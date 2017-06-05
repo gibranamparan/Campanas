@@ -454,8 +454,17 @@
     <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.Designer.cs">
       <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.cs" />
+    <Compile Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.Designer.cs">
+      <DependentUpon>201706050131537_Tabla_Intermedia_CompraProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.cs" />
+    <Compile Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.Designer.cs">
+      <DependentUpon>201706050204110_Cambio_Modelo_VentaACredito.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
     <Compile Include="Models\SistemaProductores\EmisionDeCheque.cs" />
@@ -920,6 +929,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.resx">
       <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706050131537_Tabla_Intermedia_CompraProducto.resx">
+      <DependentUpon>201706050131537_Tabla_Intermedia_CompraProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706050204110_Cambio_Modelo_VentaACredito.resx">
+      <DependentUpon>201706050204110_Cambio_Modelo_VentaACredito.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

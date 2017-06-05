@@ -100,38 +100,41 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        var costoProducto = 0;
-        var cantidad = $("#cantidadMaterial").val();
-        $("#idProducto").change(function () {
-            //Se toma la llave unica de este cliente
-            var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
-            //Se hace la solicitud indetificandose con la llave unica
-            $.postJSON("/Productos/productoInfo", { id: $(this).val() }, 'JSON',
-                function (res) {
-                    costoProducto = res.costo;
-                    $('#costoUnitario').val(numeral(costoProducto)
-                        .format('0.00')).trigger('input');
-                    actualizarMontoTotal();
-                },
-                function () { }, function () { },
-                antiForgeryToken );
-        })
+        //var costoProducto = 0;
+        //var cantidad = $("#cantidadMaterial").val();
+        //$("#idProducto").change(function () {
+        //    //Se toma la llave unica de este cliente
+        //    var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+        //    //Se hace la solicitud indetificandose con la llave unica
+        //    $.postJSON("/Productos/productoInfo", { id: $(this).val() }, 'JSON',
+        //        function (res) {
+        //            costoProducto = res.costo;
+        //            $('#costoUnitario').val(numeral(costoProducto)
+        //                .format('0.00')).trigger('input');
+        //            actualizarMontoTotal();
+        //        },
+        //        function () { }, function () { },
+        //        antiForgeryToken );
+        //})
 
-        var actualizarMontoTotal = function () {
-            cantidad = parseInt($("#cantidadMaterial").val());
-            montoTotal = costoProducto * cantidad;
-            $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input')
-        }
+        //var actualizarMontoTotal = function () {
+        //    cantidad = parseInt($("#cantidadMaterial").val());
+        //    montoTotal = costoProducto * cantidad;
+        //    $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input')
+        //}
 
-        $("#cantidadMaterial").bind('input', actualizarMontoTotal);
+        //$("#cantidadMaterial").bind('input', actualizarMontoTotal);
 
-        function actualizarMontoTotal(){
-            montoTotal = costoProducto * cantidad;
-            $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input');
-        }
+        //function actualizarMontoTotal(){
+        //    montoTotal = costoProducto * cantidad;
+        //    $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input');
+        //}
+        
+
+
 
         //Data table select sigle row
-        var COLS_ENUM = Object.freeze({ ID: 1 })
+        var COLS_ENUM = Object.freeze({ ID: 1, PROD1: 3})
         var table = $('#Productos').DataTable({
             columnDefs: [{
                 orderable: false,
@@ -147,31 +150,43 @@
             },
             order: [[1, 'asc']]
         });
-        //Al Seleccionar un activo
-        $('#Productos tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-                $('#idProducto').val('');
-                $('#crear').attr('disabled', true);
-                $('#mensaje').remove();
-                $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Producto!</div>");
 
-            }
-            else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');                
-                var row = $(this).closest('tr')[0];
-                var rowData = table.row(row).data();
-                if (rowData) {
-                    $('#mensaje').remove();
-                    var rowId = rowData[1];
-                    $('#idProducto').val(rowId);
-                    $('#crear').attr('disabled', false);
-                }
+        table.on('select', function (e, dt, type, indexes) {
+        funcionRecalcularMontos();
+    })
+    .on('deselect',function(e, dt, type, indexes){
+        funcionRecalcularMontos();
+    });
 
+
+
+        function funcionRecalcularMontos() {
+        productosID = new Array();
+        var selectedRows = table.rows({selected:true});
+        var data = selectedRows.data();
+        var totalCant1=0;
+
+        var cantidad = $('#cantidadMaterial').val();
+        if (data.length==0) {
+            $('#crear').attr('disabled', true);
+        }
+        else
+        {
+            for (var c = 0; c < data.length; c++) {
+                totalCant1 += Number(data[c][COLS_ENUM.PROD1].replace('$', ''));
+                productosID.push(Number(data[c][COLS_ENUM.ID]));
             }
+            $('#crear').attr('disabled', false);
+        }
+        
+        var monto = totalCant1 * cantidad;
+        $('#montoMovimiento').val(monto);
+        console.log(JSON.stringify(productosID))
+        $('#idProducto').val(JSON.stringify(productosID))
+    }        
+        $("#cantidadMaterial").change(function () {
+            funcionRecalcularMontos();
         });
-     
 
     </script>
 }
