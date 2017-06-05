@@ -454,24 +454,9 @@
     <Compile Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.Designer.cs">
       <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706022053424_addedField_nombreLegal_Productor.cs" />
-    <Compile Include="Migrations\201706022053424_addedField_nombreLegal_Productor.Designer.cs">
-      <DependentUpon>201706022053424_addedField_nombreLegal_Productor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706032109034_addedField_unidadMedida_producto.cs" />
-    <Compile Include="Migrations\201706032109034_addedField_unidadMedida_producto.Designer.cs">
-      <DependentUpon>201706032109034_addedField_unidadMedida_producto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.cs" />
-    <Compile Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.Designer.cs">
-      <DependentUpon>201706050203238_rename_RetencionSAnidad_Deducciones.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.cs" />
-    <Compile Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.Designer.cs">
-      <DependentUpon>201706050437328_Retenciones_TipoDeRetencion.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
     <Compile Include="Models\SistemaProductores\EmisionDeCheque.cs" />
@@ -947,18 +932,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.resx">
       <DependentUpon>201706010716205_campoAgregado_Conceptos_PrestamoAbonoCapital.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706022053424_addedField_nombreLegal_Productor.resx">
-      <DependentUpon>201706022053424_addedField_nombreLegal_Productor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706032109034_addedField_unidadMedida_producto.resx">
-      <DependentUpon>201706032109034_addedField_unidadMedida_producto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050203238_rename_RetencionSAnidad_Deducciones.resx">
-      <DependentUpon>201706050203238_rename_RetencionSAnidad_Deducciones.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706050437328_Retenciones_TipoDeRetencion.resx">
-      <DependentUpon>201706050437328_Retenciones_TipoDeRetencion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

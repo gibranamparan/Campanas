@@ -75,14 +75,15 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadMaterial,idProducto,TemporadaDeCosechaID")]
-            VentaACredito ventaACredito)
+            "cantidadMaterial,TemporadaDeCosechaID")]
+            VentaACredito ventaACredito, string idProducto)
         {
+            int[] IDProductos = HerramientasGenerales.StringTools.jsonStringToArray(idProducto);
             if (ModelState.IsValid)
             {
-                Producto producto = db.Productos.Find(ventaACredito.idProducto);
-                //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                ventaACredito.ajustarMovimiento(producto); 
+                //Producto producto = db.Productos.Find(ventaACredito.idProducto);
+                ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
+                //ventaACredito.ajustarMovimiento(producto); 
 
                 db.MovimientosFinancieros.Add(ventaACredito);
                 int numReg = db.SaveChanges();
@@ -118,7 +119,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             ViewBag.productor = ventaACredito.Productor;
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto"/*, ventaACredito.idProducto*/);
             return View(ventaACredito);
         }
 
@@ -132,9 +133,9 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                Producto producto = db.Productos.Find(ventaACredito.idProducto);
-                //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                ventaACredito.ajustarMovimiento(producto);
+                //Producto producto = db.Productos.Find(ventaACredito.idProducto);
+                ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
+                //ventaACredito.ajustarMovimiento(producto);
 
                 //Se modifica el registro
                 db.Entry(ventaACredito).State = EntityState.Modified;
@@ -158,7 +159,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
             ViewBag.productor = productor;
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto", ventaACredito.idProducto);
+            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto"/*, ventaACredito.idProducto*/);
 
             return View(ventaACredito);
         }

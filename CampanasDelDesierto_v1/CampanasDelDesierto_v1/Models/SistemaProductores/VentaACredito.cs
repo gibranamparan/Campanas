@@ -10,12 +10,9 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Range(0, int.MaxValue)]
         [Display(Name = "Cantidad de Material")]
-        public int cantidadMaterial { get; set; }
+        public int cantidadMaterial { get; set; }       
 
-        //Una venta a credito esta relacionada con un producto especifico
-        [Display(Name = "Producto")]
-        public int idProducto { get; set; }
-        public virtual Producto Producto { get; set; }
+        public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
 
         public void ajustarMovimiento(Producto producto)
         {

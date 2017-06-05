@@ -94,10 +94,8 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Es árbol")]
         public bool isArbolAceituna { get; set;}
 
-        public ICollection<VentaACredito> ventas { get; set; }
-
-        internal static int importarProductores(HttpPostedFileBase xlsFile, 
-            ApplicationDbContext db, out List<ExcelTools.ExcelParseError> errores, 
+        internal static int importarProductores(HttpPostedFileBase xlsFile,
+            ApplicationDbContext db, out List<ExcelTools.ExcelParseError> errores,
             out ExcelTools.ExcelParseError errorGeneral)
         {
             int regsSaved = 0;
@@ -129,7 +127,8 @@ namespace CampanasDelDesierto_v1.Models
                     //Se convierte renglon en registro para DB con registro de errores
                     var productoReg = new Producto(rowProducto, ref error);
 
-                    if (!error.isError) { 
+                    if (!error.isError)
+                    {
                         var productoDB = db.Productos.ToList()
                             .FirstOrDefault(rp => rp.nombreProducto == productoReg.nombreProducto);
 
@@ -177,15 +176,16 @@ namespace CampanasDelDesierto_v1.Models
             return String.Format("{0}, {1}, UM: {2}", this.nombreProducto, this.costo, this.UnidadMedida);
         }
 
-        public class UnidadDeMedida {
+        public class UnidadDeMedida
+        {
             public string nombre { get; set; }
             public string abreviacion { get; set; }
 
             public static UnidadDeMedida GetByName(string UM)
             {
-                if(!String.IsNullOrEmpty(UM))
+                if (!String.IsNullOrEmpty(UM))
                     UM = UM.Replace("(s)", "").Trim();
-                
+
                 if (UM == NombresDeUM.KILO.nombre)
                     return NombresDeUM.KILO;
                 if (UM == NombresDeUM.PIEZA.nombre)
@@ -232,5 +232,4 @@ namespace CampanasDelDesierto_v1.Models
                 };
             }
         }
-    }
 }
