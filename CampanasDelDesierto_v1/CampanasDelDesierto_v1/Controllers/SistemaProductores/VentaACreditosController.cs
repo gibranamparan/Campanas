@@ -76,7 +76,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadMaterial,TemporadaDeCosechaID")]
+            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta")]
             VentaACredito ventaACredito, string  compras)
         {
             if (ModelState.IsValid)
