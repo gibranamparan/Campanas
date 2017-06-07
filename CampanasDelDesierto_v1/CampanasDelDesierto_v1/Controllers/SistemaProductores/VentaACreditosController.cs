@@ -87,7 +87,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 //Se deserializa la lista de compras en un objeto
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
-
+                foreach (var compra in comprasList)
+                {
+                    db.Entry(compra).State = EntityState.Added;
+                }
                 db.MovimientosFinancieros.Add(ventaACredito);
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
