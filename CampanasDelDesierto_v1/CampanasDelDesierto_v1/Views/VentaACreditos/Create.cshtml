@@ -5,12 +5,11 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     Productor productor = ViewBag.productor;
+    Model.cantidadMaterial = 1;
     List<Producto> Productos = ViewBag.productos;
 
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
-
-    bool editMode = Model.idMovimiento > 0;
 }
 
 <p>
@@ -35,39 +34,53 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.idProductor)
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
-            @Html.Hidden("compras")
+            @Html.Hidden("idProducto")
 
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
-                        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group col-md-6">
-                        @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.montoMovimiento, new
-                            {
-                               htmlAttributes =
-                                   new {
-                                       @class = "form-control",
-                                       data_mask = "###0.00",
-                                       data_mask_reverse = "true",
-                                       @readonly = "readonly"
-                                   }
-                           })
-                            @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                </div>
 
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <button id="crear"  type="submit" disabled class="btn btn-success">Crear</button>
-                        </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.cantidadMaterial, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.cantidadMaterial, new { htmlAttributes = new { @class = "form-control", min = 1 } })
+                        @Html.ValidationMessageFor(model => model.cantidadMaterial, "", new { @class = "text-danger" })
                     </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label col-md-2">Costo Unitario (USD)</label>
+                    <div class="col-md-10">
+                        <input id="costoUnitario" class="form-control"
+                               data-mask="###0.00" data-mask-reverse="true" disabled />
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.montoMovimiento, new
+                   {
+                       htmlAttributes = new
+                       {
+                           @class = "form-control",
+                           data_mask = "###0.00",
+                           data_mask_reverse = "true",
+                           disabled = "disabled"
+                       }
+                   })
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <button id="crear" disabled class="btn btn-success">Crear</button>
+                </div>
             </div>
         }
     </div>
@@ -75,71 +88,96 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
     <script>
+        //var costoProducto = 0;
+        //var cantidad = $("#cantidadMaterial").val();
+        //$("#idProducto").change(function () {
+        //    //Se toma la llave unica de este cliente
+        //    var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+        //    //Se hace la solicitud indetificandose con la llave unica
+        //    $.postJSON("/Productos/productoInfo", { id: $(this).val() }, 'JSON',
+        //        function (res) {
+        //            costoProducto = res.costo;
+        //            $('#costoUnitario').val(numeral(costoProducto)
+        //                .format('0.00')).trigger('input');
+        //            actualizarMontoTotal();
+        //        },
+        //        function () { }, function () { },
+        //        antiForgeryToken );
+        //})
+
+        //var actualizarMontoTotal = function () {
+        //    cantidad = parseInt($("#cantidadMaterial").val());
+        //    montoTotal = costoProducto * cantidad;
+        //    $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input')
+        //}
+
+        //$("#cantidadMaterial").bind('input', actualizarMontoTotal);
+
+        //function actualizarMontoTotal(){
+        //    montoTotal = costoProducto * cantidad;
+        //    $("#montoMovimiento").val(numeral(montoTotal).format('0.00')).trigger('input');
+        //}
+        
+
+
+
         //Data table select sigle row
-        var COLS_ENUM = Object.freeze({ CANTIDAD: 1, ID: 2, PROD1: 4 })
+        var COLS_ENUM = Object.freeze({ ID: 1, PROD1: 3})
         var table = $('#Productos').DataTable({
             columnDefs: [{
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets: 0
-                }, {
-                    visible: false,
-                    searchable: false
-                }],
-                select: {
-                    style: 'os',
-                    selector: 'td:first-child'
-                },
-                order: [[1, 'asc']]
-            });
-
-            table.on('select', function (e, dt, type, indexes) {
-            funcionRecalcularMontos();
-        })
-        .on('deselect',function(e, dt, type, indexes){
-            funcionRecalcularMontos();
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }, {
+                visible: false,
+                searchable: false
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']]
         });
 
+        table.on('select', function (e, dt, type, indexes) {
+        funcionRecalcularMontos();
+    })
+    .on('deselect',function(e, dt, type, indexes){
+        funcionRecalcularMontos();
+    });
+
+
+
         function funcionRecalcularMontos() {
-            compras = new Array();
-            var selectedRows = table.rows({selected:true});
-            var data = selectedRows.data();
-            var totalCant1 = 0; var costoUnitario = 0;
+        productosID = new Array();
+        var selectedRows = table.rows({selected:true});
+        var data = selectedRows.data();
+        var totalCant1=0;
 
-            var cantidad = $('#cantidadMaterial').val();
-            if (data.length==0) {
-                $('#crear').attr('disabled', true);
-            }
-            else
-            {
-                for (var c = 0; c < data.length; c++) {
-                    costoUnitario = Number(data[c][COLS_ENUM.PROD1].replace('$', ''));
-                    newItem = {
-                        idProducto: Number(data[c][COLS_ENUM.ID]),
-                        cantidadMaterial: $('#producto' + data[c][COLS_ENUM.ID]).val(),
-                        costo: costoUnitario
-                    };
-                    compras.push(newItem);
-                    totalCant1 += newItem.cantidadMaterial * newItem.costo;
-                }
-                $('#crear').attr('disabled', false);
-            }
-        
-            $('#montoMovimiento').val(numeral(totalCant1).format('0.00')).trigger('input');
-            $('#montoMovimiento').attr('value', totalCant1);
-            console.log(JSON.stringify(compras))
-            $('#compras').val(JSON.stringify(compras))
+        var cantidad = $('#cantidadMaterial').val();
+        if (data.length==0) {
+            $('#crear').attr('disabled', true);
         }
-
+        else
+        {
+            for (var c = 0; c < data.length; c++) {
+                totalCant1 += Number(data[c][COLS_ENUM.PROD1].replace('$', ''));
+                productosID.push(Number(data[c][COLS_ENUM.ID]));
+            }
+            $('#crear').attr('disabled', false);
+        }
+        
+        var monto = totalCant1 * cantidad;
+        $('#montoMovimiento').val(monto);
+        console.log(JSON.stringify(productosID))
+        $('#idProducto').val(JSON.stringify(productosID))
+    }        
         $("#cantidadMaterial").change(function () {
             funcionRecalcularMontos();
         });
-    </script>
-
-    @(editMode){
-    <script>
+     
 
     </script>
-    }
 }
