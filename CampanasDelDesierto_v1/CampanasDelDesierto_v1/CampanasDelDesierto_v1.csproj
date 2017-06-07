@@ -529,7 +529,6 @@
     <Content Include="Views\PagosPorProductos\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
-    <Content Include="Views\PagosPorProductos\Create.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Delete.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Details.cshtml" />
     <Content Include="Views\Proveedores\Partial_CreateProveedor.cshtml" />

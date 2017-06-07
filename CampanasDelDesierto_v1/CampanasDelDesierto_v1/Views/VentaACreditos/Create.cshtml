@@ -2,15 +2,21 @@
 @model CampanasDelDesierto_v1.Models.VentaACredito
 
 @{
-    ViewBag.Title = "Create";
+    bool editMode = Model.idMovimiento > 0;
+    ViewBag.Title = (editMode ? "Editar" : "Nuevo") + " Venta de Material";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
     Productor productor = ViewBag.productor;
     List<Producto> Productos = ViewBag.productos;
 
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
 
-    bool editMode = Model.idMovimiento > 0;
+    List<CompraProducto> compras = null;
+    if (editMode) {
+        compras = Model.ComprasProductos.ToList();
+    }
+    vdd.Add("compras", compras);
 }
 
 <p>
@@ -28,7 +34,8 @@
     </div>
     <div class="panel-body">
         <div class="alert alert-info">
-            <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
+            <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>
+            @Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
         </div>
         @using (Html.BeginForm())
         {
@@ -83,7 +90,9 @@
 
                 <div class="form-group">
                     <div class="col-md-10">
-                        <button id="crear" type="submit" disabled class="btn btn-success">Crear</button>
+                        <button id="crear" type="submit" disabled class="btn btn-success">
+                            @(editMode ? "Guardar" : "Registrar")
+                        </button>
                     </div>
                 </div>
             </div>
@@ -155,9 +164,9 @@
         });
     </script>
 
-    @(editMode){
+    @if(editMode){
     <script>
-
+        $('#Productos').DataTable().table().rows('[default-selected]').select();
     </script>
     }
 }

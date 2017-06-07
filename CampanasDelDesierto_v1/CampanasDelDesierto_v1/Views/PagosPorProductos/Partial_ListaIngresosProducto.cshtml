@@ -42,6 +42,9 @@
     <tbody>
         @foreach (var item in Model)
         {
+            @*Si el registro de ingreso de producto tiene un ID asociado a un movimiento, 
+                significa que esta seleccionado por defecto ya que esta asociado al movimiento
+                que esta siendo registrado*@
             <tr @((item.movimientoID!=null && item.movimientoID>0)?"default-selected":"")>
                 @if (selectMode)
                 {

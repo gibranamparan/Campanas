@@ -3,18 +3,20 @@
 @using CampanasDelDesierto_v1.HerramientasGenerales
 
 @{
+    //Se esta editando un movimiento si esta tiene ID primario
     bool editMode = Model.idMovimiento > 0;
     ViewBag.Title = (editMode ? "Editar" : "Nuevo") + " Pago por Producto";
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    //Se deteminar productor, temporada e ingresos asociados al movimiento
     Productor productor = ViewBag.productor == null? Model.Productor: ViewBag.productor;
     TemporadaDeCosecha temporada = Model.temporadaDeCosecha;
-    List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto;
-
+    List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto; //En caso de ser nuevo, es una lista vacia
+    
+    /*Datos para partial de detalles de temporada*/
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
-
-    /*Datos para partial de detalles de temporada*/
     ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddDetailsTemporada.Add("editable", true);
     string funcionRecalcularMontos = "recalcularMontos";
