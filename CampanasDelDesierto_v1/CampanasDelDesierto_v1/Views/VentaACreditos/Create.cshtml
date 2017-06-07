@@ -14,6 +14,7 @@
 
     List<CompraProducto> compras = null;
     if (editMode) {
+        //Se obtiene las compras vendidas para ser editadas
         compras = Model.ComprasProductos.ToList();
     }
     vdd.Add("compras", compras);
