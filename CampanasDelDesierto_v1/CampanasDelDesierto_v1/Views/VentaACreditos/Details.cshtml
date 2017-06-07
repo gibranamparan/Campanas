@@ -1,30 +1,58 @@
 ﻿@model CampanasDelDesierto_v1.Models.VentaACredito
+@{ 
+    var compras = Model.ComprasProductos;
+}
 
-@*    LISTA DE LOS PRODUCTOS COMPRADOS*@
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.pagareVenta, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.pagareVenta)</p>
+    </div>
+</div>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.conceptoDeVenta, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.conceptoDeVenta)</p>
+    </div>
+</div>
 
-        <table class="table table-striped table-hover">
-            <thead>
+<div class="col-md-12">
+    @*    LISTA DE LOS PRODUCTOS COMPRADOS*@
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="10em">
+                    @Html.DisplayNameFor(model=> compras.FirstOrDefault().cantidadMaterial)
+                </th>
+                <th width="20%">
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.nombreProducto)
+                </th>
+                <th width="10em">
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.costo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.descripcion)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var compra in Model.ComprasProductos)
+            {
                 <tr>
-                    <th>@Html.DisplayName("Nombre Producto")</th>
-                    <th>@Html.DisplayName("Costo")</th>
-                    <th>@Html.DisplayName("Es Arbol de Aceituna")</th>
-                    <th>@Html.DisplayName("Descripcion")</th>
-                    <th>@Html.DisplayName("Fecha del Movimiento")</th>
-                    <th>@Html.DisplayName("Cantidad Material")</th>
+                    <td width="10em">
+                        @Html.DisplayFor(model=>compra.cantidadMaterial)
+                    </td>
+                    <td width="20%">
+                        @Html.DisplayFor(model => compra.Producto.nombreProducto)
+                    </td>
+                    <td width="10em">
+                        @Html.DisplayFor(model => compra.Producto.costo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => compra.Producto.descripcion)
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var compra in Model.ComprasProductos)
-                {
-                    <tr>
-                        <td>@compra.Producto.nombreProducto</td>
-                        <td>@compra.Producto.costo</td>
-                        <td>@compra.Producto.isArbolAceituna</td>
-                        <td>@compra.Producto.descripcion</td>
-                        <td>@compra.venta.fechaMovimiento</td>
-                        <td>@compra.cantidadMaterial</td>
-
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
+</div>

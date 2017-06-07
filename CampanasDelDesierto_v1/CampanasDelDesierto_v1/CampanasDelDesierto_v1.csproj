@@ -270,6 +270,14 @@
     <Compile Include="Migrations\201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.Designer.cs">
       <DependentUpon>201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706071816133_conceptosYPagara_VentaACredito.cs" />
+    <Compile Include="Migrations\201706071816133_conceptosYPagara_VentaACredito.Designer.cs">
+      <DependentUpon>201706071816133_conceptosYPagara_VentaACredito.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706071841019_intoToString_pozo_PrestamoYAbonoCapital.cs" />
+    <Compile Include="Migrations\201706071841019_intoToString_pozo_PrestamoYAbonoCapital.Designer.cs">
+      <DependentUpon>201706071841019_intoToString_pozo_PrestamoYAbonoCapital.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -614,6 +622,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.resx">
       <DependentUpon>201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706071816133_conceptosYPagara_VentaACredito.resx">
+      <DependentUpon>201706071816133_conceptosYPagara_VentaACredito.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706071841019_intoToString_pozo_PrestamoYAbonoCapital.resx">
+      <DependentUpon>201706071841019_intoToString_pozo_PrestamoYAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

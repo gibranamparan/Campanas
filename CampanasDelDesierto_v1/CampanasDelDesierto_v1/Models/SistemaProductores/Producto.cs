@@ -64,7 +64,7 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idProducto { get; set; }
 
-        [Display(Name = "Nombre")]
+        [Display(Name = "Nombre de Producto")]
         public string nombreProducto { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}",

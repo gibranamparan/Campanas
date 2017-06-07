@@ -124,8 +124,9 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.productor = ventaACredito.Productor;
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto"/*, ventaACredito.idProducto*/);
+            prepararVistaCrear(ventaACredito.Productor);
+            ViewBag.productos = db.Productos.ToList();
+
             return View("Create",ventaACredito);
         }
 
@@ -134,8 +135,8 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial,idProducto,TemporadaDeCosechaID")]
-            VentaACredito ventaACredito)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial"+
+            ",idProducto,TemporadaDeCosechaID")]VentaACredito ventaACredito)
         {
             if (ModelState.IsValid)
             {
@@ -155,18 +156,12 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
 
-                    return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });
+                    return RedirectToAction("Details", "Productores", 
+                        new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });
                 }
             }
 
-            var productor = db.Productores.Find(ventaACredito.idProductor);
-            if (productor == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.productor = productor;
-            ViewBag.idProducto = new SelectList(db.Productos, "idProducto", "nombreProducto"/*, ventaACredito.idProducto*/);
-
+            prepararVistaCrear(db.Productores.Find(ventaACredito.idProductor));
             return View(ventaACredito);
         }
 

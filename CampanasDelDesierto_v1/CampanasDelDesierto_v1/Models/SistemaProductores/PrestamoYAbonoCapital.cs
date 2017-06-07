@@ -37,7 +37,7 @@ namespace CampanasDelDesierto_v1.Models
         public string descripcionConcepto { get; set; }
 
         [Display(Name = "Pozo")]
-        public int? pozo { get; set; }
+        public string pozo { get; set; }
 
         [Display(Name = "Precio del dólar")]
         [DisplayFormat(DataFormatString = "{0:C4}",
