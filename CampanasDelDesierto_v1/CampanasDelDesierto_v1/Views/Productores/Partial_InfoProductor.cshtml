@@ -1,8 +1,24 @@
 ﻿@model CampanasDelDesierto_v1.Models.Productor
+@using CampanasDelDesierto_v1.Models
+@{ 
+    TemporadaDeCosecha temporada=null;
+    if (ViewData["temporada"] != null)
+    {
+        temporada = (TemporadaDeCosecha)ViewData["temporada"];
+    }
+}
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong>@Model.numProductor:</strong> @(Model.nombreProductor)</h2>
+        <h2 class="panel-title">
+            <strong>@Model.numProductor:</strong> @(Model.nombreProductor)
+            @if (temporada != null) {
+                <span class="pull-right">
+                    @Html.LabelFor(model=>temporada.rangoTiempo):
+                    @Html.DisplayFor(model => temporada.rangoTiempo)
+                </span>
+            }
+        </h2>
     </div>
     <div class="panel-body">
         <div class="row">

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace CampanasDelDesierto_v1.Models
 {
-    public class EmisionDeCheque:MovimientoFinanciero
+    public class LiquidacionSemanal:MovimientoFinanciero
     {
         [Display(Name = "Cheque / Folio")]
         public string cheque { get; set; }

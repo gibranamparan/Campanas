@@ -11,7 +11,7 @@ using CampanasDelDesierto_v1.Models;
 namespace CampanasDelDesierto_v1.Controllers
 {
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
-    public class EmisionDeChequesController : Controller
+    public class LiquidacionSemanalController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -29,7 +29,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
             if (emisionDeCheque == null)
             {
                 return HttpNotFound();
@@ -53,17 +53,17 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            EmisionDeCheque mov = prepararVistaCrear(productor);
+            LiquidacionSemanal mov = prepararVistaCrear(productor);
             mov.introducirMovimientoEnPeriodo(temporada);
 
             return View(mov);
         }
 
-        private EmisionDeCheque prepararVistaCrear(Productor productor)
+        private LiquidacionSemanal prepararVistaCrear(Productor productor)
         {
             ViewBag.productor = productor;
             ViewBag.balanceActual = productor.balanceActual;
-            EmisionDeCheque mov = new EmisionDeCheque();
+            LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
             return mov;
         }
@@ -75,7 +75,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
             "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza")]
-            EmisionDeCheque emisionDeCheque, EmisionDeCheque.VMRetenciones retenciones)
+            LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         numReg = introducirMovimientoAlBalance(limpieza);
                 }
 
-                db.EmisionDeCheques.Add(emisionDeCheque);
+                db.LiquidacionesSemanales.Add(emisionDeCheque);
                 numReg = db.SaveChanges();
 
                 if (numReg > 0)
@@ -137,7 +137,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
             if (emisionDeCheque == null)
             {
                 return HttpNotFound();
@@ -153,7 +153,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,"+
             "idProductor,TemporadaDeCosechaID,cheque")]
-            EmisionDeCheque emisionDeCheque)
+            LiquidacionSemanal emisionDeCheque)
         {
             //Ajuste de movimiento para entrar dentro de la lista de balances
             emisionDeCheque.ajustarMovimiento();
@@ -183,7 +183,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
             if (emisionDeCheque == null)
             {
                 return HttpNotFound();
@@ -196,7 +196,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
             db.MovimientosFinancieros.Remove(emisionDeCheque);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -208,7 +208,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmisionDeCheque emisionDeCheque = db.EmisionDeCheques.Find(id);
+            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
             if (emisionDeCheque == null)
             {
                 return HttpNotFound();

@@ -7,110 +7,95 @@
         .OrderBy(mov=>mov.fechaMovimiento);
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }
-<div class="row searchPanel">
-    <div class="col-md-8">
-        <a class="btn btn-primary"
-           href="@Url.Action("Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporada })">
-            <i class="fa fa-handshake-o"></i> Anticipos y Abonos
-        </a>
-        <a class="btn btn-primary"
-           href="@Url.Action("Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporada })">
-            <i class="fa fa-shopping-cart"></i> Venta de Material
-        </a>
-        <a class="btn btn-primary"
-           href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporada })">
-            <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
-        </a>
-        <a class="btn btn-primary"
-           href="@Url.Action("Create", "EmisionDeCheques", new { id = Model.idProductor, temporada = temporada })">
-            <i class="fa fa-credit-card"></i> Emisión de Cheques
-        </a>
-    </div>
-    <div class="col-md-4">
-        @using (Html.BeginForm())
-        {
-            <div class="form-inline pull-right">
-                <div class="form-group">
-                    <label for="temporadas">@Html.DisplayNameFor(model=>movimientos.FirstOrDefault().temporadaDeCosecha.rangoTiempo)</label>
-                    @Html.DropDownList("temporada", new SelectList(temporadas,"TemporadaDeCosechaID",
-                        "rangoTiempo", temporada), new { @class= "form-control", onchange="submitBusqueda(this)" })
-                </div>
-            </div>
-        }
-    </div>
+
+<div class="col-md-4">
+    @using (Html.BeginForm("Details", "Productores", FormMethod.Post,
+                    new { @class = "form-inline pull-right" }))
+    {
+        <div class="form-group">
+            <label for="temporadas">
+                Periodo de Cosecha
+            </label>
+            @Html.DropDownList("temporada", new SelectList(temporadas, "TemporadaDeCosechaID",
+                    "rangoTiempo", temporada), new { @class = "form-control", onchange = "submitBusqueda(this)" })
+        </div>
+    }
 </div>
-@if (Model != null && Model.MovimientosFinancieros.Count() > 0)
+@if (Model != null && movimientos.Count() > 0)
 {
-    <table class="table table-hover table-striped">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
-            </th>
-            <th>
-                Concepto
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
-            </th>
-            <th class="actions"></th>
-        </tr>
-
-        @foreach (var item in movimientos)
-        {
+    <div class="col-md-12">
+        <table class="table table-hover table-striped">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.fechaMovimiento)
-                </td>
-                <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE?"style=color:green":"")>
-                    @Html.DisplayFor(modelItem => item.montoMovimiento)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
-                </td>
-                <td>
-                    @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) { 
-                        @Html.DisplayFor(modelItem => ((PrestamoYAbonoCapital)item).concepto)
-                    }
-                </td>
-                <td class='@(item.balance<0?"montoNegativo":"")'>
-                    @Html.DisplayFor(modelItem => item.balance)
-                </td>
-                <td>
-                    <div class="dropdown_actions">
-                        <button onclick="openActionsDropDown(this)"
-                                class="dropbtn btn btn-default">
-                            <i class="glyphicon glyphicon-option-horizontal"></i>
-                        </button>
-                        <div id="myDropdown"
-                             class="dropdown-content">
-                            <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
-                                <i class="glyphicon glyphicon-edit"></i> Editar
-                            </a>
-
-                            <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                <i class="glyphicon glyphicon-print"></i> Detalles
-                            </a>
-
-                            <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                <i class="glyphicon glyphicon-remove"></i> Borrar
-                            </a>
-                        </div>
-                    </div>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
+                </th>
+                <th>
+                    Concepto
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
+                </th>
+                <th class="actions"></th>
             </tr>
-        }
 
-    </table>
+            @foreach (var item in movimientos)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                    </td>
+                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE ? "style=color:green" : "")>
+                        @Html.DisplayFor(modelItem => item.montoMovimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
+                    </td>
+                    <td>
+                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+                        {
+                            @Html.DisplayFor(modelItem => ((PrestamoYAbonoCapital)item).concepto)
+                        }
+                    </td>
+                    <td class='@(item.balance<0?"montoNegativo":"")'>
+                        @Html.DisplayFor(modelItem => item.balance)
+                    </td>
+                    <td>
+                        <div class="dropdown_actions">
+                            <button onclick="openActionsDropDown(this)"
+                                    class="dropbtn btn btn-default">
+                                <i class="glyphicon glyphicon-option-horizontal"></i>
+                            </button>
+                            <div id="myDropdown"
+                                 class="dropdown-content">
+                                <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
+                                    <i class="glyphicon glyphicon-edit"></i> Editar
+                                </a>
+
+                                <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                    <i class="glyphicon glyphicon-print"></i> Detalles
+                                </a>
+
+                                <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                    <i class="glyphicon glyphicon-remove"></i> Borrar
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
 }
 else
 {
-    <div class="alert alert-warning">
+    <div class="alert alert-warning col-md-12">
         <strong>No existen</strong> movimientos financieros en este periodo para este productor.
     </div>
 }

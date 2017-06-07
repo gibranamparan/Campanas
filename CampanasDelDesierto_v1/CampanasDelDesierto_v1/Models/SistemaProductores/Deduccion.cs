@@ -33,7 +33,7 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         public Deduccion() { }
-        public Deduccion(EmisionDeCheque emisionDeCheque, decimal monto, TipoDeduccion td)
+        public Deduccion(LiquidacionSemanal emisionDeCheque, decimal monto, TipoDeduccion td)
         {
             this.montoMovimiento = monto;
             this.fechaMovimiento = emisionDeCheque.fechaMovimiento;

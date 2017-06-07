@@ -58,6 +58,7 @@ namespace CampanasDelDesierto_v1.Controllers
             
             ViewBag.temporadas = db.TemporadaDeCosechas.ToList();
             ViewBag.temporada = tem.TemporadaDeCosechaID;
+            ViewBag.temporadaSeleccionada = tem;
 
             return View(productor);
         }

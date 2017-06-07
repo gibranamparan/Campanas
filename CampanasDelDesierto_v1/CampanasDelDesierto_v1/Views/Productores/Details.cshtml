@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Productor";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int temporadaID = ViewBag.temporada;
+    ViewDataDictionary vddInfoProductor = new ViewDataDictionary();
+    vddInfoProductor.Add("temporada", ViewBag.temporadaSeleccionada);
 }
 
 <div>
@@ -10,13 +13,33 @@
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
     </a>
 </div>
-@Html.Partial("Partial_InfoProductor", Model)
+@Html.Partial("Partial_InfoProductor", Model, vddInfoProductor)
 
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h2 class="panel-title">Movimientos</h2>
     </div>
     <div class="panel-body">
+        @*Botones para crear nuevos tipos de movimientos financieros*@
+        <div class="col-md-8" id="pnlNuevosMovimientosBotones">
+            <a class="btn btn-primary"
+               href="@Url.Action("Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporadaID })">
+                <i class="fa fa-handshake-o"></i> Anticipos y Abonos
+            </a>
+            <a class="btn btn-primary"
+               href="@Url.Action("Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporadaID })">
+                <i class="fa fa-shopping-cart"></i> Venta de Material
+            </a>
+            <a class="btn btn-primary"
+               href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporadaID })">
+                <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
+            </a>
+            <a class="btn btn-primary"
+               href="@Url.Action("Create", "LiquidacionSemanal", new { id = Model.idProductor, temporada = temporadaID })">
+                <i class="fa fa-credit-card"></i> Liquidacion Semanal
+            </a>
+        </div>
+
         @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", Model)
     </div>
 </div>

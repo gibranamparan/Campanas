@@ -29,7 +29,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public TimePeriod periodo { get { return new TimePeriod(this.fechaInicio, this.fechaFin); } }
 
-        [Display(Name ="Rango de Tiempo")]
+        [Display(Name ="Temporada de Cosecha")]
         public string rangoTiempo { get {
                 System.Globalization.CultureInfo cult = System.Globalization
                     .CultureInfo.CreateSpecificCulture("es-MX");

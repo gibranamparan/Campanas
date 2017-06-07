@@ -1,12 +1,12 @@
 ﻿@using CampanasDelDesierto_v1.Models
-@model CampanasDelDesierto_v1.Models.EmisionDeCheque
+@model CampanasDelDesierto_v1.Models.LiquidacionSemanal
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Liquidacion Semanal";
     Layout = "~/Views/Shared/_Layout.cshtml";
     bool editMode = Model.idMovimiento>0;
 
-    EmisionDeCheque.VMRetenciones retenciones = new EmisionDeCheque.VMRetenciones();
+    LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
 
     Productor productor;  decimal balanceActual;
     if (!editMode) {
@@ -27,22 +27,45 @@
         productor = Model.Productor;
     }
 
+    ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
+    vddProductorInfo.Add("temporada", Model.temporadaDeCosecha);
+
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este Productor
     </a>
 </p>
-@Html.Partial("../Productores/Partial_InfoProductor", productor)
+@Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
+@*Reporte semanal*@
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong> <span class="panel-title">Emision de Cheque</span></h2>
+        <h3 class="panel-title">Ingresos de Cosecha</h3>
     </div>
     <div class="panel-body">
-        <div class="alert alert-info col-md-12">
-            <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
-        </div>
+        Panel content
+    </div>
+</div>
+
+@*Deducciones*@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Deducciones</h3>
+    </div>
+    <div class="panel-body">
+        Panel content
+    </div>
+</div>
+
+
+@*Liquidacion semanal Forma del cheque*@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong>
+        <span class="panel-title">Emision de Cheque</span></h2>
+    </div>
+    <div class="panel-body">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()

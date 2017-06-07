@@ -82,7 +82,7 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.CAPITAL;
             else if (this is VentaACredito)
                 return TypeOfMovements.VENTA_A_CREDITO;
-            else if (this is EmisionDeCheque)
+            else if (this is LiquidacionSemanal)
                 return TypeOfMovements.CHEQUE;
             else if (this is Deduccion)
                 return TypeOfMovements.LIMPIEZA;

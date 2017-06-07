@@ -231,7 +231,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
-    <Compile Include="Controllers\SistemaProductores\EmisionDeChequesController.cs" />
+    <Compile Include="Controllers\SistemaProductores\LiquidacionSemanalController.cs" />
     <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
     <Compile Include="Controllers\SistemaActivos\InventariosController.cs" />
     <Compile Include="Controllers\SistemaActivos\PrestamosActivosController.cs" />
@@ -266,12 +266,16 @@
     <Compile Include="Migrations\201706051916448_cantidad_ComprasProductos.Designer.cs">
       <DependentUpon>201706051916448_cantidad_ComprasProductos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.cs" />
+    <Compile Include="Migrations\201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.Designer.cs">
+      <DependentUpon>201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
-    <Compile Include="Models\SistemaProductores\EmisionDeCheque.cs" />
+    <Compile Include="Models\SistemaProductores\LiquidacionSemanal.cs" />
     <Compile Include="Models\SistemaActivos\Empleado.cs" />
     <Compile Include="Models\SistemaActivos\Inventario.cs" />
     <Compile Include="Models\SistemaActivos\PrestamoActivo.cs" />
@@ -561,11 +565,11 @@
     <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Create.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Delete.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Details.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Edit.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Index.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Create.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Delete.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Details.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Edit.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Index.cshtml" />
     <Content Include="Views\Sucursales\Departamentos.cshtml" />
     <Content Include="Views\PrestamosActivos\Create.cshtml" />
     <Content Include="Views\PrestamosActivos\Delete.cshtml" />
@@ -580,7 +584,7 @@
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
     <Content Include="Views\Departamentos\Inventarios.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
-    <Content Include="Views\EmisionDeCheques\Cheque.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
     <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
@@ -607,6 +611,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706051916448_cantidad_ComprasProductos.resx">
       <DependentUpon>201706051916448_cantidad_ComprasProductos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.resx">
+      <DependentUpon>201706060158280_cambioNombre_EmisionCheque_liquidacionSemanal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

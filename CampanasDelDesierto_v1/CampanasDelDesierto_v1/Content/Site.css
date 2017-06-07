@@ -208,13 +208,14 @@ footer{
 }
 
  /*Varios*/
- .searchPanel{
+ #pnlNuevosMovimientosBotones{
      margin-bottom: .5em;
-     margin-top: .5em;
  }
 
- .searchPanel btn{
-     margin-bottom: .2em;
+ #pnlNuevosMovimientosBotones a.btn.btn-primary{
+    width: 9em;
+    white-space: normal;
+    padding: .2em;
  }
 
  .satLogo{
