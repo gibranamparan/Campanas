@@ -172,6 +172,16 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+
+        public class VMTotalDeEntregas
+        {
+            public string producto { get; set; }
+            public decimal precio { get; set; }
+            public double toneladasRecibidas { get; set; }
+            public decimal monto { get; set; }
+            public decimal montoMXN { get; set; }
+        }
+
         public class VMRecepcionProducto{
             public int recepcionID { get; set; }
 

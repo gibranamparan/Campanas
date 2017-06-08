@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using OfficeOpenXml;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.ComponentModel;
+using static CampanasDelDesierto_v1.Models.TemporadaDeCosecha;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -269,14 +270,6 @@ namespace CampanasDelDesierto_v1.Models
 
         internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento)
         {
-            /*
-            var movs = this.MovimientosFinancieros
-                .Where(mov => mov.fechaMovimiento <= fechaMovimiento).ToList()
-                .OrderByDescending(mov => mov.fechaMovimiento);
-
-            MovimientoFinanciero m = movs.FirstOrDefault();
-            */
-
             var movs = this.MovimientosFinancieros
                 .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
                 .OrderByDescending(mov => mov.fechaMovimiento)
@@ -289,6 +282,55 @@ namespace CampanasDelDesierto_v1.Models
                 m = movs.ElementAt(movs.Count() - 1);
 
             return m;
+        }
+
+
+        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanal(TemporadaDeCosecha tem, decimal precioDolar)
+        {
+            var productos = tem.getListaProductos(this.zona);
+            var totales = this.getTotalEntregas(tem.TemporadaDeCosechaID);
+            var report = new List<RecepcionDeProducto.VMTotalDeEntregas>();
+            foreach(var producto in productos)
+            {
+                var total = totales.FirstOrDefault(tot => tot.producto == producto.producto);
+                RecepcionDeProducto.VMTotalDeEntregas totalReg = new RecepcionDeProducto.VMTotalDeEntregas() { producto = producto.producto,
+                precio = producto.precio, monto = producto.precio*(decimal)total.cantidad,
+                    montoMXN = producto.precio * (decimal)total.cantidad*precioDolar, toneladasRecibidas = total.cantidad};
+                report.Add(totalReg);
+            }
+
+            return report;
+        }
+
+        private List<VMTipoProducto> getTotalEntregas(int temporadaID)
+        {
+            var movs =  this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaID).ToList()
+                .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO);
+            PagoPorProducto total = new PagoPorProducto();
+            total.pagoProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto1);
+            total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
+            total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
+            total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
+            total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
+            total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
+            List<VMTipoProducto> totalesProducto = new List<VMTipoProducto>();
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1,
+                precio = total.pagoProducto1, cantidad = total.cantidadProducto1
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2,
+                precio = total.pagoProducto2, cantidad = total.cantidadProducto2
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3,
+                precio = total.pagoProducto3, cantidad = total.cantidadProducto3
+            });
+
+            return totalesProducto;
         }
     }
 }
