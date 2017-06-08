@@ -12,14 +12,14 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Impresion de Pagare - Campanas del Desierto</title>
 </head>
 <body>
     <div id="pnlPagare">
-        <img src="/images/Pagare.jpg"/>
+        <img src="/images/Pagare.jpg" />
         <span id="ImportePagare">
-            @Html.DisplayFor(model => model.montoMovimiento) dólares
+            @Html.DisplayFor(model => model.montoMovimiento) Dólares
         </span>
         <span id="Dia">
             @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -31,10 +31,12 @@
             @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="montoMovimiento">
-            @Html.DisplayFor(model => model.montoMovimiento) dólares
+            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento)) U.S.Cy.
         </span>
         <span id="diafechaMovimiento">
-            @Model.fechaMovimiento.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+            @*@Model.Productor.fechaPagar.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+                @(((PrestamoYAbonoCapital)Model).Productor.fechaPagar)*@
         </span>
         <span id="mesfechaMovimiento">
             @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -47,19 +49,30 @@
         </span>
         <span id="DomicilioProductor">
             @Html.DisplayFor(model => model.Productor.domicilio)
-        </span>  
-                
-        <span id="cheque">
-            @Html.DisplayFor(model => model.cheque)
-        </span>
-        <span id="telefonoProductor">
-            @Html.DisplayFor(model => model.Productor.telefono)
         </span>
         <span id="PoblacionProductor">
             @Html.DisplayFor(model => model.Productor.poblacion)
         </span>
+        <span id="telefonoProductor">
+            @Html.DisplayFor(model => model.Productor.telefono)
+        </span>
+        <span id="representanteLegal">
+            @Html.DisplayFor(model => model.Productor.nombreRepresentanteLegal)
+        </span>
         <span id="RFCProductor">
             @Html.DisplayFor(model => model.Productor.RFC)
+        </span>
+        <span id="numProductor">
+            @Html.DisplayFor(model => model.Productor.numProductor)
+        </span>
+        <span id="descripcionConcepto">
+            @Html.DisplayFor(model => model.descripcionConcepto)
+        </span>
+        <span id="cheque">
+            @Html.DisplayFor(model => model.cheque)
+        </span>
+        <span id="TipoCambio">
+            @Html.DisplayFor(model => model.precioDelDolar)
         </span>
 
         @*CAMPOS EDITABLES*@
@@ -67,13 +80,10 @@
             <input id="inputTasaAnual" type="number" value="10" style="width: 30px" />
         </span>
         <span id="serieNumerada">
-            <input id="inputSerieNumerada" type="number" value="0000" style="width: 4em" />
+            <input id="inputSerieNumerada" type="number" value="1" style="width: 30px" />
         </span>
         <span id="tasaMoratoria">
             <input id="inputTasaMoratoria" type="number" value="10" style="width: 30px" />
-        </span>
-        <span id="aceptamos">
-            <input id="inputAceptamos" type="text" value="Aceptamos" style="width: 200px" />
         </span>
         <span id="numReporte">
             <input id="inputReporte" type="text" value="NA" style="width: 70px" />
@@ -83,7 +93,7 @@
         </span>
     </div>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
         }
@@ -94,55 +104,85 @@
         }
 
         span#ImportePagare {
-            left: 153mm;
-            top: 16mm;
+            left: 155mm;
+            top: 17mm;
         }
+
         span#Dia {
             left: 179mm;
             top: 40mm;
         }
+
         span#mes {
             left: 20mm;
             top: 46mm;
-        } 
+        }
+
         span#año {
             left: 67mm;
             top: 46mm;
         }
+
         span#montoMovimiento {
             left: 115mm;
-            top: 46mm;
+            top: 47mm;
+            font-size: 14px;
         }
+
         span#diafechaMovimiento {
             left: 127mm;
             top: 23mm;
         }
+
         span#mesfechaMovimiento {
             left: 144mm;
             top: 23mm;
         }
+
         span#añofechaMovimiento {
             left: 181mm;
             top: 23mm;
         }
+
         span#NombreProductor {
             left: 33mm;
-            top: 121mm;
+            top: 122mm;
+            font-size: 12px;
         }
+
         span#DomicilioProductor {
             left: 34mm;
-            top: 127mm;      
+            top: 128mm;
+            font-size: 12px;
         }
+
         span#PoblacionProductor {
             left: 35mm;
             top: 133mm;
         }
-        span#RFCProductor {
-            left: 20mm;
-            top: 138mm;
+
+        span#representanteLegal {
+            left: 136mm;
+            top: 121mm;
         }
 
-        span#telefonoProductor{
+        span#RFCProductor {
+            left: 20mm;
+            top: 143mm;
+        }
+
+        span#numProductor {
+            left: 187mm;
+            top: 143mm;
+        }
+
+        span#descripcionConcepto {
+            left: 34mm;
+            top: 159mm;
+            font-size: 14px;
+        }
+
+        span#telefonoProductor {
             left: 83mm;
             top: 127mm;
         }
@@ -151,36 +191,39 @@
             left: 128mm;
             top: 166mm;
         }
-        
-        span#tasaAnual{
+
+        span#TipoCambio {
+            left: 128mm;
+            top: 177mm;
+        }
+
+        span#tasaAnual {
             left: 28mm;
             top: 60mm;
         }
 
-        span#serieNumerada{
-            left: 172mm;
+        span#serieNumerada {
+            left: 175mm;
             top: 60mm;
         }
 
-        span#tasaMoratoria{
+        span#tasaMoratoria {
             left: 128mm;
             top: 80mm;
         }
-        span#aceptamos{
-            left: 135mm;
-            top: 120mm;
-        }
-        span#numReporte{
+
+        span#numReporte {
             left: 58mm;
             top: 166mm;
         }
-        span#OrdenCompra{
+
+        span#OrdenCompra {
             left: 69mm;
             top: 176mm;
         }
 
         /*Calibracion de margen*/
-        #pnlPagare{
+        #pnlPagare {
             position: relative;
             left: 2mm;
             top: 4mm;
@@ -188,12 +231,12 @@
             height: 11in;
         }
 
-        #pnlPagare img {
-            position: absolute;
-            z-index: 0;
-            width: 8.40in; /*Factor: .9788*/
-            height: 11.64in;/*Factor: 1.042*/
-        }
+            #pnlPagare img {
+                position: absolute;
+                z-index: 0;
+                width: 8.40in; /*Factor: .9788*/
+                height: 11.64in; /*Factor: 1.042*/
+            }
 
         @@media print {
             @@page {
@@ -207,7 +250,7 @@
                 /*border: 1px solid black;*/
             }
 
-            span input{
+            span input {
                 background: none;
                 border: none;
             }
@@ -219,20 +262,20 @@
                 margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
             }
         }
-
         /*@@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }*/
     </style>
-    @*
-    @Scripts.Render("~/bundles/jquery")
-    <script>
-        $("#pnlPagare").draggable()
-        $("#pnlPagare").draggable({
-            drag: function (event, ui) {
-                $("#px").val(ui.position.left);
-                $("#py").val(ui.position.top);
-            }
-        });
 
-    </script>*@
+    @*
+        @Scripts.Render("~/bundles/jquery")
+        <script>
+            $("#pnlPagare").draggable()
+            $("#pnlPagare").draggable({
+                drag: function (event, ui) {
+                    $("#px").val(ui.position.left);
+                    $("#py").val(ui.position.top);
+                }
+            });
+
+        </script>*@
 </body>
 </html>

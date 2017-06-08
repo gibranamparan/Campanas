@@ -77,7 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idProductor,numProductor,nombreProductor,domicilio,"+
-            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono")] Productor productor)
+            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal")] Productor productor)
         {
             if (ModelState.IsValid)
             {
@@ -149,7 +149,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idProductor,,numProductor,nombreProductor,domicilio,"
-            +"fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono")]
+            +"fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal")]
                 Productor productor)
         {
             if (ModelState.IsValid)
