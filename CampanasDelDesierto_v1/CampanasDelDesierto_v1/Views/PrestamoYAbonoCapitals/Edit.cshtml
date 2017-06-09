@@ -211,10 +211,10 @@
 
                 $("#proveedor").trigger("change");
             })
-
+            
             $("#proveedor").change(function () {
                 var prov = $(this).val();
-                $("#detallesCFE").slideToggle(prov == "CFE")
+                $("#detallesCFE").slideDownOrUp(prov=='CFE')
             })
 
             $("#montoPesos").keyup(function () {
