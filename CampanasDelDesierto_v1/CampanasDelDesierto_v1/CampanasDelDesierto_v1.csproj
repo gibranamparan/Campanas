@@ -278,6 +278,14 @@
     <Compile Include="Migrations\201706071841019_intoToString_pozo_PrestamoYAbonoCapital.Designer.cs">
       <DependentUpon>201706071841019_intoToString_pozo_PrestamoYAbonoCapital.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706081936301_addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.cs" />
+    <Compile Include="Migrations\201706081936301_addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.Designer.cs">
+      <DependentUpon>201706081936301_addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706090253414_addedFields_Retenciones_LiquidacionSemanal.cs" />
+    <Compile Include="Migrations\201706090253414_addedFields_Retenciones_LiquidacionSemanal.Designer.cs">
+      <DependentUpon>201706090253414_addedFields_Retenciones_LiquidacionSemanal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -312,6 +320,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\jquery-ui.css" />
@@ -446,6 +455,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\customFunctions.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\dataTables.buttons.min.js" />
     <Content Include="Scripts\dataTables.select.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -573,10 +583,8 @@
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Create.cshtml" />
-    <Content Include="Views\LiquidacionSemanal\Delete.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Details.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Edit.cshtml" />
-    <Content Include="Views\LiquidacionSemanal\Index.cshtml" />
     <Content Include="Views\Sucursales\Departamentos.cshtml" />
     <Content Include="Views\PrestamosActivos\Create.cshtml" />
     <Content Include="Views\PrestamosActivos\Delete.cshtml" />
@@ -599,6 +607,9 @@
     <Content Include="Views\MovimientoFinancieros\Partial_MovimientoDetails.cshtml" />
     <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
     <Content Include="Views\Proveedores\Partial_CreateConcepto.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Partial_ReporteSemanalCosecha.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Partial_ReporteSemanalRetencionesForm.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Partial_ListIngresosLiquidaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -627,6 +638,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706071841019_intoToString_pozo_PrestamoYAbonoCapital.resx">
       <DependentUpon>201706071841019_intoToString_pozo_PrestamoYAbonoCapital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706081936301_addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.resx">
+      <DependentUpon>201706081936301_addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706090253414_addedFields_Retenciones_LiquidacionSemanal.resx">
+      <DependentUpon>201706090253414_addedFields_Retenciones_LiquidacionSemanal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

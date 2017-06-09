@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -51,5 +52,6 @@ namespace CampanasDelDesierto_v1.Models
             }
             return numRegs;
         }
+
     }
 }

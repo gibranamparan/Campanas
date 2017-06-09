@@ -54,6 +54,7 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             LiquidacionSemanal mov = prepararVistaCrear(productor);
+            mov.Productor = productor;
             mov.introducirMovimientoEnPeriodo(temporada);
 
             return View(mov);
@@ -61,7 +62,6 @@ namespace CampanasDelDesierto_v1.Controllers
 
         private LiquidacionSemanal prepararVistaCrear(Productor productor)
         {
-            ViewBag.productor = productor;
             ViewBag.balanceActual = productor.balanceActual;
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
@@ -93,6 +93,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se le establecen fechas con horas diferentes para mantener la integridad del balance
                     //Las retenciones apareceran primero
                     limpieza.ajustarMovimiento();
+
                     limpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
 
                     db.Deducciones.Add(limpieza);
@@ -106,7 +107,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
-                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
+                    //numReg = introducirMovimientoAlBalance(emisionDeCheque);
                     return RedirectToAction("Details", "Productores", new { id = emisionDeCheque.idProductor,
                         temporada = emisionDeCheque.TemporadaDeCosechaID });
                 }

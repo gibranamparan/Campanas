@@ -1,32 +1,38 @@
 ﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.HerramientasGenerales
 @model CampanasDelDesierto_v1.Models.LiquidacionSemanal
 
 @{
-    ViewBag.Title = "Liquidacion Semanal";
+    //Determa si la pantalla se encuentra en modo de edicion
+    bool editMode = Model.idMovimiento > 0;
+    ViewBag.Title = editMode?"Edición":"Registro"+" de Liquidacion Semanal";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    bool editMode = Model.idMovimiento>0;
 
+    //Se determina el precio actual del dolar
+    BaxicoWebService bws = new BaxicoWebService();
+    string errorMessagePrecioDolar = String.Empty;
+    decimal precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
+
+    //Objeto para la forma de retenciones
     LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
 
-    Productor productor;  decimal balanceActual;
-    if (!editMode) {
-        productor = ViewBag.productor;
-        balanceActual = ViewBag.balanceActual;
-        Model.montoMovimiento = balanceActual;
+    //Calculo de ingresos totales en el periodo
+    Productor productor = Model.Productor;
+    var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(Model.temporadaDeCosecha, precioDolar, Model.semanaLiquidada);
+    decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
+    Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
 
-        /*Just for test*/
-        Random random = new Random();
-        // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
-
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Model.cheque = new string(Enumerable.Repeat(chars, 5)
-          .Select(s => s[random.Next(s.Length)]).ToArray());
-    }
-    else
+    //Retenciones
+    decimal retencionTotal = 0;
+    if (editMode)
     {
-        productor = Model.Productor;
+        //Calculo de retenciones capturadas
     }
 
+    //Estado actual de finanzas del productor
+    decimal balanceActual = ViewBag.balanceActual;
+
+    //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
     vddProductorInfo.Add("temporada", Model.temporadaDeCosecha);
 
@@ -36,34 +42,116 @@
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este Productor
     </a>
 </p>
+
+@*Informacino de productor*@
 @Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
-@*Reporte semanal*@
+@*Datos globales*@
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title">Ingresos de Cosecha</h3>
+        <h3 class="panel-title">
+            <strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong>
+            <span>Liquidación Semanal</span>
+        </h3>
     </div>
     <div class="panel-body">
-        Panel content
+        <div class="form-horizontal row">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.semanaLiquidada.startDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.semanaLiquidada.startDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.semanaLiquidada.endDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.semanaLiquidada.endDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.precioDelDolarEnLiquidacion, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div id="divPrecioDelDolar" class="col-md-6">
+                    @Html.EditorFor(model => model.precioDelDolarEnLiquidacion, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask_reverse = "true",
+                               data_mask = "###0.0000"
+                           }
+                       })
+                    @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+                    <a class="satLogo" target="_blank"
+                       href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
+                        <img src="/images/sat_logo.png" />
+                    </a>
+                    <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
+                </div>
+            </div>
+        </div>
+
+        @*Ingreso de cosecha*@
+        @Html.Partial("Partial_ReporteSemanalCosecha", ingresoSemanal)
+
+        @*Deducciones*@
+        @Html.Partial("Partial_ReporteSemanalRetencionesForm", retenciones)
+
+        @*Total a pagar*@
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Liquidación Semanal</h3>
+            </div>
+            <div class="panel-body">
+                @*Monto de cosecha*@
+                <div class="form-group col-md-4">
+                    <label class = "control-label col-md-5">Monto Total por Cosecha (USD):</label>
+                    <div class="col-md-7">
+                        <input id="inputCostoCosechaSemana" class = "form-control"
+                               data-mask = "###0.00" data-mask-reverse = "true" 
+                               value="@costoCosechaSemana.ToString("C")" readonly/>
+                    </div>
+                </div>
+                @*Menos*@
+                <span class="col-md-1" style="font-size:2em">-</span>
+
+                @*Retenciones*@
+                <div class="form-group col-md-3">
+                    <label class="control-label col-md-5">Retenciones Totales (USD): </label>
+                    <div class="col-md-7">
+                        <input id="inputTotalRetencion" class="form-control"
+                               data-mask="###0.00" data-mask-reverse="true"
+                               value="@retencionTotal.ToString("C")" readonly />
+                    </div>
+                </div>
+
+                @*Igual A*@
+                <span class="col-md-1" style="font-size:2em">=</span>
+
+                @*MOnto total a pagar*@
+                <div class="form-group col-md-3">
+                    <label class="control-label col-md-5">Total a Pagar (USD): </label>
+                    <div class="col-md-7">
+                        <input id="inputTotalAPagar" class="form-control"
+                               data-mask="###0.00" data-mask-reverse="true"
+                               value="@costoCosechaSemana.ToString("C")" readonly />
+                    </div>
+                </div>
+
+                @*Adeudo acumulado*@
+
+            </div>
+        </div>
     </div>
 </div>
-
-@*Deducciones*@
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">Deducciones</h3>
-    </div>
-    <div class="panel-body">
-        Panel content
-    </div>
-</div>
-
 
 @*Liquidacion semanal Forma del cheque*@
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong>
-        <span class="panel-title">Emision de Cheque</span></h2>
+        <span class="panel-title">Emision de Cheque</span>
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -107,24 +195,6 @@
                     </div>
                 </div>
 
-                @if (!editMode) { 
-                    <div class="form-group col-md-4">
-                        @Html.LabelFor(model => retenciones.garantiaLimpieza, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-8">
-                            @Html.EditorFor(model => retenciones.garantiaLimpieza, new
-                           {
-                               htmlAttributes = new
-                               {
-                                   @class = "form-control",
-                                   data_mask = "###0.00",
-                                   data_mask_reverse = "true",
-                                   onkeyup = "recalcularMonto(this)"
-                               }
-                           })
-                            @Html.ValidationMessageFor(model => retenciones.garantiaLimpieza, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                }
                 <div class="form-group">
                     <div class="col-md-12">
                         <button class="btn btn-success">@(editMode?"Guardar": "Crear")</button>
@@ -139,10 +209,42 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        $("#formRetenciones input").keyup(function () {
+            var totalRetencion=0;
+            $.each($("#formRetenciones input"), function (idx, item) {
+                totalRetencion += Number($(item).val());
+            });
+
+            $("#inputTotalRetencion").val(numeral(totalRetencion).format('0.00')).trigger('input');
+            var totalAPagar = $("#inputCostoCosechaSemana").val() - totalRetencion;
+            $("#inputTotalAPagar,#montoMovimiento").val(numeral(totalAPagar).format('0.00')).trigger('input');
+
+        })
         function recalcularMonto(tbRetencion) {
             var retencion = Number($(tbRetencion).val());
             $("#montoMovimiento").val(numeral(@Model.montoMovimiento -retencion)
                 .format('0.00')).trigger('input');
         }
+
+        function setPrecioDolar() {
+            var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+            $("#loadingImg").toggleClass('hidden');
+
+            //Se hace solicitud del precio del dolar al server
+            getTipoCambioAsync(
+                function (res) {
+                    $("#precioDelDolarEnLiquidacion").val(numeral(res.precioDolar).format('0.0000')).trigger('input');
+                    $('#precioDelDolarEnLiquidacion').attr('value', res.precioDolar);
+                    precioDolar = res.precioDolar;
+                    //recalcularMontoDolares();
+                },
+                function (err) { },
+                function () {
+                    $("#loadingImg").toggleClass('hidden');
+                    $('#divPrecioDelDolar').removeClass('col-md-8');
+                    $('#divPrecioDelDolar').addClass('col-md-9');
+                }, antiForgeryToken)
+        }
+        setPrecioDolar();
     </script>
 }

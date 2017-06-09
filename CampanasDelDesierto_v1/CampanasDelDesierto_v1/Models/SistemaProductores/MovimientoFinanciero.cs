@@ -55,13 +55,16 @@ namespace CampanasDelDesierto_v1.Models
                     return "VENTA A CREDITO";
                 else if (tom == TypeOfMovements.CHEQUE)
                     return "CHEQUE";
-                else if (tom == TypeOfMovements.LIMPIEZA)
-                    return "RETENCION DE LIMPIEZA";
+                else if (tom == TypeOfMovements.RENTENCION)
+                    return "RETENCION";
                 else
                     return "";
             }
         }
 
+        /// <summary>
+        /// Enumerador de tipos de movimientos
+        /// </summary>
         public enum TypeOfMovements
         {
             NONE,
@@ -69,11 +72,15 @@ namespace CampanasDelDesierto_v1.Models
             CAPITAL,
             VENTA_A_CREDITO,
             CHEQUE, 
-            LIMPIEZA
+            RENTENCION
         };
 
         public MovimientoFinanciero() { }
 
+        /// <summary>
+        /// Determina el tipo de movimiento segun la clase del movimiento
+        /// </summary>
+        /// <returns>El enum correspondiente al tipo.</returns>
         public TypeOfMovements getTypeOfMovement()
         {
             if (this is PagoPorProducto)
@@ -85,7 +92,7 @@ namespace CampanasDelDesierto_v1.Models
             else if (this is LiquidacionSemanal)
                 return TypeOfMovements.CHEQUE;
             else if (this is Deduccion)
-                return TypeOfMovements.LIMPIEZA;
+                return TypeOfMovements.RENTENCION;
             else
                 return TypeOfMovements.NONE;
         }
@@ -105,6 +112,31 @@ namespace CampanasDelDesierto_v1.Models
                 return "";
         }
 
+        /// <summary>
+        /// Arroja verdadero si el movimiento es un prestamo u abono (movimientos de capital) o una venta a credito.
+        /// </summary>
+        /// <returns></returns>
+        public bool isAbonoOPrestamo()
+        {
+            var tom = this.getTypeOfMovement();
+            return tom == TypeOfMovements.CAPITAL || tom == TypeOfMovements.VENTA_A_CREDITO;
+        }
+
+        /// <summary>
+        /// Arroja verdadero si es una emision de cheque, una retencion o un pago por producto
+        /// </summary>
+        /// <returns></returns>
+        public bool isMovimientoDeLiquidacion()
+        {
+            var tom = this.getTypeOfMovement();
+            return tom == TypeOfMovements.CHEQUE || tom == TypeOfMovements.RENTENCION || tom == TypeOfMovements.PAGO_POR_PRODUCTO;
+        }
+
+        /// <summary>
+        /// Ajuste general de movimiento, donde se suma a la fecha del movimiento la hora exacta en el que dio de alta el movimiento
+        /// para proposito de conferir una fecha unica a cada movimiento que permita el cronologico apropiado de los movimientos
+        /// para permitir calcular los balances.
+        /// </summary>
         public void ajustarMovimiento()
         {
             //Se agrega la hora de registro a la fecha del movimiento solo para
@@ -125,12 +157,23 @@ namespace CampanasDelDesierto_v1.Models
             introducirMovimientoEnPeriodo(periodoID, db);
         }
 
+        /// <summary>
+        /// Introduce la fecha del movimiento dentro del año de periodo de cosecha indicado, tomando por defecto
+        /// el día y mes de la fecha de registro.
+        /// </summary>
+        /// <param name="anioCosecha">Año que representa un periodo de cosecha</param>
+        /// <param name="db">Instancia representativa de la base de datos</param>
         public void introducirMovimientoEnPeriodo(int? periodoID, ApplicationDbContext db)
         {
             TemporadaDeCosecha tem = TemporadaDeCosecha.findTemporada(periodoID);
             introducirMovimientoEnPeriodo(tem);
         }
 
+        /// <summary>
+        /// Configura las fechas y variables de temporada de la instanca del movimiento para corresponder
+        /// a la instancia de temporada introducida como argumento.
+        /// </summary>
+        /// <param name="tem">Instancia de temporada dentro de la cual se introduce el movimiento.</param>
         public void introducirMovimientoEnPeriodo(TemporadaDeCosecha tem)
         {
             this.temporadaDeCosecha = tem;

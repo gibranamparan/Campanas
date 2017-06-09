@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using OfficeOpenXml;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.ComponentModel;
+using static CampanasDelDesierto_v1.Models.TemporadaDeCosecha;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -116,12 +117,16 @@ namespace CampanasDelDesierto_v1.Models
         /// <param name="fechaInicial">Fecha desde la cual se comienzan a corregir los balances.</param>
         internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db)
         {
+            /*Primeor se filtra pagos de producto y cheques*/
+            var movimientos = this.MovimientosFinancieros
+                .Where(mov => mov.isAbonoOPrestamo());
+
             /*Tomando como referencia el ultimo movimiento anterior al recien modificado, se toman
             todos los registros posteriores a este, en caso de que el recien modificado sea el 1ro,
             se toman por defecto todos los registros existentes*/
-            var movimientos = ultimoMovimiento!=null ? this.MovimientosFinancieros
+            movimientos = ultimoMovimiento!=null ? movimientos
                     .Where(mov => mov.fechaMovimiento > ultimoMovimiento.fechaMovimiento)
-                    : this.MovimientosFinancieros;
+                    : movimientos;
 
             //Se crea una lista encadenada ordenada cronologicamente hacia el pasado
             movimientos = movimientos.OrderByDescending(mov => mov.fechaMovimiento).ToList();
@@ -262,6 +267,7 @@ namespace CampanasDelDesierto_v1.Models
         public MovimientoFinanciero getUltimoMovimiento()
         {
             MovimientoFinanciero m = this.MovimientosFinancieros
+                .Where(mov => mov.isAbonoOPrestamo())
                 .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
 
             return m;
@@ -269,15 +275,8 @@ namespace CampanasDelDesierto_v1.Models
 
         internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento)
         {
-            /*
             var movs = this.MovimientosFinancieros
-                .Where(mov => mov.fechaMovimiento <= fechaMovimiento).ToList()
-                .OrderByDescending(mov => mov.fechaMovimiento);
-
-            MovimientoFinanciero m = movs.FirstOrDefault();
-            */
-
-            var movs = this.MovimientosFinancieros
+                .Where(mov => mov.isAbonoOPrestamo())
                 .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
                 .OrderByDescending(mov => mov.fechaMovimiento)
                 .Take(2).ToList();
@@ -289,6 +288,64 @@ namespace CampanasDelDesierto_v1.Models
                 m = movs.ElementAt(movs.Count() - 1);
 
             return m;
+        }
+
+        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(TemporadaDeCosecha tem, decimal precioDolar,TimePeriod tp)
+        {
+            var productos = tem.getListaProductos(this.zona);
+            var totales = this.getTotalEntregas(tem.TemporadaDeCosechaID, tp);
+            var report = new List<RecepcionDeProducto.VMTotalDeEntregas>();
+            /*Por cada producto calculado sus totales de entrega y ganancias, se genera una tabla acorde al reporte semanal de liquidacion
+            mensual marcado por el VMTotalDeEntregas con las columnas "Variedad", Precio Por tonelada, Toneladas Entregadas, Valor en USD,
+            valor en pesos, valor total de cosecha en USD*/
+            foreach(var producto in productos)
+            {
+                var total = totales.FirstOrDefault(tot => tot.producto == producto.producto);
+                RecepcionDeProducto.VMTotalDeEntregas totalReg = new RecepcionDeProducto.VMTotalDeEntregas() { producto = producto.producto,
+                precio = producto.precio, monto = producto.precio*(decimal)total.cantidad,
+                    montoMXN = producto.precio * (decimal)total.cantidad*precioDolar, toneladasRecibidas = total.cantidad};
+                report.Add(totalReg);
+            }
+
+            return report;
+        }
+
+        private List<VMTipoProducto> getTotalEntregas(int temporadaID, TimePeriod tp)
+        {
+            //Se filtran los movimientos dentro del periodo de cosecha, que sean pagos por producto dentro
+            //del periodo de tiempo consultado
+            var movs =  this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaID).ToList()
+                .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+                .Where(mov=> tp.hasInside(mov.fechaMovimiento));
+
+            PagoPorProducto total = new PagoPorProducto();
+            //Se reporta dentro de un registro de PagoPorProducto la suma de todas las cantidades y precios
+            //filtrados
+            total.pagoProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto1);
+            total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
+            total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
+            total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
+            total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
+            total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
+            //Se presenta la informacion en una lista de 3 tipos de productos con su correspondiente cantidad, precio y nombre
+            List<VMTipoProducto> totalesProducto = new List<VMTipoProducto>();
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1,
+                precio = total.pagoProducto1, cantidad = total.cantidadProducto1
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2,
+                precio = total.pagoProducto2, cantidad = total.cantidadProducto2
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3,
+                precio = total.pagoProducto3, cantidad = total.cantidadProducto3
+            });
+
+            return totalesProducto;
         }
     }
 }

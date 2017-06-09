@@ -225,12 +225,13 @@ namespace CampanasDelDesierto_v1.Models
             public const string OTRO = "MISSION-BAJA";
         }
 
-        public VMTipoProducto[] getListaProductos()
+        public VMTipoProducto[] getListaProductos(string zona)
         {
+            VMPreciosProductos vmPrecios = new VMPreciosProductos(this, zona);
             VMTipoProducto[] opciones = new VMTipoProducto[]{
-                new VMTipoProducto(this.precioProducto1, this.tipoProducto1),
-                new VMTipoProducto(this.precioProducto2, this.tipoProducto2),
-                new VMTipoProducto(this.precioProducto3, this.tipoProducto3),
+                new VMTipoProducto(this.tipoProducto1, vmPrecios.precioProducto1),
+                new VMTipoProducto(this.tipoProducto2, vmPrecios.precioProducto2),
+                new VMTipoProducto(this.tipoProducto3, vmPrecios.precioProducto3)
             };
             return opciones;
         }
@@ -242,13 +243,21 @@ namespace CampanasDelDesierto_v1.Models
 
         public class VMTipoProducto
         {
-            public decimal Value { get; set; }
-            public string Text { get; set; }
+            public string producto { get; set; }
+            public decimal precio { get; set; }
+            public double cantidad { get; set; }
             public VMTipoProducto() { }
-            public VMTipoProducto(decimal Value, string Text)
+            public VMTipoProducto(string producto, decimal precio)
             {
-                this.Value = Value;
-                this.Text = Text;
+                this.producto = producto;
+                this.precio = precio;
+                this.cantidad = 0;
+            }
+            public VMTipoProducto(string producto, decimal precio, double cantidad)
+            {
+                this.producto = producto;
+                this.precio = precio;
+                this.cantidad = cantidad;
             }
         }
 
@@ -258,16 +267,19 @@ namespace CampanasDelDesierto_v1.Models
             ApplyFormatInEditMode = true)]
             [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
             public decimal precioManzanita { get; set; }
+            public decimal precioProducto1 { get { return this.precioManzanita; } }
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
             [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
             public decimal precioObliza { get; set; }
+            public decimal precioProducto2 { get { return this.precioObliza; } }
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
             [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
             public decimal precioMission { get; set; }
+            public decimal precioProducto3 { get { return this.precioMission; } }
 
             [DisplayName("Zona")]
             public string zona { get; set; }

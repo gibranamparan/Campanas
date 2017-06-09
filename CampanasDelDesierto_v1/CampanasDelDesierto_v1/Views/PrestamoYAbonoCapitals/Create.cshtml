@@ -206,18 +206,19 @@
             })
 
             $('#divisa').change(function () {
-                if($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN'){
-                    $('#conversionDivisa').slideDown();
-                    $("#montoMovimiento").prop('readonly', true);
-                } else {
-                    $('#conversionDivisa').slideUp();
-                    $("#montoMovimiento").prop('readonly', false);
-                }
+                var pesosSelected = $(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN';
+                $("#montoMovimiento").prop('readonly', pesosSelected); //Activa dolares
+                $("#montoPesos").prop('readonly', !pesosSelected); //Desactiva pesos
+
+                //$('#conversionDivisa').slideToggle(pesosSelected);
+
+                $("#montoMovimiento").val(numeral(0).format('0.00')).trigger('input');
+                $("#montoPesos").val(numeral(0).format('0.00')).trigger('input');
             })
 
             $("#proveedor").change(function () {
                 var prov = $(this).val();
-                $("#detallesCFE").slideToggle(prov == "CFE")
+                $("#detallesCFE").slideDownOrUp(prov=='CFE')
             })
 
             function setPrecioDolar() {
