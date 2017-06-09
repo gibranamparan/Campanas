@@ -172,13 +172,44 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
-
+        /// <summary>
+        /// Representa un renglon dentro del reporte de entregas totales en la semana.
+        /// Es utilizado para el reporte de liquidacion semanal.
+        /// </summary>
         public class VMTotalDeEntregas
         {
+            /// <summary>
+            /// Nombre estandar de la variedad del producto. 
+            /// </summary>
+            [DisplayName("Variedad")]
             public string producto { get; set; }
+            /// <summary>
+            /// Precio unitario por tonelada correspondente a la variedad de producto.
+            /// Esto definido dentro de la temporada.
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:C}", 
+                ApplyFormatInEditMode = true)]
+            [DisplayName("Precio Tonelada")]
             public decimal precio { get; set; }
+            /// <summary>
+            /// Toneladas totales correspondientes a la variedad, recibidas en la semana
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            [DisplayName("Toneladas Entregadas")]
             public double toneladasRecibidas { get; set; }
+            /// <summary>
+            /// Precio total de las toneladas recibidas
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:C}",
+                ApplyFormatInEditMode = true)]
+            [DisplayName("Monto (USD)")]
             public decimal monto { get; set; }
+            /// <summary>
+            /// Mismo monto en pesos mexicanos segun el tipo de cambio dado al preparar el reporte.
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:C}",
+                ApplyFormatInEditMode = true)]
+            [DisplayName("Monto (MXN)")]
             public decimal montoMXN { get; set; }
         }
 

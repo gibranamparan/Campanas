@@ -4,6 +4,7 @@
     ViewBag.Title = "Productor";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int temporadaID = ViewBag.temporada;
+    var temporadas = ViewBag.temporadas;
     ViewDataDictionary vddInfoProductor = new ViewDataDictionary();
     vddInfoProductor.Add("temporada", ViewBag.temporadaSeleccionada);
 }
@@ -40,6 +41,27 @@
             </a>
         </div>
 
+        <div class="col-md-4">
+            @using (Html.BeginForm("Details", "Productores", FormMethod.Post,
+                    new { @class = "form-inline pull-right" }))
+            {
+                <div class="form-group">
+                    <label for="temporadas">
+                        Periodo de Cosecha
+                    </label>
+                    @Html.DropDownList("temporada", new SelectList(temporadas, "TemporadaDeCosechaID",
+                    "rangoTiempo", temporadaID), new { @class = "form-control", onchange = "submitBusqueda(this)" })
+                </div>
+            }
+        </div>
+
+        @*Prestamos y abonos*@
+        <h4>Prestamos y Abonos</h4>
         @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", Model)
+
+        @*Ingresos de productos y liquidaciones*@
+        <h4>Ingreso de cosecha y Liquidaciones</h4>
+        @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones", Model)
+
     </div>
 </div>

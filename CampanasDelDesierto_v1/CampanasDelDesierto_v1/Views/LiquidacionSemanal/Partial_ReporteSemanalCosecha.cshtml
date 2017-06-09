@@ -1,0 +1,61 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model IEnumerable<RecepcionDeProducto.VMTotalDeEntregas> 
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ingresos de Cosecha</h3>
+    </div>
+    <div class="panel-body">
+        @*Reporte de totales en el periodo por *@
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.producto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.precio)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.toneladasRecibidas)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.monto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.montoMXN)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingreso in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => ingreso.producto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => ingreso.precio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => ingreso.toneladasRecibidas)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => ingreso.monto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => ingreso.montoMXN)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group pull-right">
+            <label class = "control-label col-md-6">Monto Total por Cosecha (USD): </label>
+            <div class="col-md-6">
+                <p class="form-control-static">@Model.Sum(ingreso=>ingreso.monto).ToString("C")</p>
+            </div>
+        </div>
+    </div>
+</div>
+

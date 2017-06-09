@@ -24,7 +24,6 @@ namespace CampanasDelDesierto_v1
             bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
                         "~/Scripts/jquery.dataTables.min.js",
                         "~/Scripts/dataTables.buttons.min.js",
-                        "~/Scripts/dataTables.editor.min.js",
                         "~/Scripts/dataTables.select.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -52,7 +51,6 @@ namespace CampanasDelDesierto_v1
             
             bundles.Add(new StyleBundle("~/Content/dataTables").Include(
                       "~/Content/jquery.dataTables.min.css",
-                      "~/Content/editor.dataTables.min.css",
                       "~/Content/buttons.dataTables.min.css",
                       "~/Content/select.dataTables.min.css"));
         }

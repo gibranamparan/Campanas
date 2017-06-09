@@ -1,15 +1,14 @@
 ﻿@model CampanasDelDesierto_v1.Models.Productor
 @using CampanasDelDesierto_v1.Models;
 
-@{ 
+@{
     int temporada = ViewBag.temporada;
 
     @*Solo prestamos y abonos*@
-    var movimientos = Model.MovimientosFinancieros
-        .Where(mov => mov.TemporadaDeCosechaID == temporada)
-        .Where(mov => mov.isAbonoOPrestamo())
-        .OrderBy(mov=>mov.fechaMovimiento).ToList();
-    List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
+var movimientos = Model.MovimientosFinancieros
+    .Where(mov => mov.TemporadaDeCosechaID == temporada)
+        .Where(mov => mov.isMovimientoDeLiquidacion())
+    .OrderBy(mov => mov.fechaMovimiento).ToList();
 }
 
 @if (Model != null && movimientos.Count() > 0)
@@ -28,9 +27,6 @@
                 </th>
                 <th>
                     Concepto
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
                 </th>
                 <th class="actions"></th>
             </tr>
@@ -52,9 +48,6 @@
                         {
                             @Html.DisplayFor(modelItem => ((PrestamoYAbonoCapital)item).concepto)
                         }
-                    </td>
-                    <td class='@(item.balance<0?"montoNegativo":"")'>
-                        @Html.DisplayFor(modelItem => item.balance)
                     </td>
                     <td>
                         <div class="dropdown_actions">
@@ -87,7 +80,7 @@
 else
 {
     <div class="alert alert-warning col-md-12">
-        <strong>No existen</strong> movimientos financieros en este periodo para este productor.
+        <strong>No existen</strong> ingresos ni liquidaciones en este periodo.
     </div>
 }
 

@@ -62,3 +62,11 @@ function getTipoCambioAsync(success, error, complete , antiForgeryToken) {
     jQuery.postJSON("/MovimientoFinancieros/getCambioDolar", 0, 'JSON',
         success, error, complete, antiForgeryToken);
 }
+
+$.fn.slideDownOrUp = function (show) {
+    return show ? this.slideDown() : this.slideUp();
+}
+
+$.fn.fadeInOrOut = function (status) {
+    return status ? this.fadeIn() : this.fadeOut();
+}

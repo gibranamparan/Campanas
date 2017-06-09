@@ -90,11 +90,12 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
+                    /*
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(pagoPorProducto.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);
+                    prod.ajustarBalances(ultimoMovimiento, db);*/
 
                     return RedirectToAction("Details", "Productores", 
                         new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
@@ -249,12 +250,12 @@ namespace CampanasDelDesierto_v1.Controllers
                     }
 
                     db.SaveChanges();
-
+                    /*
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(pagoPorProducto.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);
+                    prod.ajustarBalances(ultimoMovimiento, db);*/
 
                     return RedirectToAction("Details", "Productores",
                         new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });

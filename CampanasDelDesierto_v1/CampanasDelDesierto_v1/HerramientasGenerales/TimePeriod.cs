@@ -12,13 +12,13 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true,
             DataFormatString = "{0:yyyy-MM-dd}")]
-        [DisplayName("From")]
+        [DisplayName("Desde")]
         public DateTime startDate { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true,
             DataFormatString = "{0:yyyy-MM-dd}")]
-        [DisplayName("To")]
+        [DisplayName("Hasta")]
         public DateTime endDate { get; set; }
 
         public TimePeriod() { }
