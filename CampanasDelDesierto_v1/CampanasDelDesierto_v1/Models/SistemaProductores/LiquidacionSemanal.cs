@@ -23,25 +23,12 @@ namespace CampanasDelDesierto_v1.Models
         public decimal precioDelDolarEnLiquidacion { get; set; }
 
         /*RENTECIONES*/
-        [Display(Name = "Garantia de Sanidad Vegetal ")]
-        [ForeignKey("garantiaLimpieza")]
-        public int? garantiaLimpiezaID { get; set; }
-        public PrestamoYAbonoCapital garantiaLimpieza { get; set; }
-
-        [Display(Name = "2% I.S.R Ejidal")]
-        [ForeignKey("rentecionEjidal")]
-        public int? rentecionEjidalID { get; set; }
-        public PrestamoYAbonoCapital rentecionEjidal { get; set; }
-
         [Display(Name = "Abono a Anticipos")]
         [ForeignKey("abonoAnticipo")]
         public int? abonoAnticipoID { get; set; }
-        public PrestamoYAbonoCapital abonoAnticipo { get; set; }
+        public virtual PrestamoYAbonoCapital abonoAnticipo { get; set; }
 
-        [Display(Name = "Otra Retención")]
-        [ForeignKey("retencionOtro")]
-        public int? retencionOtroID { get; set; }
-        public PrestamoYAbonoCapital retencionOtro { get; set; }
+        public virtual ICollection<Retencion> retenciones { get; set; }
 
         public LiquidacionSemanal()
         {

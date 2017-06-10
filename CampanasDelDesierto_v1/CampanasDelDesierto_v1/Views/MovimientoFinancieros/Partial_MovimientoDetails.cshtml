@@ -46,9 +46,9 @@
         }
 
         @*Panel para detalles de cheque e impresion*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE)
+        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
         {
-            @Html.Partial("../EmisionDeCheques/Details")
+            @Html.Partial("../LiquidacionSemanal/Details")
         }
     </div>
 </div>

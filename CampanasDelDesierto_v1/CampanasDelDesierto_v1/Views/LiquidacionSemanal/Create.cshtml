@@ -46,6 +46,8 @@
 @*Informacino de productor*@
 @Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
+@using (Html.BeginForm())
+{
 @*Datos globales*@
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -154,8 +156,6 @@
         <span class="panel-title">Emision de Cheque</span>
     </div>
     <div class="panel-body">
-        @using (Html.BeginForm())
-        {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model=>model.idMovimiento)
             @Html.HiddenFor(model => model.idProductor)
@@ -201,9 +201,9 @@
                     </div>
                 </div>
             </div>
-        }
     </div>
 </div>
+}
 
 
 @section Scripts {

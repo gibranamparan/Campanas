@@ -148,7 +148,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProductor,,numProductor,nombreProductor,domicilio,"
+        public ActionResult Edit([Bind(Include = "idProductor,numProductor,nombreProductor,domicilio,"
             +"fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal")]
                 Productor productor)
         {

@@ -41,22 +41,18 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 TypeOfMovements tom = this.getTypeOfMovement();
-                if (tom == TypeOfMovements.CAPITAL && this.getTypeOfMovement() == TypeOfMovements.CAPITAL) {
-                    if (((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                        return PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
-                    else if (((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                        return PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO;
-                    else
-                        return "ANTICIPO";
+                if (tom == TypeOfMovements.CAPITAL) {
+                    return ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital;
                 }
                 else if (tom == TypeOfMovements.PAGO_POR_PRODUCTO)
                     return "INGRESO DE COSECHA";
                 else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                     return "VENTA A CREDITO";
-                else if (tom == TypeOfMovements.CHEQUE)
+                else if (tom == TypeOfMovements.LIQUIDACION)
                     return "CHEQUE";
-                else if (tom == TypeOfMovements.RENTENCION)
-                    return "RETENCION";
+                else if (tom == TypeOfMovements.RENTENCION) {
+                    return "RETENCION: "+ ((Retencion)this).tipoDeDeduccion.ToString();
+                }
                 else
                     return "";
             }
@@ -71,7 +67,7 @@ namespace CampanasDelDesierto_v1.Models
             PAGO_POR_PRODUCTO,
             CAPITAL,
             VENTA_A_CREDITO,
-            CHEQUE, 
+            LIQUIDACION, 
             RENTENCION
         };
 
@@ -90,8 +86,8 @@ namespace CampanasDelDesierto_v1.Models
             else if (this is VentaACredito)
                 return TypeOfMovements.VENTA_A_CREDITO;
             else if (this is LiquidacionSemanal)
-                return TypeOfMovements.CHEQUE;
-            else if (this is Deduccion)
+                return TypeOfMovements.LIQUIDACION;
+            else if (this is Retencion)
                 return TypeOfMovements.RENTENCION;
             else
                 return TypeOfMovements.NONE;
@@ -106,7 +102,7 @@ namespace CampanasDelDesierto_v1.Models
                 return "PagosPorProductos";
             else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                 return "VentaACreditos";
-            else if (tom == TypeOfMovements.CHEQUE)
+            else if (tom == TypeOfMovements.LIQUIDACION)
                 return "EmisionDeCheques";
             else
                 return "";
@@ -129,7 +125,7 @@ namespace CampanasDelDesierto_v1.Models
         public bool isMovimientoDeLiquidacion()
         {
             var tom = this.getTypeOfMovement();
-            return tom == TypeOfMovements.CHEQUE || tom == TypeOfMovements.RENTENCION || tom == TypeOfMovements.PAGO_POR_PRODUCTO;
+            return tom == TypeOfMovements.LIQUIDACION || tom == TypeOfMovements.RENTENCION || tom == TypeOfMovements.PAGO_POR_PRODUCTO;
         }
 
         /// <summary>

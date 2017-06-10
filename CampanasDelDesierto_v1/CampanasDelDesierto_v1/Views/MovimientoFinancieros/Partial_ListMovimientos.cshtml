@@ -41,7 +41,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
-                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CHEQUE ? "style=color:green" : "")>
+                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
                         @Html.DisplayFor(modelItem => item.montoMovimiento)
                     </td>
                     <td>

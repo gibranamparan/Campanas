@@ -163,6 +163,12 @@ namespace CampanasDelDesierto_v1.Controllers
             if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
                 ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
 
+            if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+            {
+                db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
+                db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
+            }
+
             //se elimina el movimiento
             db.MovimientosFinancieros.Remove(mov);
             int numReg = db.SaveChanges();
@@ -170,7 +176,7 @@ namespace CampanasDelDesierto_v1.Controllers
             var prod = db.Productores.Find(mov.idProductor);
             if (numReg > 0 && prod.MovimientosFinancieros.Count()>0 
                 && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.CHEQUE)
+                && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
             {
                 //Se calcula el ultimo movimiento anterior al que se desea eliminar
                 MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento);

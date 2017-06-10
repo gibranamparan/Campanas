@@ -79,27 +79,30 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Se crean los registros de retenciones
-                Deduccion limpieza = new Deduccion(emisionDeCheque, retenciones.garantiaLimpieza,
-                    Deduccion.TipoDeduccion.SANIDAD);
                 int numReg = 0;
+                List<Retencion> arrRetenciones = vmRetencionesToArray(retenciones, emisionDeCheque);
 
                 //Ajuste de movimiento para entrar dentro de la lista de balances
                 emisionDeCheque.ajustarMovimiento();
 
-                //Solamente se agregara deposito para limpieza si fue introducida una cantidad mayor a 0
-                if (limpieza.montoMovimiento != 0)
+                //Si se agrego al menos una retencion a la lista, se marca para ser guardada
+                if (arrRetenciones.Count() > 0)
+                    emisionDeCheque.retenciones = arrRetenciones;
+
+                //Si se registro un abono, se instancia
+                PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                if (retenciones.abonoAnticipos > 0)
                 {
-                    //Se le establecen fechas con horas diferentes para mantener la integridad del balance
-                    //Las retenciones apareceran primero
-                    limpieza.ajustarMovimiento();
+                    abono.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-5);
+                    abono.precioDelDolar = emisionDeCheque.precioDelDolarEnLiquidacion;
+                    abono.concepto = "ABONO EN LIQUIDACION (CH:"+emisionDeCheque.cheque+")";
+                    abono.montoMovimiento = retenciones.abonoAnticipos;
+                    abono.TemporadaDeCosechaID = emisionDeCheque.TemporadaDeCosechaID;
+                    abono.idProductor = emisionDeCheque.idProductor;
+                    abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
 
-                    limpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
-
-                    db.Deducciones.Add(limpieza);
-                    numReg = db.SaveChanges();
-                    if (numReg > 0)
-                        numReg = introducirMovimientoAlBalance(limpieza);
+                    //Se marca para guardar
+                    emisionDeCheque.abonoAnticipo = abono;
                 }
 
                 db.LiquidacionesSemanales.Add(emisionDeCheque);
@@ -107,6 +110,15 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
+                    if (abono.idMovimiento > 0) { 
+                        //Se calcula el movimiento anterior al que se esta registrando
+                        var prod = db.Productores.Find(abono.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento);
+
+                        //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                        prod.ajustarBalances(ultimoMovimiento, db);
+                    }
+
                     //numReg = introducirMovimientoAlBalance(emisionDeCheque);
                     return RedirectToAction("Details", "Productores", new { id = emisionDeCheque.idProductor,
                         temporada = emisionDeCheque.TemporadaDeCosechaID });
@@ -115,9 +127,39 @@ namespace CampanasDelDesierto_v1.Controllers
 
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
             ViewBag.productor = productor;
+            ViewBag.retenciones = retenciones;
             prepararVistaCrear(productor);
 
             return View(emisionDeCheque);
+        }
+
+        private List<Retencion> vmRetencionesToArray(LiquidacionSemanal.VMRetenciones retenciones, 
+            LiquidacionSemanal emisionDeCheque)
+        {
+            //Se crean los registros de retenciones
+            Retencion garantiaLimpieza = new Retencion(emisionDeCheque, retenciones.garantiaLimpieza,
+                Retencion.TipoRetencion.SANIDAD);
+            Retencion retencionEjidal = new Retencion(emisionDeCheque, retenciones.retencionEjidal,
+                Retencion.TipoRetencion.EJIDAL);
+            Retencion retencionOtro = new Retencion(emisionDeCheque, retenciones.retencionOtro,
+                Retencion.TipoRetencion.OTRO);
+
+            List<Retencion> res = new List<Retencion>();
+            //Se le establecen fechas con horas diferentes para mantener la integridad del balance
+            //Las retenciones apareceran primero
+            garantiaLimpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
+            retencionEjidal.fechaMovimiento = garantiaLimpieza.fechaMovimiento.AddSeconds(-1);
+            retencionOtro.fechaMovimiento = retencionEjidal.fechaMovimiento.AddSeconds(-1);
+
+            //Se valida si fue introducido un monto para cada retencion
+            if(garantiaLimpieza.montoMovimiento<0)
+                res.Add(garantiaLimpieza);
+            if (retencionEjidal.montoMovimiento < 0)
+                res.Add(retencionEjidal);
+            if (retencionOtro.montoMovimiento < 0)
+                res.Add(retencionOtro);
+
+            return res;
         }
 
         private int introducirMovimientoAlBalance(MovimientoFinanciero mov)

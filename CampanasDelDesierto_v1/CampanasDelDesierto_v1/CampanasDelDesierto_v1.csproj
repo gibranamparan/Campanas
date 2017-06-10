@@ -286,6 +286,14 @@
     <Compile Include="Migrations\201706090253414_addedFields_Retenciones_LiquidacionSemanal.Designer.cs">
       <DependentUpon>201706090253414_addedFields_Retenciones_LiquidacionSemanal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706100310198_retencionesLIst_in_LiquidacionSemanal.cs" />
+    <Compile Include="Migrations\201706100310198_retencionesLIst_in_LiquidacionSemanal.Designer.cs">
+      <DependentUpon>201706100310198_retencionesLIst_in_LiquidacionSemanal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.cs" />
+    <Compile Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.Designer.cs">
+      <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -302,7 +310,7 @@
     <Compile Include="Models\SistemaProductores\PrestamoYAbonoCapital.cs" />
     <Compile Include="Models\SistemaProductores\Producto.cs" />
     <Compile Include="Models\SistemaProductores\RecepcionDeProducto.cs" />
-    <Compile Include="Models\SistemaProductores\Deduccion.cs" />
+    <Compile Include="Models\SistemaProductores\Retencion.cs" />
     <Compile Include="Models\SistemaActivos\Sucursal.cs" />
     <Compile Include="Models\SistemaProductores\TemporadaDeCosecha.cs" />
     <Compile Include="Models\SistemaProductores\VentaACredito.cs" />
@@ -644,6 +652,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706090253414_addedFields_Retenciones_LiquidacionSemanal.resx">
       <DependentUpon>201706090253414_addedFields_Retenciones_LiquidacionSemanal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706100310198_retencionesLIst_in_LiquidacionSemanal.resx">
+      <DependentUpon>201706100310198_retencionesLIst_in_LiquidacionSemanal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.resx">
+      <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
