@@ -92,6 +92,7 @@
             <input id="inputOrdenDeCompra" type="text" value="NA" style="width: 80px" />
         </span>
     </div>
+
     <style>
         * {
             margin: 0;
@@ -227,16 +228,18 @@
             position: relative;
             left: 2mm;
             top: 4mm;
+            
+            /*Tamaño de papel Letter*/
             width: 8.5in;
             height: 11in;
         }
 
-            #pnlPagare img {
-                position: absolute;
-                z-index: 0;
-                width: 8.40in; /*Factor: .9788*/
-                height: 11.64in; /*Factor: 1.042*/
-            }
+        #pnlPagare img {
+            position: absolute;
+            z-index: 0;
+            width: 8.40in; /*Factor: .9788*/
+            height: 11.64in; /*Factor: 1.042*/
+        }
 
         @@media print {
             @@page {
@@ -264,18 +267,5 @@
         }
         /*@@media print and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { body { zoom: 150%; } }*/
     </style>
-
-    @*
-        @Scripts.Render("~/bundles/jquery")
-        <script>
-            $("#pnlPagare").draggable()
-            $("#pnlPagare").draggable({
-                drag: function (event, ui) {
-                    $("#px").val(ui.position.left);
-                    $("#py").val(ui.position.top);
-                }
-            });
-
-        </script>*@
 </body>
 </html>

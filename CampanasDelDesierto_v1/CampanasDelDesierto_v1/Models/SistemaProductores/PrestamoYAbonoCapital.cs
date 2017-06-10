@@ -89,6 +89,7 @@ namespace CampanasDelDesierto_v1.Models
             ApplicationDbContext db = new ApplicationDbContext();
             var opciones = from item in db.Conceptos.ToList()
                            select new { Value = item.nombreConcepto, Text = item.nombreConcepto };
+            opciones = opciones.OrderBy(op => op.Value);
             return new SelectList(opciones,"Value","Text");
         }
 

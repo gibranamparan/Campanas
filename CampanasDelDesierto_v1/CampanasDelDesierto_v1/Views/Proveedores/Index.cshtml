@@ -32,29 +32,32 @@
 
 @Html.Partial("Partial_CreateProveedor", new PrestamoYAbonoCapital.Proveedores())
 
-<table class="table table-hover table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().nombreProveedor)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<table class="table table-hover table-striped datatablejs">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.nombreProveedor)
-            </td>
-            <td>
-                <a data-toggle="modal" id="@item.id" entityName="@item.nombreProveedor"
-                   href='#@(modelOptionsConfirmDeleteProveedor.modalID)'
-                   onclick="prepareModalDelete(this)">
-                    <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
-                </a>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().nombreProveedor)
+            </th>
+            <th></th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreProveedor)
+                </td>
+                <td>
+                    <a data-toggle="modal" id="@item.id" entityName="@item.nombreProveedor"
+                       href='#@(modelOptionsConfirmDeleteProveedor.modalID)'
+                       onclick="prepareModalDelete(this)">
+                        <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @Html.Partial("Partial_ConfirmationModal", modelOptionsConfirmDeleteProveedor)
@@ -65,29 +68,32 @@
 <h2>Tabla de Conceptos</h2>
 @Html.Partial("Partial_CreateConcepto", new PrestamoYAbonoCapital.Conceptos())
 
-<table class="table table-hover table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => conceptos.FirstOrDefault().nombreConcepto)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in conceptos)
-    {
+<table class="table table-hover table-striped datatablejs">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.nombreConcepto)
-            </td>
-            <td>
-                <a data-toggle="modal" id="@item.id" entityName="@item.nombreConcepto" 
-                   href='#@(modelOptionsConfirmDeleteConcepto.modalID)'
-                   onclick="prepareModalDelete(this)">
-                    <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
-                </a>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => conceptos.FirstOrDefault().nombreConcepto)
+            </th>
+            <th></th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in conceptos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreConcepto)
+                </td>
+                <td>
+                    <a data-toggle="modal" id="@item.id" entityName="@item.nombreConcepto"
+                       href='#@(modelOptionsConfirmDeleteConcepto.modalID)'
+                       onclick="prepareModalDelete(this)">
+                        <i class="glyphicon glyphicon-trash" title="Eliminar"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @Html.Partial("Partial_ConfirmationModal", modelOptionsConfirmDeleteConcepto)

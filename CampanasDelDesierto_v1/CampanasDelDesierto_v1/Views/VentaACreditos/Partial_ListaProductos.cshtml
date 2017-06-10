@@ -55,7 +55,7 @@
                 found = compraIndex != null;
             }
 
-            <tr @(found?"default-selected":"")>
+            <tr @(found?"default-selected":"") @(found?"compraID="+compraIndex.cantidadMaterial:"")>
                 @if (selectMode)
                 {
                     <td></td>

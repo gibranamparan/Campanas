@@ -87,11 +87,12 @@ namespace CampanasDelDesierto_v1.Controllers
                 //Se deserializa la lista de compras en un objeto
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
-                foreach (var compra in comprasList)
-                {
-                    db.Entry(compra).State = EntityState.Added;
-                }
+
+                //Se asociacian las compras a la venta
+                ventaACredito.ComprasProductos = comprasList;
                 db.MovimientosFinancieros.Add(ventaACredito);
+
+                //Se guardan cambios
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
@@ -135,17 +136,30 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,cantidadMaterial"+
-            ",idProducto,TemporadaDeCosechaID")]VentaACredito ventaACredito)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta")] VentaACredito ventaACredito, string compras)
         {
             if (ModelState.IsValid)
             {
-                //Producto producto = db.Productos.Find(ventaACredito.idProducto);
-                ////se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                //ventaACredito.ajustarMovimiento(producto);
+                //Se eliminan las compras hechas anteriormente
+                db.ComprasProductos.RemoveRange(db.ComprasProductos
+                    .Where(com=>com.idMovimiento == ventaACredito.idMovimiento));
+                db.SaveChanges();
+                
+                //Se deserializa la lista de compras nuevas en un objeto
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                List<CompraProducto> comprasList = js.Deserialize<List<CompraProducto>>(compras);
 
+                //Se asocia con la llave foranea de idMovimiento (la de la venta) a la compra
+                comprasList.ForEach(com => com.idMovimiento = ventaACredito.idMovimiento);
+                comprasList.ForEach(com => db.Entry(com).State = EntityState.Added);
+
+                //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
+                ventaACredito.ajustarMovimiento();
                 //Se modifica el registro
                 db.Entry(ventaACredito).State = EntityState.Modified;
+
+                //Se guardan cambios
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
