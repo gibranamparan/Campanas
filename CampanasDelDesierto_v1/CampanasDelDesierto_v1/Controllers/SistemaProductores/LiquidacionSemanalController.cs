@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -40,7 +41,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: EmisionDeCheques/Create
-        public ActionResult Create(int? id, int? temporada)
+        public ActionResult Create(int? id, int? temporada, TimePeriod semanaLiquidada)
         {
             if (id == null)
             {
@@ -53,18 +54,32 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
             }
 
-            LiquidacionSemanal mov = prepararVistaCrear(productor);
-            mov.Productor = productor;
+            LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada);
             mov.introducirMovimientoEnPeriodo(temporada);
 
             return View(mov);
         }
 
-        private LiquidacionSemanal prepararVistaCrear(Productor productor)
+        /// <summary>
+        /// Rutina para preparar vistas de edicion y creacion
+        /// </summary>
+        /// <param name="productor"></param>
+        /// <param name="semanaLiquidada"></param>
+        /// <returns></returns>
+        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada)
         {
             ViewBag.balanceActual = productor.balanceActual;
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
+            mov.Productor = productor;
+
+            if (semanaLiquidada.isNotDefaultInstance())
+            {
+                //El limite final del periodo semanal se configura para cubrir la totalidad del ultimo dia0
+                semanaLiquidada.endDate = semanaLiquidada.endDate.AddHours(24).AddSeconds(-1);
+                //Se asocia al nuevo registro de liquidacion semanal
+                mov.semanaLiquidada = semanaLiquidada;
+            }
             return mov;
         }
 
@@ -93,13 +108,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
                 if (retenciones.abonoAnticipos > 0)
                 {
-                    abono.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-5);
-                    abono.precioDelDolar = emisionDeCheque.precioDelDolarEnLiquidacion;
-                    abono.concepto = "ABONO EN LIQUIDACION (CH:"+emisionDeCheque.cheque+")";
-                    abono.montoMovimiento = retenciones.abonoAnticipos;
-                    abono.TemporadaDeCosechaID = emisionDeCheque.TemporadaDeCosechaID;
-                    abono.idProductor = emisionDeCheque.idProductor;
-                    abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+                    //Se crea un nuevo abono como retencion de esta liquidacion
+                    abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
 
                     //Se marca para guardar
                     emisionDeCheque.abonoAnticipo = abono;
@@ -126,13 +136,18 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
-            ViewBag.productor = productor;
-            ViewBag.retenciones = retenciones;
-            prepararVistaCrear(productor);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada);
+            mov.introducirMovimientoEnPeriodo(emisionDeCheque.TemporadaDeCosechaID);
 
             return View(emisionDeCheque);
         }
 
+        /// <summary>
+        /// Representa una arreglo de todas las retenciones ingresadas en la forma de la Liquidacion Semanal
+        /// </summary>
+        /// <param name="retenciones">Modelo virtual con las cantidades ingresadas en la forma para cada retencion</param>
+        /// <param name="emisionDeCheque">Instancia del registro de liquidacion semanal asociado a las retenciones</param>
+        /// <returns></returns>
         private List<Retencion> vmRetencionesToArray(LiquidacionSemanal.VMRetenciones retenciones, 
             LiquidacionSemanal emisionDeCheque)
         {
@@ -174,19 +189,22 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: EmisionDeCheques/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, TimePeriod semanaLiquidada)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LiquidacionSemanal emisionDeCheque = db.LiquidacionesSemanales.Find(id);
-            if (emisionDeCheque == null)
+
+            LiquidacionSemanal mov = db.LiquidacionesSemanales.Find(id);
+            if (mov == null)
             {
                 return HttpNotFound();
             }
-            
-            return View("Create",emisionDeCheque);
+
+            prepararVistaCrear(mov.Productor,semanaLiquidada);
+
+            return View("Create",mov);
         }
 
         // POST: EmisionDeCheques/Edit/5
@@ -194,20 +212,48 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,"+
-            "idProductor,TemporadaDeCosechaID,cheque")]
-            LiquidacionSemanal emisionDeCheque)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
+            "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza")]
+            LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones)
         {
-            //Ajuste de movimiento para entrar dentro de la lista de balances
-            emisionDeCheque.ajustarMovimiento();
-            int numReg = 0;
             if (ModelState.IsValid)
             {
-                db.Entry(emisionDeCheque).State = EntityState.Modified;
+                int numReg = 0;
+                List<Retencion> arrRetenciones = vmRetencionesToArray(retenciones, emisionDeCheque);
+
+                //Ajuste de movimiento para entrar dentro de la lista de balances
+                emisionDeCheque.ajustarMovimiento();
+
+                //Si se agrego al menos una retencion a la lista, se marca para ser guardada
+                if (arrRetenciones.Count() > 0)
+                    emisionDeCheque.retenciones = arrRetenciones;
+
+                //Si se registro un abono, se instancia
+                PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                if (retenciones.abonoAnticipos > 0)
+                {
+                    //Se crea un nuevo abono como retencion de esta liquidacion
+                    abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
+                    //Se marca para guardar
+                    emisionDeCheque.abonoAnticipo = abono;
+                }
+
+                db.LiquidacionesSemanales.Add(emisionDeCheque);
                 numReg = db.SaveChanges();
+
                 if (numReg > 0)
                 {
-                    numReg = introducirMovimientoAlBalance(emisionDeCheque);
+                    if (abono.idMovimiento > 0)
+                    {
+                        //Se calcula el movimiento anterior al que se esta registrando
+                        var prod = db.Productores.Find(abono.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento);
+
+                        //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                        prod.ajustarBalances(ultimoMovimiento, db);
+                    }
+
+                    //numReg = introducirMovimientoAlBalance(emisionDeCheque);
                     return RedirectToAction("Details", "Productores", new
                     {
                         id = emisionDeCheque.idProductor,
@@ -216,7 +262,11 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
             }
 
-            return View(emisionDeCheque);
+            Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada);
+            mov.introducirMovimientoEnPeriodo(emisionDeCheque.TemporadaDeCosechaID);
+
+            return View("Create", mov);
         }
 
         // GET: EmisionDeCheques/Delete/5

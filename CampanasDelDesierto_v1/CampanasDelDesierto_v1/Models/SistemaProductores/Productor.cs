@@ -55,11 +55,14 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name ="Adeudo Anterior (USD)")]
         public decimal? adeudoAnterior { get; set; }
 
+        [DisplayName("Balance Actual")]
         public decimal balanceActual {
             get {
                 if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) { 
-                    return this.MovimientosFinancieros
+                    decimal balance = this.MovimientosFinancieros
+                        .Where(mov=>mov.isAbonoOPrestamo())
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                    return balance;
                 }else return 0;
             }
         }

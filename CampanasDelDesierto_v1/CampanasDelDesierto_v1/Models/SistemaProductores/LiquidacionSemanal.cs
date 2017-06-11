@@ -1,6 +1,7 @@
 ﻿using CampanasDelDesierto_v1.HerramientasGenerales;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace CampanasDelDesierto_v1.Models
         [ForeignKey("abonoAnticipo")]
         public int? abonoAnticipoID { get; set; }
         public virtual PrestamoYAbonoCapital abonoAnticipo { get; set; }
+
+        [DisplayName("Semana")]
+        public int semana { get; set; }
 
         public virtual ICollection<Retencion> retenciones { get; set; }
 

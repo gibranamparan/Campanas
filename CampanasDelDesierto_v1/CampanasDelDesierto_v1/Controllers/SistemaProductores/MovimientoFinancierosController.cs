@@ -12,7 +12,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-   
+
     public class MovimientoFinancierosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -56,17 +56,17 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             return View(movimientoFinanciero);
         }
-        
-       // public ActionResult GeneratePDF()
+
+        // public ActionResult GeneratePDF()
         //{
-          //  if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
-            //{
-              //  return new Rotativa.ActionAsPdf("Pagare");
-            //}
-            //else
-            //{
-              //  return RedirectToAction("Index");
-            //}
+        //  if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+        //{
+        //  return new Rotativa.ActionAsPdf("Pagare");
+        //}
+        //else
+        //{
+        //  return RedirectToAction("Index");
+        //}
         //}
 
 
@@ -159,24 +159,34 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
+            var prod = db.Productores.Find(mov.idProductor);
+            bool retencionAbonoEliminado = false;
 
             if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
                 ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
 
+            //En caso de se la eliminacion de un movimiento de liquidacion
             if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
             {
-                db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
-                db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
+                //Se eliminan sus correspondientes retenciones
+                if (((LiquidacionSemanal)mov).retenciones != null && ((LiquidacionSemanal)mov).retenciones.Count() > 0)
+                    db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
+
+                //Y el abono a deudas o anticipos
+                if (((LiquidacionSemanal)mov).abonoAnticipo != null) {
+                    db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
+                    retencionAbonoEliminado = true;
+                }
+
             }
 
             //se elimina el movimiento
             db.MovimientosFinancieros.Remove(mov);
             int numReg = db.SaveChanges();
 
-            var prod = db.Productores.Find(mov.idProductor);
-            if (numReg > 0 && prod.MovimientosFinancieros.Count()>0 
+            if (numReg > 0 && prod.MovimientosFinancieros.Count() > 0
                 && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+                && (mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION || retencionAbonoEliminado))
             {
                 //Se calcula el ultimo movimiento anterior al que se desea eliminar
                 MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento);

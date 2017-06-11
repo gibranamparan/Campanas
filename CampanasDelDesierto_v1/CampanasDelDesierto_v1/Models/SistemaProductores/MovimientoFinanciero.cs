@@ -103,7 +103,7 @@ namespace CampanasDelDesierto_v1.Models
             else if (tom == TypeOfMovements.VENTA_A_CREDITO)
                 return "VentaACreditos";
             else if (tom == TypeOfMovements.LIQUIDACION)
-                return "EmisionDeCheques";
+                return "LiquidacionSemanal";
             else
                 return "";
         }

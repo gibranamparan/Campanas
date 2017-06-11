@@ -294,6 +294,10 @@
     <Compile Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.Designer.cs">
       <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.cs" />
+    <Compile Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.Designer.cs">
+      <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -658,6 +662,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.resx">
       <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.resx">
+      <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

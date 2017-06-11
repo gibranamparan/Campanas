@@ -84,6 +84,20 @@ namespace CampanasDelDesierto_v1.Models
             base.ajustarMovimiento();
         }
 
+        public static PrestamoYAbonoCapital nuevaRentecionAbono(LiquidacionSemanal ls, decimal monto)
+        {
+            PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+            abono.fechaMovimiento = ls.fechaMovimiento.AddSeconds(-5);
+            abono.precioDelDolar = ls.precioDelDolarEnLiquidacion;
+            abono.concepto = "ABONO EN LIQUIDACION (CH:" + ls.cheque + ")";
+            abono.montoMovimiento = monto;
+            abono.TemporadaDeCosechaID = ls.TemporadaDeCosechaID;
+            abono.idProductor = ls.idProductor;
+            abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+
+            return abono;
+        }
+
         public static SelectList getConceptosSelectList()
         {
             ApplicationDbContext db = new ApplicationDbContext();

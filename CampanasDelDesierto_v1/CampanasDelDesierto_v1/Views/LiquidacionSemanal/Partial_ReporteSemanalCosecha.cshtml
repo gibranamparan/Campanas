@@ -50,10 +50,15 @@
                 }
             </tbody>
         </table>
+        @if (Model.Sum(ing => ing.toneladasRecibidas) == 0) {
+            <div class="form-group col-md-6 alert alert-warning">
+                No hay registros de ingreso de cosecha la semana consultada.
+            </div>
+        }
         <div class="form-group pull-right">
-            <label class = "control-label col-md-6">Monto Total por Cosecha (USD): </label>
+            <label class="control-label col-md-6">Monto Total por Cosecha (USD): </label>
             <div class="col-md-6">
-                <p class="form-control-static">@Model.Sum(ingreso=>ingreso.monto).ToString("C")</p>
+                <p class="form-control-static">@Model.Sum(ingreso => ingreso.monto).ToString("C")</p>
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 ﻿using CampanasDelDesierto_v1.HerramientasGenerales;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -35,6 +36,9 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto3 { get; set; }
+
+        [DisplayName("Semana")]
+        public int semana { get; set; }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
 

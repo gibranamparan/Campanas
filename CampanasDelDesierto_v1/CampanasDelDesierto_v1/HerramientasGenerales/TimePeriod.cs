@@ -33,6 +33,12 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
             return this.startDate <= this.endDate;
         }
 
+        public bool isNotDefaultInstance()
+        {
+            DateTime defaultDT = new DateTime();
+            return this.startDate != defaultDT && this.endDate != defaultDT;
+        }
+
         public override string ToString()
         {
             return string.Format("{0:MMMM/dd/yyyy} - {1:MMMM/dd/yyyy}",
