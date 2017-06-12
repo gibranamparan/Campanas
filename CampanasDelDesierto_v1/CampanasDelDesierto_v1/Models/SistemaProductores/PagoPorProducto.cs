@@ -38,6 +38,8 @@ namespace CampanasDelDesierto_v1.Models
         public decimal pagoProducto3 { get; set; }
 
         [DisplayName("Semana")]
+        [Range(1,53)] //Rango de semanas en 1 año
+        [Required]
         public int semana { get; set; }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }

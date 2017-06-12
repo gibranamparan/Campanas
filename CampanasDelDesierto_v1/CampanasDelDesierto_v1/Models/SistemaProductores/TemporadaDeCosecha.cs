@@ -225,14 +225,14 @@ namespace CampanasDelDesierto_v1.Models
             public const string OTRO = "MISSION-BAJA";
         }
 
-        public VMTipoProducto[] getListaProductos(string zona)
+        public List<VMTipoProducto> getListaProductos(string zona)
         {
             VMPreciosProductos vmPrecios = new VMPreciosProductos(this, zona);
-            VMTipoProducto[] opciones = new VMTipoProducto[]{
-                new VMTipoProducto(this.tipoProducto1, vmPrecios.precioProducto1),
-                new VMTipoProducto(this.tipoProducto2, vmPrecios.precioProducto2),
-                new VMTipoProducto(this.tipoProducto3, vmPrecios.precioProducto3)
-            };
+            List<VMTipoProducto> opciones = new List<VMTipoProducto>();
+            opciones.Add(new VMTipoProducto(this.tipoProducto1, vmPrecios.precioProducto1));
+            opciones.Add(new VMTipoProducto(this.tipoProducto2, vmPrecios.precioProducto2));
+            opciones.Add(new VMTipoProducto(this.tipoProducto3, vmPrecios.precioProducto3));
+
             return opciones;
         }
 

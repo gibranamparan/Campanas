@@ -55,7 +55,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name ="Adeudo Anterior (USD)")]
         public decimal? adeudoAnterior { get; set; }
 
-        [DisplayName("Balance Actual")]
+        [DisplayName("Balance Actual (USD)")]
         public decimal balanceActual {
             get {
                 if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) { 
@@ -293,10 +293,9 @@ namespace CampanasDelDesierto_v1.Models
             return m;
         }
 
-        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(TemporadaDeCosecha tem, decimal precioDolar,TimePeriod tp)
+        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(List<PagoPorProducto> movs,List<VMTipoProducto> productos, decimal precioDolar)
         {
-            var productos = tem.getListaProductos(this.zona);
-            var totales = this.getTotalEntregas(tem.TemporadaDeCosechaID, tp);
+            var totales = this.getTotalEntregas(movs);
             var report = new List<RecepcionDeProducto.VMTotalDeEntregas>();
             /*Por cada producto calculado sus totales de entrega y ganancias, se genera una tabla acorde al reporte semanal de liquidacion
             mensual marcado por el VMTotalDeEntregas con las columnas "Variedad", Precio Por tonelada, Toneladas Entregadas, Valor en USD,
@@ -313,13 +312,21 @@ namespace CampanasDelDesierto_v1.Models
             return report;
         }
 
-        private List<VMTipoProducto> getTotalEntregas(int temporadaID, TimePeriod tp)
+        public List<PagoPorProducto> filtrarPagosPorProducto(TemporadaDeCosecha tem, TimePeriod tp, int noSemana)
         {
             //Se filtran los movimientos dentro del periodo de cosecha, que sean pagos por producto dentro
             //del periodo de tiempo consultado
-            var movs =  this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaID).ToList()
-                .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
-                .Where(mov=> tp.hasInside(mov.fechaMovimiento));
+            List<PagoPorProducto> movs = this.MovimientosFinancieros
+                .Where(mov => mov.TemporadaDeCosechaID == tem.TemporadaDeCosechaID).ToList() //De la temporada consultada
+                .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO) //Pagos por producto
+                .Where(mov => ((PagoPorProducto)mov).semana == noSemana) //De cierta semana
+                .Where(mov => tp.hasInside(mov.fechaMovimiento)).Cast<PagoPorProducto>().ToList(); //Dentro de cierto rango de tiempo
+
+            return movs;
+        }
+
+        private List<VMTipoProducto> getTotalEntregas(List<PagoPorProducto> movs)
+        {
 
             PagoPorProducto total = new PagoPorProducto();
             //Se reporta dentro de un registro de PagoPorProducto la suma de todas las cantidades y precios

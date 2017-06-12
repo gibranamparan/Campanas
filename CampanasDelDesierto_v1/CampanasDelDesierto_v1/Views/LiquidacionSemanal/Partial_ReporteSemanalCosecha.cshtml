@@ -1,9 +1,33 @@
 ﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.HerramientasGenerales
 @model IEnumerable<RecepcionDeProducto.VMTotalDeEntregas> 
+@{ 
+    //Se reciben la lista de ingresos de cosecha del productor
+    List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
+    if (ViewData["ingresosDeCosecha"] != null) {
+        ingresosDeCosecha = (List<PagoPorProducto>)ViewData["ingresosDeCosecha"];
+    }
 
+    //Configuracion de modal para detalles de reporte semanal
+    List<RecepcionDeProducto> listaRecepciones = new List<RecepcionDeProducto>();
+    ingresosDeCosecha.ForEach(ing => listaRecepciones.AddRange(ing.Recepciones));
+
+    VMConfirmModalAttributes modalDetalleReporteSemanalOpt = new VMConfirmModalAttributes
+    {
+        modalTitle = "Detalles de Reporte Semanal",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalID = "mdlDetallesReporteSemanal",
+        primaryMessage = "",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.INFO),
+        size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.LARGE),
+        partialViewURL = "../PagosPorProductos/Partial_ListaIngresosProducto",
+        modelForPartial = listaRecepciones,
+    };
+
+}
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Ingresos de Cosecha</h3>
+        <h3 class="panel-title">Reporte de Semana</h3>
     </div>
     <div class="panel-body">
         @*Reporte de totales en el periodo por *@
@@ -61,6 +85,15 @@
                 <p class="form-control-static">@Model.Sum(ingreso => ingreso.monto).ToString("C")</p>
             </div>
         </div>
+        <div class="form-group col-md-2 pull-right">
+            <button class="btn btn-info hidden-print" data-toggle="modal"
+                    data-target="#@modalDetalleReporteSemanalOpt.modalID">
+                Detalles de reporte
+            </button>
+        </div>
     </div>
 </div>
+
+
+@Html.Partial("Partial_ConfirmationModal", modalDetalleReporteSemanalOpt)
 

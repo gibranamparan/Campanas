@@ -166,6 +166,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             var productor = db.Productores.Find(pagoPorProducto.idProductor);
             var mov = prepararVistaIngresoProducto(productor, pagoPorProducto.TemporadaDeCosechaID);
+            mov.introducirMovimientoEnPeriodo(pagoPorProducto.TemporadaDeCosechaID, db);
 
             return View(mov);
         }

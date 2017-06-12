@@ -8,7 +8,7 @@
     }
 }
 
-<table id="tblIngresoAcumulado" class="table table-hover table-striped">
+<table id="tblIngresoAcumulado" class="table table-hover table-striped @(!selectMode?"datatablejs":"")">
     <thead>
         <tr>
             @if (selectMode) {
@@ -40,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(ing=>ing.semana))
         {
             @*Si el registro de ingreso de producto tiene un ID asociado a un movimiento, 
                 significa que esta seleccionado por defecto ya que esta asociado al movimiento

@@ -30,6 +30,8 @@ namespace CampanasDelDesierto_v1.Models
         public virtual PrestamoYAbonoCapital abonoAnticipo { get; set; }
 
         [DisplayName("Semana")]
+        [Range(1, 53)] //Rango de semanas en 1 año
+        [Required]
         public int semana { get; set; }
 
         public virtual ICollection<Retencion> retenciones { get; set; }

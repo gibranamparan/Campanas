@@ -293,7 +293,8 @@ jQuery.extend( {
 		var type = jQuery.type( obj );
 		return ( type === "number" || type === "string" ) &&
 
-			// parseFloat NaNs numeric-cast false positives ("")
+			// parseFloat NaNs numeric-
+ false positives ("")
 			// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
 			// subtraction forces infinities to NaN
 			!isNaN( obj - parseFloat( obj ) );

@@ -11,7 +11,6 @@
 
     //Se deteminar productor, temporada e ingresos asociados al movimiento
     Productor productor = ViewBag.productor == null? Model.Productor: ViewBag.productor;
-    TemporadaDeCosecha temporada = Model.temporadaDeCosecha;
     List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto; //En caso de ser nuevo, es una lista vacia
     
     /*Datos para partial de detalles de temporada*/
@@ -29,7 +28,7 @@
 
     /*Modelo para la forma de creacion de nueva recepcion*/
     RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
-        TemporadaDeCosechaID = temporada.TemporadaDeCosechaID, numProductor = productor.numProductor };
+        TemporadaDeCosechaID = Model.TemporadaDeCosechaID, numProductor = productor.numProductor };
     ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
     string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
     vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
@@ -47,6 +46,7 @@
         modelForPartial = nuevaRecepcion,
         datosDeVista = vddPartialCreacion
     };
+
     VMConfirmModalAttributes modalOptsEliminarRecepcion = new VMConfirmModalAttributes
     {
         modalTitle = "Eliminar Registros Seleccionados",
@@ -125,15 +125,15 @@
             <strong style="color: white">@(editMode ? "Edición" : "Creación")</strong><span> de Registro Ingreso de Producto</span>
         </div>
         <div class="panel-body">
-            <div class="form-horizontal">
+            <div class="form-horizontal" id="formNuevoPagoProducto">
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.idMovimiento)
                 @Html.HiddenFor(model => model.idProductor)
                 @Html.HiddenFor(model => model.TemporadaDeCosechaID)
                 @Html.Hidden("selectedIngresos","",new { @class= "selectedIngresos" })
 
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group col-md-6">
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="form-group col-md-4">
                     @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     @Html.LabelFor(model => model.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.montoMovimiento, new
@@ -155,6 +155,14 @@
                        }
                    })
                         @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class="form-control", min = 0 } })
+                        @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <fieldset class="col-md-12">
@@ -278,13 +286,17 @@
     var selectorInputsPrecios = "#formCostosProducto input#precio";
     var selectedIngresosIDs = new Array();
 
-    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5})
+    @*Enumeracion de cada columna del datatable*@
+    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5, SEMANA:7})
+
+    @*Definicion de la tabla*@
     var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable({
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
             targets: 0
         }, {
+            @*Se hace invisible la columna de ID's*@
             targets: COLS_ENUM.ID,
             visible: false,
             searchable: false
@@ -293,12 +305,19 @@
             style: 'os',
             selector: 'td:first-child'
         },
-        order: [[1, 'asc']]
+        order: [[COLS_ENUM.SEMANA, 'asc']]
     });
-
+    @*Declaracion de evento de selecicon de renglon*@
     tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
         @(funcionRecalcularMontos)();
+        var noSemana
+        if(dt.data()[0])
+            noSemana = dt.data()[0][COLS_ENUM.SEMANA]
+        else
+            noSemana = dt.data()[COLS_ENUM.SEMANA]
+        $("#formNuevoPagoProducto input#semana").val(noSemana)
     })
+    @*Declaracion de evento de selecicon de renglon*@
     .on('deselect',function(e, dt, type, indexes){
         @(funcionRecalcularMontos)();
     });

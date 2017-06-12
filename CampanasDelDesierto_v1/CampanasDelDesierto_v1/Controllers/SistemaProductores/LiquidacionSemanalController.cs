@@ -41,7 +41,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: EmisionDeCheques/Create
-        public ActionResult Create(int? id, int? temporada, TimePeriod semanaLiquidada)
+        public ActionResult Create(int? id, int? temporada, TimePeriod semanaLiquidada, int semana=0)
         {
             if (id == null)
             {
@@ -56,6 +56,18 @@ namespace CampanasDelDesierto_v1.Controllers
 
             LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada);
             mov.introducirMovimientoEnPeriodo(temporada);
+
+            if (semana == 0)
+            {
+                //Se determina el numero de semana actual de registro segun el consecutivo de liquidaciones registradas en la base de datos
+                var liquidaciones = db.LiquidacionesSemanales.Where(liq => liq.TemporadaDeCosechaID == temporada);
+                int noSemana = 0;
+                if (liquidaciones.Count() > 0)
+                    noSemana = liquidaciones.OrderBy(liq => liq.semana).FirstOrDefault().semana;
+                mov.semana = noSemana + 1;
+            }
+            else
+                mov.semana = semana;
 
             return View(mov);
         }
