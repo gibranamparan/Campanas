@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -43,6 +44,10 @@ namespace CampanasDelDesierto_v1.Models
         public int semana { get; set; }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
+
+        [ForeignKey("liquidacion")]
+        public int? liquidacionID { get; set; }
+        public virtual LiquidacionSemanal liquidacion { get; set; }
 
         public int eliminarAsociacionConRecepciones(ApplicationDbContext db)
         {

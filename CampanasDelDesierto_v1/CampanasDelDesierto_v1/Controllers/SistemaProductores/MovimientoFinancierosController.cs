@@ -172,18 +172,27 @@ namespace CampanasDelDesierto_v1.Controllers
                 if (((LiquidacionSemanal)mov).retenciones != null && ((LiquidacionSemanal)mov).retenciones.Count() > 0)
                     db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
 
-                //Y el abono a deudas o anticipos
+                //Se libera la sociacion de los ingresos de cosecha de la liquidacion que se esta eliminando
+                if (((LiquidacionSemanal)mov).ingresosDeCosecha != null && ((LiquidacionSemanal)mov).ingresosDeCosecha.Count() > 0)
+                    ((LiquidacionSemanal)mov).ingresosDeCosecha.ToList()
+                        .ForEach(ing => {
+                            ing.liquidacionID = null;
+                            db.Entry(ing).State = EntityState.Modified;
+                        });
+
+                //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
                 if (((LiquidacionSemanal)mov).abonoAnticipo != null) {
                     db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
                     retencionAbonoEliminado = true;
                 }
-
             }
 
             //se elimina el movimiento
             db.MovimientosFinancieros.Remove(mov);
             int numReg = db.SaveChanges();
 
+            //Se ajusta el balance si si es un movimiento financierto que no sea registro de cosecha (pago por producto),
+            //se ajusta el balance si se registra una liquidacion en cuyas renteciones se encuentre un abono a deudas
             if (numReg > 0 && prod.MovimientosFinancieros.Count() > 0
                 && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
                 && (mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION || retencionAbonoEliminado))
@@ -199,6 +208,11 @@ namespace CampanasDelDesierto_v1.Controllers
             //return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Obtiene el tipo de cambio segun el día de la fecha de consulta segun 
+        /// el webservice de Banxico
+        /// </summary>
+        /// <returns></returns>
         [HttpPost, ValidateHeaderAntiForgeryToken]
         [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public JsonResult getCambioDolar()

@@ -34,7 +34,10 @@ namespace CampanasDelDesierto_v1.Models
         [Required]
         public int semana { get; set; }
 
+        //Lista de retenciones asociadas a la liquidacion
         public virtual ICollection<Retencion> retenciones { get; set; }
+
+        public virtual ICollection<PagoPorProducto> ingresosDeCosecha { get; set; }
 
         public LiquidacionSemanal()
         {
