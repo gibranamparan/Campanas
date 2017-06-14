@@ -102,9 +102,9 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
             "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza")]
-            LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones)
+            LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ingresosDeCosechaID.Count()>0)
             {
                 int numReg = 0;
                 List<Retencion> arrRetenciones = vmRetencionesToArray(retenciones, emisionDeCheque);
@@ -132,6 +132,16 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
+                    //Asociar ingresos de cosecha a emision de cheque
+                    foreach(int ingID in ingresosDeCosechaID)
+                    {
+                        var ingreso = db.PagosPorProductos.Find(ingID);
+                        ingreso.liquidacionDeCosechaID = emisionDeCheque.idMovimiento;
+                        db.Entry(ingreso).State = EntityState.Modified;
+                    }
+                    db.SaveChanges();
+
+                    //Se ajusta el abalance si se registro una retencion por abono
                     if (abono.idMovimiento > 0) { 
                         //Se calcula el movimiento anterior al que se esta registrando
                         var prod = db.Productores.Find(abono.idProductor);
@@ -140,8 +150,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db);
                     }
-
-                    //numReg = introducirMovimientoAlBalance(emisionDeCheque);
+                    
                     return RedirectToAction("Details", "Productores", new { id = emisionDeCheque.idProductor,
                         temporada = emisionDeCheque.TemporadaDeCosechaID });
                 }

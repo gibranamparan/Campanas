@@ -298,6 +298,10 @@
     <Compile Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.Designer.cs">
       <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs" />
+    <Compile Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.Designer.cs">
+      <DependentUpon>201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -622,6 +626,7 @@
     <Content Include="Views\LiquidacionSemanal\Partial_ReporteSemanalCosecha.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Partial_ReporteSemanalRetencionesForm.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListIngresosLiquidaciones.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Partial_DetallesReporte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -665,6 +670,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.resx">
       <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.resx">
+      <DependentUpon>201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

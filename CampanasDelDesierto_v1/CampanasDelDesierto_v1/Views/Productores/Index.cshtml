@@ -2,7 +2,7 @@
 @model IEnumerable<CampanasDelDesierto_v1.Models.Productor>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Lista de Productores";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
     ExcelTools.ExcelParseError errorGeneral = ViewBag.errorGeneral;
@@ -21,7 +21,7 @@
 }
 <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
-<h2>Lista de Productores</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     <a href="@Url.Action("Create")">

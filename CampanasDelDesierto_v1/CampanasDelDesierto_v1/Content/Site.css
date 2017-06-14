@@ -26,6 +26,10 @@ div#main {
      height: 2.75em;
  }
 
+ .form-control-static {
+     padding-top: 0px;
+}
+
  form input.form-control[type="checkbox"] {
     display: block;
     /* margin: auto; */
@@ -245,4 +249,11 @@ footer{
  }
 
 .datatablejs {
+}
+
+/*CSS para mostrar los detalles del reporte semanal*/
+div#pnlDetallesReporteSemanal {
+    height: 500px;
+    overflow-y: auto;
+    padding: 0 1.5em;
 }

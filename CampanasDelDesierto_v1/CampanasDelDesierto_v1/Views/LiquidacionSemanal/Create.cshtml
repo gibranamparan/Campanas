@@ -18,7 +18,7 @@
 
     Productor productor = Model.Productor;
 
-    //Se buscan todos los ingresos que se han hecho de cosecha por el productor
+    //Se buscan todos los ingresos de cosecha que se han hecho por el productor
     var ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana);
 
     //Se determina el costo de el producto segun la zona del productor
@@ -74,7 +74,7 @@
         <div class="row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @*Forma para consulta de ingresos de cosecha por semana*@
-            @using (Html.BeginForm("Create", "LiquidacionSemanal", FormMethod.Get))
+            @using (Html.BeginForm("Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-md-12" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="form-group col-md-3">
@@ -119,7 +119,7 @@
                 </div>
 
                 <div class="form-group col-md-1">
-                    <button class="btn btn-primary">Buscar</button>
+                    <button class="btn btn-primary">@(!editMode?"Buscar":"Actualizar")</button>
                 </div>
             }
         </div>
@@ -127,13 +127,17 @@
         @*Ingreso de cosecha*@
         @Html.Partial("Partial_ReporteSemanalCosecha", ingresoSemanal, vddReporteSemanal)
 
-
         @using (Html.BeginForm("Create", "LiquidacionSemanal", FormMethod.Post))
         {
             @Html.HiddenFor(model => model.idMovimiento)
             @Html.HiddenFor(model => model.idProductor)
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
             @Html.AntiForgeryToken()
+
+            foreach(var ing in ingresosDeCosecha)
+            {
+                @Html.Hidden("ingresosDeCosechaID",ing.idMovimiento)
+            }
 
             @*Retenciones*@
             @Html.Partial("Partial_ReporteSemanalRetencionesForm", retenciones)
@@ -215,7 +219,9 @@
 
                     <div class="form-group">
                         <div class="col-md-12">
-                            <button class="btn btn-success">@(editMode ? "Guardar" : "Crear")</button>
+                            <button class="btn btn-success" @(ingresosDeCosecha.Count()==0?"disabled":"")>
+                                @(editMode ? "Guardar" : "Crear")
+                            </button>
                         </div>
                     </div>
                 </div>

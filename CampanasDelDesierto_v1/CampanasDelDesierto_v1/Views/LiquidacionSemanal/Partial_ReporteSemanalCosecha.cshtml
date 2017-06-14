@@ -7,10 +7,7 @@
     if (ViewData["ingresosDeCosecha"] != null) {
         ingresosDeCosecha = (List<PagoPorProducto>)ViewData["ingresosDeCosecha"];
     }
-
-    //Configuracion de modal para detalles de reporte semanal
-    List<RecepcionDeProducto> listaRecepciones = new List<RecepcionDeProducto>();
-    ingresosDeCosecha.ForEach(ing => listaRecepciones.AddRange(ing.Recepciones));
+   
 
     VMConfirmModalAttributes modalDetalleReporteSemanalOpt = new VMConfirmModalAttributes
     {
@@ -20,8 +17,8 @@
         primaryMessage = "",
         modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.INFO),
         size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.LARGE),
-        partialViewURL = "../PagosPorProductos/Partial_ListaIngresosProducto",
-        modelForPartial = listaRecepciones,
+        partialViewURL = "../LiquidacionSemanal/Partial_DetallesReporte",
+        modelForPartial = ingresosDeCosecha,
     };
 
 }
@@ -94,6 +91,4 @@
     </div>
 </div>
 
-
 @Html.Partial("Partial_ConfirmationModal", modalDetalleReporteSemanalOpt)
-

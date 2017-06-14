@@ -45,9 +45,9 @@ namespace CampanasDelDesierto_v1.Models
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }
 
-        [ForeignKey("liquidacion")]
-        public int? liquidacionID { get; set; }
-        public virtual LiquidacionSemanal liquidacion { get; set; }
+        [ForeignKey("liquidacionDeCosecha")]
+        public int? liquidacionDeCosechaID { get; set; }
+        public virtual LiquidacionSemanal liquidacionDeCosecha { get; set; }
 
         public int eliminarAsociacionConRecepciones(ApplicationDbContext db)
         {

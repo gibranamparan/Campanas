@@ -176,7 +176,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 if (((LiquidacionSemanal)mov).ingresosDeCosecha != null && ((LiquidacionSemanal)mov).ingresosDeCosecha.Count() > 0)
                     ((LiquidacionSemanal)mov).ingresosDeCosecha.ToList()
                         .ForEach(ing => {
-                            ing.liquidacionID = null;
+                            ing.liquidacionDeCosechaID = null;
                             db.Entry(ing).State = EntityState.Modified;
                         });
 
