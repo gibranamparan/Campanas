@@ -12,14 +12,14 @@ namespace CampanasDelDesierto_v1
             bundles.Add(new ScriptBundle("~/bundles/template").Include(
                         "~/Scripts/skel.min.js",
                         "~/Scripts/util.js",
-                        "~/Scripts/main.js"));
+                        "~/Scripts/main.js",
+                        "~/Scripts/customFunctions.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.mask.js",
-                        "~/Scripts/numeral.min.js",
-                        "~/Scripts/customFunctions.js"));
+                        "~/Scripts/numeral.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
                         "~/Scripts/jquery.dataTables.min.js",
