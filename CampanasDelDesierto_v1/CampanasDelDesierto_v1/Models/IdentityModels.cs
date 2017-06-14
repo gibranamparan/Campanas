@@ -7,19 +7,62 @@ using System.ComponentModel.DataAnnotations;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using Proveedores = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Proveedores;
 using Conceptos = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Conceptos;
+using System.ComponentModel;
 
 namespace CampanasDelDesierto_v1.Models
 {
+
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
-    {   
-        
+    {
+       
+        public ApplicationUser() { }
+        public ApplicationUser(RegisterViewModel model)
+        {
+            if (!System.String.IsNullOrEmpty(model.userID))
+                this.Id = model.userID;
+            this.UserName = model.Email;
+            this.Email = model.Email;            
+            this.nombre = model.nombre;
+            this.apellidoPaterno = model.apellidoPaterno;
+            this.apellidoMaterno = model.apellidoMaterno;         
+            this.PasswordHash = model.hash;
+            this.SecurityStamp = model.stamp;
+            this.rol = model.rol;
+        }
+        public ApplicationUser(RegisterViewModel model, ApplicationDbContext db) : this(model)
+        {
+            var userFromDB = db.Users.Find(model.userID);
+            this.EmailConfirmed = userFromDB.EmailConfirmed;
+            this.PhoneNumberConfirmed = this.PhoneNumberConfirmed;
+            this.TwoFactorEnabled = this.TwoFactorEnabled;
+            this.LockoutEnabled = this.LockoutEnabled;
+        }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+        }
+        
+        [DisplayName("Nombre")]
+        public string nombre { get; set; }
+        
+        [DisplayName("Apellido Paterno")]
+        public string apellidoPaterno { get; set; }
+ 
+        [DisplayName("Apellido Materno")]
+        public string apellidoMaterno { get; set; }
+
+        [DisplayName("Rol")]
+        public string rol { get; set; }
+
+
+        [DisplayName("Nombre Completo")]
+        public string nombreCompleto
+        {
+            get { return this.nombre + " " + this.apellidoPaterno + " " + this.apellidoMaterno; }
         }
 
         public static class RoleNames
@@ -70,5 +113,6 @@ namespace CampanasDelDesierto_v1.Models
             DecimalPrecision.ConfigureModelBuilder(modelBuilder);
         }
 
+        
     }
 }

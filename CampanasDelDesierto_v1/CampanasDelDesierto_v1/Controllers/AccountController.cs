@@ -15,6 +15,7 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class AccountController : Controller
     {
+        ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -51,6 +52,41 @@ namespace CampanasDelDesierto_v1.Controllers
                 _userManager = value;
             }
         }
+        public ActionResult Index()
+        {
+            
+            ViewBag.Admins = db.Users.ToList().Where(user=>user.rol == ApplicationUser.RoleNames.ADMIN).ToList();
+            ViewBag.Departamentos = db.Users.ToList().Where(user => user.rol == ApplicationUser.RoleNames.DEPARTAMENTO).ToList();
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(string id)
+        {
+            //Se busca el alumno a eliminar mediante el Id
+            var usuario = db.Users.Find(id);
+            if (usuario == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(usuario);
+        }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            var usuario = db.Users.Find(id);
+            if (usuario == null)
+            {
+                return RedirectToAction("Index");
+            }           
+            db.Users.Remove(usuario);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
         //
         // GET: /Account/Login
@@ -61,6 +97,7 @@ namespace CampanasDelDesierto_v1.Controllers
             return View();
         }
 
+       
         //
         // POST: /Account/Login
         [HttpPost]
@@ -151,7 +188,16 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    nombre =model.nombre,
+                    apellidoPaterno =model.apellidoPaterno,
+                    apellidoMaterno =model.apellidoMaterno,
+                    rol = model.rol
+
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
