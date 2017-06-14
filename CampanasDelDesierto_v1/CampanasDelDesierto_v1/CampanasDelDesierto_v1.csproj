@@ -290,17 +290,9 @@
     <Compile Include="Migrations\201706100310198_retencionesLIst_in_LiquidacionSemanal.Designer.cs">
       <DependentUpon>201706100310198_retencionesLIst_in_LiquidacionSemanal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.cs" />
-    <Compile Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.Designer.cs">
-      <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.cs" />
-    <Compile Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.Designer.cs">
-      <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs" />
-    <Compile Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.Designer.cs">
-      <DependentUpon>201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs</DependentUpon>
+    <Compile Include="Migrations\201706141823011_sincronizandoBaseDeDatos.cs" />
+    <Compile Include="Migrations\201706141823011_sincronizandoBaseDeDatos.Designer.cs">
+      <DependentUpon>201706141823011_sincronizandoBaseDeDatos.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -665,14 +657,8 @@
     <EmbeddedResource Include="Migrations\201706100310198_retencionesLIst_in_LiquidacionSemanal.resx">
       <DependentUpon>201706100310198_retencionesLIst_in_LiquidacionSemanal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706100340411_liquidacionID_Requiered_Retencion.resx">
-      <DependentUpon>201706100340411_liquidacionID_Requiered_Retencion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706112037011_liquidacionSemanal_newField_Semana.resx">
-      <DependentUpon>201706112037011_liquidacionSemanal_newField_Semana.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.resx">
-      <DependentUpon>201706130203131_liquidacion_added_ListaDeIngresosDeCosecha.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201706141823011_sincronizandoBaseDeDatos.resx">
+      <DependentUpon>201706141823011_sincronizandoBaseDeDatos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

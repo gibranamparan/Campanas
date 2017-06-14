@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Required]
         [ForeignKey("liquidacionSemanal")]
-        public int liquidacionID { get; set; }
+        public int liquidacionSemanalID { get; set; }
         public virtual LiquidacionSemanal liquidacionSemanal { get; set; }
 
         public enum TipoRetencion
@@ -44,7 +44,7 @@ namespace CampanasDelDesierto_v1.Models
         {
             this.montoMovimiento = monto;
             this.fechaMovimiento = emisionDeCheque.fechaMovimiento;
-            this.liquidacionID = emisionDeCheque.idMovimiento;
+            this.liquidacionSemanalID = emisionDeCheque.idMovimiento;
             this.TemporadaDeCosechaID = emisionDeCheque.TemporadaDeCosechaID;
             this.idProductor = emisionDeCheque.idProductor;
             this.tipoDeDeduccion = td;
