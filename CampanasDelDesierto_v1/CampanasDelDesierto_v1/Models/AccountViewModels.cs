@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace CampanasDelDesierto_v1.Models
@@ -64,6 +65,8 @@ namespace CampanasDelDesierto_v1.Models
 
     public class RegisterViewModel
     {
+        public string userID { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -82,6 +85,33 @@ namespace CampanasDelDesierto_v1.Models
         
         [Display(Name ="Rol")]
         public string rol { get; set; }
+
+        [Required]
+        [DisplayName("Nombre")]
+        public string nombre { get; set; }        
+
+        [Required]
+        [DisplayName("Apellido Paterno")]
+        public string apellidoPaterno { get; set; }
+
+        [Required]
+        [DisplayName("Apellido Materno")]
+        public string apellidoMaterno { get; set; }
+
+        public string hash { get; set; }
+        public string stamp { get; set; }
+
+        public RegisterViewModel() { }
+        public RegisterViewModel(ApplicationUser admin)
+        {
+            this.Email = admin.Email;
+            this.nombre = admin.nombre;       
+            this.apellidoPaterno = admin.apellidoPaterno;
+            this.apellidoMaterno = admin.apellidoMaterno;
+            this.userID = admin.Id;
+            this.hash = admin.PasswordHash;
+            this.stamp = admin.SecurityStamp;           
+        }
     }
 
     public class ResetPasswordViewModel
