@@ -537,10 +537,10 @@
     <Content Include="Views\Productores\Details.cshtml" />
     <Content Include="Views\Productores\Edit.cshtml" />
     <Content Include="Views\Productores\Index.cshtml" />
-    <Content Include="Views\VentaACreditos\Create.cshtml" />
-    <Content Include="Views\VentaACreditos\Delete.cshtml" />
-    <Content Include="Views\VentaACreditos\Details.cshtml" />
-    <Content Include="Views\VentaACreditos\Index.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\VentaACreditos\Create.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\VentaACreditos\Delete.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\VentaACreditos\Details.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
@@ -587,7 +587,7 @@
     <Content Include="Views\Activos\Edit.cshtml" />
     <Content Include="Views\Activos\Index.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Create.cshtml" />
-    <Content Include="Views\TemporadaDeCosechas\Delete.cshtml" />
+    <Content Include="Views\Shared\Delete.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
@@ -611,7 +611,7 @@
     <Content Include="Views\LiquidacionSemanal\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
-    <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\VentaACreditos\Partial_ListaProductos.cshtml" />
     <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_MovimientoDetails.cshtml" />
     <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
