@@ -231,6 +231,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\AdminDepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\LiquidacionSemanalController.cs" />
     <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
     <Compile Include="Controllers\SistemaActivos\InventariosController.cs" />
@@ -294,8 +295,13 @@
     <Compile Include="Migrations\201706141823011_sincronizandoBaseDeDatos.Designer.cs">
       <DependentUpon>201706141823011_sincronizandoBaseDeDatos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706151659267_Entidad_AdminDepartamentos.cs" />
+    <Compile Include="Migrations\201706151659267_Entidad_AdminDepartamentos.Designer.cs">
+      <DependentUpon>201706151659267_Entidad_AdminDepartamentos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
@@ -620,6 +626,9 @@
     <Content Include="Views\LiquidacionSemanal\Partial_ReporteSemanalRetencionesForm.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListIngresosLiquidaciones.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Partial_DetallesReporte.cshtml" />
+    <Content Include="Views\AdminDepartamentos\Details.cshtml" />
+    <Content Include="Views\AdminDepartamentos\Index.cshtml" />
+    <Content Include="Views\AdminDepartamentos\Partial_infoAdminDepartamento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -660,6 +669,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706141823011_sincronizandoBaseDeDatos.resx">
       <DependentUpon>201706141823011_sincronizandoBaseDeDatos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706151659267_Entidad_AdminDepartamentos.resx">
+      <DependentUpon>201706151659267_Entidad_AdminDepartamentos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

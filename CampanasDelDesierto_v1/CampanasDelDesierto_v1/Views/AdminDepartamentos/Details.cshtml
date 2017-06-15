@@ -1,0 +1,42 @@
+﻿@model CampanasDelDesierto_v1.Models.AdminDepartamento
+@using CampanasDelDesierto_v1.Models
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("selectionMode", true);
+    vdd.Add("adminID", Model.Id);
+    List<CampanasDelDesierto_v1.Models.Departamento> Departamentos = ViewBag.Departamentos;
+}
+
+@if (Request.IsAuthenticated && User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+{
+    <a href="@Url.Action("Index","AdminDepartamentos")">
+        <i class="glyphicon glyphicon-arrow-left"></i><span>Regresar a la lista de Usuarios</span>
+    </a>
+    @Html.Partial("Partial_infoAdminDepartamento", Model)
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title"></h2>
+    </div>
+    @*<div class="panel-body in" id="Partial_IndexCondo">
+        @Html.Partial("../Condo/Partial_IndexCondo", Model.Departamento))
+
+        @if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+        {
+            //Table for condos selection to associate with owner
+            <div class="panel panel-default">
+                <div class="panel-heading" onclick="changeIcon(this)"
+                     data-toggle="collapse" data-target="#condosTable">
+                    <span>Associate New Condos</span>
+                    <i class="pull-right fa fa-window-maximize"></i>
+                </div>
+                <div class="panel-body collapse" id="">
+                    @Html.Partial("../Condo/Partial_IndexCondo",null, vdd)
+                </div>
+            </div>
+        }
+    </div>*@
+</div>

@@ -93,6 +93,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Retencion> Retenciones { get; set; }
         public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
         public DbSet<CompraProducto> ComprasProductos { get; set; }
+        public DbSet<AdminDepartamento> AdminsDepartamentos { get; set; }
 
 
         public ApplicationDbContext()
@@ -113,6 +114,6 @@ namespace CampanasDelDesierto_v1.Models
             DecimalPrecision.ConfigureModelBuilder(modelBuilder);
         }
 
-        
+        public System.Data.Entity.DbSet<CampanasDelDesierto_v1.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

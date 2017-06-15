@@ -1,0 +1,65 @@
+﻿@using CampanasDelDesierto_v1.Models
+@using Microsoft.AspNet.Identity
+@model CampanasDelDesierto_v1.Models.ApplicationUser
+
+@{
+    String roleName = ApplicationUser.RoleNames.DEPARTAMENTO;
+    if (ViewData["roleName"] != null)
+    {
+        roleName = (string)ViewData["roleName"];
+    }
+}
+
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <span class="panel-title">
+            Owner's General Information
+        </span>
+    </div>
+    <div class="panel-body">
+        <div>
+            <hr />
+            <dl class="dl-horizontal col-md-6">
+                @if (!User.IsInRole(ApplicationUser.RoleNames.DEPARTAMENTO))
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.nombreCompleto)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.nombreCompleto)
+                    </dd>
+                }
+
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+
+            </dl>
+        </div>
+        <div class="col-md-12">
+            <a href="@Url.Action("Edit", "Account", new { id = Model.Id })">
+                <i class="fa fa-pencil"></i>Edit
+            </a>
+            @if (roleName == ApplicationUser.RoleNames.DEPARTAMENTO)
+            {
+                <span> | </span>
+                <a href="@Url.Action("Details","Owners", new { id = Model.Id })">
+                    <i class="fa fa-list-alt"></i> Details
+                </a>
+                <span> | </span>
+                <a href="@Url.Action("Index", "Permissions", new { id = Model.Id })">
+                    <i class="fa fa-check-square-o"></i>Check in List
+                </a>
+            }
+        </div>
+    </div>
+</div>
