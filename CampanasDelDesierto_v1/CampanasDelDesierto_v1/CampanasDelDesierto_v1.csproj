@@ -299,6 +299,10 @@
     <Compile Include="Migrations\201706151659267_Entidad_AdminDepartamentos.Designer.cs">
       <DependentUpon>201706151659267_Entidad_AdminDepartamentos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706151801461_CAmpoNulleable_DepartamentoID_AdminDepartamentos.cs" />
+    <Compile Include="Migrations\201706151801461_CAmpoNulleable_DepartamentoID_AdminDepartamentos.Designer.cs">
+      <DependentUpon>201706151801461_CAmpoNulleable_DepartamentoID_AdminDepartamentos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
@@ -672,6 +676,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706151659267_Entidad_AdminDepartamentos.resx">
       <DependentUpon>201706151659267_Entidad_AdminDepartamentos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706151801461_CAmpoNulleable_DepartamentoID_AdminDepartamentos.resx">
+      <DependentUpon>201706151801461_CAmpoNulleable_DepartamentoID_AdminDepartamentos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

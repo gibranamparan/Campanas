@@ -114,6 +114,6 @@ namespace CampanasDelDesierto_v1.Models
             DecimalPrecision.ConfigureModelBuilder(modelBuilder);
         }
 
-        public System.Data.Entity.DbSet<CampanasDelDesierto_v1.Models.ApplicationUser> ApplicationUsers { get; set; }
+       
     }
 }
