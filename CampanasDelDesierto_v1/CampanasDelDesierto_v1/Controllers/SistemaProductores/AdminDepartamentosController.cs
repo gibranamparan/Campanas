@@ -19,7 +19,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
         // GET: AdminDepartamentos
         public ActionResult Index()
         {
-            var AdminDepartamento = db.AdminsDepartamentos.ToList();
+            var AdminDepartamento = db.AdminsDepartamentos.ToList();         
             var admins = db.Users.ToList().Where((adm)=>AdminDepartamento.Find(ad => ad.Id==adm.Id)==null).ToList();
             ViewBag.admins = admins;
             return View(AdminDepartamento);
@@ -39,9 +39,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
 
             if (admins == null)
                 return HttpNotFound();
-            var user = db.AdminsDepartamentos.Find(id);
-            ViewBag.Departamentos = db.Departamentos.Where(dep=>dep.departamentoID==user.departamentoID);
-               
+            var user = db.AdminsDepartamentos.Find(id);          
             ViewBag.errorGuest = errorGuest;
 
             return View(admins);

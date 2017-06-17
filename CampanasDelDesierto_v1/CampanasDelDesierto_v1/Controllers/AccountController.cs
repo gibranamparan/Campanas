@@ -9,12 +9,15 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CampanasDelDesierto_v1.Models;
+using System.Net;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class AccountController : Controller
     {
+        
         ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -55,8 +58,8 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult Index()
         {
             
-            ViewBag.Admins = db.Users.ToList().Where(user=>user.rol == ApplicationUser.RoleNames.ADMIN).ToList();
-            ViewBag.Departamentos = db.Users.ToList().Where(user => user.rol == ApplicationUser.RoleNames.DEPARTAMENTO).ToList();
+            //ViewBag.Admins = db.Users.ToList().Where(user=>user.rol == ApplicationUser.RoleNames.ADMIN).ToList();
+            //ViewBag.Departamentos = db.Users.ToList().Where(user => user.rol == ApplicationUser.RoleNames.DEPARTAMENTO).ToList();
             return View();
         }
 
@@ -81,11 +84,11 @@ namespace CampanasDelDesierto_v1.Controllers
             var usuario = db.Users.Find(id);
             if (usuario == null)
             {
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }           
             db.Users.Remove(usuario);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","AdminDepartamentos"); 
         }
 
         //
@@ -176,6 +179,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.departamento = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
             return View();
         }
 
@@ -188,20 +192,14 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    nombre =model.nombre,
-                    apellidoPaterno =model.apellidoPaterno,
-                    apellidoMaterno =model.apellidoMaterno,
-                    rol = model.rol
-
-                };
+                var user = model.registerAsAdmin? new ApplicationUser(model) : new AdminDepartamento(model);
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, model.rol);
+                    string rolName = model.registerAsAdmin ?
+                        CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.ADMIN :
+                         CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.DEPARTAMENTO;
+                    UserManager.AddToRole(user.Id, rolName);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -209,7 +207,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                    if (model.rol==ApplicationUser.RoleNames.ADMIN)
+                    if (rolName==ApplicationUser.RoleNames.ADMIN)
                     {
                         return RedirectToAction("Index", "Productores");
                     }
@@ -224,6 +222,73 @@ namespace CampanasDelDesierto_v1.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+
+
+
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(id);
+            if (user == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            RegisterViewModel vmAdminDepartamento = prepareView(user);
+            return View(vmAdminDepartamento);
+        }
+
+        private RegisterViewModel prepareView(ApplicationUser user)
+        {
+            RegisterViewModel vmAdminDepartamento = new RegisterViewModel(user);
+            string roleName = UserManager.GetRoles(user.Id).FirstOrDefault();
+
+            ViewBag.userID = user.Id;
+            ViewBag.editMode = true;
+            ViewBag.roleName = roleName;
+
+            return vmAdminDepartamento;
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
+        public async System.Threading.Tasks.Task<ActionResult> Edit(RegisterViewModel vmAdminDepartamento)
+        {
+            ApplicationUser userEdited = new ApplicationUser(vmAdminDepartamento);
+            UserStore<ApplicationUser> store = new UserStore<ApplicationUser>(db);
+
+            string newPassword = vmAdminDepartamento.Password;
+            //If new password was introduced, it is encripted and saved
+            if (!String.IsNullOrEmpty(newPassword))
+            {
+                //Is found in db just to update his password
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(store);
+                String hashedNewPassword = UserManager.PasswordHasher.HashPassword(newPassword);
+                await store.SetPasswordHashAsync(userEdited, hashedNewPassword);
+            }
+
+            //It is possible to update the user if password is not introduced, it means it will still invariable
+            bool updateWithPasswordInvariable = ModelState.Where(ms => ms.Value.Errors.Count() > 0).Count() == 1
+                && ModelState["Password"].Errors.Count == 1;
+            if (ModelState.IsValid || updateWithPasswordInvariable)
+            {
+                //Remaininig fields are updated
+                //db.Entry(userEdited).State = EntityState.Modified;
+                string rolName = vmAdminDepartamento.registerAsAdmin ?
+                        CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.ADMIN :
+                         CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.DEPARTAMENTO;
+                //UserManager.RemoveFromRoles(vmAdminDepartamento.userID);
+                
+                await store.UpdateAsync(userEdited);
+                var updatedRegs = db.SaveChangesAsync();
+                return RedirectToAction("Index", "AdminDepartamentos");
+            }
+
+            vmAdminDepartamento = prepareView(userEdited);
+            return View(vmAdminDepartamento);
         }
 
         //

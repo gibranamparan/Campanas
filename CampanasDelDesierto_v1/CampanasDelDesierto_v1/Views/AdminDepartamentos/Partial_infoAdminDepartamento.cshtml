@@ -1,6 +1,6 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @using Microsoft.AspNet.Identity
-@model CampanasDelDesierto_v1.Models.ApplicationUser
+@model CampanasDelDesierto_v1.Models.AdminDepartamento
 
 @{
     String roleName = ApplicationUser.RoleNames.DEPARTAMENTO;
@@ -15,7 +15,7 @@
 <div class="panel panel-info">
     <div class="panel-heading">
         <span class="panel-title">
-            Owner's General Information
+           Informacion general de admin de departamento
         </span>
     </div>
     <div class="panel-body">
@@ -31,6 +31,13 @@
                     <dd>
                         @Html.DisplayFor(model => model.nombreCompleto)
                     </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Departamento.nombreDepartamento)
+                    </dd>
                 }
 
             </dl>
@@ -41,6 +48,13 @@
 
                 <dd>
                     @Html.DisplayFor(model => model.Email)
+                </dd> 
+                <dt>
+                    @Html.DisplayNameFor(model => model.Departamento.Sucursal.nombreSucursal)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal)
                 </dd>
 
             </dl>
@@ -52,14 +66,11 @@
             @if (roleName == ApplicationUser.RoleNames.DEPARTAMENTO)
             {
                 <span> | </span>
-                <a href="@Url.Action("Details","Owners", new { id = Model.Id })">
-                    <i class="fa fa-list-alt"></i> Details
-                </a>
-                <span> | </span>
-                <a href="@Url.Action("Index", "Permissions", new { id = Model.Id })">
-                    <i class="fa fa-check-square-o"></i>Check in List
-                </a>
+                <a href="@Url.Action("Details","AdminDepartamentos", new { id = Model.Id })">
+                    <i class="fa fa-list-alt"></i> Detalles
+                </a>               
             }
         </div>
     </div>
 </div>
+

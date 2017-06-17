@@ -2,25 +2,20 @@
 @model IEnumerable<CampanasDelDesierto_v1.Models.AdminDepartamento>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Usuarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<ApplicationUser> admins = ViewBag.admins;
 }
 
-<h2>Index</h2>
+<h2>Usuarios</h2>
 
 <a href="@Url.Action("Register","Account")">
     <i class="fa fa-plus-circle"></i> Registrar Nuevo Admin-Departamento/ Usuario
 </a>
 <table class="table table-hover table-striped datatable">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
+        <tr>            
+            <th>Username / Email</th>                       
             <th>
                 @Html.DisplayNameFor(model => model.nombreCompleto)
             </th>
@@ -35,9 +30,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
+               
                 <td>
                     @Html.DisplayFor(modelItem => item.nombreCompleto)
                 </td>
@@ -65,7 +58,7 @@
         <thead>
             <tr>
                 <th>Username / Email</th>
-                <th>Phone Number</th>
+                <th>@Html.DisplayNameFor(model => model.nombreCompleto)</th>
                 <th></th>
             </tr>
         </thead>
@@ -74,7 +67,7 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(model => admin.UserName)</td>
-                    <td>@Html.DisplayFor(model => admin.PhoneNumber)</td>
+                    <td>@Html.DisplayFor(model => admin.nombreCompleto)</td>
                     <td>
                         <a href="@Url.Action("Edit","Account", new { id = admin.Id })">
                             <i class="fa fa-pencil-square-o"></i> Edit
