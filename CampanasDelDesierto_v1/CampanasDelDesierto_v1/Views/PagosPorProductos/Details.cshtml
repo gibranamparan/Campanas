@@ -49,6 +49,13 @@
     </div>
 </div>
 
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.semana, new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        <p class="form-control-static">@Html.DisplayFor(model => model.semana)</p>
+    </div>
+</div>
+
 @*COSTO POR TONELADA*@
 <fieldset class="col-md-12">
     <legend>Costos por tonelada manejados</legend>

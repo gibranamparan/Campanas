@@ -37,8 +37,8 @@
 
             @foreach (var item in movimientos)
             {
-                <tr>
-                    <td>
+                <tr >
+                    <td >
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
                     <td class='@(item.montoMovimiento<0?"montoNegativo":"")' 

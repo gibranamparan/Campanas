@@ -56,12 +56,14 @@
         </div>
 
         @*Prestamos y abonos*@
-        <h4>Prestamos y Abonos</h4>
-        @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", Model)
+        <div class="row">
+            <h4>Prestamos y Abonos</h4>
+            @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", Model)
+        </div>
 
         @*Ingresos de productos y liquidaciones*@
-        <h4>Ingreso de cosecha y Liquidaciones</h4>
-        @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones", Model)
-
-    </div>
+        <div class="row">
+            <h4>Ingreso de cosecha y Liquidaciones</h4>
+            @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones", Model)
+        </div>
 </div>

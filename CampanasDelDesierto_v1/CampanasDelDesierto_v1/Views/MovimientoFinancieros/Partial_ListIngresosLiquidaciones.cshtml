@@ -5,10 +5,13 @@
     int temporada = ViewBag.temporada;
 
     @*Solo prestamos y abonos*@
-var movimientos = Model.MovimientosFinancieros
-    .Where(mov => mov.TemporadaDeCosechaID == temporada)
-        .Where(mov => mov.isMovimientoDeLiquidacion())
-    .OrderBy(mov => mov.fechaMovimiento).ToList();
+    List<MovimientoFinanciero> movimientos = Model.MovimientosFinancieros
+        .Where(mov => mov.TemporadaDeCosechaID == temporada)
+            .Where(mov => mov.isMovimientoDeLiquidacion())
+        .OrderBy(mov => mov.fechaMovimiento).ToList();
+
+    movimientos = movimientos.OrderBy(mov => mov.fechaMovimiento).ToList();
+
 }
 
 @if (Model != null && movimientos.Count() > 0)
@@ -32,8 +35,9 @@ var movimientos = Model.MovimientosFinancieros
             </tr>
 
             @foreach (var item in movimientos)
-            {
-                <tr>
+{
+                <tr style='@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
+                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"background-color:#c7c7c7":"")'>
                     <td>
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
@@ -44,9 +48,16 @@ var movimientos = Model.MovimientosFinancieros
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
                     <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO &&
+                        ((PagoPorProducto)item).liquidacionDeCosechaID != null)
                         {
-                            @Html.DisplayFor(modelItem => ((PrestamoYAbonoCapital)item).concepto)
+                            <span>CHEQUE: </span>
+                            <span>@(((PagoPorProducto)item).liquidacionDeCosecha.cheque)</span>
+                        }
+                        else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+                        {
+                            <span>CHEQUE: </span>
+                            <span>@(((LiquidacionSemanal)item).cheque)</span>
                         }
                     </td>
                     <td>

@@ -73,7 +73,7 @@
         </table>
         @if (Model.Sum(ing => ing.toneladasRecibidas) == 0) {
             <div class="form-group col-md-6 alert alert-warning">
-                No hay registros de ingreso de cosecha la semana consultada.
+                No hay registros de recepcion de cosecha disponibles en la semana consultada.
             </div>
         }
         <div class="form-group pull-right">
@@ -83,7 +83,9 @@
             </div>
         </div>
         <div class="form-group col-md-2 pull-right">
-            <button class="btn btn-info hidden-print" data-toggle="modal"
+            <button class="btn btn-info hidden-print 
+                    @(ingresosDeCosecha.Count()==0?"hidden":"")"
+                    data-toggle="modal"
                     data-target="#@modalDetalleReporteSemanalOpt.modalID">
                 Detalles de reporte
             </button>

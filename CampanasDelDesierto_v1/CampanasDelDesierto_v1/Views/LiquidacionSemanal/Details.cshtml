@@ -1,4 +1,9 @@
-﻿@model CampanasDelDesierto_v1.Models.LiquidacionSemanal
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.LiquidacionSemanal
+
+@{ 
+    var movimientos = Model.retenciones.OrderBy(mov => mov.fechaMovimiento);
+}
 
 <div>
     <div class="form-group col-md-4">
@@ -17,3 +22,38 @@
 <a href="@Url.Action("PrintCheque","EmisionDeCheques",new { id=Model.idMovimiento })" target="_blank" class="btn btn-info pull-right">
     <i class="fa fa-print"></i> <span>Print</span>
 </a>
+
+
+@if (Model != null && movimientos.Count() > 0)
+{
+    <div class="col-md-12">
+        <table class="table table-hover table-striped">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().fechaMovimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().montoMovimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().nombreDeMovimiento)
+                </th>
+            </tr>
+
+            @foreach (var item in movimientos)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                    </td>
+                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
+                        @Html.DisplayFor(modelItem => item.montoMovimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}

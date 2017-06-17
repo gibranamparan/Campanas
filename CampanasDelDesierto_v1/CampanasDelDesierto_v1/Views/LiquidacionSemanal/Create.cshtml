@@ -18,8 +18,36 @@
 
     Productor productor = Model.Productor;
 
+    bool actualizar = false;
+    if (editMode)
+    {
+        actualizar = ViewBag.actualizar;
+    }
+
     //Se buscan todos los ingresos de cosecha que se han hecho por el productor
-    var ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana);
+    List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
+
+    //Si es busqueda regular para crear
+    if (!editMode)
+    {
+        ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+    }
+    //Si es edicion
+    else
+    {
+        //Se toma los ingresos ya asociados
+        ingresosDeCosecha = Model.ingresosDeCosecha.ToList();
+        //Si es actualizacion, se agregan a los ya asociados aquellos que nos eencuentran asociados con nada
+        if (actualizar)
+        {
+            List<PagoPorProducto> ingresosDeCosechaNuevos = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+            ingresosDeCosecha.AddRange(ingresosDeCosechaNuevos);
+            ingresosDeCosecha = ingresosDeCosecha.Where(mov=>Model.semanaLiquidada.hasInside(mov.fechaMovimiento))
+                .OrderBy(mov => mov.fechaMovimiento).ToList();
+        }
+    }
 
     //Se determina el costo de el producto segun la zona del productor
     var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
@@ -37,13 +65,24 @@
     if (editMode)
     {
         //Calculo de retenciones capturadas
-    }else
-    {
-        Model.fechaMovimiento = Model.semanaLiquidada.endDate;
+        retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO);
+        retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
+        retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
+        retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
+
+        retencionTotal = retenciones.total;
+        retencionAbono = retenciones.abonoAnticipos;
+        Model.montoMovimiento -= retencionTotal;
     }
+
+    Model.fechaMovimiento = Model.semanaLiquidada.endDate;
 
     //Estado actual de finanzas del productor
     decimal balanceActual = ViewBag.balanceActual;
+    if (editMode)
+    {
+        balanceActual += retencionAbono;
+    }
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
@@ -74,9 +113,13 @@
         <div class="row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @*Forma para consulta de ingresos de cosecha por semana*@
-            @using (Html.BeginForm("Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-md-12" }))
+            @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-md-12" }))
             {
                 @Html.AntiForgeryToken()
+                if (editMode) { 
+                    @Html.Hidden("actualizar", true)
+                }
+
                 <div class="form-group col-md-3">
                     @Html.LabelFor(model => model.semanaLiquidada.startDate)
                     @Html.EditorFor(model => model.semanaLiquidada.startDate, new { htmlAttributes = new { @class = "form-control" } })
@@ -95,7 +138,7 @@
                } })
                     @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <div id="divPrecioDelDolar" class="col-md-7">
                         @Html.LabelFor(model => model.precioDelDolarEnLiquidacion)
                         @Html.EditorFor(model => model.precioDelDolarEnLiquidacion, new
@@ -109,12 +152,12 @@
                    })
                         @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger" })
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <a class="satLogo" target="_blank"
                            href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
                             <img src="/images/sat_logo.png" />
                         </a>
-                        <img id="loadingImg" src="~/images/loading.gif" class="hidden" />
+                        <img id="loadingImg" src="~/images/loading.gif" class="hidden"/>
                     </div>
                 </div>
 
@@ -127,14 +170,17 @@
         @*Ingreso de cosecha*@
         @Html.Partial("Partial_ReporteSemanalCosecha", ingresoSemanal, vddReporteSemanal)
 
-        @using (Html.BeginForm("Create", "LiquidacionSemanal", FormMethod.Post))
+        @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Post))
         {
             @Html.HiddenFor(model => model.idMovimiento)
             @Html.HiddenFor(model => model.idProductor)
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(model=>model.semanaLiquidada.startDate)
+            @Html.HiddenFor(model => model.semanaLiquidada.endDate)
+            @Html.HiddenFor(model=>model.abonoAnticipoID)
 
-            foreach(var ing in ingresosDeCosecha)
+            foreach (var ing in ingresosDeCosecha)
             {
                 @Html.Hidden("ingresosDeCosechaID",ing.idMovimiento)
             }
@@ -204,7 +250,7 @@
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-4" })
                         <div class="col-md-8">
-                            @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control", oninput="$(this).val($(this).val().toUpperCase())" } })
                             @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -227,18 +273,19 @@
                 </div>
             </div>
 
-            @*Adeudo acumulado*@
+            @*Saldo Adeudo acumulado*@
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h3 class="panel-title">Saldo de Adeudo Acumulado</h3>
                 </div>
                 <div class="panel-body">
+                    @*Balance Actual*@
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.Productor.balanceActual, htmlAttributes: new { @class = "control-label col-md-4" })
                         <div class="col-md-8">
                             <input id="balanceActual" class="form-control"
                                    data-mask="###0.00" data-mask-reverse="true"
-                                   value="@Model.Productor.balanceActual.ToString("C")" readonly />
+                                   value="@balanceActual.ToString("C")" readonly />
                         </div>
                     </div>   
 
@@ -264,7 +311,7 @@
                         <div class="col-md-7">
                             <input id="inputSaldoLiquidar" class="form-control"
                                    data-mask="###0.00" data-mask-reverse="true"
-                                   value='@((Model.Productor.balanceActual - retencionAbono).ToString("C"))' readonly />
+                                   value='@((balanceActual - retencionAbono).ToString("C"))' readonly />
                         </div>
                     </div>
                 </div>
@@ -313,9 +360,9 @@
                 },
                 function (err) { },
                 function () {
-                    $("#loadingImg").toggleClass('hidden');
+                    $("#loadingImg").toggleClass('hidden');@*
                     $('#divPrecioDelDolar').removeClass('col-md-8');
-                    $('#divPrecioDelDolar').addClass('col-md-9');
+                    $('#divPrecioDelDolar').addClass('col-md-9');*@
                 }, antiForgeryToken)
         }
         setPrecioDolar();

@@ -1,6 +1,10 @@
 ﻿@model CampanasDelDesierto_v1.Models.MovimientoFinanciero
 @using CampanasDelDesierto_v1.Models
 
+@{ 
+    Model.montoMovimiento = Math.Abs(Model.montoMovimiento);
+}
+
 <div class="panel panel-info">
     <div class="panel-heading">
         <h4><span>@(Model.nombreDeMovimiento)</span>. <strong>Temporada: </strong><span>@(Model.temporadaDeCosecha)</span></h4>
@@ -28,28 +32,7 @@
         </div>
 
         @*Panel para detalles movimentos de capital (Prestamos o abonos)*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-        {
-            @Html.Partial("../PrestamoYAbonoCapitals/Details")
-        }
-
-        @*Panel para detalles para ventas a credito*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-        {
-            @Html.Partial("../VentaACreditos/Details")
-        }
-
-        @*Panel para detalles para ventas a credito*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
-        {
-            @Html.Partial("../PagosPorProductos/Details")
-        }
-
-        @*Panel para detalles de cheque e impresion*@
-        @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
-        {
-            @Html.Partial("../LiquidacionSemanal/Details")
-        }
+        @Html.Partial("../"+Model.getNombreControlador()+"/Details")
     </div>
 </div>
 

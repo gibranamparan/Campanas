@@ -8,12 +8,6 @@
     @Styles.Render("~/Content/template")
     @Styles.Render("~/Content/icons")
     @Styles.Render("~/Content/dataTables")
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/dataTables")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/template")
 </head>
 
 <body>
@@ -84,6 +78,11 @@
         </div>
     </div>
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/template")
 
     @RenderSection("scripts", required: false)
 </body>

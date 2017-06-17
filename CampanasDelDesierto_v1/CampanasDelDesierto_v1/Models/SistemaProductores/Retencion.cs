@@ -14,11 +14,6 @@ namespace CampanasDelDesierto_v1.Models
         public int liquidacionSemanalID { get; set; }
         public virtual LiquidacionSemanal liquidacionSemanal { get; set; }
 
-        public enum TipoRetencion
-        {
-            OTRO, SANIDAD, EJIDAL
-        }
-
         public TipoRetencion tipoDeDeduccion { get; set; }
 
         public string nombreTipoDeduccion { get {
@@ -31,6 +26,11 @@ namespace CampanasDelDesierto_v1.Models
 
                 return String.Empty;
             }
+        }
+
+        public enum TipoRetencion
+        {
+            OTRO, SANIDAD, EJIDAL, ABONO
         }
 
         public new void ajustarMovimiento()

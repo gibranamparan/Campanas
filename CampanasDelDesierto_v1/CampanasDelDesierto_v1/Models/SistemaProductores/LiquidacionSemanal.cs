@@ -11,6 +11,7 @@ namespace CampanasDelDesierto_v1.Models
 {
     public class LiquidacionSemanal:MovimientoFinanciero
     {
+        [Required(AllowEmptyStrings = false)]
         [Display(Name = "Cheque / Folio")]
         public string cheque { get; set; }
 
@@ -42,14 +43,29 @@ namespace CampanasDelDesierto_v1.Models
         public LiquidacionSemanal()
         {
             this.semanaLiquidada = new TimePeriod();
-            this.semanaLiquidada.endDate = DateTime.Now;
-            this.semanaLiquidada.startDate = this.semanaLiquidada.endDate.AddDays(-7);
+            this.semanaLiquidada.endDate = DateTime.Today.AddDays(1).AddMilliseconds(-1);
+            this.semanaLiquidada.startDate = this.semanaLiquidada.endDate.AddDays(-8).AddMilliseconds(1);
         }
 
         public new void ajustarMovimiento()
         {
             this.montoMovimiento *= -1;
             base.ajustarMovimiento();
+        }
+
+        public decimal getMontoRetencion(Retencion.TipoRetencion tipo)
+        {
+            decimal monto = 0;
+            if (tipo == Retencion.TipoRetencion.ABONO && this.abonoAnticipo!=null)
+            {
+                monto = -this.abonoAnticipo.montoMovimiento;
+            }else if(this.retenciones.FirstOrDefault(mov => mov.tipoDeDeduccion == tipo)!=null)
+            {
+                monto = -this.retenciones
+                .FirstOrDefault(mov => mov.tipoDeDeduccion == tipo).montoMovimiento;
+            }
+
+            return monto;
         }
 
         public class VMRetenciones
@@ -73,6 +89,14 @@ namespace CampanasDelDesierto_v1.Models
             ApplyFormatInEditMode = true)]
             [Display(Name = "Otra Retención")]
             public decimal retencionOtro { get; set; }
+
+            public decimal total
+            {
+                get
+                {
+                    return this.garantiaLimpieza + this.abonoAnticipos + this.retencionEjidal + this.retencionOtro;
+                }
+            }
         }
     }
 }

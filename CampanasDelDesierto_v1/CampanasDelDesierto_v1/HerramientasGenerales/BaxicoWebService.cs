@@ -22,12 +22,11 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
 
         public decimal getCambioDolar(ref String errorMsg)
         {
-
-            string strXml = ws.tiposDeCambioBanxico();
-            XDocument xdoc = XDocument.Parse(@strXml);
             XElement node = null;
             try
             {
+                string strXml = ws.tiposDeCambioBanxico();
+                XDocument xdoc = XDocument.Parse(@strXml);
                 //FIX Change IDSERIE=SF43718
                 //Dentro del cuerpo del XML recibido, se busca el nodo que contiene el tipo de cambio
                 node = xdoc.Descendants().Elements()
@@ -41,7 +40,7 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
                     .SingleOrDefault(nod => nod.Attributes().SingleOrDefault(attr => attr.Name == "OBS_VALUE") != null);
             }
             catch (Exception exc ){
-                errorMsg = exc.InnerException.Message;
+                errorMsg = exc.Message;
             }
 
             //Se parsea el dato encontrado

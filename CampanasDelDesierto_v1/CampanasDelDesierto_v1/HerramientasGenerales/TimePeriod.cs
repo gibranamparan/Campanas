@@ -52,7 +52,7 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
         }
         public bool hasInside(DateTime date)
         {
-            return date >= this.startDate && date <= this.endDate;
+            return date >= this.startDate && date <= this.endDate.AddDays(1).AddMilliseconds(-1);
         }
         public bool hasInside(TimePeriod other)
         {
