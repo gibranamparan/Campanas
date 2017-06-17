@@ -1,6 +1,7 @@
 ﻿@using CampanasDelDesierto_v1.HerramientasGenerales
 @using System.Globalization;
 @model CampanasDelDesierto_v1.Models.LiquidacionSemanal
+@using CampanasDelDesierto_v1.Models;
 
 @{
     Layout = null;
@@ -31,6 +32,11 @@
         </span>
         <span id="cheque">
             @Html.DisplayFor(model => model.cheque)
+        </span>
+        <span id="concepto">
+            @Html.DisplayFor(model=>model.Productor.numProductor)
+            @(Model.semana + " del " +Model.semanaLiquidada) 
+            @Model.semana del @Model.semanaLiquidada
         </span>
     </div>
 
