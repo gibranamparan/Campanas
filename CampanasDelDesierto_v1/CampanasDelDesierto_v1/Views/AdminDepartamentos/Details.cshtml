@@ -1,0 +1,19 @@
+﻿@model CampanasDelDesierto_v1.Models.AdminDepartamento
+@using CampanasDelDesierto_v1.Models
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("selectionMode", true);
+    vdd.Add("adminID", Model.Id);
+}
+
+@if (Request.IsAuthenticated && User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+{
+    <a href="@Url.Action("Index","AdminDepartamentos")">
+        <i class="glyphicon glyphicon-arrow-left"></i><span>Regresar a la lista de Usuarios</span>
+    </a>
+    @Html.Partial("Partial_infoAdminDepartamento", Model)
+}
+ 

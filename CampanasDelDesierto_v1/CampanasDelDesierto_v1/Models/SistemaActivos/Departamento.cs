@@ -37,5 +37,7 @@ namespace CampanasDelDesierto_v1.Models
         //Un departamento tiene una sucursal
         public int idSucursal { get; set; }
         public virtual Sucursal Sucursal { get; set; }
+
+        public virtual ICollection<AdminDepartamento> AdminsDepartamentos { get; set; }
     }
 }

@@ -1,0 +1,76 @@
+﻿@using CampanasDelDesierto_v1.Models
+@using Microsoft.AspNet.Identity
+@model CampanasDelDesierto_v1.Models.AdminDepartamento
+
+@{
+    String roleName = ApplicationUser.RoleNames.DEPARTAMENTO;
+    if (ViewData["roleName"] != null)
+    {
+        roleName = (string)ViewData["roleName"];
+    }
+}
+
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <span class="panel-title">
+           Informacion general de admin de departamento
+        </span>
+    </div>
+    <div class="panel-body">
+        <div>
+            <hr />
+            <dl class="dl-horizontal col-md-6">
+                @if (!User.IsInRole(ApplicationUser.RoleNames.DEPARTAMENTO))
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.nombreCompleto)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.nombreCompleto)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Departamento.nombreDepartamento)
+                    </dd>
+                }
+
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd> 
+                <dt>
+                    @Html.DisplayNameFor(model => model.Departamento.Sucursal.nombreSucursal)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal)
+                </dd>
+
+            </dl>
+        </div>
+        <div class="col-md-12">
+            <a href="@Url.Action("Edit", "Account", new { id = Model.Id })">
+                <i class="fa fa-pencil"></i>Edit
+            </a>
+            @if (roleName == ApplicationUser.RoleNames.DEPARTAMENTO)
+            {
+                <span> | </span>
+                <a href="@Url.Action("Details","AdminDepartamentos", new { id = Model.Id })">
+                    <i class="fa fa-list-alt"></i> Detalles
+                </a>               
+            }
+        </div>
+    </div>
+</div>
+

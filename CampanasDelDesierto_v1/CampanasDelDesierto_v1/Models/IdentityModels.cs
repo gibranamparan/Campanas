@@ -27,8 +27,7 @@ namespace CampanasDelDesierto_v1.Models
             this.apellidoPaterno = model.apellidoPaterno;
             this.apellidoMaterno = model.apellidoMaterno;         
             this.PasswordHash = model.hash;
-            this.SecurityStamp = model.stamp;
-            this.rol = model.rol;
+            this.SecurityStamp = model.stamp;           
         }
         public ApplicationUser(RegisterViewModel model, ApplicationDbContext db) : this(model)
         {
@@ -54,11 +53,7 @@ namespace CampanasDelDesierto_v1.Models
  
         [DisplayName("Apellido Materno")]
         public string apellidoMaterno { get; set; }
-
-        [DisplayName("Rol")]
-        public string rol { get; set; }
-
-
+      
         [DisplayName("Nombre Completo")]
         public string nombreCompleto
         {
@@ -93,6 +88,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Retencion> Retenciones { get; set; }
         public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
         public DbSet<CompraProducto> ComprasProductos { get; set; }
+        public DbSet<AdminDepartamento> AdminsDepartamentos { get; set; }
 
 
         public ApplicationDbContext()
@@ -113,6 +109,6 @@ namespace CampanasDelDesierto_v1.Models
             DecimalPrecision.ConfigureModelBuilder(modelBuilder);
         }
 
-        
+       
     }
 }

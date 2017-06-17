@@ -1,0 +1,23 @@
+﻿@model CampanasDelDesierto_v1.Models.RegisterViewModel
+
+@{
+    string roleName = ViewBag.roleName;
+
+    ViewBag.Title = "Edit " + roleName + " Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Boolean editMode = ViewBag.editMode;
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("editMode", editMode);
+}
+
+<a href="@Url.Action("Index","AdminDepartamentos")">
+    <i class="glyphicon glyphicon-arrow-left"></i> Regresar a Usuarios
+</a>
+
+<h2>@ViewBag.Title</h2>
+<div class="alert alert-info">
+    Deje los campos de contraseña en blanco si no desea actualizar contraseñas,
+    Para que no se modifiquen estos campos.
+</div>
+@Html.Partial("Partial_UserForm")

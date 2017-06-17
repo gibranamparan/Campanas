@@ -82,10 +82,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        
-        [Display(Name ="Rol")]
-        public string rol { get; set; }
-
+               
         [Required]
         [DisplayName("Nombre")]
         public string nombre { get; set; }        
@@ -97,6 +94,9 @@ namespace CampanasDelDesierto_v1.Models
         [Required]
         [DisplayName("Apellido Materno")]
         public string apellidoMaterno { get; set; }
+
+        [DisplayName("Registro es Administrador")]
+        public bool registerAsAdmin { get; set; }
 
         public string hash { get; set; }
         public string stamp { get; set; }
