@@ -28,6 +28,14 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        public new string concepto
+        {
+            get
+            {
+                return String.Format($"RETENCION: {this.tipoDeDeduccion}. CH: {this.liquidacionSemanal.cheque}");
+            }
+        }
+
         public enum TipoRetencion
         {
             OTRO, SANIDAD, EJIDAL, ABONO

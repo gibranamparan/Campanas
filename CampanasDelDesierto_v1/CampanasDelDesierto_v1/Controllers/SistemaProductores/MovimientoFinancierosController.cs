@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
 using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
 using CampanasDelDesierto_v1.HerramientasGenerales;
+using System.IO;
+using OfficeOpenXml;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -56,21 +58,6 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             return View(movimientoFinanciero);
         }
-
-        // public ActionResult GeneratePDF()
-        //{
-        //  if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
-        //{
-        //  return new Rotativa.ActionAsPdf("Pagare");
-        //}
-        //else
-        //{
-        //  return RedirectToAction("Index");
-        //}
-        //}
-
-
-
 
         // GET: MovimientoFinancieros/Create
         [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
@@ -205,7 +192,6 @@ namespace CampanasDelDesierto_v1.Controllers
             }
             
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor });
-            //return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -221,6 +207,30 @@ namespace CampanasDelDesierto_v1.Controllers
             BaxicoWebService bws = new BaxicoWebService();
             decimal precioDolar = bws.getCambioDolar(ref errorMsg);
             return Json(new { precioDolar = precioDolar, errorMsg = errorMsg });
+        }
+
+        public JsonResult getFileFromSAT(int year)
+        {
+            BaxicoWebService bws = new BaxicoWebService();
+            string errorMsg = string.Empty;
+            bool res = bws.getExcelDocFromSat(year, ref errorMsg);
+
+            return Json(new { success = res, errorMsg = errorMsg }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult saveDollarRateFromExcel(int year)
+        {
+            string pathDestino = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+            string url = $"{pathDestino}\\tc_{year}.xls";
+
+            //Se crea el archivo Excel procesable
+            var package = new ExcelPackage(new FileInfo(@url));
+            //var workSheet = currentSheet.First();//Se toma la 1ra hoja de excel
+            var workSheet = package.Workbook.Worksheets[1];//Se toma la 1ra hoja de excel
+            var noOfCol = workSheet.Dimension.End.Column;//Se determina el ancho de la tabla en no. columnas
+            var noOfRow = workSheet.Dimension.End.Row;//El alto de la tabla en numero de renglores
+
+            return Json("dsda", JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

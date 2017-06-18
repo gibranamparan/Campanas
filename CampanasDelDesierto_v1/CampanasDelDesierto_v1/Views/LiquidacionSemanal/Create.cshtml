@@ -5,7 +5,11 @@
 @{
     //Determa si la pantalla se encuentra en modo de edicion
     bool editMode = Model.idMovimiento > 0;
-    ViewBag.Title = editMode?"Edición":"Registro"+" de Liquidacion Semanal";
+
+    //Es reporte de liquidacion
+    bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
+
+    ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     //Se determina el precio actual del dolar
