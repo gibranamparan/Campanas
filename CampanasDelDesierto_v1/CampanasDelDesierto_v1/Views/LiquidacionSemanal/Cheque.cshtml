@@ -35,7 +35,7 @@
         </span>
         <span id="concepto">
             @Html.DisplayFor(model=>model.Productor.numProductor)
-            @(Model.semana + " del " +Model.semanaLiquidada) 
+            @(Model.semana +" del "+ Model.semanaLiquidada) 
             @Model.semana del @Model.semanaLiquidada
         </span>
     </div>
@@ -69,6 +69,10 @@
 
         span#montoLetra{
             top: 45mm;
+            left: 17mm;
+        }
+         span#concepto{
+            top: 80mm;
             left: 17mm;
         }
 
