@@ -29,36 +29,40 @@
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
                 </th>
                 <th>
-                    Concepto
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
                 <th class="actions"></th>
             </tr>
 
             @foreach (var item in movimientos)
 {
-                <tr style='@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"background-color:#c7c7c7":"")'>
+                <tr class="@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION?"liquidacion":"")
+                    @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
+                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"cosechaPagada":"")">
                     <td>
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
-                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")' @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
+                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.montoMovimiento)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
                     <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO &&
-                        ((PagoPorProducto)item).liquidacionDeCosechaID != null)
-                        {
-                            <span>CHEQUE: </span>
-                            <span>@(((PagoPorProducto)item).liquidacionDeCosecha.cheque)</span>
-                        }
-                        else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
-                        {
-                            <span>CHEQUE: </span>
-                            <span>@(((LiquidacionSemanal)item).cheque)</span>
-                        }
+                        @*
+                            @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO &&
+                            ((PagoPorProducto)item).liquidacionDeCosechaID != null)
+                            {
+                                <span>CHEQUE: </span>
+                                <span>@(((PagoPorProducto)item).liquidacionDeCosecha.cheque)</span>
+                            }
+                            else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+                            {
+                                <span>CHEQUE: </span>
+                                <span>@(((LiquidacionSemanal)item).cheque)</span>
+                            }
+                        *@
+                        @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                     <td>
                         <div class="dropdown_actions">

@@ -101,6 +101,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -314,6 +319,14 @@
     <Compile Include="Migrations\201706170355230_Eliminacion_Datos_AdminDepartamentos.cs" />
     <Compile Include="Migrations\201706170355230_Eliminacion_Datos_AdminDepartamentos.Designer.cs">
       <DependentUpon>201706170355230_Eliminacion_Datos_AdminDepartamentos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706180603554_concepto_field.cs" />
+    <Compile Include="Migrations\201706180603554_concepto_field.Designer.cs">
+      <DependentUpon>201706180603554_concepto_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.cs" />
+    <Compile Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.Designer.cs">
+      <DependentUpon>201706180651254_concepto_pretamoYAbonoCapital.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -783,6 +796,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706170355230_Eliminacion_Datos_AdminDepartamentos.resx">
       <DependentUpon>201706170355230_Eliminacion_Datos_AdminDepartamentos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706180603554_concepto_field.resx">
+      <DependentUpon>201706180603554_concepto_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.resx">
+      <DependentUpon>201706180651254_concepto_pretamoYAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.resources" />
     <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.addedFields_Retenciones_LiquidacionSemanal.resources" />

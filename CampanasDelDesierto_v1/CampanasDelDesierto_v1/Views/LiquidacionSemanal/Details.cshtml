@@ -19,6 +19,12 @@
         </div>
     </div>
 </div>
+<a href="@Url.Action("PrintCheque","LiquidacionSemanal",new { id=Model.idMovimiento })" target="_blank" class="btn btn-info pull-right">
+    <i class="fa fa-print"></i> <span>Print</span>
+</a>
+<a href="@Url.Action("ReporteLiquidacionSemanal","LiquidacionSemanal",new { id=Model.idMovimiento })" target="_blank" class="btn btn-info pull-right">
+    <i class="fa fa-print"></i> <span>Imprimir Liquidacion</span>
+</a>
 
 
 @if (Model != null && movimientos.Count() > 0)

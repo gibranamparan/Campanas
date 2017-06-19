@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -35,6 +36,23 @@ namespace CampanasDelDesierto_v1.Models
         public int TemporadaDeCosechaID { get; set; }
         public virtual TemporadaDeCosecha temporadaDeCosecha { get; set; }
 
+        [DisplayName("Concepto")]
+        public string concepto { get {
+                string res = String.Empty;
+                if (this.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    res = ((PrestamoYAbonoCapital)this).concepto;
+                else if (this.getTypeOfMovement() == TypeOfMovements.LIQUIDACION)
+                    res = ((LiquidacionSemanal)this).concepto;
+                else if (this.getTypeOfMovement() == TypeOfMovements.PAGO_POR_PRODUCTO)
+                    res = ((PagoPorProducto)this).concepto;
+                else if (this.getTypeOfMovement() == TypeOfMovements.RENTENCION)
+                    res = ((Retencion)this).concepto;
+                else if (this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO)
+                    res = ((VentaACredito)this).concepto;
+
+                return string.IsNullOrEmpty(res)?String.Empty:res;
+            } }
+
         [Display(Name = "Tipo")]
         public string nombreDeMovimiento
         {
@@ -51,7 +69,7 @@ namespace CampanasDelDesierto_v1.Models
                 else if (tom == TypeOfMovements.LIQUIDACION)
                     return "LIQUIDACION";
                 else if (tom == TypeOfMovements.RENTENCION) {
-                    return "RETENCION: "+ ((Retencion)this).tipoDeDeduccion.ToString();
+                    return "RETENCION" ;
                 }
                 else
                     return "";

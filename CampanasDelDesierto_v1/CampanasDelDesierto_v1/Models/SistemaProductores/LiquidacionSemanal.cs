@@ -35,6 +35,10 @@ namespace CampanasDelDesierto_v1.Models
         [Required]
         public int semana { get; set; }
 
+        public new string concepto { get {
+                return String.Format($"CHEQUE: {this.cheque}");
+            } }
+
         //Lista de retenciones asociadas a la liquidacion
         public virtual ICollection<Retencion> retenciones { get; set; }
 

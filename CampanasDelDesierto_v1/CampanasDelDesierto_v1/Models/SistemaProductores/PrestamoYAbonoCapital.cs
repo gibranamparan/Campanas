@@ -29,9 +29,11 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Proveedor")]
         public string proveedor { get; set; }
-        
+
+        public string conceptoCapital { get; set; }
+
         [Display(Name = "Concepto")]
-        public string concepto { get; set; }
+        public new string concepto { get { return this.conceptoCapital; } set { this.conceptoCapital = value; } }
 
         [Display(Name = "Descripcion de Concepto")]
         [DataType(DataType.MultilineText)]

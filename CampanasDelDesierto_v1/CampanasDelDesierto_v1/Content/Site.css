@@ -257,3 +257,16 @@ div#pnlDetallesReporteSemanal {
     overflow-y: auto;
     padding: 0 1.5em;
 }
+
+tr.liquidacion{
+    background-color: #dfff8f !important;
+}
+tr:hover.liquidacion{
+    background-color: #b6ff00 !important;
+}
+tr.cosechaPagada{
+    background-color: #c7c7c7 !important;
+}
+tr:hover.cosechaPagada{
+    background-color: #858585 !important;
+}
