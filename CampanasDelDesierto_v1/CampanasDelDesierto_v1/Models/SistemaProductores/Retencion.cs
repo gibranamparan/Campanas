@@ -18,11 +18,13 @@ namespace CampanasDelDesierto_v1.Models
 
         public string nombreTipoDeduccion { get {
                 if (this.tipoDeDeduccion == TipoRetencion.EJIDAL)
-                    return "2% I.S.R Ejidal";
+                    return NombreRetencion.EJIDAL;
                 else if (this.tipoDeDeduccion == TipoRetencion.SANIDAD)
-                    return "Garantía de Sanidad Vegetal";
-                else if(this.tipoDeDeduccion == TipoRetencion.OTRO)
-                    return "OTRA DEDUCCION";
+                    return NombreRetencion.SANIDAD;
+                else if (this.tipoDeDeduccion == TipoRetencion.OTRO)
+                    return NombreRetencion.OTRO;
+                else if (this.tipoDeDeduccion == TipoRetencion.ABONO)
+                    return NombreRetencion.ABONO;
 
                 return String.Empty;
             }
@@ -39,6 +41,14 @@ namespace CampanasDelDesierto_v1.Models
         public enum TipoRetencion
         {
             OTRO, SANIDAD, EJIDAL, ABONO
+        }
+
+        public static class NombreRetencion
+        {
+            public const string OTRO = "OTRA DEDUCCION";
+            public const string SANIDAD = "Sanidad Vegetal";
+            public const string EJIDAL = "2% I.S.R Ejidal";
+            public const string ABONO = "Abono a Anticipos";
         }
 
         public new void ajustarMovimiento()

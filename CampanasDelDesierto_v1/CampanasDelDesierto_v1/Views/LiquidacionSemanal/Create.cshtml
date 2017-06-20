@@ -9,13 +9,15 @@
     //Es reporte de liquidacion
     bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
 
-    ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
+    ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro");
+    ViewBag.Title += " de Liquidacion Semanal";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     //Se determina el precio actual del dolar
     BaxicoWebService bws = new BaxicoWebService();
     string errorMessagePrecioDolar = String.Empty;
     decimal precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
+    Model.precioDelDolarEnLiquidacion = precioDolar;
 
     //Objeto para la forma de retenciones
     LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
@@ -25,7 +27,7 @@
     bool actualizar = false;
     if (editMode)
     {
-        actualizar = ViewBag.actualizar;
+        actualizar = ViewBag.actualizar==null?false: ViewBag.actualizar;
     }
 
     //Se buscan todos los ingresos de cosecha que se han hecho por el productor
@@ -85,78 +87,83 @@
     decimal balanceActual = ViewBag.balanceActual;
     if (editMode)
     {
-        balanceActual += retencionAbono;
+        balanceActual -= retencionAbono;
     }
+    decimal saldoTotal = balanceActual + retencionAbono;
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
     vddProductorInfo.Add("temporada", Model.temporadaDeCosecha);
+    vddProductorInfo.Add("resumido", true);
 
     //Datos para parcial de reporte semanal
     ViewDataDictionary vddReporteSemanal = new ViewDataDictionary();
     vddReporteSemanal.Add("ingresosDeCosecha", ingresosDeCosecha);
+
+    //Datos para lista de retenciones
+    ViewDataDictionary vddRetenciones = new ViewDataDictionary();
+    vddRetenciones.Add("precioDolar", precioDolar);
 }
-<p>
+
+@*Enlace para volver a movimientos de productor*@
+<p class="hidden-print">
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este Productor
     </a>
 </p>
 
-@*Informacino de productor*@
+@*Información de productor*@
 @Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
-@*Datos globales*@
+@*Reporte de liquidacion semanal*@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">
-            <strong style="color: white">@(editMode ? "Editar" : "Registrar")</strong>
-            <span>Liquidación Semanal</span>
+            <strong style="color: white">@(reportMode?"":(editMode ? "Editar" : "Registrar"))</strong>
+            <span>Reporte de Semana</span>
         </h3>
     </div>
     <div class="panel-body">
+        @*Forma para consulta de ingresos de cosecha por semana*@
         <div class="row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @*Forma para consulta de ingresos de cosecha por semana*@
-            @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-md-12" }))
+            @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-xs-12" }))
             {
                 @Html.AntiForgeryToken()
                 if (editMode) { 
                     @Html.Hidden("actualizar", true)
                 }
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-xs-3">
                     @Html.LabelFor(model => model.semanaLiquidada.startDate)
                     @Html.EditorFor(model => model.semanaLiquidada.startDate, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-xs-3">
                     @Html.LabelFor(model => model.semanaLiquidada.endDate)
                     @Html.EditorFor(model => model.semanaLiquidada.endDate, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group col-md-1">
+                <div class="form-group @(reportMode?"col-xs-2":"col-xs-1")">
                     @Html.LabelFor(model => model.semana)
                     @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", min = 0,
-                        oninput = "$('#formLiquidacionSemanal input#semana').val($(this).val())"
-               } })
+                        oninput = "$('#formLiquidacionSemanal input#semana').val($(this).val())" } })
                     @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
                 </div>
-                <div class="form-group col-md-3">
-                    <div id="divPrecioDelDolar" class="col-md-7">
+                <div class="form-group col-xs-3">
+                    <div id="divPrecioDelDolar" class="@(reportMode?"col-xs-12":"col-xs-7")">
                         @Html.LabelFor(model => model.precioDelDolarEnLiquidacion)
-                        @Html.EditorFor(model => model.precioDelDolarEnLiquidacion, new
-                   {
-                       htmlAttributes = new
-                       {
-                           @class = "form-control",
-                           data_mask_reverse = "true",
-                           data_mask = "###0.0000"
-                       }
-                   })
+                        @Html.EditorFor(model => model.precioDelDolarEnLiquidacion, new {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask_reverse = "true",
+                               data_mask = "###0.0000"
+                           } })
                         @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger" })
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-xs-5 @(reportMode?"hidden":"")">
                         <a class="satLogo" target="_blank"
                            href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
                             <img src="/images/sat_logo.png" />
@@ -165,7 +172,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-1">
+                <div class="form-group col-xs-1 @(reportMode?"hidden":"")">
                     <button class="btn btn-primary">@(!editMode?"Buscar":"Actualizar")</button>
                 </div>
             }
@@ -183,6 +190,7 @@
             @Html.HiddenFor(model=>model.semanaLiquidada.startDate)
             @Html.HiddenFor(model => model.semanaLiquidada.endDate)
             @Html.HiddenFor(model=>model.abonoAnticipoID)
+            @Html.HiddenFor(model=>model.precioDelDolarEnLiquidacion)
 
             foreach (var ing in ingresosDeCosecha)
             {
@@ -190,90 +198,119 @@
             }
 
             @*Retenciones*@
-            @Html.Partial("Partial_ReporteSemanalRetencionesForm", retenciones)
+            @Html.Partial("Partial_ReporteSemanalRetencionesForm", retenciones, vddRetenciones)
 
-            @*Total a pagar*@
+            @*Panel de liquidacion semanal*@
             <div class="panel panel-primary" id="formLiquidacionSemanal">
                 <div class="panel-heading">
                     <h3 class="panel-title">Liquidación Semanal</h3>
                 </div>
                 <div class="panel-body">
-                    @*Monto de cosecha*@
-                    <div class="form-group col-md-4">
-                        <label class = "control-label col-md-5">Monto Total por Cosecha (USD):</label>
-                        <div class="col-md-7">
-                            <input id="inputCostoCosechaSemana" class = "form-control"
-                                   data-mask = "###0.00" data-mask-reverse = "true" 
-                                   value="@costoCosechaSemana.ToString("C")" readonly/>
+                    @if (!reportMode)
+                    {
+                        //Formato de edicion y creacion
+                        <div>
+                            @*Monto de cosecha*@
+                            <div class="form-group col-xs-4">
+                                <label class="control-label col-xs-5">Monto Total por Cosecha (USD):</label>
+                                <div class="col-xs-7">
+                                    <input id="inputCostoCosechaSemana" class="form-control"
+                                           data-mask="###0.00" data-mask-reverse="true"
+                                           value="@costoCosechaSemana.ToString("C")" readonly />
+                                </div>
+                            </div>
+                            @*Menos*@
+                            <span class="col-xs-1 signos">-</span>
+
+                            @*Retenciones*@
+                            <div class="form-group col-xs-3">
+                                <label class="control-label col-xs-5">Retenciones Totales (USD): </label>
+                                <div class="col-xs-7">
+                                    <input id="inputTotalRetencion" class="form-control"
+                                           data-mask="###0.00" data-mask-reverse="true"
+                                           value="@retencionTotal.ToString("C")" readonly />
+                                </div>
+                            </div>
+
+                            @*Igual A*@
+                            <span class="col-xs-1 signos">=</span>
+
+                            @*MOnto total a pagar*@
+                            <div class="form-group col-xs-3">
+                                <label class="control-label col-xs-5">Total a Pagar (USD): </label>
+                                <div class="col-xs-7">
+                                    @Html.EditorFor(model => model.montoMovimiento, new
+                               {
+                                   htmlAttributes = new
+                                   {
+                                       @class = "form-control",
+                                       data_mask = "###0.00",
+                                       data_mask_reverse = "true",
+                                       @readonly = "readonly"
+                                   }
+                               })
+                                    @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*Liquidacion*@
+
+                            <div class="form-group col-xs-4">
+                                @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-xs-4" })
+                                <div class="col-xs-8">
+                                    @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control", oninput = "$(this).val($(this).val().toUpperCase())" } })
+                                    @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-4">
+                                @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-xs-4" })
+                                <div class="col-xs-8">
+                                    @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-4">
+                                @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-xs-4" })
+                                <div class="col-xs-8">
+                                    @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", min = 0 } })
+                                    @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-success"
+                                            @(ingresosDeCosecha.Count() == 0 ? "disabled" : "")>
+                                        @(editMode ? "Guardar" : "Crear")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    @*Menos*@
-                    <span class="col-md-1" style="font-size:2em">-</span>
-
-                    @*Retenciones*@
-                    <div class="form-group col-md-3">
-                        <label class="control-label col-md-5">Retenciones Totales (USD): </label>
-                        <div class="col-md-7">
-                            <input id="inputTotalRetencion" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@retencionTotal.ToString("C")" readonly />
+                    }
+                    else
+                    {
+                        //Vista de reporte
+                        <div>
+                            <div class="form-group col-xs-6">
+                                <label class="control-label">Cosecha de la Semana (USD):</label>
+                                <p class="form-control-static">@costoCosechaSemana.ToString("C")</p>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label class="control-label">Deducciones de Semana (USD):</label>
+                                <p class="form-control-static">@retencionTotal.ToString("C")</p>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label class="control-label">Neto a Pagar (USD):</label>
+                                <p class="form-control-static">@Html.DisplayFor(model => model.montoMovimiento)</p>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label class="control-label">Pagado con cheque No. Folio:</label>
+                                <p class="form-control-static">@Html.DisplayFor(model => model.cheque)</p>
+                            </div>
                         </div>
-                    </div>
-
-                    @*Igual A*@
-                    <span class="col-md-1" style="font-size:2em">=</span>
-
-                    @*MOnto total a pagar*@
-                    <div class="form-group col-md-3">
-                        <label class="control-label col-md-5">Total a Pagar (USD): </label>
-                        <div class="col-md-7">
-                            @Html.EditorFor(model => model.montoMovimiento, new
-                       {
-                           htmlAttributes = new
-                           {
-                               @class = "form-control",
-                               data_mask = "###0.00",
-                               data_mask_reverse = "true",
-                               @readonly="readonly"
-                           }
-                       })
-                            @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    @*Liquidacion*@
-
-                    <div class="form-group col-md-4">
-                        @Html.LabelFor(model => model.fechaMovimiento, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-8">
-                            @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        @Html.LabelFor(model => model.cheque, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-8">
-                            @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control", oninput="$(this).val($(this).val().toUpperCase())" } })
-                            @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-8">
-                            @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", @readonly= "readonly", min=0 } })
-                            @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <button class="btn btn-success" @(ingresosDeCosecha.Count()==0?"disabled":"")>
-                                @(editMode ? "Guardar" : "Crear")
-                            </button>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -284,39 +321,30 @@
                 </div>
                 <div class="panel-body">
                     @*Balance Actual*@
-                    <div class="form-group col-md-4">
-                        @Html.LabelFor(model => model.Productor.balanceActual, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-8">
-                            <input id="balanceActual" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@balanceActual.ToString("C")" readonly />
-                        </div>
+                    <div class="form-group col-xs-4">
+                        @Html.LabelFor(model => model.Productor.balanceActual, htmlAttributes: new { @class = "control-label" })
+                        <input id="balanceActual" class="form-control"
+                                value="@balanceActual.ToString("0.00")" readonly />
                     </div>   
 
                     @*Menos*@
-                    <span class="col-md-1" style="font-size:2em">-</span>
+                    <span class="col-xs-1 signos">-</span>
 
                     @*Retenciones*@
-                    <div class="form-group col-md-3">
-                        <label class="control-label col-md-5">Abono de la semana (USD): </label>
-                        <div class="col-md-7">
-                            <input id="inputAbonoSemana" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@retencionAbono.ToString("C")" readonly />
-                        </div>
+                    <div class="form-group col-xs-3">
+                        <label class="control-label">Abono de la semana (USD): </label>
+                        <input id="inputAbonoSemana" class="form-control"
+                                value="@retencionAbono.ToString("0.00")" readonly />
                     </div>
 
                     @*Igual A*@
-                    <span class="col-md-1" style="font-size:2em">=</span>
+                    <span class="col-xs-1 signos">=</span>
 
-                    @*MOnto total a pagar*@
-                    <div class="form-group col-md-3">
-                        <label class="control-label col-md-5">Saldo a Liquidar (USD): </label>
-                        <div class="col-md-7">
-                            <input id="inputSaldoLiquidar" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value='@((balanceActual - retencionAbono).ToString("C"))' readonly />
-                        </div>
+                    @*Saldo por liquidar del balance*@
+                    <div class="form-group col-xs-3">
+                        <label class="control-label">Saldo a Liquidar (USD): </label>
+                        <input id="inputSaldoLiquidar" class="form-control"
+                                value='@((saldoTotal).ToString("0.00"))' readonly />
                     </div>
                 </div>
             </div>
@@ -327,20 +355,21 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        $("#formRetenciones input").keyup(function () {
+        $("#formRetenciones input:even").keyup(function () {
             var totalRetencion=0;
-            $.each($("#formRetenciones input"), function (idx, item) {
+            $.each($("#formRetenciones input:even"), function (idx, item) {
                 totalRetencion += Number($(item).val());
             });
 
             if ($(this).attr("id") == "abonoAnticipos") {
                 $("#inputAbonoSemana").val($(this).val());
-                var saldoPagar = $("#balanceActual").val() - $(this).val()
+                var saldoPagar = Number($("#balanceActual").val()) + Number($(this).val())
                 $("#inputSaldoLiquidar").val(numeral(saldoPagar).format('0.00')).trigger('input');
             }
 
             $("#inputTotalRetencion").val(numeral(totalRetencion).format('0.00')).trigger('input');
             var totalAPagar = $("#inputCostoCosechaSemana").val() - totalRetencion;
+            totalAPagar = totalAPagar < 0 ? 0 : totalAPagar;
             $("#montoMovimiento").val(numeral(totalAPagar).format('0.00')).trigger('input');
 
         })
@@ -356,19 +385,24 @@
 
             //Se hace solicitud del precio del dolar al server
             getTipoCambioAsync(
-                function (res) {
+                function (res) { //Success
                     $("#precioDelDolarEnLiquidacion").val(numeral(res.precioDolar).format('0.0000')).trigger('input');
                     $('#precioDelDolarEnLiquidacion').attr('value', res.precioDolar);
                     precioDolar = res.precioDolar;
-                    //recalcularMontoDolares();
+
+                    $("#formRetenciones input:even").trigger('input');
                 },
-                function (err) { },
-                function () {
-                    $("#loadingImg").toggleClass('hidden');@*
-                    $('#divPrecioDelDolar').removeClass('col-md-8');
-                    $('#divPrecioDelDolar').addClass('col-md-9');*@
+                function (err) { }, // Error
+                function () { // Always
+                    $("#loadingImg").toggleClass('hidden');
                 }, antiForgeryToken)
-        }
-        setPrecioDolar();
+        };
     </script>
+
+    @if (reportMode)
+    {
+        <script>
+            $("input").attr('disabled', true);
+        </script>
+    }
 }

@@ -258,6 +258,12 @@ div#pnlDetallesReporteSemanal {
     padding: 0 1.5em;
 }
 
+
+span.signos{
+    text-align: center;
+    font-size:2em
+}
+
 tr.liquidacion{
     background-color: #dfff8f !important;
 }
@@ -269,4 +275,18 @@ tr.cosechaPagada{
 }
 tr:hover.cosechaPagada{
     background-color: #858585 !important;
+}
+
+@media print{
+    #main > .inner {
+        padding: 0;
+    }
+
+    span.signos{
+        font-size:inherit;
+    }
+
+    #formLiquidacionSemanal{
+        page-break-before:always;
+    }
 }

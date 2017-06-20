@@ -44,8 +44,10 @@ namespace CampanasDelDesierto_v1.Models
         public int semana { get; set; }
 
         public new string concepto { get {
-                return this.liquidacionDeCosecha == null ? "" 
-                    : String.Format($"CHEQUE: {this.liquidacionDeCosecha.cheque}");
+                string res = "SEMANA: " + this.semana;
+                res+= this.liquidacionDeCosecha == null ? "" 
+                    : String.Format($", CHEQUE: {this.liquidacionDeCosecha.cheque}");
+                return res;
             } }
 
         public virtual ICollection<RecepcionDeProducto> Recepciones { get; set; }

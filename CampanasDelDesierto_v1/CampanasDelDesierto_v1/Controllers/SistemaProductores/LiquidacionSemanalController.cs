@@ -17,7 +17,7 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private const string strBindFields = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
             "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza,semana,"+
-            "semanaLiquidada.startDate,semanaLiquidada.endDate,abonoAnticipoID";
+            "semanaLiquidada.startDate,semanaLiquidada.endDate,abonoAnticipoID,precioDelDolarEnLiquidacion";
         // GET: EmisionDeCheques
         public ActionResult Index()
         {
@@ -184,13 +184,25 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
+                    PagoPorProducto ingreso = new PagoPorProducto();
                     //Asociar ingresos de cosecha a emision de cheque
                     foreach(int ingID in ingresosDeCosechaID)
                     {
-                        var ingreso = db.PagosPorProductos.Find(ingID);
+                        ingreso = db.PagosPorProductos.Find(ingID);
                         ingreso.liquidacionDeCosechaID = emisionDeCheque.idMovimiento;
                         db.Entry(ingreso).State = EntityState.Modified;
                     }
+
+                    //Se crea una nueva fecha igual en anio, mes y dia a la original del cheque
+                    DateTime fechaMovimiento = new DateTime(emisionDeCheque.fechaMovimiento.Year,
+                        emisionDeCheque.fechaMovimiento.Month, emisionDeCheque.fechaMovimiento.Day);
+                    //Se establece el horario del cheque igual al del ultimo movimiento agregando 1ms para ajustar el orden
+                    //dentro de la tabla de balances
+                    fechaMovimiento = fechaMovimiento.AddMilliseconds(ingreso.fechaMovimiento.TimeOfDay.TotalMilliseconds + 1);
+                    emisionDeCheque.fechaMovimiento = fechaMovimiento;
+
+                    //Se guardan cambios de ajuste de hora del movimiento y los pagos
+                    db.Entry(emisionDeCheque).State = EntityState.Modified;
                     db.SaveChanges();
 
                     //Se ajusta el abalance si se registro una retencion por abono
@@ -203,6 +215,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         prod.ajustarBalances(ultimoMovimiento, db);
                     }
                     
+                    //Se redirecciona a la lista de movimientos del productor
                     return RedirectToAction("Details", "Productores", new {
                         id = emisionDeCheque.idProductor,
                         temporada = emisionDeCheque.TemporadaDeCosechaID
