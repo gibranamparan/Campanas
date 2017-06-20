@@ -17,17 +17,20 @@
     </a>
 
     @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL &&
-                                        ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                                                ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
     {
         @(" | ")
         <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
-            <i class="glyphicon glyphicon-print"></i> Imprimir 
-        </a> 
+            <i class="glyphicon glyphicon-print"></i> Imprimir Pagaré
+        </a>
     }
-
-    <a href="@Url.Action("Details","Productores", new { id=Model.idProductor })">
-        <i class="glyphicon glyphicon-arrow-left"></i>Volver a movimientos del productor
-    </a>
+    @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+    {
+        @(" | ")
+        <a href="@Url.Action("PrintCheque","LiquidacionSemanal",new { id = Model.idMovimiento })" target="_blank">
+            <i class="glyphicon glyphicon-print"></i> Imprimir Cheque
+        </a>
+    }
 </p>
 
 @Html.Partial("Partial_MovimientoDetails")
