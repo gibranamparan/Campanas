@@ -28,15 +28,15 @@
             @(NumbersTools.NumberToText.Convert(Model.montoMovimiento))
         </span>
         <span id="fechaMovimiento">
-            @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy",CultureInfo.CreateSpecificCulture("es-MX"))
+            @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="cheque">
             @Html.DisplayFor(model => model.cheque)
         </span>
         <span id="concepto">
-            @Html.DisplayFor(model=>model.Productor.numProductor)
-            @(Model.semana + " del " +Model.semanaLiquidada) 
-            @Model.semana del @Model.semanaLiquidada
+            @Html.DisplayFor(model => model.Productor.numProductor)
+            @(Model.semana + " del " + Model.semanaLiquidada) 
+       
         </span>
     </div>
 
@@ -69,6 +69,10 @@
 
         span#montoLetra{
             top: 45mm;
+            left: 17mm;
+        }
+         span#concepto{
+            top: 100mm;
             left: 17mm;
         }
 

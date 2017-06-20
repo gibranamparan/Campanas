@@ -22,13 +22,13 @@
             @Html.DisplayFor(model => model.montoMovimiento) Dólares
         </span>
         <span id="Dia">
-            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
         </span>
         <span id="mes">
             @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="año">
-            @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            @Model.fechaMovimiento.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="montoMovimiento">
             @(NumbersTools.NumberToText.Convert(Model.montoMovimiento)) U.S.Cy.
@@ -87,7 +87,7 @@
             <input id="inputSerieNumerada" type="number" value="1" style="width: 30px" />
         </span>
         <span id="tasaMoratoria">
-            <input id="inputTasaMoratoria" type="number" value="10" style="width: 30px" />
+            <input id="inputTasaMoratoria" type="number" style="width: 30px" />
         </span>
         <span id="numReporte">
             <input id="inputReporte" type="text" value="NA" style="width: 70px" />
@@ -158,7 +158,7 @@
         span#DomicilioProductor {
             left: 23mm;
             top: 135mm;
-            font-size: 12px;
+            font-size: 11px;
             width: 16em; 
             word-wrap: break-word;
         }
