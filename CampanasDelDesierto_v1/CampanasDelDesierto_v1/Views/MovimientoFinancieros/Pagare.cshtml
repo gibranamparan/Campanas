@@ -22,13 +22,13 @@
             @Html.DisplayFor(model => model.montoMovimiento) Dólares
         </span>
         <span id="Dia">
-            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
+          @Model.fechaPagar.Value.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
         </span>
-        <span id="mes">
-            @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+               *<span id="mes">
+             @Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="año">
-            @Model.fechaMovimiento.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            @Model.fechaPagar.Value.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="montoMovimiento">
             @(NumbersTools.NumberToText.Convert(Model.montoMovimiento)) U.S.Cy.
@@ -172,7 +172,7 @@
         span#representanteLegal {
             left: 150mm;
             top: 126mm;
-            font-size: 14px;
+            font-size: 11px;
         }
 
         span#RFCProductor {
