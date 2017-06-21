@@ -35,6 +35,10 @@ namespace CampanasDelDesierto_v1.Models
         [Required]
         public int semana { get; set; }
 
+        public new string concepto { get {
+                return String.Format($"CHEQUE: {this.cheque}");
+            } }
+
         //Lista de retenciones asociadas a la liquidacion
         public virtual ICollection<Retencion> retenciones { get; set; }
 
@@ -58,7 +62,7 @@ namespace CampanasDelDesierto_v1.Models
             decimal monto = 0;
             if (tipo == Retencion.TipoRetencion.ABONO && this.abonoAnticipo!=null)
             {
-                monto = -this.abonoAnticipo.montoMovimiento;
+                monto = this.abonoAnticipo.montoMovimiento;
             }else if(this.retenciones.FirstOrDefault(mov => mov.tipoDeDeduccion == tipo)!=null)
             {
                 monto = -this.retenciones
@@ -72,22 +76,22 @@ namespace CampanasDelDesierto_v1.Models
         {
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Garantia de Sanidad Vegetal ")]
+            [Display(Name = Retencion.NombreRetencion.SANIDAD)]
             public decimal garantiaLimpieza { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "2% I.S.R Ejidal")]
+            [Display(Name = Retencion.NombreRetencion.EJIDAL)]
             public decimal retencionEjidal { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Abono a Anticipos")]
+            [Display(Name = Retencion.NombreRetencion.ABONO)]
             public decimal abonoAnticipos { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Otra Retención")]
+            [Display(Name = Retencion.NombreRetencion.OTRO)]
             public decimal retencionOtro { get; set; }
 
             public decimal total

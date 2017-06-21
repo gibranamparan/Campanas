@@ -17,7 +17,7 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private const string strBindFields = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
             "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza,semana,"+
-            "semanaLiquidada.startDate,semanaLiquidada.endDate,abonoAnticipoID";
+            "semanaLiquidada.startDate,semanaLiquidada.endDate,abonoAnticipoID,precioDelDolarEnLiquidacion";
         // GET: EmisionDeCheques
         public ActionResult Index()
         {
@@ -69,7 +69,7 @@ namespace CampanasDelDesierto_v1.Controllers
             mov.idProductor = mov.Productor.idProductor;
             mov.Productor = mov.Productor;
 
-            if (semanaLiquidada.isNotDefaultInstance())
+            if (semanaLiquidada != null && semanaLiquidada.isNotDefaultInstance())
             {
                 //El limite final del periodo semanal se configura para cubrir la totalidad del ultimo dia0
                 semanaLiquidada.endDate = semanaLiquidada.endDate.AddHours(24).AddSeconds(-1);
@@ -184,13 +184,25 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
+                    PagoPorProducto ingreso = new PagoPorProducto();
                     //Asociar ingresos de cosecha a emision de cheque
                     foreach(int ingID in ingresosDeCosechaID)
                     {
-                        var ingreso = db.PagosPorProductos.Find(ingID);
+                        ingreso = db.PagosPorProductos.Find(ingID);
                         ingreso.liquidacionDeCosechaID = emisionDeCheque.idMovimiento;
                         db.Entry(ingreso).State = EntityState.Modified;
                     }
+
+                    //Se crea una nueva fecha igual en anio, mes y dia a la original del cheque
+                    DateTime fechaMovimiento = new DateTime(emisionDeCheque.fechaMovimiento.Year,
+                        emisionDeCheque.fechaMovimiento.Month, emisionDeCheque.fechaMovimiento.Day);
+                    //Se establece el horario del cheque igual al del ultimo movimiento agregando 1ms para ajustar el orden
+                    //dentro de la tabla de balances
+                    fechaMovimiento = fechaMovimiento.AddMilliseconds(ingreso.fechaMovimiento.TimeOfDay.TotalMilliseconds + 1);
+                    emisionDeCheque.fechaMovimiento = fechaMovimiento;
+
+                    //Se guardan cambios de ajuste de hora del movimiento y los pagos
+                    db.Entry(emisionDeCheque).State = EntityState.Modified;
                     db.SaveChanges();
 
                     //Se ajusta el abalance si se registro una retencion por abono
@@ -203,6 +215,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         prod.ajustarBalances(ultimoMovimiento, db);
                     }
                     
+                    //Se redirecciona a la lista de movimientos del productor
                     return RedirectToAction("Details", "Productores", new {
                         id = emisionDeCheque.idProductor,
                         temporada = emisionDeCheque.TemporadaDeCosechaID
@@ -237,6 +250,26 @@ namespace CampanasDelDesierto_v1.Controllers
             return View("Create",mov);
         }
 
+        [HttpGet]
+        public ActionResult ReporteLiquidacionSemanal(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            LiquidacionSemanal mov = db.LiquidacionesSemanales.Find(id);
+            if (mov == null)
+            {
+                return HttpNotFound();
+            }
+
+            prepararVistaEditar(ref mov, null);
+            ViewBag.reportMode = true;
+
+            return View("Create", mov);
+        }
+
         // POST: EmisionDeCheques/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -264,7 +297,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 var tiposRetencionesArray = Enum.GetValues(typeof(Retencion.TipoRetencion))
                     .Cast<Retencion.TipoRetencion>().ToList();
 
-                PrestamoYAbonoCapital abonoNuevo = new PrestamoYAbonoCapital();
+                PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
                 //Se editas las retenciones
                 foreach (Retencion.TipoRetencion tipo in tiposRetencionesArray)
                 {
@@ -276,16 +309,14 @@ namespace CampanasDelDesierto_v1.Controllers
                     
                     //No se habia reportado y se reporta en edicion
                     if (oldRet == null && newRet != null)
-                    {
                         //Se agrega nueva retencion
                         db.Entry(newRet).State = EntityState.Added;
-                    }
+
                     //Existia previamente pero en la edicion se elimina
                     else if (oldRet != null && newRet == null)
-                    {
                         //Se marca para ser borrada la retencion
                         db.Entry(oldRet).State = EntityState.Deleted;
-                    }
+
                     //Se habia reportado previamente y aparece en edicion
                     else if (oldRet != null && newRet != null)
                     {
@@ -297,7 +328,6 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Para retenciones de abono
                     if(tipo == Retencion.TipoRetencion.ABONO)
                     {
-                        PrestamoYAbonoCapital abono;
                         //No se habia reportado y se reporta en edicion
                         if (oldRet == null && newRet != null)
                         {
@@ -357,7 +387,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     }
                     db.SaveChanges();
 
-                    /*
+                    //Se valida si se agrego un abono
                     if (abono.idMovimiento > 0)
                     {
                         //Se calcula el movimiento anterior al que se esta registrando
@@ -366,7 +396,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db);
-                    }*/
+                    }
 
                     //numReg = introducirMovimientoAlBalance(emisionDeCheque);
                     return RedirectToAction("Details", "Productores", new
@@ -377,6 +407,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
             }
 
+            //En caso de haber problemas en el llenado de la forma, se prepara nuevamente para ser mostrada
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
             prepararVistaEditar(ref emisionDeCheque, semanaLiquidada);
 

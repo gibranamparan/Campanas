@@ -181,7 +181,6 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         private int DIA_INICIO_PERIODO = 30;
-        private int DIA_FIN_PERIODO = 30;
         private int MES_PERIODO = 8;
 
         public static TemporadaDeCosecha findTemporada(int? temporada)

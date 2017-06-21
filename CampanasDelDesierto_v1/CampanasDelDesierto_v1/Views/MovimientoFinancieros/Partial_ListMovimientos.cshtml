@@ -27,7 +27,7 @@
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
                 </th>
                 <th>
-                    Concepto
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
@@ -49,10 +49,7 @@
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
                     <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                        {
-                            @Html.DisplayFor(modelItem => ((PrestamoYAbonoCapital)item).concepto)
-                        }
+                        @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                     <td class='@(item.balance<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.balance)
