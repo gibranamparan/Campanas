@@ -193,6 +193,7 @@ namespace CampanasDelDesierto_v1.Controllers
             if (ModelState.IsValid)
             {
                 var user = model.registerAsAdmin? new ApplicationUser(model) : new AdminDepartamento(model);
+                
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -200,26 +201,20 @@ namespace CampanasDelDesierto_v1.Controllers
                         CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.ADMIN :
                          CampanasDelDesierto_v1.Models.ApplicationUser.RoleNames.DEPARTAMENTO;
                     UserManager.AddToRole(user.Id, rolName);
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                    if (rolName==ApplicationUser.RoleNames.ADMIN)
-                    {
-                        return RedirectToAction("Index", "Productores");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Activos");
-                    }
+                    
+                        return RedirectToAction("Index", "AdminDepartamentos");                   
                     
                 }
                 AddErrors(result);
             }
-
+            ViewBag.departamento = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -238,6 +233,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
 
             RegisterViewModel vmAdminDepartamento = prepareView(user);
+            ViewBag.departamento = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
             return View(vmAdminDepartamento);
         }
 

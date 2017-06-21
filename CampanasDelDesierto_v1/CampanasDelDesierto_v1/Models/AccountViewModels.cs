@@ -95,11 +95,14 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Apellido Materno")]
         public string apellidoMaterno { get; set; }
 
-        [DisplayName("Registro es Administrador")]
+        [DisplayName("Registro es Administrador General")]
         public bool registerAsAdmin { get; set; }
 
         public string hash { get; set; }
         public string stamp { get; set; }
+
+        [DisplayName("Departamento")]
+        public int departamento { get; set; }
 
         public RegisterViewModel() { }
         public RegisterViewModel(ApplicationUser admin)
