@@ -18,6 +18,10 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class PrestamoYAbonoCapitalsController : Controller
     {
+        private const string BIND_FIELDS = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
+                "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa,TemporadaDeCosechaID, pozo," +
+                "tipoDeMovimientoDeCapital,descripcionConcepto,montoPesos";
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: PrestamoYAbonoCapitals
@@ -106,9 +110,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa,TemporadaDeCosechaID, pozo,"+
-            "tipoDeMovimientoDeCapital,descripcionConcepto")] PrestamoYAbonoCapital prestamoYAbonoCapital)
+        public ActionResult Create([Bind(Include = BIND_FIELDS)] PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
             {
@@ -166,9 +168,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cheque,concepto,pagare,fechaPagar,proveedor,nota,precioDelDolar,divisa,TemporadaDeCosechaID, pozo,"+
-            "tipoDeMovimientoDeCapital,descripcionConcepto")]PrestamoYAbonoCapital prestamoYAbonoCapital)
+        public ActionResult Edit([Bind(Include = BIND_FIELDS)]PrestamoYAbonoCapital prestamoYAbonoCapital)
         {
             if (ModelState.IsValid)
             {

@@ -48,6 +48,11 @@ namespace CampanasDelDesierto_v1.Models
         [DecimalPrecision(18, 4)]
         public decimal precioDelDolar { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [Display(Name = "Monto (MXN)")]
+        public decimal montoPesos { get; set; }
+
         [Display(Name = "Divisa")]
         public string divisa { get; set; }
         

@@ -328,6 +328,10 @@
     <Compile Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.Designer.cs">
       <DependentUpon>201706180651254_concepto_pretamoYAbonoCapital.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706221935145_montoPesos_Capital.cs" />
+    <Compile Include="Migrations\201706221935145_montoPesos_Capital.Designer.cs">
+      <DependentUpon>201706221935145_montoPesos_Capital.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
@@ -540,7 +544,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -723,6 +729,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.resx">
       <DependentUpon>201706180651254_concepto_pretamoYAbonoCapital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706221935145_montoPesos_Capital.resx">
+      <DependentUpon>201706221935145_montoPesos_Capital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

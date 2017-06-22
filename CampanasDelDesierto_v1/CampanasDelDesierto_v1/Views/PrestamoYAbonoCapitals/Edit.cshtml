@@ -61,14 +61,25 @@
                     </div>
                 </div>
 
-                <div id="conversionDivisa" class="row" style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?"block":"none")">
+                <div id="conversionDivisa" class="row" 
+                     style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?
+                        "block":"none")">
                     <div class="form-group col-md-6">
-                        <label class="control-label col-md-2">Monto (MXN)</label>
+                        @Html.LabelFor(model => model.montoPesos, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            <input id="montoPesos" class="form-control" value="@montoMovimientoPesos"
-                                   data-mask="###0.00" data-mask-reverse="true" />
+                            @Html.EditorFor(model => model.montoPesos, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.montoPesos, "", new { @class = "text-danger" })
                         </div>
                     </div>
+
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.precioDelDolar, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div id="divPrecioDelDolar" class="col-md-8">
@@ -264,7 +275,7 @@
                 $('#montoPesos').attr('value', num);
             }
 
-            recalcularMontoPesos();
+            //recalcularMontoPesos();
             $('#divisa').trigger('change');
         })
 
