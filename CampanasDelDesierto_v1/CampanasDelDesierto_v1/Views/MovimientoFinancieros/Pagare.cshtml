@@ -6,6 +6,7 @@
 @{
     Layout = null;
     Model.montoMovimiento *= -1;
+    string currency = "Dólares";
 }
 
 <!DOCTYPE html>
@@ -19,7 +20,7 @@
     <div id="pnlPagare">
         <img src="/images/Pagare.jpg" />
         <span id="ImportePagare">
-            @Html.DisplayFor(model => model.montoMovimiento) Dólares
+            @Html.DisplayFor(model => model.montoMovimiento) @currency
         </span>
         <span id="Dia">
           @Model.fechaPagar.Value.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
@@ -31,7 +32,7 @@
             @Model.fechaPagar.Value.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="montoMovimiento">
-            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento)) U.S.Cy.
+            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
         </span>
         <span id="diafechaMovimiento">
             @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))

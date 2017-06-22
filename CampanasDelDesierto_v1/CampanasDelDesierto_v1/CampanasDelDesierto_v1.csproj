@@ -350,9 +350,6 @@
     <Compile Include="Models\SistemaProductores\TemporadaDeCosecha.cs" />
     <Compile Include="Models\SistemaProductores\VentaACredito.cs" />
     <Compile Include="Models\SistemaProductores\Productor.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\Banxico\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -362,74 +359,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Antlr3.Runtime.dll" />
-    <Content Include="bin\Antlr3.Runtime.xml" />
-    <Content Include="bin\CampanasDelDesierto_v1.dll" />
-    <Content Include="bin\CampanasDelDesierto_v1.pdb" />
-    <Content Include="bin\EntityFramework.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.xml" />
-    <Content Include="bin\EntityFramework.xml" />
-    <Content Include="bin\EPPlus.dll" />
-    <Content Include="bin\EPPlus.xml" />
-    <Content Include="bin\Microsoft.AI.Agent.Intercept.dll" />
-    <Content Include="bin\Microsoft.AI.DependencyCollector.dll" />
-    <Content Include="bin\Microsoft.AI.DependencyCollector.xml" />
-    <Content Include="bin\Microsoft.AI.PerfCounterCollector.dll" />
-    <Content Include="bin\Microsoft.AI.ServerTelemetryChannel.dll" />
-    <Content Include="bin\Microsoft.AI.ServerTelemetryChannel.xml" />
-    <Content Include="bin\Microsoft.AI.Web.dll" />
-    <Content Include="bin\Microsoft.AI.Web.xml" />
-    <Content Include="bin\Microsoft.AI.WindowsServer.dll" />
-    <Content Include="bin\Microsoft.AI.WindowsServer.xml" />
-    <Content Include="bin\Microsoft.ApplicationInsights.dll" />
-    <Content Include="bin\Microsoft.ApplicationInsights.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
-    <Content Include="bin\Microsoft.Owin.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Facebook.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Facebook.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Google.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Google.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Twitter.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Twitter.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.xml" />
-    <Content Include="bin\Microsoft.Owin.xml" />
-    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
-    <Content Include="bin\Microsoft.Web.Services3.dll" />
-    <Content Include="bin\Microsoft.Web.XmlTransform.dll" />
-    <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
-    <Content Include="bin\NuGet.Core.dll" />
-    <Content Include="bin\Owin.dll" />
-    <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Helpers.xml" />
-    <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Mvc.xml" />
-    <Content Include="bin\System.Web.Optimization.dll" />
-    <Content Include="bin\System.Web.Optimization.xml" />
-    <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
-    <Content Include="bin\System.Web.WebPages.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.xml" />
-    <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -515,10 +444,6 @@
     <Content Include="images\sort_both.png" />
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
-    <Content Include="obj\Debug\CampanasDelDesierto_v1.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\CampanasDelDesierto_v1.dll" />
-    <Content Include="obj\Debug\CampanasDelDesierto_v1.pdb" />
-    <Content Include="obj\Debug\TempPE\Service References.Banxico.Reference.cs.dll" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -566,11 +491,6 @@
     <Content Include="App_Browsers\qt.browser" />
     <Content Include="images\Sorting icons.psd" />
     <Content Include="images\Thumbs.db" />
-    <Content Include="obj\Debug\CampanasDelDesierto_v1.csproj.GenerateResource.Cache" />
-    <Content Include="obj\Debug\CampanasDelDesierto_v1.csprojResolveAssemblyReference.cache" />
-    <Content Include="obj\Debug\CoreCompileInputs.cache" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Content Include="bin\CampanasDelDesierto_v1.dll.config" />
     <None Include="Properties\PublishProfiles\Produccion Campanas.pubxml" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\Pruebas Campanas.pubxml" />
@@ -804,17 +724,6 @@
     <EmbeddedResource Include="Migrations\201706180651254_concepto_pretamoYAbonoCapital.resx">
       <DependentUpon>201706180651254_concepto_pretamoYAbonoCapital.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.addedFiedl_liquidacionSemanal_timePeriod_precioDelDolar.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.addedFields_Retenciones_LiquidacionSemanal.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.cambioNombre_EmisionCheque_liquidacionSemanal.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.CAmpoNulleable_DepartamentoID_AdminDepartamentos.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.cantidad_ComprasProductos.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.conceptosYPagara_VentaACredito.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.Entidad_AdminDepartamentos.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.initialcommit.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.intoToString_pozo_PrestamoYAbonoCapital.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.retencionesLIst_in_LiquidacionSemanal.resources" />
-    <EmbeddedResource Include="obj\Debug\CampanasDelDesierto_v1.Migrations.sincronizandoBaseDeDatos.resources" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
