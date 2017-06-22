@@ -10,7 +10,8 @@ using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [AllowAnonymous]
     public class SucursalesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

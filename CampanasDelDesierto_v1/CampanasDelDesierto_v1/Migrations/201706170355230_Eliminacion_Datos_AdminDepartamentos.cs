@@ -7,7 +7,7 @@ namespace CampanasDelDesierto_v1.Migrations
     {
         public override void Up()
         {
-            AlterColumn("dbo.AspNetUsers", "nombre", c => c.String());
+            AlterColumn("dbo.AspNetUsers", "nombre", c => c.String(defaultValue:""));
             AlterColumn("dbo.AspNetUsers", "apellidoPaterno", c => c.String());
             AlterColumn("dbo.AspNetUsers", "apellidoMaterno", c => c.String());
             AlterColumn("dbo.AspNetUsers", "Email", c => c.String(maxLength: 256));

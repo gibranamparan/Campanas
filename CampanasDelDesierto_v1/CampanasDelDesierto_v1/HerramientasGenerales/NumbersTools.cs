@@ -50,7 +50,7 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
             /// </summary>
             /// <param name="value">Value to be converted</param>
             /// <returns></returns>
-            public static string Convert(decimal value)
+            public static string Convert(decimal value, string currency="")
             {
                 string digits, temp;
                 bool showThousands = false;
@@ -143,8 +143,10 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
                     }
                 }
 
+                //currency = string.IsNullOrEmpty(currency) ? currency : (currency + " ");
+
                 // Append fractional portion/cents
-                builder.AppendFormat("con {0:00}/100", (value - (long)value) * 100);
+                builder.AppendFormat(currency+" {0:00}/100", (value - (long)value) * 100);
 
                 // Capitalize first letter
                 return String.Format("{0}{1}",
