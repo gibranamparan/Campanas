@@ -26,7 +26,7 @@
           @Model.fechaPagar.Value.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
         </span>
                *<span id="mes">
-             @Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+             @(Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
         </span>
         <span id="año">
             @Model.fechaPagar.Value.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -40,7 +40,7 @@
                 @(((PrestamoYAbonoCapital)Model).Productor.fechaPagar)*@
         </span>
         <span id="mesfechaMovimiento">
-            @Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX"))
+            @(Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
         </span>
         <span id="añofechaMovimiento">
             @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
