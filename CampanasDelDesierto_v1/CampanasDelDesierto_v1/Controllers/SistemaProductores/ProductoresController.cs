@@ -19,7 +19,52 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Productores
         public ActionResult Index()
         {
-            return View(db.Productores.ToList());
+            var productores = db.Productores.Where(pro => pro.Desactivado == false).ToList();
+            return View(productores);
+        }
+        //Vista de ususarios desactivados
+        public ActionResult Desactivados()
+        {
+            var productores = db.Productores.Where(pro => pro.Desactivado == true).ToList();
+            return View(productores); 
+        }
+
+        //Accion para desactivar a un usuario
+        public ActionResult Desactivar(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Productor productor = db.Productores.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+
+            productor.Desactivado = true;
+            db.SaveChanges();
+            return RedirectToAction("Desactivados");
+        }
+
+        //Accion para desactivar a un usuario
+        public ActionResult Activar(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Productor productor = db.Productores.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+
+            productor.Desactivado = false;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // Post: INDEX

@@ -336,6 +336,10 @@
     <Compile Include="Migrations\201706231520023_datoDesactivadoEnProductor.Designer.cs">
       <DependentUpon>201706231520023_datoDesactivadoEnProductor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706231627286_CambioNombreAtributo.cs" />
+    <Compile Include="Migrations\201706231627286_CambioNombreAtributo.Designer.cs">
+      <DependentUpon>201706231627286_CambioNombreAtributo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
@@ -672,6 +676,7 @@
     <Content Include="Views\Account\Partial_UserForm.cshtml" />
     <Content Include="Views\Account\Delete.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Productores\Desactivados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -739,6 +744,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706231520023_datoDesactivadoEnProductor.resx">
       <DependentUpon>201706231520023_datoDesactivadoEnProductor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706231627286_CambioNombreAtributo.resx">
+      <DependentUpon>201706231627286_CambioNombreAtributo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

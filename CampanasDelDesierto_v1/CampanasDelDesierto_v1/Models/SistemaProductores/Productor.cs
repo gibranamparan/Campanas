@@ -51,7 +51,7 @@ namespace CampanasDelDesierto_v1.Models
         public string telefono { get; set; }
 
         [DisplayName("Desactivado")]
-        public bool desactivado { get; set; }
+        public bool Desactivado { get; set; }
 
 
         [DisplayFormat(DataFormatString = "{0:C}",
