@@ -131,8 +131,8 @@
                     <a href="@Url.Action("Details","Productores",new { id = item.idProductor })">
                         <i class="fa fa-money"></i> Movimientos
                     </a><br />
-                    <a href="@Url.Action("Delete","Productores",new { id = item.idProductor })">
-                        <i class="glyphicon glyphicon-remove"></i> Eliminar
+                    <a href="@Url.Action("Desactivar","Productores",new { id = item.idProductor })">
+                        <i class="glyphicon glyphicon-ban-circle"></i> Desactivar
                     </a>
                 </td>
             </tr>

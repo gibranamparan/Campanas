@@ -50,6 +50,10 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Teléfono")]
         public string telefono { get; set; }
 
+        [DisplayName("Desactivado")]
+        public bool desactivado { get; set; }
+
+
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [Display(Name ="Adeudo Anterior (USD)")]
