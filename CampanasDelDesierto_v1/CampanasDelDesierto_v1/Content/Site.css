@@ -67,7 +67,7 @@ input[readonly='readonly']{
 }
 
 input[disabled]{
-    background-color:lightgrey;
+    background-color:#eee;
 }
 
 /*Centers logo*/

@@ -102,5 +102,46 @@ namespace CampanasDelDesierto_v1.Models
                 }
             }
         }
+
+        public class VMRetencionReporteSemanal
+        {
+            [DisplayFormat(DataFormatString = "{0:0.00}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Garantia de la Semana")]
+            public decimal garantiaSemana { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:0.00}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Garantia Actual")]
+            public decimal garantiaActual { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:0.00}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Garantia Acumulada")]
+            public decimal garantiaAcumulada { get; set; }
+
+            public VMRetencionReporteSemanal(List<Retencion> retencionesDeSanidad, LiquidacionSemanal liquidacionReportada, Retencion.TipoRetencion tipo)
+            {
+                //Se toman todas las retenciones de sanidad anteriores al reporte actual
+                retencionesDeSanidad = retencionesDeSanidad.Where(mov => mov.tipoDeDeduccion == tipo
+                && mov.fechaMovimiento < liquidacionReportada.fechaMovimiento && mov.TemporadaDeCosechaID == liquidacionReportada.TemporadaDeCosechaID)
+                .OrderBy(mov => mov.fechaMovimiento).ToList();
+
+                //Retenciones de sanidad acumuladas hasta la fecha
+                this.garantiaAcumulada = Math.Abs(retencionesDeSanidad.Sum(mov => mov.montoMovimiento));
+                this.garantiaActual = Math.Abs(this.garantiaAcumulada);
+
+                Retencion ultimaRetencion = new Retencion();
+
+                //Se esta editando un reporte de liquidacion semanal
+                if (liquidacionReportada.idMovimiento != 0 && liquidacionReportada.retenciones!=null && liquidacionReportada.retenciones.Count() > 0)
+                {
+                    Retencion retActual = liquidacionReportada.retenciones.FirstOrDefault(mov => mov.tipoDeDeduccion == tipo);
+                    //garantiaActual = retActual.montoMovimiento;
+                    this.garantiaSemana = Math.Abs(retActual.montoMovimiento);
+                    this.garantiaAcumulada -= this.garantiaSemana;
+                }
+            }
+        }
     }
 }

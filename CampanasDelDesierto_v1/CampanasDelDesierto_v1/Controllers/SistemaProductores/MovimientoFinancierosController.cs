@@ -146,6 +146,7 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
+            int temporadaID = mov.TemporadaDeCosechaID;
             var prod = db.Productores.Find(mov.idProductor);
             bool retencionAbonoEliminado = false;
 
@@ -191,7 +192,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 numReg = prod.ajustarBalances(ultimoMovimiento, db);
             }
             
-            return RedirectToAction("Details", "Productores", new { id = mov.idProductor });
+            return RedirectToAction("Details", "Productores", new { id = mov.idProductor, temporada= temporadaID });
         }
 
         /// <summary>

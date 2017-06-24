@@ -114,12 +114,13 @@
         </h3>
     </div>
     <div class="panel-body">
+        @*Forma para consulta de ingresos de cosecha por semana*@
         <div class="row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @*Forma para consulta de ingresos de cosecha por semana*@
             @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Get, new {@class= "col-md-12" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.Hidden("temporada",Model.temporadaDeCosecha)
                 if (editMode) { 
                     @Html.Hidden("actualizar", true)
                 }
@@ -320,23 +321,37 @@
                     </div>
                 </div>
             </div>
-            }
+        }
+
+        @*Reporte de retenciones de sanidad*@
+        @Html.Partial("Partial_RetencionesSanidad",Model)
     </div>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        $("#formRetenciones input").keyup(function () {
-            var totalRetencion=0;
-            $.each($("#formRetenciones input"), function (idx, item) {
+        $("#formRetenciones input:even").keyup(function () {
+            var totalRetencion = 0;
+            //Por cada input de retencion, se suma el monto
+            $.each($("#formRetenciones input:even"), function (idx, item) {
                 totalRetencion += Number($(item).val());
             });
 
+            //Para el input de anticipo a abonos
             if ($(this).attr("id") == "abonoAnticipos") {
+                //Se visualiza el cambio del balance
                 $("#inputAbonoSemana").val($(this).val());
                 var saldoPagar = $("#balanceActual").val() - $(this).val()
                 $("#inputSaldoLiquidar").val(numeral(saldoPagar).format('0.00')).trigger('input');
+            }
+
+            //Para el input de garantia de sanidad
+            if ($(this).attr("id") == "garantiaLimpieza") {
+                //Se visualiza el cambio del balance
+                $("#reporteSemanal_garantiaSemana").val($(this).val());
+                var garantiaActual = Number($("#reporteSemanal_garantiaAcumulada").val()) + Number($(this).val())
+                $("#reporteSemanal_garantiaActual").val(numeral(garantiaActual).format('0.00'));
             }
 
             $("#inputTotalRetencion").val(numeral(totalRetencion).format('0.00')).trigger('input');
@@ -364,9 +379,7 @@
                 },
                 function (err) { },
                 function () {
-                    $("#loadingImg").toggleClass('hidden');@*
-                    $('#divPrecioDelDolar').removeClass('col-md-8');
-                    $('#divPrecioDelDolar').addClass('col-md-9');*@
+                    $("#loadingImg").toggleClass('hidden')
                 }, antiForgeryToken)
         }
         setPrecioDolar();

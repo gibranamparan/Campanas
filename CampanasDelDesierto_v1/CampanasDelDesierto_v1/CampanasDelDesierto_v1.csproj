@@ -668,6 +668,7 @@
     <Content Include="Views\Account\Partial_UserForm.cshtml" />
     <Content Include="Views\Account\Delete.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Partial_RetencionesSanidad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -56,7 +56,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             TemporadaDeCosecha tem = TemporadaDeCosecha.findTemporada(temporada);
             
-            ViewBag.temporadas = db.TemporadaDeCosechas.ToList();
+            ViewBag.temporadas = db.TemporadaDeCosechas.OrderByDescending(temp=> temp.fechaFin).ToList();
             ViewBag.temporada = tem.TemporadaDeCosechaID;
             ViewBag.temporadaSeleccionada = tem;
 
