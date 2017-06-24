@@ -669,6 +669,7 @@
     <Content Include="Views\Account\Delete.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Partial_RetencionesSanidad.cshtml" />
+    <Content Include="Views\Productores\Desactivados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
