@@ -1,0 +1,86 @@
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Productor>
+
+@{
+    ViewBag.Title = "Desactivados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Desactivados</h2>
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
+    </a>
+</div>
+
+<table class="table table-striped table-hover datatablejs">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.numProductor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreProductor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreCheque)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.domicilio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaIntegracion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RFC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.zona)
+            </th>
+            <th class="actions"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.numProductor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreProductor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreCheque)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.domicilio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaIntegracion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RFC)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.zona)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit","Productores",new { id = item.idProductor })">
+                            <i class="glyphicon glyphicon-pencil"></i> Editar
+                        </a><br />
+                        <a href="@Url.Action("Details","Productores",new { id = item.idProductor })">
+                            <i class="fa fa-money"></i> Movimientos
+                        </a><br />
+                        <a href="@Url.Action("Activar","Productores",new { id = item.idProductor })">
+                            <i class="glyphicon glyphicon-ban-circle"></i> Activar
+                        </a>
+                    </td>
+                </tr>
+            
+        }
+
+
+    </tbody>
+</table>
