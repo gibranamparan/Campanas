@@ -28,13 +28,11 @@
     </a> | 
     <a href="#" onclick="$('#formImportExcel').slideToggle()">
         <i class="fa fa-file-excel-o"></i> Importar de Excel
+    </a> |
+    <a href="@Url.Action("Desactivados")">
+        <i class="glyphicon glyphicon-arrow-right"></i>Productores desactivados
     </a>
 </p>
-<div>
-    <a href="@Url.Action("Desactivados")">
-        <i class="glyphicon glyphicon-arrow-right"></i>Lista de productores desactivados
-    </a>
-</div>
 @using (Html.BeginForm(null, null, FormMethod.Post,
     new { enctype = "multipart/form-data", @class = "form-inline",
         id ="formImportExcel", style="display:none" }))

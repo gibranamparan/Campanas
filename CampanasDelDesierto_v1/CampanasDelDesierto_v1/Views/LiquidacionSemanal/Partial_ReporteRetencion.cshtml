@@ -2,16 +2,22 @@
 @model CampanasDelDesierto_v1.Models.LiquidacionSemanal
 
 @{ 
+    string titulo = ViewData["titulo"] == null ? "" : (string)ViewData["titulo"];
+    Retencion.TipoRetencion tipo = ViewData["tipoRetencion"] == null ?
+        Retencion.TipoRetencion.OTRO : (Retencion.TipoRetencion)ViewData["tipoRetencion"];
+
     List<Retencion> retenciones = Model.Productor.MovimientosFinancieros
-        .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION).Cast<Retencion>().ToList();
-    LiquidacionSemanal.VMRetencionReporteSemanal reporteSemanal = new LiquidacionSemanal.VMRetencionReporteSemanal(retenciones,Model, Retencion.TipoRetencion.SANIDAD);
+.Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION).Cast<Retencion>().ToList();
+
+    LiquidacionSemanal.VMRetencionReporteSemanal reporteSemanal = new LiquidacionSemanal.VMRetencionReporteSemanal(retenciones,
+        Model, tipo);
 }
 
-<div class="panel panel-info">
+<div class="panel panel-info" >
     <div class="panel-heading">
-        <h3 class="panel-title">Acumulado de Retencion de Garantía de Sanidad</h3>
+        <h3 class="panel-title">@titulo</h3>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" id="pnlRetencion@(tipo)">
         <div class="form-group col-xs-4">
             @Html.LabelFor(model => reporteSemanal.garantiaAcumulada, new { @class = "control-label" })
             <p class="form-control-static">@Html.EditorFor(model => reporteSemanal.garantiaAcumulada, new { htmlAttributes = new { disabled = "disabled" } })</p>

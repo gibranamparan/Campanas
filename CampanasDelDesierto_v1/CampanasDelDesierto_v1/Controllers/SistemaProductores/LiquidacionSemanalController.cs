@@ -168,17 +168,6 @@ namespace CampanasDelDesierto_v1.Controllers
                 if (arrRetenciones.Count() > 0)
                     emisionDeCheque.retenciones = arrRetenciones;
 
-                //Si se registro un abono, se instancia
-                PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
-                if (retenciones.abonoAnticipos > 0)
-                {
-                    //Se crea un nuevo abono como retencion de esta liquidacion
-                    abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
-
-                    //Se marca para guardar
-                    emisionDeCheque.abonoAnticipo = abono;
-                }
-
                 db.LiquidacionesSemanales.Add(emisionDeCheque);
                 numReg = db.SaveChanges();
 
@@ -193,6 +182,18 @@ namespace CampanasDelDesierto_v1.Controllers
                         db.Entry(ingreso).State = EntityState.Modified;
                     }
 
+                    //Si se registro un abono, se instancia
+                    PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                    if (retenciones.abonoAnticipos > 0)
+                    {
+                        //Se crea un nuevo abono como retencion de esta liquidacion
+                        abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
+
+                        //Se marca para guardar
+                        db.Entry(abono).State = EntityState.Added;
+                    }
+
+                    //AJUSTE DE LA FECHA DE LA LIQUIDACION PARA ORDERNAR CON LAS RETENCIONES EN LA LISTA DE MOVIMIENTOS
                     //Se crea una nueva fecha igual en anio, mes y dia a la original del cheque
                     DateTime fechaMovimiento = new DateTime(emisionDeCheque.fechaMovimiento.Year,
                         emisionDeCheque.fechaMovimiento.Month, emisionDeCheque.fechaMovimiento.Day);

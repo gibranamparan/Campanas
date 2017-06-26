@@ -322,9 +322,25 @@
                 </div>
             </div>
         }
-
         @*Reporte de retenciones de sanidad*@
-        @Html.Partial("Partial_RetencionesSanidad",Model)
+        @{ 
+            ViewDataDictionary vddReporteSemanalSanidad = new ViewDataDictionary();
+            vddReporteSemanalSanidad.Add("titulo", "Acumulado de Retencion de Garantía de Sanidad");
+            vddReporteSemanalSanidad.Add("tipoRetencion", Retencion.TipoRetencion.SANIDAD);
+        }
+        @Html.Partial("Partial_ReporteRetencion", Model, vddReporteSemanalSanidad)
+
+        @*Reporte de retenciones ejidales*@
+        @*Solo se muestra si en esta temporada a este productor se le ha hecho una retencion ejidal antes*@
+        @if (productor.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == Model.TemporadaDeCosechaID)
+            .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+            .Where(mov=>((Retencion)mov).tipoDeDeduccion == Retencion.TipoRetencion.EJIDAL).Count() > 0)
+        {
+            ViewDataDictionary vddReporteSemanalEjidal = new ViewDataDictionary();
+            vddReporteSemanalEjidal.Add("titulo", "Acumulado de Retencion Ejidal");
+            vddReporteSemanalEjidal.Add("tipoRetencion", Retencion.TipoRetencion.EJIDAL);
+            @Html.Partial("Partial_ReporteRetencion", Model, vddReporteSemanalEjidal)
+        }
     </div>
 </div>
 
@@ -347,11 +363,16 @@
             }
 
             //Para el input de garantia de sanidad
-            if ($(this).attr("id") == "garantiaLimpieza") {
+            if ($(this).attr("id") == "garantiaLimpieza" || $(this).attr("id") == "retencionEjidal") {
+                //Se componen el selector de los campos del reporte por retencion segun la retencion modificada
+                var pnlSelector = $(this).attr("id") == "garantiaLimpieza" ? "pnlRetencionSANIDAD" :
+                    $(this).attr("id") == "retencionEjidal" ? "pnlRetencionEJIDAL" : "";
+                var selector = "#" + pnlSelector + " #reporteSemanal_";
+
                 //Se visualiza el cambio del balance
-                $("#reporteSemanal_garantiaSemana").val($(this).val());
-                var garantiaActual = Number($("#reporteSemanal_garantiaAcumulada").val()) + Number($(this).val())
-                $("#reporteSemanal_garantiaActual").val(numeral(garantiaActual).format('0.00'));
+                $(selector+"garantiaSemana").val($(this).val());
+                var garantiaActual = Number($(selector + "garantiaAcumulada").val()) + Number($(this).val())
+                $(selector + "garantiaActual").val(numeral(garantiaActual).format('0.00'));
             }
 
             $("#inputTotalRetencion").val(numeral(totalRetencion).format('0.00')).trigger('input');

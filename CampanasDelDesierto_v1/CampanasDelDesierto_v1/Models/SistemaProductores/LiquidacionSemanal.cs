@@ -107,17 +107,17 @@ namespace CampanasDelDesierto_v1.Models
         {
             [DisplayFormat(DataFormatString = "{0:0.00}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Garantia de la Semana")]
+            [Display(Name = "Retención de la Semana")]
             public decimal garantiaSemana { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:0.00}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Garantia Actual")]
+            [Display(Name = "Retención Actual")]
             public decimal garantiaActual { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:0.00}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = "Garantia Acumulada")]
+            [Display(Name = "Retención Acumulada")]
             public decimal garantiaAcumulada { get; set; }
 
             public VMRetencionReporteSemanal(List<Retencion> retencionesDeSanidad, LiquidacionSemanal liquidacionReportada, Retencion.TipoRetencion tipo)

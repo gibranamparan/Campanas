@@ -55,7 +55,9 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Divisa")]
         public string divisa { get; set; }
-        
+
+        public int? abonoEnliquidacionID { get; set; }
+
         public static class TipoMovimientoCapital
         {
             public static readonly string ABONO = "ABONO";
@@ -95,6 +97,7 @@ namespace CampanasDelDesierto_v1.Models
         public static PrestamoYAbonoCapital nuevaRentecionAbono(LiquidacionSemanal ls, decimal monto)
         {
             PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+            //abono.liquidacionDondeAbonaID = ls.idMovimiento;
             abono.fechaMovimiento = ls.fechaMovimiento.AddSeconds(-5);
             abono.precioDelDolar = ls.precioDelDolarEnLiquidacion;
             abono.concepto = "ABONO EN LIQUIDACION (CH:" + ls.cheque + ")";
@@ -102,6 +105,7 @@ namespace CampanasDelDesierto_v1.Models
             abono.TemporadaDeCosechaID = ls.TemporadaDeCosechaID;
             abono.idProductor = ls.idProductor;
             abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+            abono.abonoEnliquidacionID = ls.idMovimiento;
 
             return abono;
         }

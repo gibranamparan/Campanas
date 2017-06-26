@@ -55,26 +55,32 @@
                         @Html.DisplayFor(modelItem => item.balance)
                     </td>
                     <td>
-                        <div class="dropdown_actions">
-                            <button onclick="openActionsDropDown(this)"
-                                    class="dropbtn btn btn-default">
-                                <i class="glyphicon glyphicon-option-horizontal"></i>
-                            </button>
-                            <div id="myDropdown"
-                                 class="dropdown-content">
-                                <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
-                                    <i class="glyphicon glyphicon-edit"></i> Editar
-                                </a>
+                        @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
+                            ademas no es un ingreso de de cosecha ya reportado como liquidado*@
+                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                                && ((PrestamoYAbonoCapital)item).abonoEnliquidacionID != null)
+                            ) {
+                            <div class="dropdown_actions">
+                                <button onclick="openActionsDropDown(this)"
+                                        class="dropbtn btn btn-default">
+                                    <i class="glyphicon glyphicon-option-horizontal"></i>
+                                </button>
+                                <div id="myDropdown"
+                                     class="dropdown-content">
+                                    <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
+                                        <i class="glyphicon glyphicon-edit"></i> Editar
+                                    </a>
 
-                                <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                    <i class="glyphicon glyphicon-print"></i> Detalles
-                                </a>
+                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                        <i class="glyphicon glyphicon-print"></i> Detalles
+                                    </a>
 
-                                <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                    <i class="glyphicon glyphicon-remove"></i> Borrar
-                                </a>
+                                    <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                        <i class="glyphicon glyphicon-remove"></i> Borrar
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </td>
                 </tr>
             }

@@ -332,6 +332,14 @@
     <Compile Include="Migrations\201706221935145_montoPesos_Capital.Designer.cs">
       <DependentUpon>201706221935145_montoPesos_Capital.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706231520023_datoDesactivadoEnProductor.cs" />
+    <Compile Include="Migrations\201706231520023_datoDesactivadoEnProductor.Designer.cs">
+      <DependentUpon>201706231520023_datoDesactivadoEnProductor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706262003010_liquidacionID_abonos.cs" />
+    <Compile Include="Migrations\201706262003010_liquidacionID_abonos.Designer.cs">
+      <DependentUpon>201706262003010_liquidacionID_abonos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
@@ -668,7 +676,7 @@
     <Content Include="Views\Account\Partial_UserForm.cshtml" />
     <Content Include="Views\Account\Delete.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
-    <Content Include="Views\LiquidacionSemanal\Partial_RetencionesSanidad.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Partial_ReporteRetencion.cshtml" />
     <Content Include="Views\Productores\Desactivados.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -734,6 +742,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706221935145_montoPesos_Capital.resx">
       <DependentUpon>201706221935145_montoPesos_Capital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706231520023_datoDesactivadoEnProductor.resx">
+      <DependentUpon>201706231520023_datoDesactivadoEnProductor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706262003010_liquidacionID_abonos.resx">
+      <DependentUpon>201706262003010_liquidacionID_abonos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

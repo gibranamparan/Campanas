@@ -53,7 +53,6 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Desactivado")]
         public bool Desactivado { get; set; }
 
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [Display(Name ="Adeudo Anterior (USD)")]
