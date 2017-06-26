@@ -109,7 +109,8 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor")] MovimientoFinanciero movimientoFinanciero)
+        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor")]
+            MovimientoFinanciero movimientoFinanciero)
         {
             if (ModelState.IsValid)
             {

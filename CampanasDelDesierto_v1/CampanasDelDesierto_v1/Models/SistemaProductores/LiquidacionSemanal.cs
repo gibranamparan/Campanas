@@ -124,7 +124,7 @@ namespace CampanasDelDesierto_v1.Models
             {
                 //Se toman todas las retenciones de sanidad anteriores al reporte actual
                 retencionesDeSanidad = retencionesDeSanidad.Where(mov => mov.tipoDeDeduccion == tipo
-                && mov.fechaMovimiento < liquidacionReportada.fechaMovimiento && mov.TemporadaDeCosechaID == liquidacionReportada.TemporadaDeCosechaID)
+                && mov.fechaMovimiento.Date <= liquidacionReportada.fechaMovimiento.Date && mov.TemporadaDeCosechaID == liquidacionReportada.TemporadaDeCosechaID)
                 .OrderBy(mov => mov.fechaMovimiento).ToList();
 
                 //Retenciones de sanidad acumuladas hasta la fecha

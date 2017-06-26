@@ -190,7 +190,8 @@ namespace CampanasDelDesierto_v1.Controllers
                         abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
 
                         //Se marca para guardar
-                        db.Entry(abono).State = EntityState.Added;
+                        //db.Entry(abono).State = EntityState.Added;
+                        emisionDeCheque.abonoAnticipo = abono;
                     }
 
                     //AJUSTE DE LA FECHA DE LA LIQUIDACION PARA ORDERNAR CON LAS RETENCIONES EN LA LISTA DE MOVIMIENTOS
@@ -204,7 +205,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se guardan cambios de ajuste de hora del movimiento y los pagos
                     db.Entry(emisionDeCheque).State = EntityState.Modified;
-                    db.SaveChanges();
+                    numReg = db.SaveChanges();
 
                     //Se ajusta el abalance si se registro una retencion por abono
                     if (abono.idMovimiento > 0) { 
@@ -355,6 +356,7 @@ namespace CampanasDelDesierto_v1.Controllers
                             //Se modifica y marca para ser editada
                             abono.montoMovimiento = -newRet.montoMovimiento;
                             abono.fechaMovimiento = newRet.fechaMovimiento;
+                            abono.concepto = "ABONO EN LIQUIDACION (CH:" + emisionDeCheque.cheque + ")";
                             db.Entry(abono).State = EntityState.Modified;
                         }
                     }
