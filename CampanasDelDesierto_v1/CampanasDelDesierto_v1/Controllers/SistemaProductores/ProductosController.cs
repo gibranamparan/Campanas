@@ -16,6 +16,7 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class ProductosController : Controller
     {
+        public const string BIND_FIELDS = "nombreProducto,costo,descripcion,concepto,UnidadMedida,isArbolAceituna,idProducto";
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activos
@@ -68,12 +69,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "nombreProducto,costo,descripcion,concepto")]
+        public ActionResult Create([Bind(Include = BIND_FIELDS)]
             Producto producto, string UnidadMedida)
         {
             if (ModelState.IsValid)
             {
-                producto.UnidadMedida = Producto.UnidadDeMedida.GetByName(UnidadMedida);
                 db.Productos.Add(producto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -94,7 +94,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UnidadMedida = producto.UnidadMedida.nombre;
+            ViewBag.UnidadMedida = producto.abreviacionUM.nombre;
             return View(producto);
         }
 
@@ -103,12 +103,11 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idProducto,nombreProducto,costo,descripcion,concepto")]
-            Producto producto, string UnidadMedida)
+        public ActionResult Edit([Bind(Include = BIND_FIELDS)]
+            Producto producto)
         {
             if (ModelState.IsValid)
             {
-                producto.UnidadMedida = Producto.UnidadDeMedida.GetByName(UnidadMedida);
                 db.Entry(producto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

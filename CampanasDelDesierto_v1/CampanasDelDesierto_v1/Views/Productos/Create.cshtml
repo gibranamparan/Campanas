@@ -46,11 +46,11 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    @Html.LabelFor(model => model.UnidadMedida, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.unidadMedida, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.UnidadMedida,
+                        @Html.DropDownListFor(model => model.unidadMedida,
                     Producto.getUnidadesDeMedida(), new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.UnidadMedida, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.unidadMedida, "", new { @class = "text-danger" })
                     </div>
                 </div>
 

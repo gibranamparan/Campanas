@@ -127,13 +127,35 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Arroja verdadero si el movimiento es un prestamo u abono (movimientos de capital) o una venta a credito.
+        /// Arroja verdadero si el movimiento es una venta a credito de arbol de olivo.
+        /// </summary>
+        /// <returns></returns>
+        public bool isVentaDeOlivo()
+        {
+            bool hayOlivo = false;
+            bool tom = this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO;
+            if (tom)
+            {
+                VentaACredito ven = ((VentaACredito)this);
+                foreach(var com in ven.ComprasProductos)
+                    if(com.Producto.isArbolAceituna)
+                    {
+                        hayOlivo = true;
+                        break;
+                    }
+            }
+            return tom && hayOlivo;
+        }
+
+        /// <summary>
+        /// Arroja verdadero si el movimiento es un prestamo u abono (movimientos de capital) o 
+        /// una venta a credito (exceptuando ventas de arbol de olivo).
         /// </summary>
         /// <returns></returns>
         public bool isAbonoOPrestamo()
         {
             var tom = this.getTypeOfMovement();
-            return tom == TypeOfMovements.CAPITAL || tom == TypeOfMovements.VENTA_A_CREDITO;
+            return tom == TypeOfMovements.CAPITAL || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
         }
 
         /// <summary>

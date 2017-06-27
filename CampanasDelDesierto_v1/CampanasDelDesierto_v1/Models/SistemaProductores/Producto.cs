@@ -32,7 +32,7 @@ namespace CampanasDelDesierto_v1.Models
                 this.costo = decimal.Parse(rowProducto.ElementAt((int)ExcelColumns.PRECIO).Value.ToString());
                 string unidadMedida = rowProducto.ElementAt((int)ExcelColumns.UM).Value.ToString();
 
-                this.UnidadMedida = Producto.UnidadDeMedida.GetByName(unidadMedida);
+                this.unidadMedida = unidadMedida.Replace("(s)", "").Trim();
             }
             catch (NullReferenceException exc)
             {
@@ -77,18 +77,15 @@ namespace CampanasDelDesierto_v1.Models
         [DataType(DataType.MultilineText)]
         public string descripcion { get; set; }
 
-        private string unidadMedida { get; set; }
+        [Display(Name = "um.")]
+        public string unidadMedida { get; set; }
 
         [Display(Name = "um.")]
-        public UnidadDeMedida UnidadMedida
+        public UnidadDeMedida abreviacionUM
         {
             get
             {
                 return UnidadDeMedida.GetByName(this.unidadMedida);
-            }
-            set
-            {
-                this.unidadMedida = value.nombre;
             }
         }
 
@@ -136,6 +133,13 @@ namespace CampanasDelDesierto_v1.Models
                         //Si el registro no se encontró, se agrega
                         if (productoDB == null)
                             db.Productos.Add(productoReg);
+                        else
+                        {
+                            productoDB.costo = productoReg.costo;
+                            productoDB.descripcion = productoReg.descripcion;
+                            productoDB.unidadMedida = productoReg.unidadMedida;
+                            db.Entry(productoDB).State = System.Data.Entity.EntityState.Modified;
+                        }
                     }
                     else
                         errores.Add(error);
@@ -174,7 +178,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public override string ToString()
         {
-            return String.Format("{0}, {1}, UM: {2}", this.nombreProducto, this.costo, this.UnidadMedida);
+            return String.Format("{0}, {1}, UM: {2}", this.nombreProducto, this.costo, this.abreviacionUM);
         }
 
         public class UnidadDeMedida

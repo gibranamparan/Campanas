@@ -17,7 +17,17 @@ namespace CampanasDelDesierto_v1.Models
 
         public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
 
-        public new string concepto { get { return this.nombreDeMovimiento; } }
+        public new string concepto { get {
+                string res = String.Empty;
+                foreach(var com in this.ComprasProductos)
+                    res += com.Producto.nombreProducto+",";
+                res = res.TrimEnd(',');
+                if (res.Length > 60) { 
+                    res = res.Substring(0, 60);
+                    res += "...";
+                }
+                return res;
+            } }
 
         public new void ajustarMovimiento()
         {
