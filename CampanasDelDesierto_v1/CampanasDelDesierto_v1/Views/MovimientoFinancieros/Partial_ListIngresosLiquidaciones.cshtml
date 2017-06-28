@@ -7,7 +7,7 @@
     @*Solo prestamos y abonos*@
     List<MovimientoFinanciero> movimientos = Model.MovimientosFinancieros
         .Where(mov => mov.TemporadaDeCosechaID == temporada)
-            .Where(mov => mov.isMovimientoDeLiquidacion())
+            .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)
         .OrderBy(mov => mov.fechaMovimiento).ToList();
 
     movimientos = movimientos.OrderBy(mov => mov.fechaMovimiento).ToList();

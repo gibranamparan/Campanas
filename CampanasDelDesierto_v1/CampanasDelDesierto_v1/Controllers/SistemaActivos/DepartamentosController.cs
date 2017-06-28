@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using CampanasDelDesierto_v1.Models;
 
 namespace CampanasDelDesierto_v1.Controllers
@@ -20,8 +21,18 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Departamentos
         public async Task<ActionResult> Index()
         {
-            var departamentos = db.Departamentos.Include(d => d.Sucursal);
-            return View(await departamentos.ToListAsync());
+            if (User.IsInRole(ApplicationUser.RoleNames.ADMIN)) {
+                //Se muestra el listado de todos los departamentos si es admin general
+                var departamentos = db.Departamentos.Include(d => d.Sucursal);
+                return View(await departamentos.ToListAsync());
+             } else if (User.IsInRole(ApplicationUser.RoleNames.DEPARTAMENTO)) {
+                //Si es admin de departamento, se muestran los detalles de su departamento
+                var userID = User.Identity.GetUserId();
+                AdminDepartamento adminDep = db.AdminsDepartamentos.Find(userID);
+                return RedirectToAction("Details", new { id = adminDep.departamentoID });
+             }
+
+            return View();
         }
 
         // GET: Departamentos/Details/5

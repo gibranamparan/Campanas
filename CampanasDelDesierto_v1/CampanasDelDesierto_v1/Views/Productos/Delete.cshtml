@@ -5,9 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
+    </a>
+</div>
+
+
 <h2>Eliminar</h2>
 
-<h3>¿Estás seguro que quieres eliminar esto?</h3>
+<h3>¿Estás seguro que quieres eliminar este registro?</h3>
 <div>
     <h4>Producto</h4>
     <hr />
@@ -27,15 +34,6 @@
         <dd>
             @Html.DisplayFor(model => model.costo)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.estado)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.descripcion)
         </dt>
@@ -54,13 +52,6 @@
                 <button class="btn btn-danger">Eliminar</button>
             </div>
         </div>
-        <div>
-            <a href="@Url.Action("Index")">
-                <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-            </a>
-        </div>
-
-
     }
    
 </div>

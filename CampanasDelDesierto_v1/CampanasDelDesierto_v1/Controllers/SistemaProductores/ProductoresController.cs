@@ -126,6 +126,7 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 //Si existe adeudo anterior, se introduce como movimiento de anticipo con
                 //dicho concepto
                 if (productor.adeudoAnterior > 0)

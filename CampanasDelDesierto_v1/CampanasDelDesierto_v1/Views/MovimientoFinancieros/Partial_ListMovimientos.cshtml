@@ -7,7 +7,7 @@
     @*Solo prestamos y abonos*@
     var movimientos = Model.MovimientosFinancieros
         .Where(mov => mov.TemporadaDeCosechaID == temporada)
-        .Where(mov => mov.isAbonoOPrestamo())
+        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
         .OrderBy(mov=>mov.fechaMovimiento).ToList();
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }

@@ -12,30 +12,53 @@ namespace CampanasDelDesierto_v1.Models
         [Key]
         public int idMovimiento { get; set; }
 
+        /// <summary>
+        /// Representa el movimiento de capital neto para esta instancia.
+        /// </summary>
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [Display(Name = "Monto (USD)")]
         public decimal montoMovimiento { get; set; }
 
+        /// <summary>
+        /// Almacena el balance correspondiente al hacerse este movimiento con respecto a todos los movimientos
+        /// introducidos dentro del mismo balance ordenados por orden cronológico. Acceder a tipoDeBalance para
+        /// determinar dentro de que tipo entra esta instancia.
+        /// </summary>
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [Display(Name = "Balance (USD)")]
         public decimal balance { get; set; }
 
+        /// <summary>
+        /// Fecha en la que se realizó el movimiento.
+        /// </summary>
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
         ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha")]
         public DateTime fechaMovimiento { get; set; }
 
-        //Todos los movimientos financieros le corresponden a un solo productor
+        /// <summary>
+        /// Llave primaria del productor al que le responde la instancia del movimiento.
+        /// Todos los movimientos financieros le corresponden a un productor.
+        /// </summary>
         public int idProductor { get; set; }
+
+        /// <summary>
+        /// Instancia virtual del productor al que le responde la instancia del movimiento.
+        /// A una instancia de productor le corresponden muchos movimientos.
+        /// </summary>
         public virtual Productor Productor { get; set; }
 
         //Cada movimiento entra dentro de un periodo de cosecha previamente aperturado
         public int TemporadaDeCosechaID { get; set; }
         public virtual TemporadaDeCosecha temporadaDeCosecha { get; set; }
 
+        /// <summary>
+        /// Propiedad padre de concepto la cual determina que concepto desplegar segun el tipo de movimiento
+        /// al que corresponda la presente instancia.
+        /// </summary>
         [DisplayName("Concepto")]
         public string concepto { get {
                 string res = String.Empty;
@@ -53,6 +76,9 @@ namespace CampanasDelDesierto_v1.Models
                 return string.IsNullOrEmpty(res)?String.Empty:res;
             } }
 
+        /// <summary>
+        /// Despliega el nombre en String del tipo de movimiento al que corresponde la presente instancia.
+        /// </summary>
         [Display(Name = "Tipo")]
         public string nombreDeMovimiento
         {
@@ -75,6 +101,34 @@ namespace CampanasDelDesierto_v1.Models
                     return "";
             }
         }
+
+        /// <summary>
+        /// Enumeracion de tipos de balances bajo los que se que agrupan los diferentes movimientos financieros.
+        /// </summary>
+        public enum TipoDeBalance
+        {
+            NONE, CAPITAL_VENTAS, VENTA_OLIVO, MOV_LIQUIDACION
+        }
+
+        /// <summary>
+        /// Arroja el tipo de balance correspondiente a esta instancia segun su tipo de movimiento y
+        /// características particulares. Ver los metodos isVentaDeOlivo(), isAbonoOPrestamo() y 
+        /// isMovimientoDeLiquidacion().
+        /// </summary>
+        public TipoDeBalance tipoDeBalance { get
+            {
+                if (this.isAbonoOPrestamo())
+                {
+                    return TipoDeBalance.CAPITAL_VENTAS;
+                } else if (this.isMovimientoDeLiquidacion())
+                {
+                    return TipoDeBalance.MOV_LIQUIDACION;
+                } else if (this.isVentaDeOlivo())
+                {
+                    return TipoDeBalance.VENTA_OLIVO;
+                }
+                return TipoDeBalance.NONE;
+            } }
 
         /// <summary>
         /// Enumerador de tipos de movimientos
@@ -137,12 +191,15 @@ namespace CampanasDelDesierto_v1.Models
             if (tom)
             {
                 VentaACredito ven = ((VentaACredito)this);
-                foreach(var com in ven.ComprasProductos)
-                    if(com.Producto.isArbolAceituna)
-                    {
-                        hayOlivo = true;
-                        break;
-                    }
+                //Si al menos un arbol de olivo se ha vendido, la venta se marca y 
+                //se acaba la busqueda
+                if(ven.ComprasProductos !=null)
+                    foreach(var com in ven.ComprasProductos)
+                        if(com.producto.isArbolAceituna)
+                        {
+                            hayOlivo = true;
+                            break;
+                        }
             }
             return tom && hayOlivo;
         }

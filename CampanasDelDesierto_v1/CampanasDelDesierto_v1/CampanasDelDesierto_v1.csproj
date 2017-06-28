@@ -346,7 +346,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\SistemaProductores\AdminDepartamento.cs" />
+    <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
@@ -547,6 +547,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Views\Productores\Desactivados.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -681,7 +682,6 @@
     <Content Include="Views\Account\Delete.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Partial_ReporteRetencion.cshtml" />
-    <Content Include="Views\Productores\Desactivados.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListVentaOlivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
