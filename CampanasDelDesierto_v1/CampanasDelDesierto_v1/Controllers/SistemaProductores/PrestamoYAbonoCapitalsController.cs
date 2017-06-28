@@ -129,7 +129,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 {
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,
+                        MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db);
@@ -179,7 +180,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 if (numreg > 0) { 
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
                 }
@@ -201,7 +202,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             //Se calcula el ultimo movimiento antes de guardar el nuevo
             var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-            MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento);
+            MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
 
             db.MovimientosFinancieros.Remove(prestamoYAbonoCapital);
             int numReg = db.SaveChanges();

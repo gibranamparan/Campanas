@@ -187,7 +187,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 && (mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION || retencionAbonoEliminado))
             {
                 //Se calcula el ultimo movimiento anterior al que se desea eliminar
-                MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento);
+                MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento, mov.tipoDeBalance);
 
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                 numReg = prod.ajustarBalances(ultimoMovimiento, db);

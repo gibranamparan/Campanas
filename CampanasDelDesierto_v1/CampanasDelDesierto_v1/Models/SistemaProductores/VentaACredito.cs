@@ -20,7 +20,7 @@ namespace CampanasDelDesierto_v1.Models
         public new string concepto { get {
                 string res = String.Empty;
                 foreach(var com in this.ComprasProductos)
-                    res += com.Producto.nombreProducto+",";
+                    res += com.producto.nombreProducto+",";
                 res = res.TrimEnd(',');
                 if (res.Length > 60) { 
                     res = res.Substring(0, 60);

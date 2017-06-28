@@ -124,8 +124,11 @@ namespace CampanasDelDesierto_v1.Models
         internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db)
         {
             /*Primeor se filtra pagos de producto y cheques*/
+            /*var movimientos = this.MovimientosFinancieros
+                .Where(mov => mov.isAbonoOPrestamo());*/
+
             var movimientos = this.MovimientosFinancieros
-                .Where(mov => mov.isAbonoOPrestamo());
+                .Where(mov => mov.tipoDeBalance == ultimoMovimiento.tipoDeBalance);
 
             /*Tomando como referencia el ultimo movimiento anterior al recien modificado, se toman
             todos los registros posteriores a este, en caso de que el recien modificado sea el 1ro,
@@ -279,19 +282,35 @@ namespace CampanasDelDesierto_v1.Models
             return m;
         }
 
-        internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento)
+        /// <summary>
+        /// Busca el ultimo movimiento hecho en la fecha indicada por el argumento.
+        /// 
+        /// </summary>
+        /// <param name="fechaMovimiento"></param>
+        /// <returns></returns>
+        internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento, MovimientoFinanciero.TipoDeBalance tipoBalance)
         {
+            /*
             var movs = this.MovimientosFinancieros
                 .Where(mov => mov.isAbonoOPrestamo())
+                .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
+                .OrderByDescending(mov => mov.fechaMovimiento)
+                .Take(2).ToList();*/
+
+            //Se busca el ultimo movimiento anterior a la fecha de referencia dentro del mismo tipo de balance
+            var movs = this.MovimientosFinancieros
+                .Where(mov => tipoBalance == MovimientoFinanciero.TipoDeBalance.NONE?
+                    true : mov.tipoDeBalance == tipoBalance)
                 .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
                 .OrderByDescending(mov => mov.fechaMovimiento)
                 .Take(2).ToList();
 
             MovimientoFinanciero m;
+            //Si hay resultados, se toma el resultado
             if (movs.Count() > 0)
-                m = null;
-            else
                 m = movs.ElementAt(movs.Count() - 1);
+            else // Si no, se establece como nulo
+                m = null;
 
             return m;
         }

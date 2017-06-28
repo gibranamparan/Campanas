@@ -14,7 +14,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
-    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class AccountController : Controller
     {
         
@@ -64,7 +63,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult Delete(string id)
         {
             //Se busca el alumno a eliminar mediante el Id
@@ -78,7 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
         public ActionResult DeleteConfirmed(string id)
         {
             var usuario = db.Users.Find(id);

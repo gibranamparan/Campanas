@@ -14,6 +14,9 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class VentaACreditosController : Controller
     {
+        public const string BIND_FORM  = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
+            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta";
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: VentaACreditos
@@ -75,8 +78,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta")]
+        public ActionResult Create([Bind(Include = BIND_FORM)]
             VentaACredito ventaACredito, string  compras)
         {
             if (ModelState.IsValid)
@@ -96,9 +98,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
+                    ventaACredito.ComprasProductos.ToList().ForEach(com => db.Entry(com).Reference(p => p.producto).Load());
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(ventaACredito.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);
@@ -136,8 +139,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor,"+
-            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta")] VentaACredito ventaACredito, string compras)
+        public ActionResult Edit([Bind(Include = BIND_FORM)] VentaACredito ventaACredito, string compras)
         {
             if (ModelState.IsValid)
             {
@@ -165,7 +167,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 {
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(ventaACredito.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db);

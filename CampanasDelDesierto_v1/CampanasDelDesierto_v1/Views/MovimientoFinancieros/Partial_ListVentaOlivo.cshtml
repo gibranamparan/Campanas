@@ -7,7 +7,7 @@
     @*Solo ventas de olivo*@
     var movimientos = Model.MovimientosFinancieros
         .Where(mov => mov.TemporadaDeCosechaID == temporada)
-        .Where(mov => mov.isVentaDeOlivo())
+        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
         .OrderBy(mov=>mov.fechaMovimiento).ToList();
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }

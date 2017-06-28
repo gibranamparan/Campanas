@@ -211,7 +211,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     if (abono.idMovimiento > 0) { 
                         //Se calcula el movimiento anterior al que se esta registrando
                         var prod = db.Productores.Find(abono.idProductor);
-                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db);
@@ -395,7 +395,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     {
                         //Se calcula el movimiento anterior al que se esta registrando
                         var prod = db.Productores.Find(abono.idProductor);
-                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db);
