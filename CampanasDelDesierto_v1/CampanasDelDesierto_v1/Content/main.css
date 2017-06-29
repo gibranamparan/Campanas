@@ -2127,8 +2127,9 @@ Css pesonalisado
 			}
 
 	strong, b {
-		color: #3d4449;
+		color: #100000;
 		font-weight: 600;
+        font-style: italic;
 	}
 
 	em, i {
