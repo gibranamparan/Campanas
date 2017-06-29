@@ -195,10 +195,10 @@
     <script>
         $().ready(function () {
             $("#tipoDeMovimientoDeCapital").change(function () {
-                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO")
-                    $("#formGroupDeuda").slideUp();
-                else
+                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO")
                     $("#formGroupDeuda").slideDown();
+                else
+                    $("#formGroupDeuda").slideUp();
 
                 $("#proveedor").trigger("change");
             })

@@ -59,14 +59,34 @@ namespace CampanasDelDesierto_v1.Models
         public decimal? adeudoAnterior { get; set; }
 
         [DisplayName("Balance Actual (USD)")]
-        public decimal balanceActual {
-            get {
-                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) { 
+        public decimal balanceActual
+        {
+            get
+            {
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
                     decimal balance = this.MovimientosFinancieros
-                        .Where(mov=>mov.isAbonoOPrestamo())
+                        .Where(mov => mov.isAbonoOPrestamo())
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
-                }else return 0;
+                }
+                else return 0;
+            }
+        }
+
+        [DisplayName("Balance Actual por Árboles (USD)")]
+        public decimal balanceActualArboles
+        {
+            get
+            {
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
+                    decimal balance = this.MovimientosFinancieros
+                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
+                        .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                    return balance;
+                }
+                else return 0;
             }
         }
 
@@ -121,14 +141,15 @@ namespace CampanasDelDesierto_v1.Models
         /// desde la fecha inicial indicada.
         /// </summary>
         /// <param name="fechaInicial">Fecha desde la cual se comienzan a corregir los balances.</param>
-        internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db)
+        internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db,
+            MovimientoFinanciero.TipoDeBalance tipoBalance)
         {
             /*Primeor se filtra pagos de producto y cheques*/
             /*var movimientos = this.MovimientosFinancieros
                 .Where(mov => mov.isAbonoOPrestamo());*/
 
             var movimientos = this.MovimientosFinancieros
-                .Where(mov => mov.tipoDeBalance == ultimoMovimiento.tipoDeBalance);
+                .Where(mov => mov.tipoDeBalance == tipoBalance);
 
             /*Tomando como referencia el ultimo movimiento anterior al recien modificado, se toman
             todos los registros posteriores a este, en caso de que el recien modificado sea el 1ro,
@@ -301,7 +322,7 @@ namespace CampanasDelDesierto_v1.Models
             var movs = this.MovimientosFinancieros
                 .Where(mov => tipoBalance == MovimientoFinanciero.TipoDeBalance.NONE?
                     true : mov.tipoDeBalance == tipoBalance)
-                .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
+                .Where(mov => mov.fechaMovimiento < fechaMovimiento)
                 .OrderByDescending(mov => mov.fechaMovimiento)
                 .Take(2).ToList();
 

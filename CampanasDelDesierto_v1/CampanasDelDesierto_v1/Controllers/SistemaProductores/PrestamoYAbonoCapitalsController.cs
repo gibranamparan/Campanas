@@ -130,10 +130,10 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,
-                        MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                        prestamoYAbonoCapital.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento,db);
+                    prod.ajustarBalances(ultimoMovimiento,db, prestamoYAbonoCapital.tipoDeBalance);
 
                     return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
                         temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
@@ -182,7 +182,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);
+                    prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
                 }
                 return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
                     temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
@@ -210,7 +210,7 @@ namespace CampanasDelDesierto_v1.Controllers
             if (numReg > 0)
             {
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                numReg = prod.ajustarBalances(ultimoMovimiento, db);
+                numReg = prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
             }
 
             return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });

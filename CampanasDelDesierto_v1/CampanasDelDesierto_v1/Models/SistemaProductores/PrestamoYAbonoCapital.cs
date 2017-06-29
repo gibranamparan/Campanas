@@ -13,7 +13,10 @@ namespace CampanasDelDesierto_v1.Models
     {
         [Display(Name = "Cheque/Folio")]
         public string cheque { get; set; }
-
+        
+        /// <summary>
+        /// Indica el tipo de movimiento de Abono O Capital, este puede ser ABONO, ANTICIPO, ABONO A ARBOLES
+        /// </summary>
         [Display(Name = "Tipo de Movimiento")]
         public string tipoDeMovimientoDeCapital { get; set; }
 
@@ -62,6 +65,7 @@ namespace CampanasDelDesierto_v1.Models
         {
             public static readonly string ABONO = "ABONO";
             public static readonly string PRESTAMO = "ANTICIPO";
+            public static readonly string ABONO_ARBOLES = "ABONO A ARBOLES";
         }
 
         public static class Divisas
@@ -82,8 +86,9 @@ namespace CampanasDelDesierto_v1.Models
             //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
             if (this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                 this.montoMovimiento *= -1;
-            else if (this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) { 
-                this.proveedor = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+            else if (this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
+                || this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) { 
+                this.proveedor = this.tipoDeMovimientoDeCapital; //confirmar
                 this.fechaPagar = null;
             }
 
@@ -94,7 +99,7 @@ namespace CampanasDelDesierto_v1.Models
             base.ajustarMovimiento();
         }
 
-        public static PrestamoYAbonoCapital nuevaRentecionAbono(LiquidacionSemanal ls, decimal monto)
+        public static PrestamoYAbonoCapital nuevaRentecionAbono(LiquidacionSemanal ls, decimal monto, string tipoCapital)
         {
             PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
             //abono.liquidacionDondeAbonaID = ls.idMovimiento;
@@ -106,6 +111,7 @@ namespace CampanasDelDesierto_v1.Models
             abono.idProductor = ls.idProductor;
             abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
             abono.abonoEnliquidacionID = ls.idMovimiento;
+            abono.tipoDeMovimientoDeCapital = tipoCapital;
 
             return abono;
         }
@@ -119,14 +125,36 @@ namespace CampanasDelDesierto_v1.Models
             return new SelectList(opciones,"Value","Text");
         }
 
-        public static Object[] getTipoMovimientoCapitalArray()
+        /// <summary>
+        /// Arroja una lista de opciones correspondientes a los tipos de movimiento de capital posibles que son PRESTAMO, 
+        /// ABONO  y ABONO A ARBOLES.
+        /// </summary>
+        /// <param name="soloAbonos">Por defecto es falso, en caso de ser verdadero, arroja una lista de opciones donde solamente se ven
+        /// los nombres de los tipos de abonos, omitiendo los prestamos o anticipos.</param>
+        /// <returns></returns>
+        public static List<object> getTipoMovimientoCapitalArray(bool soloAbonos = false)
         {
-            Object[] opciones = new Object[]{
-                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO,
-                    Text =PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO},
-                new {Value=PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO,
-                    Text =PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO},
-            };
+            List<object> opciones = new List<object>();
+
+            if (!soloAbonos)
+                opciones.Add(new
+                {
+                    Value = PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO,
+                    Text = PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO
+                });
+
+            opciones.Add(new
+            {
+                Value = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO,
+                Text = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
+            });
+
+            opciones.Add(new
+            {
+                Value = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES,
+                Text = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES
+            });
+
             return opciones;
         }
 

@@ -47,9 +47,13 @@ namespace CampanasDelDesierto_v1.Controllers
         private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada)
         {
             ViewBag.balanceActual = productor.balanceActual;
+            ViewBag.balanceActualArboles = productor.balanceActualArboles;
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
             mov.Productor = productor;
+
+            List<object> opcionesTipoCapital = PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(true);
+            ViewBag.opcionesTipoCapital = opcionesTipoCapital;
 
             if (semanaLiquidada.isNotDefaultInstance())
                 mov.semanaLiquidada = semanaLiquidada; //Se asocia al nuevo registro de liquidacion semanal
@@ -66,8 +70,12 @@ namespace CampanasDelDesierto_v1.Controllers
         private void prepararVistaEditar(ref LiquidacionSemanal mov, TimePeriod semanaLiquidada)
         {
             ViewBag.balanceActual = mov.Productor.balanceActual;
+            ViewBag.balanceActualArboles = mov.Productor.balanceActualArboles;
             mov.idProductor = mov.Productor.idProductor;
             mov.Productor = mov.Productor;
+
+            List<object> opcionesTipoCapital = PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(true);
+            ViewBag.opcionesTipoCapital = opcionesTipoCapital;
 
             if (semanaLiquidada != null && semanaLiquidada.isNotDefaultInstance())
             {
@@ -143,7 +151,7 @@ namespace CampanasDelDesierto_v1.Controllers
             else
                 mov.semana = semana;
 
-            return View(mov);
+            return View("Form_Liquidacion",mov);
         }
 
         // POST: EmisionDeCheques/Create
@@ -153,7 +161,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = LiquidacionSemanalController.strBindFields)]
             LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones,
-            TimePeriod semanaLiquidada, int[] ingresosDeCosechaID)
+            TimePeriod semanaLiquidada, int[] ingresosDeCosechaID, string tipoCapital)
         {
             if (ModelState.IsValid && ingresosDeCosechaID.Count()>0)
             {
@@ -187,7 +195,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     if (retenciones.abonoAnticipos > 0)
                     {
                         //Se crea un nuevo abono como retencion de esta liquidacion
-                        abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
+                        abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos, tipoCapital);
 
                         //Se marca para guardar
                         //db.Entry(abono).State = EntityState.Added;
@@ -214,7 +222,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                        prod.ajustarBalances(ultimoMovimiento, db);
+                        prod.ajustarBalances(ultimoMovimiento, db, abono.tipoDeBalance);
                     }
                     
                     //Se redirecciona a la lista de movimientos del productor
@@ -229,7 +237,7 @@ namespace CampanasDelDesierto_v1.Controllers
             LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada);
             mov.introducirMovimientoEnPeriodo(emisionDeCheque.TemporadaDeCosechaID);
 
-            return View(emisionDeCheque);
+            return View("Form_Liquidacion", emisionDeCheque);
         }
         
         // GET: EmisionDeCheques/Edit/5
@@ -249,7 +257,7 @@ namespace CampanasDelDesierto_v1.Controllers
             prepararVistaEditar(ref mov,semanaLiquidada);
             ViewBag.actualizar = actualizar;
 
-            return View("Create",mov);
+            return View("Form_Liquidacion", mov);
         }
 
         [HttpGet]
@@ -269,7 +277,7 @@ namespace CampanasDelDesierto_v1.Controllers
             prepararVistaEditar(ref mov, null);
             ViewBag.reportMode = true;
 
-            return View("Create", mov);
+            return View("Form_Liquidacion", mov);
         }
 
         // POST: EmisionDeCheques/Edit/5
@@ -279,7 +287,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = LiquidacionSemanalController.strBindFields)]
             LiquidacionSemanal emisionDeCheque, TimePeriod semanaLiquidada, 
-            LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID)
+            LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID, string tipoCapital)
         {
             if (ModelState.IsValid)
             {
@@ -334,7 +342,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         if (oldRet == null && newRet != null)
                         {
                             //Se crea un nuevo abono como retencion de esta liquidacion
-                            abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos);
+                            abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos, tipoCapital);
                             emisionDeCheque.abonoAnticipo = abono; //Se asocia el nuevo abono
 
                             //Se agrega nueva retencion
@@ -398,7 +406,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                        prod.ajustarBalances(ultimoMovimiento, db);
+                        prod.ajustarBalances(ultimoMovimiento, db,abono.tipoDeBalance);
                     }
 
                     //numReg = introducirMovimientoAlBalance(emisionDeCheque);

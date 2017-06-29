@@ -136,10 +136,12 @@ namespace CampanasDelDesierto_v1.Models
                 //Se esta editando un reporte de liquidacion semanal
                 if (liquidacionReportada.idMovimiento != 0 && liquidacionReportada.retenciones!=null && liquidacionReportada.retenciones.Count() > 0)
                 {
+                    //Se busca el tipo de retencion a la que se le esta preparando el reporte
                     Retencion retActual = liquidacionReportada.retenciones.FirstOrDefault(mov => mov.tipoDeDeduccion == tipo);
-                    //garantiaActual = retActual.montoMovimiento;
-                    this.garantiaSemana = Math.Abs(retActual.montoMovimiento);
-                    this.garantiaAcumulada -= this.garantiaSemana;
+                    if (retActual != null) { 
+                        this.garantiaSemana = Math.Abs(retActual.montoMovimiento);
+                        this.garantiaAcumulada -= this.garantiaSemana;
+                    }
                 }
             }
         }

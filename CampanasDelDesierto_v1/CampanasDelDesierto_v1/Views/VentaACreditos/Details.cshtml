@@ -25,13 +25,13 @@
                     @Html.DisplayNameFor(model=> compras.FirstOrDefault().cantidadMaterial)
                 </th>
                 <th width="20%">
-                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.nombreProducto)
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().producto.nombreProducto)
                 </th>
                 <th width="10em">
-                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.costo)
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().producto.costo)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => compras.FirstOrDefault().Producto.descripcion)
+                    @Html.DisplayNameFor(model => compras.FirstOrDefault().producto.descripcion)
                 </th>
             </tr>
         </thead>
@@ -43,13 +43,13 @@
                         @Html.DisplayFor(model=>compra.cantidadMaterial)
                     </td>
                     <td width="20%">
-                        @Html.DisplayFor(model => compra.Producto.nombreProducto)
+                        @Html.DisplayFor(model => compra.producto.nombreProducto)
                     </td>
                     <td width="10em">
-                        @Html.DisplayFor(model => compra.Producto.costo)
+                        @Html.DisplayFor(model => compra.producto.costo)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => compra.Producto.descripcion)
+                        @Html.DisplayFor(model => compra.producto.descripcion)
                     </td>
                 </tr>
             }

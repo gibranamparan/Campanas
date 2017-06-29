@@ -190,7 +190,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento, mov.tipoDeBalance);
 
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                numReg = prod.ajustarBalances(ultimoMovimiento, db);
+                numReg = prod.ajustarBalances(ultimoMovimiento, db, mov.tipoDeBalance);
             }
             
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor, temporada= temporadaID });

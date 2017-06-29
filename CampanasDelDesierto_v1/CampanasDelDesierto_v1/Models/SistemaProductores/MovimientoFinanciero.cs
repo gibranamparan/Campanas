@@ -186,7 +186,9 @@ namespace CampanasDelDesierto_v1.Models
         /// <returns></returns>
         public bool isVentaDeOlivo()
         {
-            bool hayOlivo = false;
+            bool hayOlivo = false; bool res = false;
+
+            //Se valida si es una venta de arboles de olivo
             bool tom = this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO;
             if (tom)
             {
@@ -201,7 +203,14 @@ namespace CampanasDelDesierto_v1.Models
                             break;
                         }
             }
-            return tom && hayOlivo;
+            res = tom && hayOlivo;
+
+            //O si es un abono al balance de olivo
+            if (!res)
+                res = res || (this.getTypeOfMovement() == TypeOfMovements.CAPITAL &&
+                    ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES);
+
+            return res;
         }
 
         /// <summary>
@@ -212,7 +221,8 @@ namespace CampanasDelDesierto_v1.Models
         public bool isAbonoOPrestamo()
         {
             var tom = this.getTypeOfMovement();
-            return tom == TypeOfMovements.CAPITAL || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
+            return (tom == (TypeOfMovements.CAPITAL) && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
+                || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
         }
 
         /// <summary>

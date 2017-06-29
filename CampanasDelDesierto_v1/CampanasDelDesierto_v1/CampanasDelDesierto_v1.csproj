@@ -646,7 +646,7 @@
     <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />
-    <Content Include="Views\LiquidacionSemanal\Create.cshtml" />
+    <Content Include="Views\LiquidacionSemanal\Form_Liquidacion.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Details.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Edit.cshtml" />
     <Content Include="Views\Sucursales\Departamentos.cshtml" />

@@ -25,7 +25,7 @@
     bool actualizar = false;
     if (editMode)
     {
-       actualizar = ViewBag.actualizar;
+        actualizar = ViewBag.actualizar;
     }
 
     //Se buscan todos los ingresos de cosecha que se han hecho por el productor
@@ -66,6 +66,7 @@
     //Retenciones
     decimal retencionTotal = 0;
     decimal retencionAbono = 0;
+    PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
     if (editMode)
     {
         //Calculo de retenciones capturadas
@@ -74,6 +75,9 @@
         retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
         retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
 
+        //Se obtiene el abono retenido, si no hay tal, es nulo
+        abonoRetenido = Model.abonoAnticipo;
+
         retencionTotal = retenciones.total;
         retencionAbono = retenciones.abonoAnticipos;
         Model.montoMovimiento -= retencionTotal;
@@ -81,12 +85,28 @@
 
     Model.fechaMovimiento = Model.semanaLiquidada.endDate;
 
+    decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0;
     //Estado actual de finanzas del productor
     decimal balanceActual = ViewBag.balanceActual;
+    //Estado actual del balance por arboles de olivo del productor
+    decimal balanceActualArboles = ViewBag.balanceActualArboles;
     if (editMode)
     {
-        balanceActual += retencionAbono;
+        if(abonoRetenido.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+        {
+            abonoBalanceAnticipos = abonoRetenido.montoMovimiento;
+        }else if(abonoRetenido.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
+        {
+            abonoBalanceArbolOlivo = abonoRetenido.montoMovimiento;
+        }
+
+        balanceActual -= abonoBalanceAnticipos;
+        balanceActualArboles -= abonoBalanceArbolOlivo;
     }
+
+    //Lista de seleccion del tipo de abono para cada tipo de balance
+    List<object> opcionesTipoCapital = ViewBag.opcionesTipoCapital;
+    SelectList slOpcionesTipoCapital = new SelectList(opcionesTipoCapital, "Value", "Text", abonoRetenido.tipoDeMovimientoDeCapital);
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
@@ -175,15 +195,15 @@
         @*Ingreso de cosecha*@
         @Html.Partial("Partial_ReporteSemanalCosecha", ingresoSemanal, vddReporteSemanal)
 
-        @using (Html.BeginForm(editMode?"Edit":"Create", "LiquidacionSemanal", FormMethod.Post))
+        @using (Html.BeginForm(editMode ? "Edit" : "Create", "LiquidacionSemanal", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.idMovimiento)
             @Html.HiddenFor(model => model.idProductor)
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model=>model.semanaLiquidada.startDate)
+            @Html.HiddenFor(model => model.semanaLiquidada.startDate)
             @Html.HiddenFor(model => model.semanaLiquidada.endDate)
-            @Html.HiddenFor(model=>model.abonoAnticipoID)
+            @Html.HiddenFor(model => model.abonoAnticipoID)
 
             foreach (var ing in ingresosDeCosecha)
             {
@@ -193,7 +213,7 @@
             @*Retenciones*@
             @Html.Partial("Partial_ReporteSemanalRetencionesForm", retenciones)
 
-            @*Total a pagar*@
+            @*Forma para la creacion de la liquidacion*@
             <div class="panel panel-primary" id="formLiquidacionSemanal">
                 <div class="panel-heading">
                     <h3 class="panel-title">Liquidación Semanal</h3>
@@ -263,8 +283,16 @@
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-md-4" })
                         <div class="col-md-8">
-                            @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", @readonly= "readonly", min=0 } })
+                            @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", min = 0 } })
                             @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4" id="inputTipoCapital"
+                         style="display:@(String.IsNullOrEmpty(abonoRetenido.tipoDeMovimientoDeCapital)?"none":"block")">
+                        <label class="control-label col-md-4">Abono al balance:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("tipoCapital", slOpcionesTipoCapital, new { @class = "form-control" })
                         </div>
                     </div>
 
@@ -283,7 +311,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Saldo de Adeudo Acumulado</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="pnlSaldoAnticipos">
                     @*Balance Actual*@
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.Productor.balanceActual, htmlAttributes: new { @class = "control-label col-md-4" })
@@ -292,7 +320,7 @@
                                    data-mask="###0.00" data-mask-reverse="true"
                                    value="@balanceActual.ToString("C")" readonly />
                         </div>
-                    </div>   
+                    </div>
 
                     @*Menos*@
                     <span class="col-md-1" style="font-size:2em">-</span>
@@ -303,7 +331,7 @@
                         <div class="col-md-7">
                             <input id="inputAbonoSemana" class="form-control"
                                    data-mask="###0.00" data-mask-reverse="true"
-                                   value="@retencionAbono.ToString("C")" readonly />
+                                   value="@abonoBalanceAnticipos.ToString("C")" readonly />
                         </div>
                     </div>
 
@@ -316,7 +344,51 @@
                         <div class="col-md-7">
                             <input id="inputSaldoLiquidar" class="form-control"
                                    data-mask="###0.00" data-mask-reverse="true"
-                                   value='@((balanceActual - retencionAbono).ToString("C"))' readonly />
+                                   value='@((balanceActual + abonoBalanceAnticipos).ToString("C"))' readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Balance de deuda de arbolitos*@
+            <div class="panel panel-info" id="pnlSaldoArboles">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Saldo por Árboles de Olivo</h3>
+                </div>
+                <div class="panel-body">
+                    @*Balance Actual*@
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Productor.balanceActualArboles, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <input id="balanceActual" class="form-control"
+                                   data-mask="###0.00" data-mask-reverse="true"
+                                   value="@balanceActualArboles.ToString("C")" readonly />
+                        </div>
+                    </div>
+
+                    @*Menos*@
+                    <span class="col-md-1" style="font-size:2em">-</span>
+
+                    @*Retenciones*@
+                    <div class="form-group col-md-3">
+                        <label class="control-label col-md-5">Abono de la semana (USD): </label>
+                        <div class="col-md-7">
+                            <input id="inputAbonoSemana" class="form-control"
+                                   data-mask="###0.00" data-mask-reverse="true"
+                                   value="@abonoBalanceArbolOlivo.ToString("C")" readonly />
+                        </div>
+                    </div>
+
+                    @*Igual A*@
+                    <span class="col-md-1" style="font-size:2em">=</span>
+
+                    @*MOnto total a pagar*@
+                    <div class="form-group col-md-3">
+                        <label class="control-label col-md-5">Saldo a Liquidar (USD): </label>
+                        <div class="col-md-7">
+                            <input id="inputSaldoLiquidar" class="form-control"
+                                   data-mask="###0.00" data-mask-reverse="true"
+                                   value='@((balanceActualArboles + abonoBalanceArbolOlivo).ToString("C"))' readonly />
                         </div>
                     </div>
                 </div>
@@ -347,6 +419,47 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        //Si se hace un cambio de seleccion en el tipo de abono para cierto balance
+        $("#tipoCapital").change(function () {
+            //Se pone en ceros los campos de abono semanal de los balances
+            $("input[id=inputAbonoSemana]").val(numeral(0).format('0.00'));
+            //Input donde se introduce la retencion
+            var inputRetencion = $("#abonoAnticipos");
+            //Input del abono semanal para el tipo de balance seleccionado
+            var inputAbonoSemana = $(getSelectorInputAbono());
+            //Se introduce el valor de la retencion en el correspondiente abono semanal
+            inputAbonoSemana.val(inputRetencion.val());
+            //Se refrescan todos los saldos a pagar de todos los balances
+            refreshSaldos(inputAbonoSemana, inputRetencion)
+        })
+
+
+        function getSelectorInputAbono() {
+            var selector = '#';
+            if ($("#tipoCapital").val() == '@(PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)') {
+                selector += 'pnlSaldoAnticipos'
+            } else if ($("#tipoCapital").val() == '@(PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES)') {
+                selector += 'pnlSaldoArboles'
+            }
+            selector += " #inputAbonoSemana"
+
+            return selector;
+        }
+
+        function refreshSaldos(inputAbonoSemana, inputRetencion) {
+            $.each($("input[id=inputAbonoSemana]"), function (idx, inputAbonoSemana) {
+                inputAbonoSemana = $(inputAbonoSemana);
+                var parent = inputAbonoSemana.closest(".panel-body");
+                var saldo = parent.find("#inputSaldoLiquidar");
+
+                var balanceActual = parent.find("#balanceActual");
+                var saldoPagar = balanceActual.val() - inputAbonoSemana.val()
+                saldoPagar = saldoPagar < 0 ? 0 : saldoPagar;
+
+                saldo.val(numeral(saldoPagar).format('0.00')).trigger('input');
+            })
+        }   
+
         $("#formRetenciones input:even").keyup(function () {
             var totalRetencion = 0;
             //Por cada input de retencion, se suma el monto
@@ -356,10 +469,20 @@
 
             //Para el input de anticipo a abonos
             if ($(this).attr("id") == "abonoAnticipos") {
+                var inputRetencion = $(this);
                 //Se visualiza el cambio del balance
-                $("#inputAbonoSemana").val($(this).val());
+                $("#inputAbonoSemana").val(numeral(0).format('0.00'));
+
+                var inputAbonoSemana = $(getSelectorInputAbono());
+                inputAbonoSemana.val(inputRetencion.val());
+                refreshSaldos(inputAbonoSemana, inputRetencion)
+
+                /*
                 var saldoPagar = $("#balanceActual").val() - $(this).val()
-                $("#inputSaldoLiquidar").val(numeral(saldoPagar).format('0.00')).trigger('input');
+                $("#inputSaldoLiquidar").val(numeral(saldoPagar).format('0.00')).trigger('input');*/
+
+                //Aparece o desaparece el dropdown de tipo de abono si se introdujo una retencion de este tipo
+                $("#inputTipoCapital").slideDownOrUp(Number(inputRetencion.val()) > 0)
             }
 
             //Para el input de garantia de sanidad

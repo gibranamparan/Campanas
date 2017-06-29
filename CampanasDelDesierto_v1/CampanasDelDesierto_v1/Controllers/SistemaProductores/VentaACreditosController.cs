@@ -104,7 +104,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);
+                    prod.ajustarBalances(ultimoMovimiento, db,ventaACredito.tipoDeBalance);
 
                     return RedirectToAction("Details", "Productores", new { id = ventaACredito.idProductor,
                         temporada = ventaACredito.TemporadaDeCosechaID });
@@ -170,7 +170,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);
+                    prod.ajustarBalances(ultimoMovimiento, db, ventaACredito.tipoDeBalance);
 
                     return RedirectToAction("Details", "Productores", 
                         new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });
