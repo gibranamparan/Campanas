@@ -44,36 +44,52 @@
                     <header class="major">                        
                         <img src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">
                     </header>
-                    <header class="major">
+                   <!--< <header class="major">
                         <ul>
                             
                         </ul>
-                    </header>
+                    </header>-->
                     
                     @if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
                     {
+                        <h5><strong>SISTEMA DE PRODUCTORES</strong></h5>
+                   
                         <ul>
                             <li><a href="~/Productores">Productores</a></li>
                             <li><a href="~/Productos/">Productos</a></li>
                             <li><a href="~/Proveedores">Proveedores</a></li>
                             <li><a href="~/TemporadaDeCosechas">Temporadas</a></li>
-                            <li><a href="~/AdminDepartamentos">Usuarios</a></li>
                            
                         </ul>
+                        <br />
+                        <br />
                     }
-                </nav>
-                <!--Rol sucursales-->
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <nav id="menu">
+                    <!--Rol sucursales-->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <nav id="menu">
+                        <h5><strong>SISTEMA DE ACTIVOS</strong></h5>
+       
+                            <ul>
+                                <li><a href="~/PrestamosActivos/">Prestamos de Activos</a></li>
+                                <li><a href="~/Sucursales/">Sucursales</a></li>
+                                <li><a href="~/Departamentos/">Departamentos</a></li>
+                                <li><a href="~/Empleados/">Empleados</a></li>
+                            </ul>
+                        </nav>
+                        <br />
+
+                    }
+
+                    @if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
+                    {
+                        <h5><strong>CONFIGURACIONES</strong></h5>
+              
                         <ul>
-                            <li><a href="~/PrestamosActivos/">Prestamos de Activos</a></li>
-                            <li><a href="~/Sucursales/">Sucursales</a></li>                                                                                 
-                            <li><a href="~/Departamentos/">Departamentos</a></li>
-                            <li><a href="~/Empleados/">Empleados</a></li>
+                            <li><a href="~/AdminDepartamentos">Usuarios</a></li>
                         </ul>
+                    }
                     </nav>
-                }
             </div>
         </div>
     </div>

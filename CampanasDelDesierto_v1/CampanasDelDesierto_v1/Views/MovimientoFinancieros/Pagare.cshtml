@@ -25,7 +25,7 @@
         <span id="Dia">
           @Model.fechaPagar.Value.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
         </span>
-               *<span id="mes">
+        <span id="mes">
              @(Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
         </span>
         <span id="año">
@@ -103,6 +103,8 @@
             margin: 0;
             padding: 0;
         }
+                   
+
 
         #pnlPagare span {
             position: absolute;
@@ -249,10 +251,11 @@
         }
 
         #pnlPagare img {
-            position: absolute;
+            /*position: absolute;*/
+
             z-index: 0;
-            width: 9.40in; /*Factor: .9788*/
-            height: 11.85in; /*Factor: 1.042*/
+            width: 8.43in; /*Factor: .9788*/
+            height: 10.91in; /*Factor: 1.042*/
         }
 
         @@media print {
