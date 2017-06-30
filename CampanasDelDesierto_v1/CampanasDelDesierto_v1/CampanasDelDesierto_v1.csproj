@@ -251,6 +251,7 @@
     <Compile Include="Controllers\SistemaProductores\ProveedoresController.cs" />
     <Compile Include="Controllers\SistemaProductores\RecepcionDeProductosController.cs" />
     <Compile Include="Controllers\SistemaActivos\SucursalesController.cs" />
+    <Compile Include="Controllers\SistemaProductores\ReportesProductoresController.cs" />
     <Compile Include="Controllers\SistemaProductores\TemporadaDeCosechasController.cs" />
     <Compile Include="Controllers\SistemaProductores\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -361,6 +362,7 @@
     <Compile Include="Models\SistemaProductores\PrestamoYAbonoCapital.cs" />
     <Compile Include="Models\SistemaProductores\Producto.cs" />
     <Compile Include="Models\SistemaProductores\RecepcionDeProducto.cs" />
+    <Compile Include="Models\SistemaProductores\ReportesViewModels.cs" />
     <Compile Include="Models\SistemaProductores\Retencion.cs" />
     <Compile Include="Models\SistemaActivos\Sucursal.cs" />
     <Compile Include="Models\SistemaProductores\TemporadaDeCosecha.cs" />
@@ -683,6 +685,8 @@
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Partial_ReporteRetencion.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListVentaOlivo.cshtml" />
+    <Content Include="Views\Shared\Partial_EncabezadoReporte.cshtml" />
+    <Content Include="Views\ReportesProductores\AdeudosRecuperacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

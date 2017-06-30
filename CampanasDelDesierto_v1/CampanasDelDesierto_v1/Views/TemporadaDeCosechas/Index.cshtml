@@ -69,6 +69,9 @@
                     </a> | 
                     <a href="@Url.Action("Details", new { id = item.TemporadaDeCosechaID })">
                         <i class="fa fa-file-excel-o"></i> Importar Datos
+                    </a> |
+                    <a href="@Url.Action("AdeudosRecuperacion","ReportesProductores", new { id = item.TemporadaDeCosechaID })">
+                        <i class="fa fa-list"></i> Reporte de Adeudos y Recuperacion
                     </a>
                 </td>
             </tr>

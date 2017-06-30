@@ -130,6 +130,10 @@
     </a>
 </p>
 
+@if(reportMode){
+    @Html.Partial("Partial_EncabezadoReporte")
+}
+
 @*Informacino de productor*@
 @Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
@@ -253,7 +257,7 @@
                     <span class="col-xs-1" style="font-size:2em; text-align: center">=</span>
 
                     @*MOnto total a pagar*@
-                    <div class="form-group col-xs-2">
+                    <div class="form-group col-xs-4">
                         <label>Total a Pagar (USD): </label>
                         @Html.EditorFor(model => model.montoMovimiento, new
                            {
@@ -573,6 +577,9 @@
                 #formLiquidacionSemanal{
                     page-break-before:always;
                     margin-top: 2em;
+                }
+                #main > .inner > section{
+                    padding: 0;
                 }
             }
             /*
