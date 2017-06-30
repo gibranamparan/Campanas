@@ -285,8 +285,8 @@ tr:hover.cosechaPagada{
     span.signos{
         font-size:inherit;
     }
-
+    /*
     #formLiquidacionSemanal{
         page-break-before:always;
-    }
+    }*/
 }

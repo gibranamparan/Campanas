@@ -28,7 +28,7 @@
     </div>
     <div class="panel-body">
         @*Reporte de totales en el periodo por *@
-        <table class="table table-hover table-striped">
+        <table id="tblReporteSemanaCosecha" class="table table-hover table-striped">
             <thead>
                 <tr>
                     <th>
@@ -61,10 +61,10 @@
                         <td>
                             @Html.DisplayFor(model => ingreso.toneladasRecibidas)
                         </td>
-                        <td>
+                        <td class="montoUSDReporte">
                             @Html.DisplayFor(model => ingreso.monto)
                         </td>
-                        <td>
+                        <td class="montoMXNReporte">
                             @Html.DisplayFor(model => ingreso.montoMXN)
                         </td>
                     </tr>

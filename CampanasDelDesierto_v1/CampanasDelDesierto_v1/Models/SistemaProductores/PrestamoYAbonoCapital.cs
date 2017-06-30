@@ -36,7 +36,14 @@ namespace CampanasDelDesierto_v1.Models
         public string conceptoCapital { get; set; }
 
         [Display(Name = "Concepto")]
-        public new string concepto { get { return this.conceptoCapital; } set { this.conceptoCapital = value; } }
+        public new string concepto {
+            get {
+                string res = this.conceptoCapital;
+               /* if (this.tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                    res = this.tipoDeMovimientoDeCapital;*/
+                return res;
+            }
+            set { this.conceptoCapital = value; } }
 
         [Display(Name = "Descripcion de Concepto")]
         [DataType(DataType.MultilineText)]
@@ -89,6 +96,7 @@ namespace CampanasDelDesierto_v1.Models
             else if (this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
                 || this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) { 
                 this.proveedor = this.tipoDeMovimientoDeCapital; //confirmar
+                this.conceptoCapital = this.proveedor;
                 this.fechaPagar = null;
             }
 
@@ -105,7 +113,7 @@ namespace CampanasDelDesierto_v1.Models
             //abono.liquidacionDondeAbonaID = ls.idMovimiento;
             abono.fechaMovimiento = ls.fechaMovimiento.AddSeconds(-5);
             abono.precioDelDolar = ls.precioDelDolarEnLiquidacion;
-            abono.concepto = "ABONO EN LIQUIDACION (CH:" + ls.cheque + ")";
+            abono.concepto = tipoCapital+" EN LIQUIDACION (CH:" + ls.cheque + ")";
             abono.montoMovimiento = monto;
             abono.TemporadaDeCosechaID = ls.TemporadaDeCosechaID;
             abono.idProductor = ls.idProductor;

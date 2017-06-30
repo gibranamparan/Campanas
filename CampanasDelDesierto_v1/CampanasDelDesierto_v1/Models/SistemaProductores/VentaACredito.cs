@@ -17,7 +17,8 @@ namespace CampanasDelDesierto_v1.Models
 
         public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
 
-        public new string concepto { get {
+        public new string concepto {
+            get {
                 string res = String.Empty;
                 foreach(var com in this.ComprasProductos)
                     res += com.producto.nombreProducto+",";
@@ -26,8 +27,18 @@ namespace CampanasDelDesierto_v1.Models
                     res = res.Substring(0, 60);
                     res += "...";
                 }
+
+                if(this.tipoDeBalance == TipoDeBalance.VENTA_OLIVO)
+                {
+                    var compra= this.ComprasProductos.FirstOrDefault(com => com.producto.isArbolAceituna);
+                    if (compra != null) {
+                        res += String.Format(" ({0})", compra.cantidadMaterial);
+                    }
+                }
+
                 return res;
-            } }
+            }
+        }
 
         public new void ajustarMovimiento()
         {

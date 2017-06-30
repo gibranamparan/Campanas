@@ -118,8 +118,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 prestamoYAbonoCapital.ajustarMovimiento();
 
                 //El concepto no aplica para abonos
-                if (prestamoYAbonoCapital.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                    prestamoYAbonoCapital.concepto = String.Empty;
+                /*if (prestamoYAbonoCapital.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                    prestamoYAbonoCapital.concepto = String.Empty;*/
 
                 //Guardar cambios
                 db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);

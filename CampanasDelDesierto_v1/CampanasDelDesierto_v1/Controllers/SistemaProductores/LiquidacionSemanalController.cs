@@ -364,7 +364,8 @@ namespace CampanasDelDesierto_v1.Controllers
                             //Se modifica y marca para ser editada
                             abono.montoMovimiento = -newRet.montoMovimiento;
                             abono.fechaMovimiento = newRet.fechaMovimiento;
-                            abono.concepto = "ABONO EN LIQUIDACION (CH:" + emisionDeCheque.cheque + ")";
+                            abono.concepto = tipoCapital+" EN LIQUIDACION (CH:" + emisionDeCheque.cheque + ")";
+                            abono.tipoDeMovimientoDeCapital = tipoCapital;
                             db.Entry(abono).State = EntityState.Modified;
                         }
                     }
