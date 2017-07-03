@@ -16,8 +16,8 @@ namespace CampanasDelDesierto_v1.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private const string strBindFields = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
-            "TemporadaDeCosechaID,cheque,garantiaLimpieza,retenciones.garantiaLimpieza,semana,"+
-            "semanaLiquidada.startDate,semanaLiquidada.endDate,abonoAnticipoID,precioDelDolarEnLiquidacion";
+            "TemporadaDeCosechaID,cheque,,semana,semanaLiquidada.startDate,semanaLiquidada.endDate," +
+            "abonoAnticipoID,precioDelDolarEnLiquidacion";
         // GET: EmisionDeCheques
         public ActionResult Index()
         {
@@ -102,8 +102,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 Retencion.TipoRetencion.EJIDAL);
             Retencion retencionOtro = new Retencion(emisionDeCheque, retenciones.retencionOtro,
                 Retencion.TipoRetencion.OTRO);
-            Retencion retencionAbono = new Retencion(emisionDeCheque, retenciones.abonoAnticipos,
-                Retencion.TipoRetencion.ABONO);
+            Retencion retencionAbonoAnticipo = new Retencion(emisionDeCheque, retenciones.abonoAnticipos,
+                Retencion.TipoRetencion.ABONO_ANTICIPO);
+            Retencion retencionAbonoArboles = new Retencion(emisionDeCheque, retenciones.abonoArboles,
+                Retencion.TipoRetencion.ABONO_ARBOLES);
 
             List<Retencion> res = new List<Retencion>();
             //Se le establecen fechas con horas diferentes para mantener la integridad del balance
@@ -111,7 +113,8 @@ namespace CampanasDelDesierto_v1.Controllers
             garantiaLimpieza.fechaMovimiento = emisionDeCheque.fechaMovimiento.AddSeconds(-1);
             retencionEjidal.fechaMovimiento = garantiaLimpieza.fechaMovimiento.AddSeconds(-1);
             retencionOtro.fechaMovimiento = retencionEjidal.fechaMovimiento.AddSeconds(-1);
-            retencionAbono.fechaMovimiento = retencionOtro.fechaMovimiento.AddSeconds(-1);
+            retencionAbonoAnticipo.fechaMovimiento = retencionOtro.fechaMovimiento.AddSeconds(-1);
+            retencionAbonoArboles.fechaMovimiento = retencionAbonoAnticipo.fechaMovimiento.AddSeconds(-1);
 
             //Se valida si fue introducido un monto para cada retencion
             if (garantiaLimpieza.montoMovimiento < 0)
@@ -120,8 +123,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 res.Add(retencionEjidal);
             if (retencionOtro.montoMovimiento < 0)
                 res.Add(retencionOtro);
-            if (retencionAbono.montoMovimiento < 0)
-                res.Add(retencionAbono);
+            if (retencionAbonoAnticipo.montoMovimiento < 0)
+                res.Add(retencionAbonoAnticipo);
+            if (retencionAbonoArboles.montoMovimiento < 0)
+                res.Add(retencionAbonoArboles);
 
             return res;
         }
@@ -161,7 +166,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = LiquidacionSemanalController.strBindFields)]
             LiquidacionSemanal emisionDeCheque, LiquidacionSemanal.VMRetenciones retenciones,
-            TimePeriod semanaLiquidada, int[] ingresosDeCosechaID, string tipoCapital)
+            TimePeriod semanaLiquidada, int[] ingresosDeCosechaID)
         {
             if (ModelState.IsValid && ingresosDeCosechaID.Count()>0)
             {
@@ -169,6 +174,8 @@ namespace CampanasDelDesierto_v1.Controllers
                 //Ajuste de movimiento para entrar dentro de la lista de balances
                 emisionDeCheque.ajustarMovimiento();
 
+                //Toma el input de retenciones entrante y lo transforma en registros de retenciones
+                //para ser mostrados en el balance corresspondiente
                 List<Retencion> arrRetenciones = vmRetencionesToArray(retenciones, emisionDeCheque);
                 emisionDeCheque.semanaLiquidada = semanaLiquidada;
                 
@@ -191,15 +198,23 @@ namespace CampanasDelDesierto_v1.Controllers
                     }
 
                     //Si se registro un abono, se instancia
-                    PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                    PrestamoYAbonoCapital abonoAnticipo = new PrestamoYAbonoCapital();
+                    PrestamoYAbonoCapital abonoArboles = new PrestamoYAbonoCapital();
                     if (retenciones.abonoAnticipos > 0)
                     {
                         //Se crea un nuevo abono como retencion de esta liquidacion
-                        abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos, tipoCapital);
-
+                        abonoAnticipo = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque,
+                            retenciones.abonoAnticipos, PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO);
                         //Se marca para guardar
-                        //db.Entry(abono).State = EntityState.Added;
-                        emisionDeCheque.abonoAnticipo = abono;
+                        emisionDeCheque.abonoAnticipo = abonoAnticipo;
+                    }
+                    if (retenciones.abonoArboles > 0)
+                    {
+                        //Se crea un nuevo abono como retencion de esta liquidacion
+                        abonoArboles = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque,
+                            retenciones.abonoArboles, PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES);
+                        //Se marca para guardar
+                        emisionDeCheque.abonoArboles = abonoArboles;
                     }
 
                     //AJUSTE DE LA FECHA DE LA LIQUIDACION PARA ORDERNAR CON LAS RETENCIONES EN LA LISTA DE MOVIMIENTOS
@@ -215,20 +230,31 @@ namespace CampanasDelDesierto_v1.Controllers
                     db.Entry(emisionDeCheque).State = EntityState.Modified;
                     numReg = db.SaveChanges();
 
-                    //Se ajusta el abalance si se registro una retencion por abono
-                    if (abono.idMovimiento > 0) { 
+                    //Se ajusta el abalance si se registro una retencion por abono de ANTICIPOS
+                    if (abonoAnticipo.idMovimiento > 0)
+                    {
                         //Se calcula el movimiento anterior al que se esta registrando
-                        var prod = db.Productores.Find(abono.idProductor);
-                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
+                        var prod = db.Productores.Find(abonoAnticipo.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoAnticipo.fechaMovimiento, abonoAnticipo.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                        prod.ajustarBalances(ultimoMovimiento, db, abono.tipoDeBalance);
+                        prod.ajustarBalances(ultimoMovimiento, db, abonoAnticipo.tipoDeBalance);
                     }
-                    
-                    //Se redirecciona a la lista de movimientos del productor
-                    return RedirectToAction("Details", "Productores", new {
-                        id = emisionDeCheque.idProductor,
-                        temporada = emisionDeCheque.TemporadaDeCosechaID
+
+                    //Se ajusta el abalance si se registro una retencion por abono de ARBOLES
+                    if (abonoArboles.idMovimiento > 0)
+                    {
+                        //Se calcula el movimiento anterior al que se esta registrando
+                        var prod = db.Productores.Find(abonoArboles.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoArboles.fechaMovimiento, abonoArboles.tipoDeBalance);
+
+                        //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                        prod.ajustarBalances(ultimoMovimiento, db, abonoArboles.tipoDeBalance);
+                    }
+
+                    //Se redirecciona para visualizar el reporte e imprimirlo una vez creado
+                    return RedirectToAction("ReporteLiquidacionSemanal", new {
+                        id = emisionDeCheque.idMovimiento,
                     });
                 }
             }
@@ -336,7 +362,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         db.Entry(oldRet).State = EntityState.Modified;
                     }
                     //Para retenciones de abono
-                    if(tipo == Retencion.TipoRetencion.ABONO)
+                    if(tipo == Retencion.TipoRetencion.ABONO_ANTICIPO)
                     {
                         //No se habia reportado y se reporta en edicion
                         if (oldRet == null && newRet != null)

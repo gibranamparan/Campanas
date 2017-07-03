@@ -23,8 +23,10 @@ namespace CampanasDelDesierto_v1.Models
                     return NombreRetencion.SANIDAD;
                 else if (this.tipoDeDeduccion == TipoRetencion.OTRO)
                     return NombreRetencion.OTRO;
-                else if (this.tipoDeDeduccion == TipoRetencion.ABONO)
-                    return NombreRetencion.ABONO;
+                else if (this.tipoDeDeduccion == TipoRetencion.ABONO_ANTICIPO)
+                    return NombreRetencion.ABONO_ANTICIPO;
+                else if (this.tipoDeDeduccion == TipoRetencion.ABONO_ARBOLES)
+                    return NombreRetencion.ABONO_ARBOLES;
 
                 return String.Empty;
             }
@@ -35,7 +37,7 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 string abonoTipo = this.tipoDeDeduccion.ToString();
-                if(this.tipoDeDeduccion == TipoRetencion.ABONO)
+                if(this.tipoDeDeduccion == TipoRetencion.ABONO_ANTICIPO)
                     abonoTipo = this.liquidacionSemanal.abonoAnticipo.tipoDeMovimientoDeCapital;
 
                 return String.Format($"RETENCION: {abonoTipo}. CH: {this.liquidacionSemanal.cheque}");
@@ -44,7 +46,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public enum TipoRetencion
         {
-            OTRO, SANIDAD, EJIDAL, ABONO
+            OTRO, SANIDAD, EJIDAL, ABONO_ANTICIPO, ABONO_ARBOLES
         }
 
         public static class NombreRetencion
@@ -52,7 +54,8 @@ namespace CampanasDelDesierto_v1.Models
             public const string OTRO = "OTRA DEDUCCION";
             public const string SANIDAD = "Sanidad Vegetal";
             public const string EJIDAL = "2% I.S.R Ejidal";
-            public const string ABONO = "Abono a Anticipos";
+            public const string ABONO_ANTICIPO = "Abono Anticipos";
+            public const string ABONO_ARBOLES = "Abono Arboles";
         }
 
         public new void ajustarMovimiento()

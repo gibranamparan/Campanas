@@ -21,7 +21,8 @@
                 @Html.LabelFor(model => model.abonoAnticipos, htmlAttributes: new { @class = "control-label col-xs-2" })
                 @*Precio en USD*@
                 <div class="col-xs-5">
-                    @Html.EditorFor(model => model.abonoAnticipos, new {
+                    @Html.EditorFor(model => model.abonoAnticipos, new
+               {
                    htmlAttributes = new
                    {
                        @class = "form-control",
@@ -34,7 +35,29 @@
                 </div>
                 @*Precio en MXN*@
                 <div class="col-xs-5">
-                    <input id="abonoAnticiposMXN" class = "form-control" readonly = "readonly"
+                    <input id="abonoAnticiposMXN" class="form-control" readonly="readonly"
+                           value="@((precioDolar*Model.abonoAnticipos).ToString("0.00"))" />
+                </div>
+            </div>
+            <div class="form-group col-xs-12">
+                @Html.LabelFor(model => model.abonoArboles, htmlAttributes: new { @class = "control-label col-xs-2" })
+                @*Precio en USD*@
+                <div class="col-xs-5">
+                    @Html.EditorFor(model => model.abonoArboles, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true",
+                       onkeyup = "fillPesosColumn(this)"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.abonoArboles, "", new { @class = "text-danger" })
+                </div>
+                @*Precio en MXN*@
+                <div class="col-xs-5">
+                    <input id="abonoAnticiposMXN" class="form-control" readonly="readonly"
                            value="@((precioDolar*Model.abonoAnticipos).ToString("0.00"))" />
                 </div>
             </div>

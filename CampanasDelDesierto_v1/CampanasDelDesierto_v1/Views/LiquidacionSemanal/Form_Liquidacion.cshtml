@@ -3,85 +3,86 @@
 @model CampanasDelDesierto_v1.Models.LiquidacionSemanal
 
 @{
-    //Determa si la pantalla se encuentra en modo de edicion
-    bool editMode = Model.idMovimiento > 0;
+        //Determa si la pantalla se encuentra en modo de edicion
+        bool editMode = Model.idMovimiento > 0;
 
-    //Es reporte de liquidacion
-    bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
+        //Es reporte de liquidacion
+        bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
 
-    ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
-    Layout = "~/Views/Shared/_Layout.cshtml";
+        ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
+        Layout = "~/Views/Shared/_Layout.cshtml";
 
-    //Se determina el precio actual del dolar
-    BaxicoWebService bws = new BaxicoWebService();
-    string errorMessagePrecioDolar = String.Empty;
-    decimal precioDolar = 0;
+        //Se determina el precio actual del dolar
+        BaxicoWebService bws = new BaxicoWebService();
+        string errorMessagePrecioDolar = String.Empty;
+        decimal precioDolar = 0;
 
-    if(editMode || reportMode)
-    {
-        precioDolar = Model.precioDelDolarEnLiquidacion;
-    }else
-    {
-        precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
-    }
-
-    //Objeto para la forma de retenciones
-    LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
-
-    Productor productor = Model.Productor;
-
-    bool actualizar = false;
-    if (editMode)
-    {
-        actualizar = ViewBag.actualizar!=null? ViewBag.actualizar:false;
-    }
-
-    //Se buscan todos los ingresos de cosecha que se han hecho por el productor
-    List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
-
-    //Si es busqueda regular para crear
-    if (!editMode)
-    {
-        ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
-            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
-    }
-    //Si es edicion
-    else
-    {
-        //Se toma los ingresos ya asociados
-        ingresosDeCosecha = Model.ingresosDeCosecha.ToList();
-        //Si es actualizacion, se agregan a los ya asociados aquellos que nos eencuentran asociados con nada
-        if (actualizar)
+        if(editMode || reportMode)
         {
-            List<PagoPorProducto> ingresosDeCosechaNuevos = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
-            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
-            ingresosDeCosecha.AddRange(ingresosDeCosechaNuevos);
-            ingresosDeCosecha = ingresosDeCosecha.Where(mov=>Model.semanaLiquidada.hasInside(mov.fechaMovimiento))
-                .OrderBy(mov => mov.fechaMovimiento).ToList();
+            precioDolar = Model.precioDelDolarEnLiquidacion;
+        }else
+        {
+            precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
         }
-    }
 
-    //Se determina el costo de el producto segun la zona del productor
-    var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
+        //Objeto para la forma de retenciones
+        LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
 
-    //Se genera el reporte semanal
-    var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
+        Productor productor = Model.Productor;
 
-    //Se calcula el total de ingreso por la cosecha registrada
-    decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
-    Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
+        bool actualizar = false;
+        if (editMode)
+        {
+            actualizar = ViewBag.actualizar!=null? ViewBag.actualizar:false;
+        }
 
-    //Retenciones
-    decimal retencionTotal = 0;
-    decimal retencionAbono = 0;
-    PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
-    if (editMode)
-    {
-        //Calculo de retenciones capturadas
-        retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO);
-        retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
-        retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
-        retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
+        //Se buscan todos los ingresos de cosecha que se han hecho por el productor
+        List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
+
+        //Si es busqueda regular para crear
+        if (!editMode)
+        {
+            ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+                .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+        }
+        //Si es edicion
+        else
+        {
+            //Se toma los ingresos ya asociados
+            ingresosDeCosecha = Model.ingresosDeCosecha.ToList();
+            //Si es actualizacion, se agregan a los ya asociados aquellos que nos eencuentran asociados con nada
+            if (actualizar)
+            {
+                List<PagoPorProducto> ingresosDeCosechaNuevos = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+                .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+                ingresosDeCosecha.AddRange(ingresosDeCosechaNuevos);
+                ingresosDeCosecha = ingresosDeCosecha.Where(mov=>Model.semanaLiquidada.hasInside(mov.fechaMovimiento))
+                    .OrderBy(mov => mov.fechaMovimiento).ToList();
+            }
+        }
+
+        //Se determina el costo de el producto segun la zona del productor
+        var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
+
+        //Se genera el reporte semanal
+        var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
+
+        //Se calcula el total de ingreso por la cosecha registrada
+        decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
+        Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
+
+        //Retenciones
+        decimal retencionTotal = 0;
+        decimal retencionAbono = 0;
+        PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
+        if (editMode)
+        {
+            //Calculo de retenciones capturadas
+            retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ANTICIPO);
+            retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ARBOLES);
+            retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
+            retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
+            retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
 
         //Se obtiene el abono retenido, si no hay tal, es nulo
         abonoRetenido = Model.abonoAnticipo;
@@ -94,10 +95,10 @@
     Model.fechaMovimiento = Model.semanaLiquidada.endDate.AddDays(1);
 
     decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0;
-    //Estado actual de finanzas del productor
-    decimal balanceActual = ViewBag.balanceActual;
-    //Estado actual del balance por arboles de olivo del productor
-    decimal balanceActualArboles = ViewBag.balanceActualArboles;
+            //Estado actual de finanzas del productor
+            decimal balanceActual = ViewBag.balanceActual;
+            //Estado actual del balance por arboles de olivo del productor
+            decimal balanceActualArboles = ViewBag.balanceActualArboles;
     if (editMode)
     {
         if(abonoRetenido.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
@@ -108,7 +109,7 @@
             abonoBalanceArbolOlivo = abonoRetenido.montoMovimiento;
         }
 
-        balanceActual -= abonoBalanceAnticipos;
+    balanceActual -= abonoBalanceAnticipos;
         balanceActualArboles -= abonoBalanceArbolOlivo;
     }
 
@@ -292,12 +293,6 @@
                         @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="form-group col-xs-4" id="inputTipoCapital"
-                         style="display:@(String.IsNullOrEmpty(abonoRetenido.tipoDeMovimientoDeCapital)?"none":"inline-block")">
-                        <label>Abono al balance:</label>
-                        @Html.DropDownList("tipoCapital", slOpcionesTipoCapital, new { @class = "form-control" })
-                    </div>
-
                     <div class="form-group @(reportMode?"hidden":"")">
                         <div class="col-xs-12">
                             <button class="btn btn-success" @(ingresosDeCosecha.Count()==0?"disabled":"")>
@@ -421,34 +416,6 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        //Si se hace un cambio de seleccion en el tipo de abono para cierto balance
-        $("#tipoCapital").change(function () {
-            //Se pone en ceros los campos de abono semanal de los balances
-            $("input[id=inputAbonoSemana]").val(numeral(0).format('0.00'));
-            //Input donde se introduce la retencion
-            var inputRetencion = $("#abonoAnticipos");
-            //Input del abono semanal para el tipo de balance seleccionado
-            var inputAbonoSemana = $(getSelectorInputAbono());
-            //Se introduce el valor de la retencion en el correspondiente abono semanal
-            inputAbonoSemana.val(inputRetencion.val());
-            //Se refrescan todos los saldos a pagar de todos los balances
-            refreshSaldos(inputAbonoSemana, inputRetencion)
-        })
-
-        //Segun el dropdown de tipo de abono, la funcion arroja el selector correspondiente a el abono semanal
-        //para el balance de anticipos o de arboles
-        function getSelectorInputAbono() {
-            var selector = '#';
-            if ($("#tipoCapital").val() == '@(PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)') {
-                selector += 'pnlSaldoAnticipos'
-            } else if ($("#tipoCapital").val() == '@(PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES)') {
-                selector += 'pnlSaldoArboles'
-            }
-            selector += " #inputAbonoSemana"
-
-            return selector;
-        }
-
         //Recalcula los reportes semanales para ambos balances de arboles y anticipos
         function refreshSaldos(inputAbonoSemana, inputRetencion) {
             $.each($("input[id=inputAbonoSemana]"), function (idx, inputAbonoSemana) {
@@ -472,17 +439,23 @@
             });
 
             //Para el input de anticipo a abonos
-            if ($(this).attr("id") == "abonoAnticipos") {
+            if ($(this).attr("id") == "abonoAnticipos" || $(this).attr("id") == "abonoArboles") {
                 var inputRetencion = $(this);
-                //Se visualiza el cambio del balance
-                $("#inputAbonoSemana").val(numeral(0).format('0.00'));
 
-                var inputAbonoSemana = $(getSelectorInputAbono());
+                var inputAbonoSemana = $(getSelectorInputAbono(inputRetencion));
                 inputAbonoSemana.val(inputRetencion.val());
                 refreshSaldos(inputAbonoSemana, inputRetencion)
-                
-                //Aparece o desaparece el dropdown de tipo de abono si se introdujo una retencion de este tipo
-                $("#inputTipoCapital").slideDownOrUp(Number(inputRetencion.val()) > 0)
+            }
+
+            function getSelectorInputAbono(inputRetencion) {
+                var res = "";
+                if (inputRetencion.attr("id") == "abonoAnticipos") {
+                    res = "#pnlSaldoAnticipos";
+                } else if (inputRetencion.attr("id") == "abonoArboles") {
+                    res = "#pnlSaldoArboles";
+                }
+                res += " #inputAbonoSemana";
+                return res;
             }
 
             //Para el input de garantia de sanidad
@@ -554,18 +527,11 @@
     @if (reportMode)
     {
         <script>
-            $("input, select").attr("disabled", true);
+            $("input, select").attr("readonly", true);
         </script>
 
         <style>
             @@media print{
-                /*body {
-                    margin-top: 50mm; 
-                    margin-bottom: 50mm; 
-                    margin-left: 0mm; 
-                    margin-right: 0mm
-                }*/
-
                 .form-group{
                     margin-bottom: 5px;
                 }
@@ -582,11 +548,6 @@
                     padding: 0;
                 }
             }
-            /*
-            @@page {
-                margin-top: 5cm;
-                margin-bottom: 5cm;
-             }*/
         </style>
     }
 }

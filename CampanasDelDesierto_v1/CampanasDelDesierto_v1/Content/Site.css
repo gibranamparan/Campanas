@@ -62,12 +62,8 @@ textarea {
    /*max-width: 280px;*/ 
 }
 
-input[readonly='readonly']{
-    background-color: dimgray;
-}
-
-input[disabled]{
-    background-color:#eee;
+input[disabled], input[readonly], input[readonly='readonly']{
+    background-color: #eee;
 }
 
 /*Centers logo*/

@@ -345,6 +345,10 @@
     <Compile Include="Migrations\201706270242427_simplifcar_UnidadMedida.Designer.cs">
       <DependentUpon>201706270242427_simplifcar_UnidadMedida.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707030553141_liquidacion_abonoArboles.cs" />
+    <Compile Include="Migrations\201707030553141_liquidacion_abonoArboles.Designer.cs">
+      <DependentUpon>201707030553141_liquidacion_abonoArboles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -760,6 +764,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706270242427_simplifcar_UnidadMedida.resx">
       <DependentUpon>201706270242427_simplifcar_UnidadMedida.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707030553141_liquidacion_abonoArboles.resx">
+      <DependentUpon>201707030553141_liquidacion_abonoArboles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

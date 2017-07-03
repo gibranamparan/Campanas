@@ -117,7 +117,6 @@ namespace CampanasDelDesierto_v1.Models
             abono.montoMovimiento = monto;
             abono.TemporadaDeCosechaID = ls.TemporadaDeCosechaID;
             abono.idProductor = ls.idProductor;
-            abono.tipoDeMovimientoDeCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
             abono.abonoEnliquidacionID = ls.idMovimiento;
             abono.tipoDeMovimientoDeCapital = tipoCapital;
 

@@ -11,6 +11,7 @@ namespace CampanasDelDesierto_v1.Models
 {
     public class LiquidacionSemanal:MovimientoFinanciero
     {
+
         [Required(AllowEmptyStrings = false)]
         [Display(Name = "Cheque / Folio")]
         public string cheque { get; set; }
@@ -24,24 +25,34 @@ namespace CampanasDelDesierto_v1.Models
         [DecimalPrecision(18, 4)]
         public decimal precioDelDolarEnLiquidacion { get; set; }
 
-        /*RENTECIONES*/
-        [Display(Name = "Abono a Anticipos")]
-        [ForeignKey("abonoAnticipo")]
-        public int? abonoAnticipoID { get; set; }
-        public virtual PrestamoYAbonoCapital abonoAnticipo { get; set; }
-
         [DisplayName("Semana")]
         [Range(1, 53)] //Rango de semanas en 1 año
         [Required]
         public int semana { get; set; }
 
-        public new string concepto { get {
+        public new string concepto
+        {
+            get
+            {
                 return String.Format($"CHEQUE: {this.cheque}");
-            } }
+            }
+        }
+
+        /*RENTECIONES*/
+        [Display(Name = "Abono Anticipos")]
+        [ForeignKey("abonoAnticipo")]
+        public int? abonoAnticipoID { get; set; }
+        public virtual PrestamoYAbonoCapital abonoAnticipo { get; set; }
+        
+        [Display(Name = "Abono Arboles")]
+        [ForeignKey("abonoArboles")]
+        public int? abonoArbolesID { get; set; }
+        public virtual PrestamoYAbonoCapital abonoArboles { get; set; }
 
         //Lista de retenciones asociadas a la liquidacion
         public virtual ICollection<Retencion> retenciones { get; set; }
 
+        //Lista de ingresos de cosecha liquidados en esta instancia
         public virtual ICollection<PagoPorProducto> ingresosDeCosecha { get; set; }
 
         public LiquidacionSemanal()
@@ -60,7 +71,7 @@ namespace CampanasDelDesierto_v1.Models
         public decimal getMontoRetencion(Retencion.TipoRetencion tipo)
         {
             decimal monto = 0;
-            if (tipo == Retencion.TipoRetencion.ABONO && this.abonoAnticipo!=null)
+            if (tipo == Retencion.TipoRetencion.ABONO_ANTICIPO && this.abonoAnticipo!=null)
             {
                 monto = this.abonoAnticipo.montoMovimiento;
             }else if(this.retenciones.FirstOrDefault(mov => mov.tipoDeDeduccion == tipo)!=null)
@@ -74,21 +85,42 @@ namespace CampanasDelDesierto_v1.Models
 
         public class VMRetenciones
         {
+            /// <summary>
+            /// Retención de garantía por sanidad.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
             [Display(Name = Retencion.NombreRetencion.SANIDAD)]
             public decimal garantiaLimpieza { get; set; }
 
+            //Retención ejidal
+            /// <summary>
+            /// Retencion de aportación de 2% ejidal
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
             [Display(Name = Retencion.NombreRetencion.EJIDAL)]
             public decimal retencionEjidal { get; set; }
 
+            /// <summary>
+            /// Retención para abonar a balance de anticipos
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
-            [Display(Name = Retencion.NombreRetencion.ABONO)]
+            [Display(Name = Retencion.NombreRetencion.ABONO_ANTICIPO)]
             public decimal abonoAnticipos { get; set; }
+            
+            /// <summary>
+            /// Retencion de abono a balance de venta de arboles de olivo
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = Retencion.NombreRetencion.ABONO_ARBOLES)]
+            public decimal abonoArboles { get; set; }
 
+            /// <summary>
+            /// Otro tipo de retenciones sumarizadas
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
             [Display(Name = Retencion.NombreRetencion.OTRO)]
@@ -105,6 +137,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public class VMRetencionReporteSemanal
         {
+
             [DisplayFormat(DataFormatString = "{0:0.00}",
             ApplyFormatInEditMode = true)]
             [Display(Name = "Retención de la Semana")]

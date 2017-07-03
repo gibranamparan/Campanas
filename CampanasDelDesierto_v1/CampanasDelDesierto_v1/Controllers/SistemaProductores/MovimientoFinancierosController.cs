@@ -170,8 +170,15 @@ namespace CampanasDelDesierto_v1.Controllers
                         });
 
                 //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
-                if (((LiquidacionSemanal)mov).abonoAnticipo != null) {
+                if (((LiquidacionSemanal)mov).abonoAnticipo != null)
+                {
                     db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
+                    retencionAbonoEliminado = true;
+                }
+                //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
+                if (((LiquidacionSemanal)mov).abonoArboles != null)
+                {
+                    db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoArboles);
                     retencionAbonoEliminado = true;
                 }
             }
