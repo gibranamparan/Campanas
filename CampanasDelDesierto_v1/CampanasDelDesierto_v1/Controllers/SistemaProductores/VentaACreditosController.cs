@@ -165,9 +165,12 @@ namespace CampanasDelDesierto_v1.Controllers
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
+                    db.Entry(ventaACredito).Collection(vc => vc.ComprasProductos).Load();
+                    ventaACredito.ComprasProductos.ToList().ForEach(com => db.Entry(com).Reference(p => p.producto).Load());
+
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(ventaACredito.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
+                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento, ventaACredito.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db, ventaACredito.tipoDeBalance);

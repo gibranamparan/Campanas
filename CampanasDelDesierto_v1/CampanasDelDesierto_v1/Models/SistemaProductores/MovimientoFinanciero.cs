@@ -195,13 +195,7 @@ namespace CampanasDelDesierto_v1.Models
                 VentaACredito ven = ((VentaACredito)this);
                 //Si al menos un arbol de olivo se ha vendido, la venta se marca y 
                 //se acaba la busqueda
-                if(ven.ComprasProductos !=null)
-                    foreach(var com in ven.ComprasProductos)
-                        if(com.producto.isArbolAceituna)
-                        {
-                            hayOlivo = true;
-                            break;
-                        }
+                hayOlivo = VentaACredito.isVentaOlivo(ven.ComprasProductos);
             }
             res = tom && hayOlivo;
 
@@ -221,7 +215,9 @@ namespace CampanasDelDesierto_v1.Models
         public bool isAbonoOPrestamo()
         {
             var tom = this.getTypeOfMovement();
-            return (tom == (TypeOfMovements.CAPITAL) && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
+            return (tom == (TypeOfMovements.CAPITAL) 
+                && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital 
+                    != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
                 || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
         }
 

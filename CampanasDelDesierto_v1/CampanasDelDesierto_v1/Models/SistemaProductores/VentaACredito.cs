@@ -45,6 +45,19 @@ namespace CampanasDelDesierto_v1.Models
             this.montoMovimiento *= -1;
             base.ajustarMovimiento();
         }
+
+        internal static bool isVentaOlivo(ICollection<CompraProducto> comprasProductos)
+        {
+            bool hayOlivo = false;
+            if (comprasProductos != null)
+                foreach (var com in comprasProductos)
+                    if (com.producto.isArbolAceituna)
+                    {
+                        hayOlivo = true;
+                        break;
+                    }
+            return hayOlivo;
+        }
     }
 
 }

@@ -8,8 +8,8 @@
 
     Productor productor = ViewBag.productor;
 
-    decimal montoMovimientoPesos = Model.precioDelDolar * Model.montoMovimiento;
-    montoMovimientoPesos = montoMovimientoPesos < 0 ? montoMovimientoPesos * -1 : montoMovimientoPesos;
+    Model.montoMovimiento = Model.montoMovimiento < 0 ? Model.montoMovimiento * -1 : Model.montoMovimiento;
+    Model.montoPesos = Model.montoPesos < 0 ? Model.montoPesos * -1 : Model.montoPesos;
 }
 <p>
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
@@ -61,9 +61,7 @@
                     </div>
                 </div>
 
-                <div id="conversionDivisa" class="row" 
-                     style="display:@(Model.divisa == PrestamoYAbonoCapital.Divisas.MXN?
-                        "block":"none")">
+                <div id="conversionDivisa" class="row"  >
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.montoPesos, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
@@ -204,14 +202,14 @@
                 $('#precioDelDolar').attr('value', precioDolarOriginal);
                 recalcularMontoDolares();
             }
+
             $('#divisa').change(function () {
-                if ($(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN') {
-                    $('#conversionDivisa').slideDown();
-                    $("#montoMovimiento").prop('readonly', true);
-                } else {
-                    $('#conversionDivisa').slideUp();
-                    $("#montoMovimiento").prop('readonly', false);
-                }
+                var pesosSelected = $(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN';
+                $("#montoMovimiento").prop('readonly', pesosSelected); //Activa dolares
+                $("#montoPesos").prop('readonly', !pesosSelected); //Desactiva pesos
+
+                /*$("#montoMovimiento").val(numeral(0).format('0.00')).trigger('input');
+                $("#montoPesos").val(numeral(0).format('0.00')).trigger('input');*/
             })
 
             $("#tipoDeMovimientoDeCapital").change(function () {
@@ -222,7 +220,7 @@
 
                 $("#proveedor").trigger("change");
             })
-            
+
             $("#proveedor").change(function () {
                 var prov = $(this).val();
                 $("#detallesCFE").slideDownOrUp(prov=='CFE')
@@ -277,6 +275,7 @@
 
             //recalcularMontoPesos();
             $('#divisa').trigger('change');
+            $("#tipoDeMovimientoDeCapital").trigger('change')
         })
 
     </script>

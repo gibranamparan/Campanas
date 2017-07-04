@@ -17,7 +17,7 @@ namespace CampanasDelDesierto_v1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private const string strBindFields = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
             "TemporadaDeCosechaID,cheque,,semana,semanaLiquidada.startDate,semanaLiquidada.endDate," +
-            "abonoAnticipoID,precioDelDolarEnLiquidacion";
+            "abonoAnticipoID,abonoArbolesID,precioDelDolarEnLiquidacion";
         // GET: EmisionDeCheques
         public ActionResult Index()
         {
@@ -286,26 +286,6 @@ namespace CampanasDelDesierto_v1.Controllers
             return View("Form_Liquidacion", mov);
         }
 
-        [HttpGet]
-        public ActionResult ReporteLiquidacionSemanal(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            LiquidacionSemanal mov = db.LiquidacionesSemanales.Find(id);
-            if (mov == null)
-            {
-                return HttpNotFound();
-            }
-
-            prepararVistaEditar(ref mov, null);
-            ViewBag.reportMode = true;
-
-            return View("Form_Liquidacion", mov);
-        }
-
         // POST: EmisionDeCheques/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -313,7 +293,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = LiquidacionSemanalController.strBindFields)]
             LiquidacionSemanal emisionDeCheque, TimePeriod semanaLiquidada, 
-            LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID, string tipoCapital)
+            LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID)
         {
             if (ModelState.IsValid)
             {
@@ -333,7 +313,10 @@ namespace CampanasDelDesierto_v1.Controllers
                 var tiposRetencionesArray = Enum.GetValues(typeof(Retencion.TipoRetencion))
                     .Cast<Retencion.TipoRetencion>().ToList();
 
-                PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                //Apuntadores temporales para guardar el abono almacenado para regenerar el balance
+                //despues de guardar el registro de liquidacion
+                PrestamoYAbonoCapital abonoAnticipo = new PrestamoYAbonoCapital();
+                PrestamoYAbonoCapital abonoArboles = new PrestamoYAbonoCapital();
                 //Se editas las retenciones
                 foreach (Retencion.TipoRetencion tipo in tiposRetencionesArray)
                 {
@@ -362,13 +345,30 @@ namespace CampanasDelDesierto_v1.Controllers
                         db.Entry(oldRet).State = EntityState.Modified;
                     }
                     //Para retenciones de abono
-                    if(tipo == Retencion.TipoRetencion.ABONO_ANTICIPO)
+                    if(tipo == Retencion.TipoRetencion.ABONO_ANTICIPO || tipo == Retencion.TipoRetencion.ABONO_ARBOLES)
                     {
+                        PrestamoYAbonoCapital abono = new PrestamoYAbonoCapital();
+                        //Se determina el tipo de movimiento capital segun el tipo de rentecion (Abono a anticipo o a arboles)
+                        string tipoCapital=string.Empty;
+                        decimal montoRetenido = 0;
+                        int abonoID = 0;
+                        if (tipo == Retencion.TipoRetencion.ABONO_ANTICIPO) { 
+                            tipoCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO;
+                            montoRetenido = retenciones.abonoAnticipos;
+                            abonoID = emisionDeCheque.abonoAnticipoID == null ? 0 : emisionDeCheque.abonoAnticipoID.Value;
+                        }
+
+                        if (tipo == Retencion.TipoRetencion.ABONO_ARBOLES) { 
+                            tipoCapital = PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES;
+                            montoRetenido = retenciones.abonoArboles;
+                            abonoID = emisionDeCheque.abonoArbolesID == null ? 0 : emisionDeCheque.abonoArbolesID.Value;
+                        }
+
                         //No se habia reportado y se reporta en edicion
                         if (oldRet == null && newRet != null)
                         {
                             //Se crea un nuevo abono como retencion de esta liquidacion
-                            abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, retenciones.abonoAnticipos, tipoCapital);
+                            abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, montoRetenido, tipoCapital);
                             emisionDeCheque.abonoAnticipo = abono; //Se asocia el nuevo abono
 
                             //Se agrega nueva retencion
@@ -385,7 +385,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         //Se habia reportado previamente y aparece en edicion
                         else if (oldRet != null && newRet != null)
                         {
-                            abono = db.PrestamosYAbonosCapital.Find(emisionDeCheque.abonoAnticipoID);
+                            abono = db.PrestamosYAbonosCapital.Find(abonoID);
 
                             //Se modifica y marca para ser editada
                             abono.montoMovimiento = -newRet.montoMovimiento;
@@ -394,6 +394,12 @@ namespace CampanasDelDesierto_v1.Controllers
                             abono.tipoDeMovimientoDeCapital = tipoCapital;
                             db.Entry(abono).State = EntityState.Modified;
                         }
+
+                        if (tipo == Retencion.TipoRetencion.ABONO_ANTICIPO)
+                            abonoAnticipo = abono;
+
+                        if (tipo == Retencion.TipoRetencion.ABONO_ARBOLES)
+                            abonoArboles = abono;
                     }
                 }
                 
@@ -425,23 +431,30 @@ namespace CampanasDelDesierto_v1.Controllers
                     }
                     db.SaveChanges();
 
-                    //Se valida si se agrego un abono
-                    if (abono.idMovimiento > 0)
+                    //Se valida si se agrego un abono al balance de ANTICIPOS
+                    if (abonoAnticipo.idMovimiento > 0)
                     {
                         //Se calcula el movimiento anterior al que se esta registrando
-                        var prod = db.Productores.Find(abono.idProductor);
-                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abono.fechaMovimiento, abono.tipoDeBalance);
+                        var prod = db.Productores.Find(abonoAnticipo.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoAnticipo.fechaMovimiento, abonoAnticipo.tipoDeBalance);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                        prod.ajustarBalances(ultimoMovimiento, db,abono.tipoDeBalance);
+                        prod.ajustarBalances(ultimoMovimiento, db, abonoAnticipo.tipoDeBalance);
+                    }
+                    //Se valida si se agrego un abono al balance de ARBOLES
+                    if (abonoArboles.idMovimiento > 0)
+                    {
+                        //Se calcula el movimiento anterior al que se esta registrando
+                        var prod = db.Productores.Find(abonoArboles.idProductor);
+                        MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoArboles.fechaMovimiento, abonoArboles.tipoDeBalance);
+
+                        //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                        prod.ajustarBalances(ultimoMovimiento, db, abonoArboles.tipoDeBalance);
                     }
 
                     //numReg = introducirMovimientoAlBalance(emisionDeCheque);
-                    return RedirectToAction("Details", "Productores", new
-                    {
-                        id = emisionDeCheque.idProductor,
-                        temporada = emisionDeCheque.TemporadaDeCosechaID
-                    });
+                    return RedirectToAction("ReporteLiquidacionSemanal", new
+                        { id = emisionDeCheque.idMovimiento, });
                 }
             }
 
@@ -449,7 +462,27 @@ namespace CampanasDelDesierto_v1.Controllers
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
             prepararVistaEditar(ref emisionDeCheque, semanaLiquidada);
 
-            return View("Create", emisionDeCheque);
+            return View("Form_Liquidacion", emisionDeCheque);
+        }
+
+        [HttpGet]
+        public ActionResult ReporteLiquidacionSemanal(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            LiquidacionSemanal mov = db.LiquidacionesSemanales.Find(id);
+            if (mov == null)
+            {
+                return HttpNotFound();
+            }
+
+            prepararVistaEditar(ref mov, null);
+            ViewBag.reportMode = true;
+
+            return View("Form_Liquidacion", mov);
         }
 
         // GET: EmisionDeCheques/Delete/5

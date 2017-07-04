@@ -79,7 +79,7 @@
         {
             //Calculo de retenciones capturadas
             retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ANTICIPO);
-            retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ARBOLES);
+            retenciones.abonoArboles = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ARBOLES);
             retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
             retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
             retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
@@ -128,10 +128,17 @@
 <p class="hidden-print">
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este Productor
-    </a>
+    </a> 
+    @if (reportMode) { 
+        <span> | </span> 
+        <a href="@Url.Action("Edit", new { id = Model.idMovimiento})">
+            <i class="glyphicon glyphicon-pencil"></i> Editar Registro de Liquidacion
+        </a>
+    }
 </p>
 
-@if(reportMode){
+@*Solamente se muestra el encabezado del reporte para impresion cuando la vista se encuentra en modo de reporte*@
+@if (reportMode){
     @Html.Partial("Partial_EncabezadoReporte")
 }
 
@@ -219,6 +226,7 @@
             @Html.HiddenFor(model => model.semanaLiquidada.startDate)
             @Html.HiddenFor(model => model.semanaLiquidada.endDate)
             @Html.HiddenFor(model => model.abonoAnticipoID)
+            @Html.HiddenFor(model => model.abonoArbolesID)
             @Html.HiddenFor(model => model.precioDelDolarEnLiquidacion)
 
             foreach (var ing in ingresosDeCosecha)
