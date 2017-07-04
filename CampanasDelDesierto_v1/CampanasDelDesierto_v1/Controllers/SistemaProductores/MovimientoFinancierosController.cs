@@ -11,6 +11,7 @@ using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.IO;
 using OfficeOpenXml;
+using System.ComponentModel;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -45,7 +46,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
         // GET: MovimientoFinancieros/Details/5
         [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
-        public ActionResult Pagare(int? id)
+        public ActionResult PagareAnticipo(int? id)
         {
             if (id == null)
             {
@@ -56,7 +57,21 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            return View(movimientoFinanciero);
+            return View("Pagare", movimientoFinanciero);
+        }
+        [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]        
+        public ActionResult PagareVenta(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            VentaACredito movimientoFinanciero = db.VentasACreditos.Find(id);
+            if (movimientoFinanciero == null)
+            {
+                return HttpNotFound();
+            }
+            return View("Pagare", movimientoFinanciero);
         }
 
         // GET: MovimientoFinancieros/Create

@@ -14,6 +14,8 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Pagaré")]
         public string pagareVenta { get; set; }
+        [Display(Name = "Orden de Compra")]
+        public string ordenCompra { get; set; }
 
         public virtual ICollection<CompraProducto> ComprasProductos { get; set; }
 

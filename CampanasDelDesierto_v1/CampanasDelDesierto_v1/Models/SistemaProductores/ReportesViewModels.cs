@@ -10,7 +10,7 @@ namespace CampanasDelDesierto_v1.Models
     public class ReportesViewModels
     {
         public class VMAdeudosRecuperacionReg
-        {
+        { ApplicationDbContext db = new ApplicationDbContext();
             private Productor _productor;
 
             [DisplayFormat(DataFormatString = "{0:C}")]
@@ -41,6 +41,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayName("Total Recuperado")]
             public decimal totalRecuperado { get; set; }
 
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Adeudo Anterior Cosecha")]
+            public decimal adeudoAnteriorCosecha { get; set; }
+
             [DisplayName("Productor")]
             public string productor
             {
@@ -52,6 +56,7 @@ namespace CampanasDelDesierto_v1.Models
             public VMAdeudosRecuperacionReg(Productor productor, int temporadaID)
             {
                 this._productor = productor;
+                var temporadaActual = db.TemporadaDeCosechas.Find(temporadaID);
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
                     .Where(mov => mov.TemporadaDeCosechaID == temporadaID);
@@ -72,9 +77,19 @@ namespace CampanasDelDesierto_v1.Models
                     .Sum(mov => mov.montoMovimiento);
 
                 //Calculo de total de ventas
-                decimal totalVentas = movimientosBalanceAnticipos
+                  decimal totalVentas = movimientosBalanceAnticipos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                     .Sum(mov => mov.montoMovimiento);
+
+                //Adeudo Anterior cosecha                
+                var tempCosechas = db.TemporadaDeCosechas.Where(temp=>temp.fechaFin<=temporadaActual.fechaFin).ToList();
+                var primerasTemporadas = tempCosechas.Take(2);                
+                TemporadaDeCosecha cosechaAnterior= primerasTemporadas.ElementAt(1);
+                var movAnteriorCosecha = db.MovimientosFinancieros
+                    .Where(pro=> pro.idProductor== productor.idProductor && pro.TemporadaDeCosechaID==cosechaAnterior.TemporadaDeCosechaID)
+                    .ToList().OrderByDescending(mov=>mov.fechaMovimiento).ToList().Last();
+                decimal adeudoAnterior = movAnteriorCosecha.balance;
+                this.adeudoAnteriorCosecha = (adeudoAnterior)*(-1);
 
                 //Adeudo total es la suma de prestamos y ventas
                 this.totalAdeudo = -(totalPrestamos + totalVentas);

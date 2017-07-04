@@ -88,7 +88,15 @@
                         @Html.EditorFor(model => model.conceptoDeVenta, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.conceptoDeVenta, "", new { @class = "text-danger" })
                     </div>
-                </div>
+                </div> 
+                
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.ordenCompra, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ordenCompra, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ordenCompra, "", new { @class = "text-danger" })
+                    </div>
+                </div> 
 
                 <div class="form-group">
                     <div class="col-md-10">
