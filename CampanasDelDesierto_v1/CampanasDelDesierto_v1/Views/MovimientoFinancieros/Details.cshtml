@@ -17,10 +17,14 @@
     </a>
 
     @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL &&
-                                                ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO || Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+        ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO 
+        || Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
     {
+        string actionName = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL?"PagareAnticipo":
+            Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO?"PagareVenta":"Details";
+
         @(" | ")
-        <a href="@Url.Action("Pagare","MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
+        <a href="@Url.Action(actionName,"MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
             <i class="glyphicon glyphicon-print"></i> Imprimir Pagaré
         </a>
     }
