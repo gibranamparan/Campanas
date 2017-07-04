@@ -36,7 +36,7 @@
                     @Html.DisplayNameFor(model => movimientos.FirstOrDefault().montoMovimiento)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().nombreDeMovimiento)
+                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().concepto)
                 </th>
             </tr>
 
@@ -50,7 +50,7 @@
                         @Html.DisplayFor(modelItem => item.montoMovimiento)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
+                        @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                 </tr>
             }

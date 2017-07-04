@@ -68,6 +68,11 @@ namespace CampanasDelDesierto_v1.Models
 
         public int? abonoEnliquidacionID { get; set; }
 
+        /// <summary>
+        /// Conjunto de intereses generados para este prestamo
+        /// </summary>
+        public ICollection<CargoDeInteres> intereses { get; set; }
+
         public static class TipoMovimientoCapital
         {
             public static readonly string ABONO = "ABONO";
@@ -193,6 +198,26 @@ namespace CampanasDelDesierto_v1.Models
             [Required]
             [Display(Name = "Concepto")]
             public string nombreConcepto { get; set; }
+        }
+
+        public class CargoDeInteres
+        {
+            [Key]
+            public int cargoDeInteresID { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Monto (USD)")]
+            public decimal monto { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
+            ApplyFormatInEditMode = true)]
+            [DataType(DataType.Date)]
+            public DateTime fecha { get; set; }
+
+            [ForeignKey("anticipo")]
+            public int anticipoID { get; set; }
+            public virtual PrestamoYAbonoCapital anticipo { get; set; }
         }
     }
 }

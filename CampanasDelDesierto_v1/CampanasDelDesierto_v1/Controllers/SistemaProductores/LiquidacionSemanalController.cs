@@ -52,9 +52,6 @@ namespace CampanasDelDesierto_v1.Controllers
             mov.idProductor = productor.idProductor;
             mov.Productor = productor;
 
-            List<object> opcionesTipoCapital = PrestamoYAbonoCapital.getTipoMovimientoCapitalArray(true);
-            ViewBag.opcionesTipoCapital = opcionesTipoCapital;
-
             if (semanaLiquidada.isNotDefaultInstance())
                 mov.semanaLiquidada = semanaLiquidada; //Se asocia al nuevo registro de liquidacion semanal
 

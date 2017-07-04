@@ -135,8 +135,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db, prestamoYAbonoCapital.tipoDeBalance);
 
-                    return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
-                        temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
+                    return RedirectToAction("Details", "MovimientoFinancieros", new { id = prestamoYAbonoCapital.idMovimiento });
                 }
             }
 

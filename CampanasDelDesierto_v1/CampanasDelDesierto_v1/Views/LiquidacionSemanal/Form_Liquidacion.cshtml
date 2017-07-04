@@ -3,90 +3,88 @@
 @model CampanasDelDesierto_v1.Models.LiquidacionSemanal
 
 @{
-        //Determa si la pantalla se encuentra en modo de edicion
-        bool editMode = Model.idMovimiento > 0;
+    //Determa si la pantalla se encuentra en modo de edicion
+    bool editMode = Model.idMovimiento > 0;
 
-        //Es reporte de liquidacion
-        bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
+    //Es reporte de liquidacion
+    bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
 
-        ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
-        Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = reportMode?"Reporte":(editMode ? "Edición":"Registro"+" de Liquidacion Semanal");
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-        //Se determina el precio actual del dolar
-        BaxicoWebService bws = new BaxicoWebService();
-        string errorMessagePrecioDolar = String.Empty;
-        decimal precioDolar = 0;
+    //Se determina el precio actual del dolar
+    BaxicoWebService bws = new BaxicoWebService();
+    string errorMessagePrecioDolar = String.Empty;
+    decimal precioDolar = 0;
 
-        if(editMode || reportMode)
+    if(editMode || reportMode)
+    {
+        precioDolar = Model.precioDelDolarEnLiquidacion;
+    }else
+    {
+        precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
+    }
+
+    //Objeto para la forma de retenciones
+    LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
+
+    Productor productor = Model.Productor;
+
+    bool actualizar = false;
+    if (editMode)
+    {
+        actualizar = ViewBag.actualizar!=null? ViewBag.actualizar:false;
+    }
+
+    //Se buscan todos los ingresos de cosecha que se han hecho por el productor
+    List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
+
+    //Si es busqueda regular para crear
+    if (!editMode)
+    {
+        ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+    }
+    //Si es edicion
+    else
+    {
+        //Se toma los ingresos ya asociados
+        ingresosDeCosecha = Model.ingresosDeCosecha.ToList();
+        //Si es actualizacion, se agregan a los ya asociados aquellos que nos eencuentran asociados con nada
+        if (actualizar)
         {
-            precioDolar = Model.precioDelDolarEnLiquidacion;
-        }else
-        {
-            precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
+            List<PagoPorProducto> ingresosDeCosechaNuevos = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
+            .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
+            ingresosDeCosecha.AddRange(ingresosDeCosechaNuevos);
+            ingresosDeCosecha = ingresosDeCosecha.Where(mov=>Model.semanaLiquidada.hasInside(mov.fechaMovimiento))
+                .OrderBy(mov => mov.fechaMovimiento).ToList();
         }
+    }
 
-        //Objeto para la forma de retenciones
-        LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
+    //Se determina el costo de el producto segun la zona del productor
+    var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
 
-        Productor productor = Model.Productor;
+    //Se genera el reporte semanal
+    var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
 
-        bool actualizar = false;
-        if (editMode)
-        {
-            actualizar = ViewBag.actualizar!=null? ViewBag.actualizar:false;
-        }
+    //Se calcula el total de ingreso por la cosecha registrada
+    decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
+    Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
 
-        //Se buscan todos los ingresos de cosecha que se han hecho por el productor
-        List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
-
-        //Si es busqueda regular para crear
-        if (!editMode)
-        {
-            ingresosDeCosecha = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
-                .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
-        }
-        //Si es edicion
-        else
-        {
-            //Se toma los ingresos ya asociados
-            ingresosDeCosecha = Model.ingresosDeCosecha.ToList();
-            //Si es actualizacion, se agregan a los ya asociados aquellos que nos eencuentran asociados con nada
-            if (actualizar)
-            {
-                List<PagoPorProducto> ingresosDeCosechaNuevos = productor.filtrarPagosPorProducto(Model.temporadaDeCosecha, Model.semanaLiquidada, Model.semana)
-                .Where(ing => ing.liquidacionDeCosechaID == null).ToList();
-                ingresosDeCosecha.AddRange(ingresosDeCosechaNuevos);
-                ingresosDeCosecha = ingresosDeCosecha.Where(mov=>Model.semanaLiquidada.hasInside(mov.fechaMovimiento))
-                    .OrderBy(mov => mov.fechaMovimiento).ToList();
-            }
-        }
-
-        //Se determina el costo de el producto segun la zona del productor
-        var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
-
-        //Se genera el reporte semanal
-        var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
-
-        //Se calcula el total de ingreso por la cosecha registrada
-        decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
-        Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
-
-        //Retenciones
-        decimal retencionTotal = 0;
-        decimal retencionAbono = 0;
-        PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
-        if (editMode)
-        {
-            //Calculo de retenciones capturadas
-            retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ANTICIPO);
-            retenciones.abonoArboles = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ARBOLES);
-            retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
-            retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
-            retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
-
-        //Se obtiene el abono retenido, si no hay tal, es nulo
-        abonoRetenido = Model.abonoAnticipo;
-
+    //Retenciones
+    decimal retencionTotal = 0;
+    decimal retencionAbono = 0;
+    PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
+    PrestamoYAbonoCapital abonoArboles = new PrestamoYAbonoCapital();
+    if (editMode)
+    {
+        //Calculo de retenciones capturadas
+        retenciones.abonoAnticipos = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ANTICIPO);
+        retenciones.abonoArboles = Model.getMontoRetencion(Retencion.TipoRetencion.ABONO_ARBOLES);
+        retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
+        retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
+        retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
+        
         retencionTotal = retenciones.total;
         retencionAbono = retenciones.abonoAnticipos;
         Model.montoMovimiento -= retencionTotal;
@@ -95,27 +93,16 @@
     Model.fechaMovimiento = Model.semanaLiquidada.endDate.AddDays(1);
 
     decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0;
-            //Estado actual de finanzas del productor
-            decimal balanceActual = ViewBag.balanceActual;
-            //Estado actual del balance por arboles de olivo del productor
-            decimal balanceActualArboles = ViewBag.balanceActualArboles;
+    //Estado actual de finanzas del productor
+    decimal balanceActual = ViewBag.balanceActual;
+    //Estado actual del balance por arboles de olivo del productor
+    decimal balanceActualArboles = ViewBag.balanceActualArboles;
+
     if (editMode)
     {
-        if(abonoRetenido.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-        {
-            abonoBalanceAnticipos = abonoRetenido.montoMovimiento;
-        }else if(abonoRetenido.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
-        {
-            abonoBalanceArbolOlivo = abonoRetenido.montoMovimiento;
-        }
-
-    balanceActual -= abonoBalanceAnticipos;
+        balanceActual -= abonoBalanceAnticipos;
         balanceActualArboles -= abonoBalanceArbolOlivo;
     }
-
-    //Lista de seleccion del tipo de abono para cada tipo de balance
-    List<object> opcionesTipoCapital = ViewBag.opcionesTipoCapital;
-    SelectList slOpcionesTipoCapital = new SelectList(opcionesTipoCapital, "Value", "Text", abonoRetenido.tipoDeMovimientoDeCapital);
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
@@ -411,6 +398,7 @@
         @*Solo se muestra si en esta temporada a este productor se le ha hecho una retencion ejidal antes*@
         @if (productor.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == Model.TemporadaDeCosechaID)
             .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+            .Where(mov=>mov.fechaMovimiento.Date <= Model.fechaMovimiento.Date)
             .Where(mov=>((Retencion)mov).tipoDeDeduccion == Retencion.TipoRetencion.EJIDAL).Count() > 0)
         {
             ViewDataDictionary vddReporteSemanalEjidal = new ViewDataDictionary();

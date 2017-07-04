@@ -1,12 +1,32 @@
 ﻿@using CampanasDelDesierto_v1.HerramientasGenerales
 @using System.Globalization;
-@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 @using CampanasDelDesierto_v1.Models;
+@model CampanasDelDesierto_v1.Models.MovimientoFinanciero
 
 @{
     Layout = null;
     Model.montoMovimiento *= -1;
+    bool isVenta = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO;
+    bool isPrestamo = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL;
     string currency = "Dólares";
+    DateTime fechaPagar = new DateTime();
+
+    PrestamoYAbonoCapital prestamo = new PrestamoYAbonoCapital();
+    if (isPrestamo)
+    {
+        //asignacion de valor a cada variable para un PRESTAMO
+        prestamo = ((PrestamoYAbonoCapital)Model);
+        fechaPagar = prestamo.fechaPagar.Value;
+    }
+
+    VentaACredito venta = new VentaACredito();
+    if (isPrestamo)
+    {
+        venta = ((VentaACredito)Model);
+        //asignacion de valor a cada variable para un VENTA
+        //...
+    }
+
 }
 
 <!DOCTYPE html>
@@ -23,13 +43,13 @@
             @Html.DisplayFor(model => model.montoMovimiento) @currency
         </span>
         <span id="Dia">
-          @Model.fechaPagar.Value.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
+          @fechaPagar.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
         </span>
         <span id="mes">
-             @(Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaPagar.Value.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+             @(fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
         </span>
         <span id="año">
-            @Model.fechaPagar.Value.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
         <span id="montoMovimiento">
             @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.

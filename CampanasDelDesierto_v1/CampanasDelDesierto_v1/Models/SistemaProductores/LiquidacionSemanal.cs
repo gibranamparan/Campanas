@@ -153,15 +153,20 @@ namespace CampanasDelDesierto_v1.Models
             [Display(Name = "Retención Acumulada")]
             public decimal garantiaAcumulada { get; set; }
 
-            public VMRetencionReporteSemanal(List<Retencion> retencionesDeSanidad, LiquidacionSemanal liquidacionReportada, Retencion.TipoRetencion tipo)
+            public VMRetencionReporteSemanal(List<Retencion> retenciones, LiquidacionSemanal liquidacionReportada, Retencion.TipoRetencion tipo)
             {
                 //Se toman todas las retenciones de sanidad anteriores al reporte actual
-                retencionesDeSanidad = retencionesDeSanidad.Where(mov => mov.tipoDeDeduccion == tipo
+                /*retenciones = retenciones.Where(mov => mov.tipoDeDeduccion == tipo
                 && mov.fechaMovimiento.Date <= liquidacionReportada.fechaMovimiento.Date && mov.TemporadaDeCosechaID == liquidacionReportada.TemporadaDeCosechaID)
-                .OrderBy(mov => mov.fechaMovimiento).ToList();
+                .OrderBy(mov => mov.fechaMovimiento).ToList();*/
+
+                retenciones = retenciones.Where(mov => mov.tipoDeDeduccion == tipo).ToList();
+                retenciones = retenciones.Where(mov=>mov.fechaMovimiento.Date <= liquidacionReportada.fechaMovimiento.Date 
+                        && mov.TemporadaDeCosechaID == liquidacionReportada.TemporadaDeCosechaID)
+                    .OrderBy(mov => mov.fechaMovimiento).ToList();
 
                 //Retenciones de sanidad acumuladas hasta la fecha
-                this.garantiaAcumulada = Math.Abs(retencionesDeSanidad.Sum(mov => mov.montoMovimiento));
+                this.garantiaAcumulada = Math.Abs(retenciones.Sum(mov => mov.montoMovimiento));
                 this.garantiaActual = Math.Abs(this.garantiaAcumulada);
 
                 Retencion ultimaRetencion = new Retencion();
