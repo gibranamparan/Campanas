@@ -230,7 +230,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Liquidación Semanal</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body fixLabelsPrint">
                     @*Monto de cosecha*@
                     <div class="form-group col-xs-3">
                         <label>Total por Cosecha (USD):</label>
@@ -304,7 +304,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Saldo de Adeudo Acumulado</h3>
                 </div>
-                <div class="panel-body" id="pnlSaldoAnticipos">
+                <div class="panel-body fixLabelsPrint" id="pnlSaldoAnticipos">
                     @*Balance Actual*@
                     <div class="form-group col-xs-4">
                         @Html.LabelFor(model => model.Productor.balanceActual)
@@ -342,7 +342,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Saldo por Árboles de Olivo</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body fixLabelsPrint">
                     @*Balance Actual*@
                     <div class="form-group col-xs-4">
                         @Html.LabelFor(model => model.Productor.balanceActualArboles)
@@ -397,6 +397,10 @@
         }
     </div>
 </div>
+@if (reportMode)
+{
+    @Html.Partial("Partial_LineaFirmaReportes", Model.Productor)
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -525,7 +529,7 @@
                     margin-bottom: 5px;
                 }
 
-                label{
+                .fixLabelsPrint label{
                     margin-bottom: 0px;
                     min-height: 3em;
                 }

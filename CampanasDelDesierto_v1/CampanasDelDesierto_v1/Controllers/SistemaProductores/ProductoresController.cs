@@ -203,7 +203,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 productor.numProductor = productor.numProductor.Trim();
                 db.Entry(productor).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = productor.idProductor});
             }
             return View(productor);
         }

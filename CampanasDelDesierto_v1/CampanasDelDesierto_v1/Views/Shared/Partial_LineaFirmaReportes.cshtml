@@ -1,0 +1,18 @@
+﻿@model CampanasDelDesierto_v1.Models.Productor
+@{ 
+    string nombreFirma = string.Empty;
+    nombreFirma = Model.nombreCheque;
+    if (!String.IsNullOrEmpty(Model.nombreRepresentanteLegal) 
+        && Model.nombreCheque != Model.nombreRepresentanteLegal) {
+        nombreFirma += ", " + Model.nombreRepresentanteLegal;
+    }
+}
+<div class="col-xs-12 visible-print">
+    <div class="col-xs-6 col-xs-offset-3" 
+         style="border-top: 2px solid black; 
+            text-align: center;
+            margin-top: 2em;">
+        <span>Firma de recibido</span><br />
+        @nombreFirma
+    </div>
+</div>

@@ -703,6 +703,7 @@
     <Content Include="Views\MovimientoFinancieros\Partial_ListVentaOlivo.cshtml" />
     <Content Include="Views\Shared\Partial_EncabezadoReporte.cshtml" />
     <Content Include="Views\ReportesProductores\AdeudosRecuperacion.cshtml" />
+    <Content Include="Views\Shared\Partial_LineaFirmaReportes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

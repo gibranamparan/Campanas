@@ -64,9 +64,10 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                var movimientos = this.MovimientosFinancieros.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                var movimientos = this.MovimientosFinancieros;
                 if (movimientos != null && movimientos.Count() > 0)
                 {
+                    movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
                     decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
@@ -80,9 +81,10 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                var movimientos = this.MovimientosFinancieros.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                var movimientos = this.MovimientosFinancieros;
                 if (movimientos != null && movimientos.Count() > 0)
                 {
+                    movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
                     decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
