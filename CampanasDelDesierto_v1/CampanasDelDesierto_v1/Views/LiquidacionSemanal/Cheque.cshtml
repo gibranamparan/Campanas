@@ -6,8 +6,10 @@
 @{
     Layout = null;
     Model.montoMovimiento *= -1;
+    string currency = "Dólares";
+   
 }
-
+    
 <!DOCTYPE html>
 
 <html>
@@ -21,100 +23,101 @@
         <span id="nombreCheque">
             @Html.DisplayFor(model => model.Productor.nombreCheque)
         </span>
-        <span id="montoMovimiento">
-            @(Model.montoMovimiento.ToString("C"))
+        <span id="montoMovimiento">   
+        @Html.DisplayFor(model => model.montoMovimiento) @currency
         </span>
         <span id="montoLetra">
-            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento))
+            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
         </span>
         <span id="fechaMovimiento">
             @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
-        <span id="cheque">
-            @Html.DisplayFor(model => model.cheque)
-        </span>
-        <span id="concepto">
-            @Html.DisplayFor(model => model.Productor.numProductor)
-            @(Model.semana + " del " + Model.semanaLiquidada) 
-       
-        </span>
-    </div>
+        @*<span id="cheque">
+        @Html.DisplayFor(model => model.cheque)
+    </span>*@
+            <span id="concepto">
+               <h5>Productor:</h5>@Html.DisplayFor(model => model.Productor.numProductor)
+                <h5>Semana:</h5>@(Model.semana + " del " + Model.semanaLiquidada)
 
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
+            </span>
+        </div>
 
-        #pnlCheque span {
-            position: absolute;
-            font-size: 18px;
-        }
-
-        #pnlCheque img {
-            position: absolute;
-            left: 0;
-            z-index: 0;
-        }
-
-        span#nombreCheque {
-            left: 18mm;
-            top: 36mm;
-        }
-
-        span#montoMovimiento {
-            top: 35mm;
-            left: 161mm;
-        }
-
-        span#montoLetra{
-            top: 45mm;
-            left: 17mm;
-        }
-         span#concepto{
-            top: 100mm;
-            left: 17mm;
-        }
-
-        span#fechaMovimiento {
-            top: 17mm;
-            left: 152mm;
-        }
-
-        span#cheque {
-            left: 165mm;
-            top: 5mm;
-        }
-
-        #pnlCheque {
-            position: relative;
-            left: 1mm;
-            top: 2mm;
-
-            /*Tamaño de papel Letter*/
-            width: 8.5in;
-            height: 11in;
-        }
-
-        #pnlCheque img {
-            position: absolute;
-            z-index: 0;
-            width: 8.31in; /*Factor: */
-            height: 11in;/*Factor:*/
-        }
-
-        @@page {
-            size: letter;
-            margin: 0;
-            padding: 0;
-        }
-
-        @@media print {
-            #pnlCheque img {
-                display:none;
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
             }
-        }
-    </style>
-</body>
-</html>
+
+            #pnlCheque span {
+                position: absolute;
+                font-size: 18px;
+            }
+
+            #pnlCheque img {
+                position: absolute;
+                left: 0;
+                z-index: 0;
+            }
+
+            span#nombreCheque {
+                left: 18mm;
+                top: 36mm;
+            }
+
+            span#montoMovimiento {
+                top: 35mm;
+                left: 161mm;
+            }
+
+            span#montoLetra{
+                top: 45mm;
+                left: 17mm;
+            }
+             span#concepto{
+                top: 100mm;
+                left: 17mm;
+                font-size: 14px;
+            }
+
+            span#fechaMovimiento {
+                top: 17mm;
+                left: 152mm;
+            }
+
+            span#cheque {
+                left: 165mm;
+                top: 5mm;
+            }
+
+            #pnlCheque {
+                position: relative;
+                left: 1mm;
+                top: 2mm;
+
+                /*Tamaño de papel Letter*/
+                width: 8.5in;
+                height: 11in;
+            }
+
+            #pnlCheque img {
+                position: absolute;
+                z-index: 0;
+                width: 8.31in; /*Factor: */
+                height: 11in;/*Factor:*/
+            }
+
+            @@page {
+                size: letter;
+                margin: 0;
+                padding: 0;
+            }
+
+            @@media print {
+                #pnlCheque img {
+                    display:none;
+                }
+            }
+        </style>
+    </body>
+    </html>
 
