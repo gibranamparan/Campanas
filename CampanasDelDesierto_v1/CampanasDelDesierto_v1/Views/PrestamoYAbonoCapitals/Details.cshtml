@@ -1,5 +1,5 @@
-﻿@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
-
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 
 <div class="form-group col-md-4">
     @Html.LabelFor(model => model.cheque, new { @class = "control-label col-md-3" })
@@ -37,6 +37,64 @@
         <p class="form-control-static">@Html.DisplayFor(model => model.descripcionConcepto)</p>
     </div>
 </div>
+<div class="row">
+    @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+    {
+        if (Model.prestamosAbonados.Count() > 0)
+        {
+            <div>
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.fechaMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoActivo)</th>
+                    </tr>
+                    @foreach (var mov in Model.prestamosAbonados)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => mov.prestamo.fechaMovimiento)</td>
+                            <td>@Html.DisplayFor(model => mov.prestamo.montoMovimiento)</td>
+                            <td>@Html.DisplayFor(model => mov.prestamo.montoActivo)</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning col-md-12">
+                Este abono <strong>no se ha distribuido</strong> en ningún anticipo.
+            </div>
+        }
+    }
 
-
-
+    @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+    {
+        if (Model.abonosRecibidos.Count() > 0)
+        {
+            <div>
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.fechaMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoActivo)</th>
+                    </tr>
+                    @foreach (var mov in Model.abonosRecibidos)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => mov.abono.fechaMovimiento)</td>
+                            <td>@Html.DisplayFor(model => mov.abono.montoMovimiento)</td>
+                            <td>@Html.DisplayFor(model => mov.abono.montoActivo)</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning col-md-12">
+                Este prestamo <strong>no ha recibido</strong> ningún abono.
+            </div>
+        }
+    }
+</div>

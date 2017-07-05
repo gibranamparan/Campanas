@@ -39,7 +39,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
+            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Include("prestamosAbonados")
+                .SingleOrDefault(mov=>mov.idMovimiento == id);
             if (prestamoYAbonoCapital == null)
             {
                 return HttpNotFound();
@@ -134,6 +135,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db, prestamoYAbonoCapital.tipoDeBalance);
+                    prod.asociarAbonosConPrestamos(db);
 
                     return RedirectToAction("Details", "MovimientoFinancieros", new { id = prestamoYAbonoCapital.idMovimiento });
                 }
@@ -214,6 +216,12 @@ namespace CampanasDelDesierto_v1.Controllers
 
             return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
         }
+        /*
+        public JsonResult incrementarInteres(int id)
+        {
+            var mov = db.PrestamosYAbonosCapital.Find(id);
+            mov.incrementarInteres(db);
+        }*/
 
         protected override void Dispose(bool disposing)
         {

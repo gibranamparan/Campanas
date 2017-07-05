@@ -69,6 +69,7 @@ namespace CampanasDelDesierto_v1.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        //Sistema de productores
         public DbSet<MovimientoFinanciero> MovimientosFinancieros { get; set; }
         public DbSet<PagoPorProducto> PagosPorProductos { get; set; }
         public DbSet<PrestamoYAbonoCapital> PrestamosYAbonosCapital { get; set; }
@@ -77,19 +78,22 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Proveedores> Proveedores { get; set; }
         public DbSet<Conceptos> Conceptos { get; set; }
+        public DbSet<LiquidacionSemanal> LiquidacionesSemanales { get; set; }
+        public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
+        public DbSet<Retencion> Retenciones { get; set; }
+        public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
+        public DbSet<PrestamoYAbonoCapital.CargoDeInteres> CargosDeInteres { get; set; }
+        public DbSet<PrestamoYAbonoCapital.Prestamo_Abono> Prestamo_Abono { get; set; }
+
+        //Sistema de activos
         public DbSet<Activo> Activos { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<PrestamoActivo> PrestamoActivos { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
-        public DbSet<LiquidacionSemanal> LiquidacionesSemanales { get; set; }
-        public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
-        public DbSet<Retencion> Retenciones { get; set; }
-        public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
         public DbSet<CompraProducto> ComprasProductos { get; set; }
         public DbSet<AdminDepartamento> AdminsDepartamentos { get; set; }
-        public DbSet<PrestamoYAbonoCapital.CargoDeInteres> CargosDeInteres { get; set; }
 
 
         public ApplicationDbContext()

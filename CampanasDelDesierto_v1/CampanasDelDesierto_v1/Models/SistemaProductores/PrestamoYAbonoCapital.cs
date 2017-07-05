@@ -6,14 +6,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.VisualBasic;
 
 namespace CampanasDelDesierto_v1.Models
 {
-    public class PrestamoYAbonoCapital:MovimientoFinanciero
+    public class PrestamoYAbonoCapital : MovimientoFinanciero
     {
         [Display(Name = "Cheque/Folio")]
         public string cheque { get; set; }
-        
+
         /// <summary>
         /// Indica el tipo de movimiento de Abono O Capital, este puede ser ABONO, ANTICIPO, ABONO A ARBOLES
         /// </summary>
@@ -39,8 +40,8 @@ namespace CampanasDelDesierto_v1.Models
         public new string concepto {
             get {
                 string res = this.conceptoCapital;
-               /* if (this.tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                    res = this.tipoDeMovimientoDeCapital;*/
+                /* if (this.tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                     res = this.tipoDeMovimientoDeCapital;*/
                 return res;
             }
             set { this.conceptoCapital = value; } }
@@ -68,10 +69,56 @@ namespace CampanasDelDesierto_v1.Models
 
         public int? abonoEnliquidacionID { get; set; }
 
+        public decimal totalLiquidadoPrestamo
+        {
+            get
+            {
+                return abonosRecibidos != null ? abonosRecibidos.Sum(mov => mov.monto) : 0;
+            }
+        }
+
+        public decimal totalGastadoAbono
+        {
+            get
+            {
+                return prestamosAbonados != null ? prestamosAbonados.Sum(mov => mov.monto) : 0;
+            }
+        }
+
+        public decimal montoActivo
+        {
+            get { 
+                decimal suma = this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
+                    ? this.totalGastadoAbono :
+                    this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO ?
+                    this.totalLiquidadoPrestamo : 0;
+
+                return Math.Abs(this.montoMovimiento) - suma;
+            }
+        }
+
+        /// <summary>
+        /// Indica TRUE si el monto del abono ya ha sido distribuido completamente en un conjunto de prestamos o si
+        /// la instancia de prestamo ya ha sido saldada por un conjunto de abonos. En caso contrario, arroja FALSE.
+        /// </summary>
+        public bool agotado { get { return this.montoActivo <= 0; } }
+
         /// <summary>
         /// Conjunto de intereses generados para este prestamo
         /// </summary>
         public ICollection<CargoDeInteres> intereses { get; set; }
+
+        /// <summary>
+        /// Prestamos sobre los cuales se distribuye el abono
+        /// </summary>
+        [InverseProperty("prestamo")]
+        public virtual ICollection<Prestamo_Abono> prestamosAbonados { get; set; }
+
+        /// <summary>
+        /// Abonos recibidos a este prestamo
+        /// </summary>
+        [InverseProperty("abono")]
+        public virtual ICollection<Prestamo_Abono> abonosRecibidos { get; set; }
 
         public static class TipoMovimientoCapital
         {
@@ -126,6 +173,16 @@ namespace CampanasDelDesierto_v1.Models
             abono.tipoDeMovimientoDeCapital = tipoCapital;
 
             return abono;
+        }
+
+        //TODO: Terminar de desarrollar metodo para generar movimientos de interes
+        internal void incrementarInteres(ApplicationDbContext db)
+        {
+            double totalPays = 12;
+            double interest = .1 / totalPays;
+
+            double toPay = Financial.Pmt(interest, totalPays, (double)this.montoMovimiento / totalPays);
+            //CargoDeInteres  
         }
 
         public static SelectList getConceptosSelectList()
@@ -218,6 +275,33 @@ namespace CampanasDelDesierto_v1.Models
             [ForeignKey("anticipo")]
             public int anticipoID { get; set; }
             public virtual PrestamoYAbonoCapital anticipo { get; set; }
+        }
+
+        public class Prestamo_Abono
+        {
+            public Prestamo_Abono() { }
+            public Prestamo_Abono(PrestamoYAbonoCapital prestamo, PrestamoYAbonoCapital abono)
+            {
+                this.prestamoID = prestamo.idMovimiento;
+                this.abonoID = abono.idMovimiento;
+                this.prestamo = prestamo;
+                this.abono = abono;
+            }
+
+            public int id { get; set; }
+
+            [ForeignKey("prestamo")]
+            public int? prestamoID { get; set; }
+            public virtual PrestamoYAbonoCapital prestamo { get; set; }
+
+            [ForeignKey("abono")]
+            public int? abonoID { get; set; }
+            public virtual PrestamoYAbonoCapital abono { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [Display(Name = "Monto (USD)")]
+            public decimal monto { get; set; }
         }
     }
 }

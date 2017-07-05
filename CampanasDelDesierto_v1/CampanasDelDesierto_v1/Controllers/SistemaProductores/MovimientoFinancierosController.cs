@@ -41,6 +41,13 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+
+            if(movimientoFinanciero.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+            {
+                var mov = db.PrestamosYAbonosCapital.Find(id);
+                var abonos = mov.abonosRecibidos.ToList();
+            }
+
             return View(movimientoFinanciero);
         }
 

@@ -113,7 +113,8 @@
     vddReporteSemanal.Add("ingresosDeCosecha", ingresosDeCosecha);
 }
 <p class="hidden-print">
-    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor, temporada = Model.TemporadaDeCosechaID })">
+    <a href="@Url.Action("Details","Productores", new { id = productor.idProductor,
+            temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i> Ver Movimientos de este Productor
     </a> 
     @if (reportMode) { 
@@ -283,7 +284,7 @@
                     </div>
 
                     <div class="form-group col-xs-4">
-                        @Html.LabelFor(model => model.semana, htmlAttributes: new { @class = "control-label col-xs-4" })
+                        @Html.LabelFor(model => model.semana)
                         @Html.EditorFor(model => model.semana, new { htmlAttributes = new {@readonly = "readonly", min = 0 } })
                         @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
                     </div>
@@ -306,38 +307,32 @@
                 <div class="panel-body" id="pnlSaldoAnticipos">
                     @*Balance Actual*@
                     <div class="form-group col-xs-4">
-                        @Html.LabelFor(model => model.Productor.balanceActual, htmlAttributes: new { @class = "control-label col-xs-4" })
-                        <div class="col-xs-8">
-                            <input id="balanceActual" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@balanceActual.ToString("C")" readonly />
-                        </div>
+                        @Html.LabelFor(model => model.Productor.balanceActual)
+                        <input id="balanceActual" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value="@balanceActual.ToString("C")" readonly />
                     </div>
 
                     @*Menos*@
-                    <span class="col-xs-1" style="font-size:2em">-</span>
+                    <span class="col-xs-1" style="font-size:2em; text-align: center">-</span>
 
                     @*Retenciones*@
                     <div class="form-group col-xs-3">
-                        <label class="control-label col-xs-5">Abono de la semana (USD): </label>
-                        <div class="col-xs-7">
-                            <input id="inputAbonoSemana" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@abonoBalanceAnticipos.ToString("C")" readonly />
-                        </div>
+                        <label>Abono de la semana (USD): </label>
+                        <input id="inputAbonoSemana" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value="@abonoBalanceAnticipos.ToString("C")" readonly />
                     </div>
 
                     @*Igual A*@
-                    <span class="col-xs-1" style="font-size:2em">=</span>
+                    <span class="col-xs-1" style="font-size:2em; text-align: center">=</span>
 
                     @*MOnto total a pagar*@
                     <div class="form-group col-xs-3">
-                        <label class="control-label col-xs-5">Saldo a Liquidar (USD): </label>
-                        <div class="col-xs-7">
-                            <input id="inputSaldoLiquidar" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value='@((balanceActual + abonoBalanceAnticipos).ToString("C"))' readonly />
-                        </div>
+                        <label>Saldo a Liquidar (USD): </label>
+                        <input id="inputSaldoLiquidar" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value='@((balanceActual + abonoBalanceAnticipos).ToString("C"))' readonly />
                     </div>
                 </div>
             </div>
@@ -350,38 +345,32 @@
                 <div class="panel-body">
                     @*Balance Actual*@
                     <div class="form-group col-xs-4">
-                        @Html.LabelFor(model => model.Productor.balanceActualArboles, htmlAttributes: new { @class = "control-label col-xs-4" })
-                        <div class="col-xs-8">
-                            <input id="balanceActual" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@balanceActualArboles.ToString("C")" readonly />
-                        </div>
+                        @Html.LabelFor(model => model.Productor.balanceActualArboles)
+                        <input id="balanceActual" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value="@balanceActualArboles.ToString("C")" readonly />
                     </div>
 
                     @*Menos*@
-                    <span class="col-xs-1" style="font-size:2em">-</span>
+                    <span class="col-xs-1" style="font-size:2em; text-align: center">-</span>
 
                     @*Retenciones*@
                     <div class="form-group col-xs-3">
-                        <label class="control-label col-xs-5">Abono de la semana (USD): </label>
-                        <div class="col-xs-7">
-                            <input id="inputAbonoSemana" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value="@abonoBalanceArbolOlivo.ToString("C")" readonly />
-                        </div>
+                        <label>Abono de la semana (USD): </label>
+                        <input id="inputAbonoSemana" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value="@abonoBalanceArbolOlivo.ToString("C")" readonly />
                     </div>
 
                     @*Igual A*@
-                    <span class="col-xs-1" style="font-size:2em">=</span>
+                    <span class="col-xs-1" style="font-size:2em; text-align: center">=</span>
 
                     @*MOnto total a pagar*@
                     <div class="form-group col-xs-3">
-                        <label class="control-label col-xs-5">Saldo a Liquidar (USD): </label>
-                        <div class="col-xs-7">
-                            <input id="inputSaldoLiquidar" class="form-control"
-                                   data-mask="###0.00" data-mask-reverse="true"
-                                   value='@((balanceActualArboles + abonoBalanceArbolOlivo).ToString("C"))' readonly />
-                        </div>
+                        <label>Saldo a Liquidar (USD): </label>
+                        <input id="inputSaldoLiquidar" class="form-control"
+                                data-mask="###0.00" data-mask-reverse="true"
+                                value='@((balanceActualArboles + abonoBalanceArbolOlivo).ToString("C"))' readonly />
                     </div>
                 </div>
             </div>
@@ -528,16 +517,21 @@
 
         <style>
             @@media print{
+                input{
+                    max-height: 1.5em !important;
+                }
+
                 .form-group{
                     margin-bottom: 5px;
                 }
 
                 label{
                     margin-bottom: 0px;
+                    min-height: 3em;
                 }
 
                 #formLiquidacionSemanal{
-                    page-break-before:always;
+                    /*page-break-before:always;*/
                     margin-top: 2em;
                 }
                 #main > .inner > section{

@@ -142,6 +142,7 @@
       <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -356,6 +357,10 @@
     <Compile Include="Migrations\201707042116082_cargosDeInteres.cs" />
     <Compile Include="Migrations\201707042116082_cargosDeInteres.Designer.cs">
       <DependentUpon>201707042116082_cargosDeInteres.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707050728457_prestamo_abono_par_relacion.cs" />
+    <Compile Include="Migrations\201707050728457_prestamo_abono_par_relacion.Designer.cs">
+      <DependentUpon>201707050728457_prestamo_abono_par_relacion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -613,7 +618,6 @@
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
-    <Content Include="Views\PrestamoYAbonoCapitals\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
@@ -781,6 +785,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707042116082_cargosDeInteres.resx">
       <DependentUpon>201707042116082_cargosDeInteres.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707050728457_prestamo_abono_par_relacion.resx">
+      <DependentUpon>201707050728457_prestamo_abono_par_relacion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

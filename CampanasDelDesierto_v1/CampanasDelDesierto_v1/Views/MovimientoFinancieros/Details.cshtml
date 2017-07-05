@@ -12,14 +12,16 @@
         <i class="fa fa-pencil"></i> Editar
     </a>
     |
-    <a href="@Url.Action("Details","Productores", new { id=Model.idProductor })">
+    <a href="@Url.Action("Details","Productores", new { id=Model.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a movimientos del productor
     </a>
 
     @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL &&
-        ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO 
+        ((PrestamoYAbonoCapital)Model).tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
         || Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
     {
+        //Se determina si el enlace para generar pagare sera invocado desde el action PagareAnticipo o PagareVenta, segun
+        //el tipo de movimiento consultado
         string actionName = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL?"PagareAnticipo":
             Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO?"PagareVenta":"Details";
 

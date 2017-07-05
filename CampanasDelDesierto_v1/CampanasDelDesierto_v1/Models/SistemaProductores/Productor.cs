@@ -9,6 +9,7 @@ using OfficeOpenXml;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.ComponentModel;
 using static CampanasDelDesierto_v1.Models.TemporadaDeCosecha;
+using Prestamo_Abono = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Prestamo_Abono;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -63,10 +64,10 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                var movimientos = this.MovimientosFinancieros.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                if (movimientos != null && movimientos.Count() > 0)
                 {
-                    decimal balance = this.MovimientosFinancieros
-                        .Where(mov => mov.isAbonoOPrestamo())
+                    decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
                 }
@@ -79,10 +80,10 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                var movimientos = this.MovimientosFinancieros.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                if (movimientos != null && movimientos.Count() > 0)
                 {
-                    decimal balance = this.MovimientosFinancieros
-                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
+                    decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
                 }
@@ -144,10 +145,7 @@ namespace CampanasDelDesierto_v1.Models
         internal int ajustarBalances(MovimientoFinanciero ultimoMovimiento, ApplicationDbContext db,
             MovimientoFinanciero.TipoDeBalance tipoBalance)
         {
-            /*Primeor se filtra pagos de producto y cheques*/
-            /*var movimientos = this.MovimientosFinancieros
-                .Where(mov => mov.isAbonoOPrestamo());*/
-
+            /*Primeor se filtran los movimientos dentro de un tipo de balance determinado*/
             var movimientos = this.MovimientosFinancieros
                 .Where(mov => mov.tipoDeBalance == tipoBalance);
 
@@ -157,17 +155,18 @@ namespace CampanasDelDesierto_v1.Models
             movimientos = ultimoMovimiento!=null ? movimientos
                     .Where(mov => mov.fechaMovimiento > ultimoMovimiento.fechaMovimiento)
                     : movimientos;
-
+            
             //Se crea una lista encadenada ordenada cronologicamente hacia el pasado
             movimientos = movimientos.OrderByDescending(mov => mov.fechaMovimiento).ToList();
             LinkedList<MovimientoFinanciero> movimientosOrdenados = new LinkedList<MovimientoFinanciero>(movimientos);
-
+            
             //Para el registro recien modificado, se recalcula su balance
-            movimientosOrdenados.Last.Value.balance = movimientosOrdenados.Last.Value.montoMovimiento + 
-                (ultimoMovimiento==null ? 0 : ultimoMovimiento.balance);
+            if(movimientosOrdenados.Count()>0)
+                movimientosOrdenados.Last.Value.balance = movimientosOrdenados.Last.Value.montoMovimiento +
+                    (ultimoMovimiento == null ? 0 : ultimoMovimiento.balance);
 
             /*Recorriendo la lista encadenada desde el registro recien modificado hasta el ultimo
-            se vam corrigiendo los balances, uno tras otro*/
+            se van corrigiendo los balances, uno tras otro, esto solo cuando es mas de 1 movimiento registrado*/
             int numreg = 0;
             if (movimientos.Count() > 1)
             {
@@ -187,8 +186,8 @@ namespace CampanasDelDesierto_v1.Models
             }
 
             //Se notifica la edicion de los registros modificados
-            foreach (var mov in movimientosOrdenados)
-                db.Entry(mov).State = System.Data.Entity.EntityState.Modified;
+            movimientosOrdenados.ToList()
+                .ForEach(mov => db.Entry(mov).State = System.Data.Entity.EntityState.Modified);                
 
             //Se guardan cambios
             numreg = db.SaveChanges();
@@ -196,6 +195,49 @@ namespace CampanasDelDesierto_v1.Models
             return numreg;
         }
         
+        public int asociarAbonosConPrestamos(ApplicationDbContext db)
+        {
+            //TODO: Filtrar para movimientos aun no agotados (suma de abonos o pagos igual al monto del movimiento)
+            var movimientosCapital = this.MovimientosFinancieros.ToList()
+                .Where(mov => mov.getTypeOfMovement() == PrestamoYAbonoCapital.TypeOfMovements.CAPITAL)
+                .Cast<PrestamoYAbonoCapital>()
+                .Where(mov => !mov.agotado);
+            //Se toman todos los prestamos activos
+            var prestamos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital
+                .Where(mov => mov.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                .OrderBy(mov => mov.fechaMovimiento));
+            //Se toman todos los abonos activos
+            var abonos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital
+                .Where(mov => mov.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                .OrderBy(mov => mov.fechaMovimiento));
+
+            var prestamoNodo = prestamos.First;
+            var abonoNodo = abonos.First;
+            //Si existen prestamos y abonos activos, se procede a asociarlos
+            while (prestamoNodo != null && abonoNodo != null)
+            {
+                PrestamoYAbonoCapital prestamo = prestamoNodo.Value;
+                PrestamoYAbonoCapital abono = abonoNodo.Value;
+
+                //Se crea un nuevo par de asociacion
+                Prestamo_Abono pa = new Prestamo_Abono(prestamo, abono);
+                //Si el abono se agota al pagar el prestamo
+                if (prestamo.montoActivo >= abono.montoActivo)
+                {
+                    pa.monto = abono.montoActivo; //El monto del par es el resto del abono
+                    abonoNodo = abonoNodo.Next; //Se pasa a un siguiente abono
+                }
+                else //Si el prestamo se agota al recibir el abono
+                {
+                    pa.monto = prestamo.montoActivo; // El monto del par es el resto del prestamo
+                    prestamoNodo = prestamoNodo.Next; // Se pasa a un siguiente prestamo
+                }
+                db.Prestamo_Abono.Add(pa); //Se guarda el par asociativo de prestamo y abono
+            }
+            int numRegs = db.SaveChanges(); //Se guardan todos los pares marcados
+            return numRegs;
+        }
+
         public override string ToString()
         {
             return String.Format("{0}: {1}. Zona: {2}", this.numProductor, this.nombreProductor, this.zona);
