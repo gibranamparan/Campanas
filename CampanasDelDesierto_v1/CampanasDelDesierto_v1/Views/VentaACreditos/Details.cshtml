@@ -15,6 +15,12 @@
         <p class="form-control-static">@Html.DisplayFor(model => model.conceptoDeVenta)</p>
     </div>
 </div>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.ordenCompra, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.ordenCompra)</p>
+    </div>
+</div>
 
 <div class="col-md-12">
     @*    LISTA DE LOS PRODUCTOS COMPRADOS*@
