@@ -358,9 +358,9 @@
     <Compile Include="Migrations\201707042116082_cargosDeInteres.Designer.cs">
       <DependentUpon>201707042116082_cargosDeInteres.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201707050728457_prestamo_abono_par_relacion.cs" />
-    <Compile Include="Migrations\201707050728457_prestamo_abono_par_relacion.Designer.cs">
-      <DependentUpon>201707050728457_prestamo_abono_par_relacion.cs</DependentUpon>
+    <Compile Include="Migrations\201707060112479_presta_abono_relacionPar.cs" />
+    <Compile Include="Migrations\201707060112479_presta_abono_relacionPar.Designer.cs">
+      <DependentUpon>201707060112479_presta_abono_relacionPar.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -787,8 +787,8 @@
     <EmbeddedResource Include="Migrations\201707042116082_cargosDeInteres.resx">
       <DependentUpon>201707042116082_cargosDeInteres.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707050728457_prestamo_abono_par_relacion.resx">
-      <DependentUpon>201707050728457_prestamo_abono_par_relacion.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707060112479_presta_abono_relacionPar.resx">
+      <DependentUpon>201707060112479_presta_abono_relacionPar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

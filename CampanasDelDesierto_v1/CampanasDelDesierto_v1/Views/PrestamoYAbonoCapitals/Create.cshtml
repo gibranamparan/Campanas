@@ -8,16 +8,14 @@
 
     Productor productor = ViewBag.productor;
 
-    @*
-        /*Just for test*/
-        Random random = new Random();
-        // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Model.cheque = new string(Enumerable.Repeat(chars, 5)
-          .Select(s => s[random.Next(s.Length)]).ToArray());
-        Model.pagare = new string(Enumerable.Repeat(chars, 5)
-          .Select(s => s[random.Next(s.Length)]).ToArray());
-    *@
+    /*Just for test*/
+    Random random = new Random();
+    // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
+    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    Model.cheque = new string(Enumerable.Repeat(chars, 5)
+        .Select(s => s[random.Next(s.Length)]).ToArray());
+    Model.pagare = new string(Enumerable.Repeat(chars, 5)
+        .Select(s => s[random.Next(s.Length)]).ToArray());
 
 }
 

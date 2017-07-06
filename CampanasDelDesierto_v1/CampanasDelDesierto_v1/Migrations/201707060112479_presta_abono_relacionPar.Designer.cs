@@ -7,13 +7,13 @@ namespace CampanasDelDesierto_v1.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class prestamo_abono_par_relacion : IMigrationMetadata
+    public sealed partial class presta_abono_relacionPar : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(prestamo_abono_par_relacion));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(presta_abono_relacionPar));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707050728457_prestamo_abono_par_relacion"; }
+            get { return "201707060112479_presta_abono_relacionPar"; }
         }
         
         string IMigrationMetadata.Source

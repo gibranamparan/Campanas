@@ -111,13 +111,13 @@ namespace CampanasDelDesierto_v1.Models
         /// <summary>
         /// Prestamos sobre los cuales se distribuye el abono
         /// </summary>
-        [InverseProperty("prestamo")]
+        [InverseProperty("abono")]
         public virtual ICollection<Prestamo_Abono> prestamosAbonados { get; set; }
 
         /// <summary>
         /// Abonos recibidos a este prestamo
         /// </summary>
-        [InverseProperty("abono")]
+        [InverseProperty("prestamo")]
         public virtual ICollection<Prestamo_Abono> abonosRecibidos { get; set; }
 
         public static class TipoMovimientoCapital

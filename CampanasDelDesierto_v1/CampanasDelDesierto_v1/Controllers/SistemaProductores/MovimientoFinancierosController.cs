@@ -46,6 +46,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 var mov = db.PrestamosYAbonosCapital.Find(id);
                 var abonos = mov.abonosRecibidos.ToList();
+                var prestamos = mov.prestamosAbonados.ToList();
             }
 
             return View(movimientoFinanciero);
