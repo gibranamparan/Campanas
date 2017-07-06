@@ -9,23 +9,41 @@
     bool isVenta = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO;
     bool isPrestamo = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL;
     string currency = "Dólares";
+    //Datos de pagare anticipo
     DateTime fechaPagar = new DateTime();
+    string pozo = "";
+    string descripcionConcepto="";
+    string precioDelDolar="";
+    string cheque="";
 
     PrestamoYAbonoCapital prestamo = new PrestamoYAbonoCapital();
     if (isPrestamo)
     {
-        //asignacion de valor a cada variable para un PRESTAMO
+        //asignacion de valor a cada variable para un PRESTAMO 
         prestamo = ((PrestamoYAbonoCapital)Model);
         fechaPagar = prestamo.fechaPagar.Value;
+        pozo = prestamo.pozo;
+        descripcionConcepto = prestamo.descripcionConcepto;
+        if (descripcionConcepto == null)
+        {
+            descripcionConcepto = "";
+        }
+        cheque = prestamo.cheque;
+        precioDelDolar = (prestamo.precioDelDolar).ToString();
     }
 
+
+    //Datos de pagare venta               
     VentaACredito venta = new VentaACredito();
-    if (isPrestamo)
+    if (isVenta)
     {
         venta = ((VentaACredito)Model);
         //asignacion de valor a cada variable para un VENTA
-        //...
+        //...        
+
     }
+
+
 
 }
 
@@ -36,88 +54,185 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Impresion de Pagare - Campanas del Desierto</title>
 </head>
-<body>
-    <div id="pnlPagare">
-        <img src="/images/Pagare.jpg" />
-        <span id="ImportePagare">
-            @Html.DisplayFor(model => model.montoMovimiento) @currency
-        </span>
-        <span id="Dia">
-          @fechaPagar.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
-        </span>
-        <span id="mes">
-             @(fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
-        </span>
-        <span id="año">
-            @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
-        </span>
-        <span id="montoMovimiento">
-            @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
-        </span>
-        <span id="diafechaMovimiento">
-            @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
-            @*@Model.Productor.fechaPagar.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
-                @(((PrestamoYAbonoCapital)Model).Productor.fechaPagar)*@
-        </span>
-        <span id="mesfechaMovimiento">
-            @(Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
-        </span>
-        <span id="añofechaMovimiento">
-            @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
-        </span>
-        <span id="NombreProductor">
-            @Html.DisplayFor(model => model.Productor.nombreCheque)
-        </span>
-        <span id="DomicilioProductor">
-            @Html.DisplayFor(model => model.Productor.domicilio)
-        </span>
-        <span id="PoblacionProductor">
-            @Html.DisplayFor(model => model.Productor.poblacion)
-        </span>
-        <span id="telefonoProductor">
-            @Html.DisplayFor(model => model.Productor.telefono)
-        </span>
-        <span id="representanteLegal">
-            @Html.DisplayFor(model => model.Productor.nombreRepresentanteLegal)
-        </span>
-        <span id="RFCProductor">
-            @Html.DisplayFor(model => model.Productor.RFC)
-        </span>
-        <span id="numProductor">
-            @Html.DisplayFor(model => model.Productor.numProductor)
-        </span>
-        <span id="descripcionConcepto">
-            @Html.DisplayFor(model => model.descripcionConcepto)
-        </span>
-        <span id="pozo">
-            @Html.DisplayFor(model => model.pozo)
-        </span>
+<body>   
+    @if (isPrestamo)
+    {
+        <div id="pnlPagare">
+            <img src="/images/Pagare.jpg" />
+            <span id="ImportePagare">
+                @Html.DisplayFor(model => model.montoMovimiento) @currency
+            </span>
+            <span id="Dia">
+                @fechaPagar.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
+            </span>
+            <span id="mes">
+                @(fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+            </span>
+            <span id="año">
+                @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="montoMovimiento">
+                @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
+            </span>
+            <span id="diafechaMovimiento">
+                @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+                @*@Model.Productor.fechaPagar.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+                    @(((PrestamoYAbonoCapital)Model).Productor.fechaPagar)*@
+            </span>
+            <span id="mesfechaMovimiento">
+                @(Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+            </span>
+            <span id="añofechaMovimiento">
+                @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="NombreProductor">
+                @Html.DisplayFor(model => model.Productor.nombreCheque)
+            </span>
+            <span id="DomicilioProductor">
+                @Html.DisplayFor(model => model.Productor.domicilio)
+            </span>
+            <span id="PoblacionProductor">
+                @Html.DisplayFor(model => model.Productor.poblacion)
+            </span>
+            <span id="telefonoProductor">
+                @Html.DisplayFor(model => model.Productor.telefono)
+            </span>
+            <span id="representanteLegal">
+                @Html.DisplayFor(model => model.Productor.nombreRepresentanteLegal)
+            </span>
+            <span id="RFCProductor">
+                @Html.DisplayFor(model => model.Productor.RFC)
+            </span>
+            <span id="numProductor">
+                @Html.DisplayFor(model => model.Productor.numProductor)
+            </span>
+            <span id="descripcionConcepto">
+                @Html.Display(descripcionConcepto)
+            </span>
+            <span id="pozo">
+                @Html.Display(pozo)
+            </span>
 
-        <span id="cheque">
-            @Html.DisplayFor(model => model.cheque)
-        </span>
-        <span id="TipoCambio">
-            @Html.DisplayFor(model => model.precioDelDolar)
-        </span>
+            <span id="cheque">
+                @Html.Display(cheque)
+            </span>
+            <span id="TipoCambio">
+                @Html.Display(precioDelDolar)
+            </span>
 
-        @*CAMPOS EDITABLES*@
-        <span id="tasaAnual">
-            <input id="inputTasaAnual" type="number" value="10" style="width: 30px" />
-        </span>
-        <span id="serieNumerada">
-            <input id="inputSerieNumerada" type="number" value="1" style="width: 30px" />
-        </span>
-        <span id="tasaMoratoria">
-            <input id="inputTasaMoratoria" type="number" style="width: 30px" />
-        </span>
-        <span id="numReporte">
-            <input id="inputReporte" type="text" value="NA" style="width: 70px" />
-        </span>
-        <span id="OrdenCompra">
-            <input id="inputOrdenDeCompra" type="text" value="NA" style="width: 80px" />
-        </span>
-    </div>
+            @*CAMPOS EDITABLES*@
+            <span id="tasaAnual">
+                <input id="inputTasaAnual" type="number" value="10" style="width: 30px" />
+            </span>
+            <span id="serieNumerada">
+                <input id="inputSerieNumerada" type="number" value="1" style="width: 30px" />
+            </span>
+            <span id="tasaMoratoria">
+                <input id="inputTasaMoratoria" type="number" style="width: 30px" />
+            </span>
+            <span id="numReporte">
+                <input id="inputReporte" type="text" value="NA" style="width: 70px" />
+            </span>
+            <span id="OrdenCompra">
+                <input id="inputOrdenDeCompra" type="text" value="NA" style="width: 80px" />
+            </span>
+        </div>
+    }
+    @if (isVenta)
+    {
+        
+            string ordenCompra = venta.ordenCompra;
+            string conceptoDeVenta = venta.conceptoDeVenta;
+            if (ordenCompra == null)
+            {
+                ordenCompra = "";
+            }
 
+
+        
+        <div id="pnlPagare">
+            <img src="/images/Pagare.jpg" />
+            <span id="ImportePagare">
+                @Html.DisplayFor(model => model.montoMovimiento) @currency
+            </span>
+            <span id="Dia">
+                @fechaPagar.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))@*cambiar a fecha pagar*@
+            </span>
+            <span id="mes">
+                @(fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + fechaPagar.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+            </span>
+            <span id="año">
+                @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="montoMovimiento">
+                @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
+            </span>
+            <span id="diafechaMovimiento">
+                @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
+                @*@Model.Productor.fechaPagar.ToString("dd",CultureInfo.CreateSpecificCulture("es-MX"))
+                    @(((PrestamoYAbonoCapital)Model).Productor.fechaPagar)*@
+            </span>
+            <span id="mesfechaMovimiento">
+                @(Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).First().ToString().ToUpper() + Model.fechaMovimiento.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+            </span>
+            <span id="añofechaMovimiento">
+                @Model.fechaMovimiento.ToString("yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
+            </span>
+            <span id="NombreProductor">
+                @Html.DisplayFor(model => model.Productor.nombreCheque)
+            </span>
+            <span id="DomicilioProductor">
+                @Html.DisplayFor(model => model.Productor.domicilio)
+            </span>
+            <span id="PoblacionProductor">
+                @Html.DisplayFor(model => model.Productor.poblacion)
+            </span>
+            <span id="telefonoProductor">
+                @Html.DisplayFor(model => model.Productor.telefono)
+            </span>
+            <span id="representanteLegal">
+                @Html.DisplayFor(model => model.Productor.nombreRepresentanteLegal)
+            </span>
+            <span id="RFCProductor">
+                @Html.DisplayFor(model => model.Productor.RFC)
+            </span>
+            <span id="numProductor">
+                @Html.DisplayFor(model => model.Productor.numProductor)
+            </span>
+            <span id="descripcionConcepto">
+                @Html.Display(conceptoDeVenta.ToString())
+            </span>
+            <span id="pozo">
+                @Html.Display("NA")
+            </span>
+
+            <span id="cheque">
+                @Html.Display("NA")
+            </span>
+            <span id="TipoCambio">
+                @Html.Display("NA")
+            </span>
+
+            @*CAMPOS EDITABLES*@
+            <span id="tasaAnual">
+                <input id="inputTasaAnual" type="number" value="10" style="width: 30px" />
+            </span>
+            <span id="serieNumerada">
+                <input id="inputSerieNumerada" type="number" value="1" style="width: 30px" />
+            </span>
+            <span id="tasaMoratoria">
+                <input id="inputTasaMoratoria" type="number" style="width: 30px" />
+            </span>
+            <span id="numReporte">
+                <input id="inputReporte" type="text" value="NA" style="width: 70px" />
+            </span>
+            <span id="OrdenCompras">
+                @Html.Display(ordenCompra);
+            </span>
+        </div>
+    }
+        
+    
     <style>
         * {
             margin: 0;
