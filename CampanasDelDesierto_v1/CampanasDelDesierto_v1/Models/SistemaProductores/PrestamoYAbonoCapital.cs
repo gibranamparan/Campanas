@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.VisualBasic;
+using System.ComponentModel;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -35,7 +36,7 @@ namespace CampanasDelDesierto_v1.Models
         public string proveedor { get; set; }
 
         public string conceptoCapital { get; set; }
-
+        
         [Display(Name = "Concepto")]
         public new string concepto {
             get {
@@ -85,6 +86,11 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        /// <summary>
+        /// Indica el monto faltante por saldar para un anticipo o el monto
+        /// disponible para seguir abonando en el caso de un abono.
+        /// </summary>
+        [DisplayName("Monto Activo")]
         public decimal montoActivo
         {
             get { 

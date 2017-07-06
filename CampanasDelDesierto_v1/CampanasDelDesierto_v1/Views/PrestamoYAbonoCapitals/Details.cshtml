@@ -31,12 +31,6 @@
         <p class="form-control-static">@Html.DisplayFor(model => model.pagare)</p>
     </div>
 </div>
-<div class="form-group col-md-4">
-    @Html.LabelFor(model => model.montoActivo, new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.montoActivo)</p>
-    </div>
-</div>
 <div class="form-group col-md-12">
     @Html.LabelFor(model => model.descripcionConcepto, new { @class = "control-label col-md-3" })
     <div class="col-md-9">
@@ -44,23 +38,24 @@
     </div>
 </div>
 <div class="row">
-@if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-{
-    if (Model.prestamosAbonados.Count() > 0)
+    @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
     {
+        <h4>Anticipos Abonados</h4>
+        if (Model.prestamosAbonados.Count() > 0)
+        {
             <div class="col-md-12">
                 <table class="table table-hover table-striped">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().abono.fechaMovimiento)</th>
-                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().abono.montoMovimiento)</th>
-                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().abono.montoActivo)</th>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.fechaMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoMovimiento)</th>
+                        <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoActivo)</th>
                     </tr>
                     @foreach (var mov in Model.prestamosAbonados)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(model => mov.abono.fechaMovimiento)</td>
-                            <td>@Html.DisplayFor(model => mov.abono.montoMovimiento)</td>
-                            <td>@Html.DisplayFor(model => mov.abono.montoActivo)</td>
+                            <td>@Html.DisplayFor(model => mov.prestamo.fechaMovimiento)</td>
+                            <td>@Math.Abs(mov.prestamo.montoMovimiento).ToString("C")</td>
+                            <td>@Html.DisplayFor(model => mov.prestamo.montoActivo)</td>
                         </tr>
                     }
                 </table>
@@ -74,8 +69,9 @@
         }
     }
 
-@if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+    @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
     {
+        <h4>Abonos recibidos</h4>
         if (Model.abonosRecibidos.Count() > 0)
         {
             <div class="col-md-12">
