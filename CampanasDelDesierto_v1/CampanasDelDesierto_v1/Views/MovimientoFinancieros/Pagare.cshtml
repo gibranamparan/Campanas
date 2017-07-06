@@ -33,13 +33,21 @@
     }
 
 
-    //Datos de pagare venta               
+    //Datos de pagare venta  
+    string ordenCompra = "";
+    string conceptoDeVenta = "";
     VentaACredito venta = new VentaACredito();
     if (isVenta)
     {
         venta = ((VentaACredito)Model);
         //asignacion de valor a cada variable para un VENTA
-        //...        
+        //...  
+        ordenCompra = venta.ordenCompra;
+        conceptoDeVenta = venta.conceptoDeVenta;
+        if (ordenCompra == null)
+        {
+            ordenCompra = "";
+        }
 
     }
 
@@ -107,17 +115,17 @@
                 @Html.DisplayFor(model => model.Productor.numProductor)
             </span>
             <span id="descripcionConcepto">
-                @Html.Display(descripcionConcepto)
+                @descripcionConcepto
             </span>
             <span id="pozo">
-                @Html.Display(pozo)
+                @pozo
             </span>
 
             <span id="cheque">
-                @Html.Display(cheque)
+                @cheque
             </span>
             <span id="TipoCambio">
-                @Html.Display(precioDelDolar)
+                @precioDelDolar
             </span>
 
             @*CAMPOS EDITABLES*@
@@ -141,12 +149,7 @@
     @if (isVenta)
     {
         
-            string ordenCompra = venta.ordenCompra;
-            string conceptoDeVenta = venta.conceptoDeVenta;
-            if (ordenCompra == null)
-            {
-                ordenCompra = "";
-            }
+            
 
 
         
@@ -200,17 +203,17 @@
                 @Html.DisplayFor(model => model.Productor.numProductor)
             </span>
             <span id="descripcionConcepto">
-                @Html.Display(conceptoDeVenta.ToString())
+                @conceptoDeVenta
             </span>
             <span id="pozo">
-                @Html.Display("NA")
+                <input id="inputPozo" type="text" value="NA" style="width: 30px" />
             </span>
 
             <span id="cheque">
-                @Html.Display("NA")
+                <input id="inputCheque" type="text" value="NA" style="width: 30px" />
             </span>
             <span id="TipoCambio">
-                @Html.Display("NA")
+                <input id="inputTipoCambio" type="text" value="NA" style="width: 30px" />
             </span>
 
             @*CAMPOS EDITABLES*@
@@ -226,8 +229,8 @@
             <span id="numReporte">
                 <input id="inputReporte" type="text" value="NA" style="width: 70px" />
             </span>
-            <span id="OrdenCompras">
-                @Html.Display(ordenCompra);
+            <span id="OrdenCompra">
+                @ordenCompra
             </span>
         </div>
     }

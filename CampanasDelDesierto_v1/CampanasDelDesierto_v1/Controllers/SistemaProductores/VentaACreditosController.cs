@@ -15,7 +15,7 @@ namespace CampanasDelDesierto_v1.Controllers
     public class VentaACreditosController : Controller
     {
         public const string BIND_FORM  = "idMovimiento,montoMovimiento,fechaMovimiento,idProductor," +
-            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta";
+            "cantidadMaterial,TemporadaDeCosechaID,conceptoDeVenta,pagareVenta,ordenCompra";
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
