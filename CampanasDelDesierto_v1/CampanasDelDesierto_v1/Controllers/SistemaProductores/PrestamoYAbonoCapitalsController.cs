@@ -80,13 +80,7 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.proveedor = new SelectList(db.Proveedores, "nombreProveedor", "nombreProveedor");
             PrestamoYAbonoCapital mov = new PrestamoYAbonoCapital();
             mov.fechaMovimiento = DateTime.Now;
-
-            //Se establece como fecha a pagar el 15 de agosto mas próximo
-            //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
-            mov.fechaPagar = new DateTime(mov.fechaMovimiento.Year, 8, 15);
-            if (mov.fechaMovimiento > mov.fechaPagar)
-                mov.fechaPagar = mov.fechaPagar.Value.AddYears(1);
-
+            
             mov.idProductor = productor.idProductor;
 
             return mov;
@@ -118,10 +112,6 @@ namespace CampanasDelDesierto_v1.Controllers
                 //Ajuste de movimiento para entrar dentro de la lista de balances
                 prestamoYAbonoCapital.ajustarMovimiento();
 
-                //El concepto no aplica para abonos
-                /*if (prestamoYAbonoCapital.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                    prestamoYAbonoCapital.concepto = String.Empty;*/
-
                 //Guardar cambios
                 db.PrestamosYAbonosCapital.Add(prestamoYAbonoCapital);
                 int numReg = db.SaveChanges();
@@ -135,7 +125,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db, prestamoYAbonoCapital.tipoDeBalance);
-                    prod.asociarAbonosConPrestamos(db);
+                    if (prestamoYAbonoCapital.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db,prestamoYAbonoCapital);
 
                     return RedirectToAction("Details", "MovimientoFinancieros", new { id = prestamoYAbonoCapital.idMovimiento });
                 }
@@ -174,16 +165,23 @@ namespace CampanasDelDesierto_v1.Controllers
         {
             if (ModelState.IsValid)
             {
-                prestamoYAbonoCapital.ajustarMovimiento();
-                db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
-                int numreg = db.SaveChanges();
+                //Se ajusta el movimiento mantiendo la hora de su registro aunque el dia haya sido modificado
+                var movTemp = db.MovimientosFinancieros.Find(prestamoYAbonoCapital.idMovimiento);
+                db.Entry(movTemp).State = EntityState.Detached;
 
+                //Se ajusta las entradas a los requisitos del listado de balance
+                prestamoYAbonoCapital.ajustarMovimiento(movTemp.fechaMovimiento);
+                db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
+
+                int numreg = db.SaveChanges();
                 if (numreg > 0) { 
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
                     MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
+                    if (prestamoYAbonoCapital.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db, prestamoYAbonoCapital, true);
                 }
                 return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
                     temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });

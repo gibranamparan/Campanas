@@ -56,7 +56,7 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name ="Adeudo Anterior (USD)")]
+        [Display(Name = "Adeudo Anterior (USD)")]
         public decimal? adeudoAnterior { get; set; }
 
         [DisplayName("Balance Actual (USD)")]
@@ -154,16 +154,16 @@ namespace CampanasDelDesierto_v1.Models
             /*Tomando como referencia el ultimo movimiento anterior al recien modificado, se toman
             todos los registros posteriores a este, en caso de que el recien modificado sea el 1ro,
             se toman por defecto todos los registros existentes*/
-            movimientos = ultimoMovimiento!=null ? movimientos
+            movimientos = ultimoMovimiento != null ? movimientos
                     .Where(mov => mov.fechaMovimiento > ultimoMovimiento.fechaMovimiento)
                     : movimientos;
-            
+
             //Se crea una lista encadenada ordenada cronologicamente hacia el pasado
             movimientos = movimientos.OrderByDescending(mov => mov.fechaMovimiento).ToList();
             LinkedList<MovimientoFinanciero> movimientosOrdenados = new LinkedList<MovimientoFinanciero>(movimientos);
-            
+
             //Para el registro recien modificado, se recalcula su balance
-            if(movimientosOrdenados.Count()>0)
+            if (movimientosOrdenados.Count() > 0)
                 movimientosOrdenados.Last.Value.balance = movimientosOrdenados.Last.Value.montoMovimiento +
                     (ultimoMovimiento == null ? 0 : ultimoMovimiento.balance);
 
@@ -189,36 +189,115 @@ namespace CampanasDelDesierto_v1.Models
 
             //Se notifica la edicion de los registros modificados
             movimientosOrdenados.ToList()
-                .ForEach(mov => db.Entry(mov).State = System.Data.Entity.EntityState.Modified);                
+                .ForEach(mov => db.Entry(mov).State = System.Data.Entity.EntityState.Modified);
 
             //Se guardan cambios
             numreg = db.SaveChanges();
 
             return numreg;
         }
-        
-        public int asociarAbonosConPrestamos(ApplicationDbContext db)
+
+        /// <summary>
+        /// Limpia los registros que asocian prestamo_pagos  que se ven afectados por la introduccion
+        /// de un nuevo movimiento.
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos.</param>
+        /// <param name="nuevoMovimiento">Movimiento que se encuentra siendo registrado</param>
+        /// <param name="editMode">Introducir TRUE si se quiere indicar que un movimiento editado 
+        ///     afectara la distribucion.</param>
+        /// <returns></returns>
+        private int limpiarDistribuiciones(ApplicationDbContext db, MovimientoFinanciero nuevoMovimiento, bool editMode)
         {
+            int numRegs = 0;
+            //Si es un abono introducido antes de abonos agotados
+            if(nuevoMovimiento.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+            {
+                //Se eliminan los registros de distribucion de los abonos agotados
+                //var movs = this.MovimientosFinancieros.Where(mov => mov.isAbonoCapital)
+                var movs = this.MovimientosFinancieros
+                    .Where(mov => mov.fechaMovimiento >= nuevoMovimiento.fechaMovimiento)
+                    .Where(mov => mov.agotado).ToList();
+
+                if (editMode) { 
+                    //Incluir el movimiento que esta siendo editado dentro de la limpieza de distribuciones
+                    //en caso de que el registro que esta siendo editado sea un abono de capital
+                    if (nuevoMovimiento.isAbonoCapital)
+                    {
+                        var movTemp = (PrestamoYAbonoCapital)nuevoMovimiento;
+                        db.Entry(movTemp).Collection(mov => mov.prestamosAbonados).Load();
+                        if (movTemp.prestamosAbonados != null && movTemp.prestamosAbonados.Count() > 0)
+                                movs.Add(movTemp);
+                    }else
+                    {
+                        var movTemp = nuevoMovimiento;
+                        db.Entry(movTemp).Collection(mov => mov.abonosRecibidos).Load();
+                        if (movTemp.abonosRecibidos != null && movTemp.abonosRecibidos.Count() > 0)
+                            movs.Add(movTemp);
+                    }
+                }
+
+                //Si existen relaciones pretamo_abono que limpiar
+                if (movs.Count()>0)
+                    //Se elimina cada conjunto de relaciones par que tienen entre prestamos y pagos
+                    //a los movimientos filtrados
+                    movs.ForEach(mov =>
+                    {
+                        if (mov.isAbonoCapital) { db.Prestamo_Abono.RemoveRange(((PrestamoYAbonoCapital)mov).prestamosAbonados); }
+                        else { db.Prestamo_Abono.RemoveRange(mov.abonosRecibidos); }
+                    });
+
+                numRegs = db.SaveChanges();
+            }
+
+            return numRegs;
+        }
+
+        public int restaurarDistribuciones(ApplicationDbContext db)
+        {
+            //Se eliminan los registros de distribucion de los abonos agotados
+            var movs = this.MovimientosFinancieros.Where(mov => mov.isAbonoCapital)
+                .Cast<PrestamoYAbonoCapital>().ToList();
+
+            //Si existen relaciones pretamo_abono que limpiar
+            if (movs.Count() > 0)
+                movs.ForEach(mov => db.Prestamo_Abono.RemoveRange(mov.prestamosAbonados));
+
+            return asociarAbonosConPrestamos(db);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos.</param>
+        /// <param name="nuevoMovimiento">Movimiento que se encuentra siendo registrado</param>
+        /// <param name="editMode">Introducir TRUE si se quiere indicar que un movimiento editado 
+        ///     afectara la distribucion.</param>
+        /// <returns></returns>
+        public int asociarAbonosConPrestamos(ApplicationDbContext db, MovimientoFinanciero nuevoMovimiento=null, bool editMode = false)
+        {
+            int numRegs = 0;
+            if(nuevoMovimiento!=null)
+                numRegs = limpiarDistribuiciones(db, nuevoMovimiento, editMode);
+
             //TODO: Filtrar para movimientos aun no agotados (suma de abonos o pagos igual al monto del movimiento)
             var movimientosCapital = this.MovimientosFinancieros.ToList()
-                .Where(mov => mov.getTypeOfMovement() == PrestamoYAbonoCapital.TypeOfMovements.CAPITAL)
-                .Cast<PrestamoYAbonoCapital>()
-                .Where(mov => !mov.agotado);
-            //Se toman todos los prestamos activos
-            var prestamos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital
-                .Where(mov => mov.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
+                .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                .Where(mov => !mov.agotado).ToList();
+
+            //Se toman todos los prestamos activos (en ventas y anticipos)
+            var prestamos = new LinkedList<MovimientoFinanciero>(movimientosCapital.Where(mov => !mov.isAbonoCapital)
                 .OrderBy(mov => mov.fechaMovimiento));
+
             //Se toman todos los abonos activos
-            var abonos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital
-                .Where(mov => mov.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                .OrderBy(mov => mov.fechaMovimiento));
+            var abonos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital.Where(mov => mov.isAbonoCapital)
+                .Cast<PrestamoYAbonoCapital>().OrderBy(mov => mov.fechaMovimiento));
 
             var prestamoNodo = prestamos.First;
             var abonoNodo = abonos.First;
             //Si existen prestamos y abonos activos, se procede a asociarlos
             while (prestamoNodo != null && abonoNodo != null)
             {
-                PrestamoYAbonoCapital prestamo = prestamoNodo.Value;
+                MovimientoFinanciero prestamo = prestamoNodo.Value;
                 PrestamoYAbonoCapital abono = abonoNodo.Value;
 
                 //Se crea un nuevo par de asociacion
@@ -236,7 +315,7 @@ namespace CampanasDelDesierto_v1.Models
                 }
                 db.Prestamo_Abono.Add(pa); //Se guarda el par asociativo de prestamo y abono
             }
-            int numRegs = db.SaveChanges(); //Se guardan todos los pares marcados
+            numRegs = db.SaveChanges(); //Se guardan todos los pares marcados
             return numRegs;
         }
 

@@ -223,6 +223,25 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(productor);
         }
 
+        [AllowAnonymous]
+        public JsonResult restaurarDistribuciones(int id)
+        {
+            var prod = db.Productores.Find(id);
+            int numRegs = prod.restaurarDistribuciones(db);
+            return Json(new { registrosModificados = numRegs }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        public JsonResult restaurarDistribucionesParaTodos()
+        {
+            var prods = db.Productores;
+            int numRegs = 0;
+            foreach(var prod in prods) { 
+                numRegs += prod.restaurarDistribuciones(db);
+            }
+            return Json(new { registrosModificados = numRegs }, JsonRequestBehavior.AllowGet);
+        }
+
         // POST: Productores/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -1,6 +1,7 @@
 ﻿@model CampanasDelDesierto_v1.Models.VentaACredito
 @{ 
     var compras = Model.ComprasProductos;
+    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = Model.generarSeguimientoPagosConInteres(DateTime.Now);
 }
 
 <div class="form-group col-md-4">
@@ -21,9 +22,15 @@
         <p class="form-control-static">@Html.DisplayFor(model => model.ordenCompra)</p>
     </div>
 </div>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.montoActivo, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.montoActivo)</p>
+    </div>
+</div>
 
 <div class="col-md-12">
-    @*    LISTA DE LOS PRODUCTOS COMPRADOS*@
+    @*LISTA DE LOS PRODUCTOS COMPRADOS*@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -61,4 +68,43 @@
             }
         </tbody>
     </table>
+
+    @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses)
+
+    <h4>Abonos recibidos</h4>
+    @if (Model.abonosRecibidos.Count() > 0)
+    {
+    <div class="col-md-12">
+        <table class="table table-hover table-striped">
+            <tr>
+                <th>No. Pagaré/Compra</th>
+                <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.fechaMovimiento)</th>
+                <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoMovimiento)</th>
+                <th>Monto Distribuido</th>
+                <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoActivo)</th>
+            </tr>
+            @foreach (var mov in Model.abonosRecibidos)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Details",new { id = mov.abonoID })" target="_blank">
+                            Ver @Html.DisplayFor(model=>mov.abono.pagare)
+                        </a>
+                    </td>
+                    <td>@Html.DisplayFor(model => mov.abono.fechaMovimiento)</td>
+                    <td>@Html.DisplayFor(model => mov.abono.montoMovimiento)</td>
+                    <td>@Html.DisplayFor(model => mov.monto)</td>
+                    <td>@Html.DisplayFor(model => mov.abono.montoActivo)</td>
+                </tr>
+            }
+        </table>
+    </div>
+    }
+    else
+    {
+    <div class="alert alert-warning col-md-12">
+        Este prestamo <strong>no ha recibido</strong> ningún abono.
+    </div>
+    }
 </div>
+

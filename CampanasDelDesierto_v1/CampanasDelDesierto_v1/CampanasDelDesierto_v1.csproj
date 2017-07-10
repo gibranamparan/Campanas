@@ -362,6 +362,10 @@
     <Compile Include="Migrations\201707060112479_presta_abono_relacionPar.Designer.cs">
       <DependentUpon>201707060112479_presta_abono_relacionPar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707100155224_pagos_prestamos_addedField_isINteres.cs" />
+    <Compile Include="Migrations\201707100155224_pagos_prestamos_addedField_isINteres.Designer.cs">
+      <DependentUpon>201707100155224_pagos_prestamos_addedField_isINteres.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -614,7 +618,6 @@
     <Content Include="Views\VentaACreditos\Create.cshtml" />
     <Content Include="Views\VentaACreditos\Delete.cshtml" />
     <Content Include="Views\VentaACreditos\Details.cshtml" />
-    <Content Include="Views\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
@@ -704,6 +707,7 @@
     <Content Include="Views\Shared\Partial_EncabezadoReporte.cshtml" />
     <Content Include="Views\ReportesProductores\AdeudosRecuperacion.cshtml" />
     <Content Include="Views\Shared\Partial_LineaFirmaReportes.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Partial_ListarIntereses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -789,6 +793,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707060112479_presta_abono_relacionPar.resx">
       <DependentUpon>201707060112479_presta_abono_relacionPar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707100155224_pagos_prestamos_addedField_isINteres.resx">
+      <DependentUpon>201707100155224_pagos_prestamos_addedField_isINteres.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

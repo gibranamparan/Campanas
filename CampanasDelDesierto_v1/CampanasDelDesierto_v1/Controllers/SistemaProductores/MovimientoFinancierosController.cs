@@ -172,8 +172,10 @@ namespace CampanasDelDesierto_v1.Controllers
             MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
             int temporadaID = mov.TemporadaDeCosechaID;
             var prod = db.Productores.Find(mov.idProductor);
-            bool retencionAbonoEliminado = false;
+            bool retencionAbonoEliminado = false; int numReg = 0;
 
+            //Los registros de recibos se desasocian de los registro de PagoPorProducto para estar disponibles
+            //nuevamente para otros registros.
             if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
                 ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
 
@@ -206,9 +208,18 @@ namespace CampanasDelDesierto_v1.Controllers
                 }
             }
 
+            //Si es esta eliminando un abono del balance de anticipos, 
+            //se elimina su asociacion de pagos a anticipos
+            if(mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) {
+                if (mov.isAbonoCapital)
+                    numReg = ((PrestamoYAbonoCapital)mov).liberarAbono(db);
+                else
+                    numReg = mov.liberarPrestamo(db);
+            }
+
             //se elimina el movimiento
             db.MovimientosFinancieros.Remove(mov);
-            int numReg = db.SaveChanges();
+            numReg = db.SaveChanges();
 
             //Se ajusta el balance si si es un movimiento financierto que no sea registro de cosecha (pago por producto),
             //se ajusta el balance si se registra una liquidacion en cuyas renteciones se encuentre un abono a deudas
@@ -221,6 +232,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                 numReg = prod.ajustarBalances(ultimoMovimiento, db, mov.tipoDeBalance);
+                if(mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                    prod.asociarAbonosConPrestamos(db, mov);
             }
             
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor, temporada= temporadaID });
