@@ -704,6 +704,7 @@
     <Content Include="Views\Shared\Partial_EncabezadoReporte.cshtml" />
     <Content Include="Views\ReportesProductores\AdeudosRecuperacion.cshtml" />
     <Content Include="Views\Shared\Partial_LineaFirmaReportes.cshtml" />
+    <Content Include="Views\ReportesProductores\AdeudosRecuperacionDetallado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
