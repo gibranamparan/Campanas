@@ -106,6 +106,9 @@ namespace CampanasDelDesierto_v1.Controllers
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db,ventaACredito.tipoDeBalance);
 
+                    if (ventaACredito.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db, ventaACredito);
+
                     return RedirectToAction("Details", "MovimientoFinancieros", new { id = ventaACredito.idMovimiento });
                 }
             }
@@ -155,8 +158,12 @@ namespace CampanasDelDesierto_v1.Controllers
                 comprasList.ForEach(com => com.idMovimiento = ventaACredito.idMovimiento);
                 comprasList.ForEach(com => db.Entry(com).State = EntityState.Added);
 
+                //Se ajusta el movimiento mantiendo la hora de su registro aunque el dia haya sido modificado
+                var movTemp = db.MovimientosFinancieros.Find(ventaACredito.idMovimiento);
+                db.Entry(movTemp).State = EntityState.Detached;
+
                 //se ejecuta el metodo de juste para calcular automaticamente el total de la venta 
-                ventaACredito.ajustarMovimiento();
+                ventaACredito.ajustarMovimiento(movTemp.fechaMovimiento);
                 //Se modifica el registro
                 db.Entry(ventaACredito).State = EntityState.Modified;
 
@@ -173,6 +180,9 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db, ventaACredito.tipoDeBalance);
+
+                    if (ventaACredito.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db, ventaACredito,true);
 
                     return RedirectToAction("Details", "Productores", 
                         new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });

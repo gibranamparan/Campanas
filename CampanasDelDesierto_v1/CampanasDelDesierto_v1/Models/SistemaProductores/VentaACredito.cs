@@ -42,10 +42,10 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
-        public new void ajustarMovimiento()
+        public new void ajustarMovimiento(DateTime? originalDate = null)
         {
             this.montoMovimiento *= -1;
-            base.ajustarMovimiento();
+            base.ajustarMovimiento(originalDate);
         }
 
         internal static bool isVentaOlivo(ICollection<CompraProducto> comprasProductos)

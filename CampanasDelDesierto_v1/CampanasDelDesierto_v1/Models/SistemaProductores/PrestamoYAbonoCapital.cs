@@ -70,61 +70,16 @@ namespace CampanasDelDesierto_v1.Models
 
         public int? abonoEnliquidacionID { get; set; }
 
-        public decimal totalLiquidadoPrestamo
-        {
-            get
-            {
-                return abonosRecibidos != null ? abonosRecibidos.Sum(mov => mov.monto) : 0;
-            }
-        }
-
-        public decimal totalGastadoAbono
-        {
-            get
-            {
-                return prestamosAbonados != null ? prestamosAbonados.Sum(mov => mov.monto) : 0;
-            }
-        }
-
-        /// <summary>
-        /// Indica el monto faltante por saldar para un anticipo o el monto
-        /// disponible para seguir abonando en el caso de un abono.
-        /// </summary>
-        [DisplayName("Monto Activo")]
-        public decimal montoActivo
-        {
-            get { 
-                decimal suma = this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
-                    ? this.totalGastadoAbono :
-                    this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO ?
-                    this.totalLiquidadoPrestamo : 0;
-
-                return Math.Abs(this.montoMovimiento) - suma;
-            }
-        }
-
-        /// <summary>
-        /// Indica TRUE si el monto del abono ya ha sido distribuido completamente en un conjunto de prestamos o si
-        /// la instancia de prestamo ya ha sido saldada por un conjunto de abonos. En caso contrario, arroja FALSE.
-        /// </summary>
-        public bool agotado { get { return this.montoActivo <= 0; } }
-
         /// <summary>
         /// Conjunto de intereses generados para este prestamo
         /// </summary>
         public ICollection<CargoDeInteres> intereses { get; set; }
 
         /// <summary>
-        /// Prestamos sobre los cuales se distribuye el abono
+        /// Si es abono, prestamos sobre los cuales se distribuye el abono
         /// </summary>
         [InverseProperty("abono")]
         public virtual ICollection<Prestamo_Abono> prestamosAbonados { get; set; }
-
-        /// <summary>
-        /// Abonos recibidos a este prestamo
-        /// </summary>
-        [InverseProperty("prestamo")]
-        public virtual ICollection<Prestamo_Abono> abonosRecibidos { get; set; }
 
         public static class TipoMovimientoCapital
         {
@@ -146,7 +101,7 @@ namespace CampanasDelDesierto_v1.Models
         /// segun el concepto (Prestamo o Abono), esto para preparse para ser mostrado en la lsita de balances
         /// TODO: Checar si es posible hacer estos ajustes sobrecargando los setters de fechaMovimiento, concepto y montoDeMovimiento
         /// </summary>
-        public new void ajustarMovimiento()
+        public new void ajustarMovimiento(DateTime? originalDate = null)
         {
             //Los prestamos son cantidad negativas, los abonos no indican a que concepto pertenencen.
             if (this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
@@ -155,6 +110,7 @@ namespace CampanasDelDesierto_v1.Models
                 || this.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) { 
                 this.proveedor = this.tipoDeMovimientoDeCapital; //confirmar
                 this.conceptoCapital = this.proveedor;
+                //this.pagare = string.Empty;
                 this.fechaPagar = null;
             }
 
@@ -162,7 +118,7 @@ namespace CampanasDelDesierto_v1.Models
             if (this.TemporadaDeCosechaID == 0)
                 this.TemporadaDeCosechaID = TemporadaDeCosecha.getUltimaTemporada().TemporadaDeCosechaID;
 
-            base.ajustarMovimiento();
+            base.ajustarMovimiento(originalDate);
         }
 
         public static PrestamoYAbonoCapital nuevaRentecionAbono(LiquidacionSemanal ls, decimal monto, string tipoCapital)
@@ -283,10 +239,17 @@ namespace CampanasDelDesierto_v1.Models
             public virtual PrestamoYAbonoCapital anticipo { get; set; }
         }
 
+        public int liberarAbono(ApplicationDbContext db)
+        {
+            var prestamoAbonos = db.Prestamo_Abono.Where(mov => mov.abonoID == this.idMovimiento);
+            db.Prestamo_Abono.RemoveRange(prestamoAbonos);
+            return db.SaveChanges();
+        }
+
         public class Prestamo_Abono
         {
             public Prestamo_Abono() { }
-            public Prestamo_Abono(PrestamoYAbonoCapital prestamo, PrestamoYAbonoCapital abono)
+            public Prestamo_Abono(MovimientoFinanciero prestamo, PrestamoYAbonoCapital abono)
             {
                 this.prestamoID = prestamo.idMovimiento;
                 this.abonoID = abono.idMovimiento;
@@ -298,7 +261,7 @@ namespace CampanasDelDesierto_v1.Models
 
             [ForeignKey("prestamo")]
             public int? prestamoID { get; set; }
-            public virtual PrestamoYAbonoCapital prestamo { get; set; }
+            public virtual MovimientoFinanciero prestamo { get; set; }
 
             [ForeignKey("abono")]
             public int? abonoID { get; set; }
@@ -308,6 +271,9 @@ namespace CampanasDelDesierto_v1.Models
             ApplyFormatInEditMode = true)]
             [Display(Name = "Monto (USD)")]
             public decimal monto { get; set; }
+
+            public bool pagoAInteres { get; set; }
         }
+
     }
 }

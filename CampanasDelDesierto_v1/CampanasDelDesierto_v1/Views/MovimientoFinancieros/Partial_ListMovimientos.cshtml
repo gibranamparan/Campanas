@@ -2,6 +2,7 @@
 @using CampanasDelDesierto_v1.Models;
 
 @{ 
+    DateTime fechaActual = DateTime.Today.AddMonths(5);
     int temporada = ViewBag.temporada;
 
     @*Solo prestamos y abonos*@
@@ -17,6 +18,7 @@
     <div class="col-md-12">
         <table class="table table-hover table-striped">
             <tr>
+                <th>No. Pagaré/Compra</th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
                 </th>
@@ -26,8 +28,14 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
                 </th>
-                <th width="25%">
+                <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
+                </th>
+                <th>
+                    Monto Activo
+                </th>
+                <th>
+                    Interes Devengado
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
@@ -38,6 +46,15 @@
             @foreach (var item in movimientos)
             {
                 <tr >
+                    <td>
+                        @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) { 
+                            @Html.DisplayFor(model => ((PrestamoYAbonoCapital)item).pagare)
+                        }
+                        else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                        {
+                            @Html.DisplayFor(model => ((VentaACredito)item).ordenCompra)
+                        }
+                    </td>
                     <td >
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
@@ -48,8 +65,25 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
-                    <td width="25%">
+                    <td>
                         @Html.DisplayFor(modelItem => item.concepto)
+                    </td>
+                    <td>
+                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                        {
+                            @Html.DisplayFor(modelItem => item.montoActivo)
+                        }
+                    </td>
+                    <td>
+                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                        {
+                            var intereses = item.generarSeguimientoPagosConInteres(fechaActual);
+                            var interesDevengado = (intereses != null && intereses.Count() > 0) ? 
+                                intereses.Last().interesAcum : 0;
+                            @Math.Abs(interesDevengado).ToString("C");
+                        }
                     </td>
                     <td class='@(item.balance<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.balance)
