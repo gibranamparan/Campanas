@@ -10,7 +10,7 @@
 
 <table class="table table-hover table-striped">
     <tr>
-        <th>@Html.DisplayNameFor(model => model.productor)</th>
+        <th>@Html.DisplayNameFor(model => model.productor)</th>        
         <th>@Html.DisplayNameFor(model => model.totalAdeudo) @temporada.fechaInicio.Year</th>
         <th>@Html.DisplayNameFor(model => model.adeudoRecuperado) @temporada.fechaInicio.Year</th>
         <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
@@ -18,15 +18,14 @@
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
         <th>@Html.DisplayNameFor(model => model.adeudoArbolitos) @temporada.fechaInicio.Year</th>
         <th>@Html.DisplayNameFor(model => model.abonoArbolitosRecuperado)</th>
-        <th>@Html.DisplayNameFor(model => model.adeudoPorRecuperarArbolitos)</th>
-        <th>@Html.DisplayNameFor(model => model.adeudoAnteriorCosecha)</th>
+        <th>@Html.DisplayNameFor(model => model.adeudoPorRecuperarArbolitos)</th>       
         <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
         <th>@Html.DisplayNameFor(model => model.totalRecuperado)</th>
     </tr>
     @foreach(var item in Model) { 
         <tr>
-            <td>@Html.DisplayFor(model => item.productor)</td>
+            <td>@Html.DisplayFor(model => item.productor)</td>            
             <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
             <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
             <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
@@ -34,8 +33,7 @@
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
             <td>@Html.DisplayFor(model => item.adeudoArbolitos)</td>
             <td>@Html.DisplayFor(model => item.abonoArbolitosRecuperado)</td>
-            <td>@Html.DisplayFor(model => item.adeudoPorRecuperarArbolitos)</td>
-            <td>@Html.DisplayFor(model => item.adeudoAnteriorCosecha)</td>
+            <td>@Html.DisplayFor(model => item.adeudoPorRecuperarArbolitos)</td>            
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
             <td>@Html.DisplayFor(model => item.totalRecuperado)</td>

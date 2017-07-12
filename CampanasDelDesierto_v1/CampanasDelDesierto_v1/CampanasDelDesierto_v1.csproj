@@ -626,6 +626,7 @@
     <Content Include="Views\VentaACreditos\Create.cshtml" />
     <Content Include="Views\VentaACreditos\Delete.cshtml" />
     <Content Include="Views\VentaACreditos\Details.cshtml" />
+    <Content Include="Views\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
@@ -716,6 +717,7 @@
     <Content Include="Views\ReportesProductores\AdeudosRecuperacion.cshtml" />
     <Content Include="Views\Shared\Partial_LineaFirmaReportes.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListarIntereses.cshtml" />
+    <Content Include="Views\ReportesProductores\AdeudosRecuperacionDetallado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
