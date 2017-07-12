@@ -120,13 +120,20 @@ namespace CampanasDelDesierto_v1.Controllers
                 {
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,
-                        prestamoYAbonoCapital.tipoDeBalance);
+
+                    //Se asocia el nuevo abono a los prestamos existentes en el balance
+                    if (prestamoYAbonoCapital.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db, prestamoYAbonoCapital);
+
+                    MovimientoFinanciero ultimoMovimiento;
+                    ultimoMovimiento = prestamoYAbonoCapital.primerMovimientoAsociado();
+
+                    //Se determina el ultimo movimiento modificado por la distrubcion y asociacion de abonos con prestamos
+                    ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento,
+                        ultimoMovimiento.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento,db, prestamoYAbonoCapital.tipoDeBalance);
-                    if (prestamoYAbonoCapital.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-                        prod.asociarAbonosConPrestamos(db,prestamoYAbonoCapital);
 
                     return RedirectToAction("Details", "MovimientoFinancieros", new { id = prestamoYAbonoCapital.idMovimiento });
                 }
@@ -174,52 +181,33 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.Entry(prestamoYAbonoCapital).State = EntityState.Modified;
 
                 int numreg = db.SaveChanges();
-                if (numreg > 0) { 
-                    //Se calcula el movimiento anterior al que se esta registrando
+                if (numreg > 0) { //Si se almaceno satisfactoriamente
+                    //Se procede a ajustar el balance de los movimientos del productor
                     var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
-                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
+
+                    //Se asocia el nuevo pago a los movimientos ya existentes dentro de este balance
                     if (prestamoYAbonoCapital.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
                         prod.asociarAbonosConPrestamos(db, prestamoYAbonoCapital, true);
+
+                    //Se busca el movimiento mas viejo que haya sido modificado por la asociacion
+                    MovimientoFinanciero ultimoMovimiento;
+                    ultimoMovimiento = prestamoYAbonoCapital.primerMovimientoAsociado();
+
+                    //Se toma el movimiento anterior al mas viejo modificado por la asociacion
+                    ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento,
+                        ultimoMovimiento.tipoDeBalance);
+
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
                 }
+
                 return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor,
                     temporada = prestamoYAbonoCapital.TemporadaDeCosechaID });
             }
 
             prepararVistaEditar(db.Productores.Find(prestamoYAbonoCapital.idProductor), prestamoYAbonoCapital);
-
             return View(prestamoYAbonoCapital);
         }
-
-        // POST: PrestamoYAbonoCapitals/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            PrestamoYAbonoCapital prestamoYAbonoCapital = db.PrestamosYAbonosCapital.Find(id);
-
-            //Se calcula el ultimo movimiento antes de guardar el nuevo
-            var prod = db.Productores.Find(prestamoYAbonoCapital.idProductor);
-            MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(prestamoYAbonoCapital.fechaMovimiento,prestamoYAbonoCapital.tipoDeBalance);
-
-            db.MovimientosFinancieros.Remove(prestamoYAbonoCapital);
-            int numReg = db.SaveChanges();
-
-            if (numReg > 0)
-            {
-                //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                numReg = prod.ajustarBalances(ultimoMovimiento, db, prestamoYAbonoCapital.tipoDeBalance);
-            }
-
-            return RedirectToAction("Details", "Productores", new { id = prestamoYAbonoCapital.idProductor });
-        }
-        /*
-        public JsonResult incrementarInteres(int id)
-        {
-            var mov = db.PrestamosYAbonosCapital.Find(id);
-            mov.incrementarInteres(db);
-        }*/
 
         protected override void Dispose(bool disposing)
         {

@@ -10,6 +10,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.ComponentModel;
 using static CampanasDelDesierto_v1.Models.TemporadaDeCosecha;
 using Prestamo_Abono = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Prestamo_Abono;
+using static CampanasDelDesierto_v1.Models.MovimientoFinanciero;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -81,10 +82,10 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                var movimientos = this.MovimientosFinancieros;
+                var movimientos = this.MovimientosFinancieros
+                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
                 if (movimientos != null && movimientos.Count() > 0)
                 {
-                    movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
                     decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;
@@ -161,11 +162,17 @@ namespace CampanasDelDesierto_v1.Models
             //Se crea una lista encadenada ordenada cronologicamente hacia el pasado
             movimientos = movimientos.OrderByDescending(mov => mov.fechaMovimiento).ToList();
             LinkedList<MovimientoFinanciero> movimientosOrdenados = new LinkedList<MovimientoFinanciero>(movimientos);
-
+            
             //Para el registro recien modificado, se recalcula su balance
-            if (movimientosOrdenados.Count() > 0)
-                movimientosOrdenados.Last.Value.balance = movimientosOrdenados.Last.Value.montoMovimiento +
-                    (ultimoMovimiento == null ? 0 : ultimoMovimiento.balance);
+            if (movimientosOrdenados.Count() > 0) {
+                decimal monto = movimientosOrdenados.Last.Value.montoMovimiento;
+                if (movimientosOrdenados.Last.Value.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS 
+                    && movimientosOrdenados.Last.Value.isAbonoCapital)
+                    monto = ((PrestamoYAbonoCapital)movimientosOrdenados.Last.Value).capitalAbonado;
+
+                movimientosOrdenados.Last.Value.balance = monto
+                    + (ultimoMovimiento == null ? 0 : ultimoMovimiento.balance);
+            }
 
             /*Recorriendo la lista encadenada desde el registro recien modificado hasta el ultimo
             se van corrigiendo los balances, uno tras otro, esto solo cuando es mas de 1 movimiento registrado*/
@@ -179,8 +186,18 @@ namespace CampanasDelDesierto_v1.Models
                     //nodo anterior
                     var nodo = nodePointer.Previous;
 
+                    //nodo.Value.balance = nodePointer.Value.balance + nodo.Value.montoMovimiento;
+                    //Calculo de interes del movimiento para ser incluido en el balance
+                    decimal monto = nodo.Value.montoMovimiento;
+                    if (nodo.Value.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && nodo.Value.isAbonoCapital) { 
+                        monto = ((PrestamoYAbonoCapital)nodo.Value).capitalAbonado;
+                        //Si aun esta activo el el abono, se agrega al balance el monto disponible
+                        if (!((PrestamoYAbonoCapital)nodo.Value).agotado)
+                            monto += ((PrestamoYAbonoCapital)nodo.Value).montoActivo;
+                    }
+
                     //Se calcula nuevo balance
-                    nodo.Value.balance = nodePointer.Value.balance + nodo.Value.montoMovimiento;
+                    nodo.Value.balance = nodePointer.Value.balance + monto;
 
                     //Se recorre apuntador
                     nodePointer = nodo;
@@ -222,17 +239,18 @@ namespace CampanasDelDesierto_v1.Models
                     //Incluir el movimiento que esta siendo editado dentro de la limpieza de distribuciones
                     //en caso de que el registro que esta siendo editado sea un abono de capital
                     if (nuevoMovimiento.isAbonoCapital)
-                    {
-                        var movTemp = (PrestamoYAbonoCapital)nuevoMovimiento;
-                        db.Entry(movTemp).Collection(mov => mov.prestamosAbonados).Load();
+                    {//Se agrega el movimiento que se esta editando a la lista para ser limpiado
+                        var movTemp = (PrestamoYAbonoCapital)nuevoMovimiento; //Es abono, por lo que se hace casting
+                        db.Entry(movTemp).Collection(mov => mov.prestamosAbonados).Load(); //Si es abono, se comprueba si ha pagado prestamos
                         if (movTemp.prestamosAbonados != null && movTemp.prestamosAbonados.Count() > 0)
-                                movs.Add(movTemp);
-                    }else
+                                movs.Add(movTemp);//Si, se agrega.
+                    }
+                    else //Se agrega el movimiento que se esta editando a la lista para ser limpiado
                     {
                         var movTemp = nuevoMovimiento;
-                        db.Entry(movTemp).Collection(mov => mov.abonosRecibidos).Load();
+                        db.Entry(movTemp).Collection(mov => mov.abonosRecibidos).Load();//Si es prestamo, se comprueba si ha recibido abonos
                         if (movTemp.abonosRecibidos != null && movTemp.abonosRecibidos.Count() > 0)
-                            movs.Add(movTemp);
+                            movs.Add(movTemp);//Si, se agrega
                     }
                 }
 
@@ -262,7 +280,9 @@ namespace CampanasDelDesierto_v1.Models
             if (movs.Count() > 0)
                 movs.ForEach(mov => db.Prestamo_Abono.RemoveRange(mov.prestamosAbonados));
 
-            return asociarAbonosConPrestamos(db);
+            var nuevasAsoc = asociarAbonosConPrestamos(db);
+
+            return nuevasAsoc.Count();
         }
 
         /// <summary>
@@ -273,7 +293,7 @@ namespace CampanasDelDesierto_v1.Models
         /// <param name="editMode">Introducir TRUE si se quiere indicar que un movimiento editado 
         ///     afectara la distribucion.</param>
         /// <returns></returns>
-        public int asociarAbonosConPrestamos(ApplicationDbContext db, MovimientoFinanciero nuevoMovimiento=null, bool editMode = false)
+        public List<Prestamo_Abono> asociarAbonosConPrestamos(ApplicationDbContext db, MovimientoFinanciero nuevoMovimiento=null, bool editMode = false)
         {
             int numRegs = 0;
             if(nuevoMovimiento!=null)
@@ -292,31 +312,94 @@ namespace CampanasDelDesierto_v1.Models
             var abonos = new LinkedList<PrestamoYAbonoCapital>(movimientosCapital.Where(mov => mov.isAbonoCapital)
                 .Cast<PrestamoYAbonoCapital>().OrderBy(mov => mov.fechaMovimiento));
 
-            var prestamoNodo = prestamos.First;
-            var abonoNodo = abonos.First;
-            //Si existen prestamos y abonos activos, se procede a asociarlos
-            while (prestamoNodo != null && abonoNodo != null)
-            {
-                MovimientoFinanciero prestamo = prestamoNodo.Value;
-                PrestamoYAbonoCapital abono = abonoNodo.Value;
+            List<Prestamo_Abono> nuevasAsociaciones = new List<Prestamo_Abono>();
 
-                //Se crea un nuevo par de asociacion
-                Prestamo_Abono pa = new Prestamo_Abono(prestamo, abono);
-                //Si el abono se agota al pagar el prestamo
-                if (prestamo.montoActivo >= abono.montoActivo)
+            //Variables iniciales para distribucion de abonos
+            Boolean? pagarInteres = true;
+            do //Se realiza ciclo paga barrer con los prestamos 2 veces, la 1ra para abonar intereses y la 2da para abonar capital
+            {
+                var prestamoNodo = prestamos.First;
+                var abonoNodo = abonos.First;
+
+                //Variables para calcular intereses por prestamo a la fecha del abono
+                VMInteres interesReg = new VMInteres();
+                decimal interesAlAbonar = 0;bool hayInteres;
+
+                //Si existen prestamos y abonos activos con monto activo disponible, se procede a asociarlos
+                while (prestamoNodo != null && abonoNodo != null)
                 {
-                    pa.monto = abono.montoActivo; //El monto del par es el resto del abono
-                    abonoNodo = abonoNodo.Next; //Se pasa a un siguiente abono
+                    MovimientoFinanciero prestamo = prestamoNodo.Value;
+                    PrestamoYAbonoCapital abono = abonoNodo.Value;
+
+                    //Se determina el interes a la fecha en la que se hizo el abono
+                    if (pagarInteres.Value) { //Ciclo de pago de interes
+                        interesReg = prestamo.getInteresReg(abono.fechaMovimiento);
+                        interesAlAbonar = interesReg.interesRestante;
+                    }
+                    hayInteres = Math.Round(interesAlAbonar,2) > 0;
+
+                    //Se crea un nuevo par de asociacion
+                    Prestamo_Abono pa = new Prestamo_Abono(prestamo, abono);
+                    pa.pagoAInteres = hayInteres;
+
+                    //Si es pago a intereses, se crea un registro de pago a interes
+                    if (pagarInteres.Value)//Ciclo de pago de interes
+                        if (hayInteres) { 
+                            //Si el abono se agota al pagar el prestamo
+                            if (interesAlAbonar >= abono.montoActivo)
+                            {
+                                pa.monto = abono.montoActivo; //El monto del par es el resto del abono
+                                abonoNodo = abonoNodo.Next; //Se pasa a un siguiente abono
+                            }
+                            else //Si el prestamo se agota al recibir el abono
+                            {
+                                pa.monto = interesAlAbonar; // El monto del par es el resto del prestamo
+                                prestamoNodo = prestamoNodo.Next; // Se pasa a un siguiente prestamo
+                            }
+                            db.Prestamo_Abono.Add(pa); //Se guarda el par asociativo de prestamo y abono
+                            nuevasAsociaciones.Add(pa);
+                        }
+                        else //El interes del prestamo esta pagado, se pasa al siguiente prestamo
+                        { 
+                            prestamoNodo = prestamoNodo.Next;
+                        }
+
+                    else //Si no es pago a interes, se paga capital
+                    { 
+                        if (prestamo.montoActivo >= abono.montoActivo)//Si el abono se agota al pagar el prestamo
+                        {
+                            pa.monto = abono.montoActivo; //El monto del par es el resto del abono
+                            abonoNodo = abonoNodo.Next; //Se pasa a un siguiente abono
+                            //Si al proceder al siguiente abono, este es de otro mes, se deben considerar
+                            //los intereses generados por los prestamos en este mes, por lo que se 
+                            //levanta la vandera de pagarInteres otra vez.
+                            if (abonoNodo!=null && abonoNodo.Value.fechaMovimiento.Month
+                                != abonoNodo.Previous.Value.fechaMovimiento.Month)
+                                pagarInteres = true;
+                        }
+                        else //Si el prestamo se agota al recibir el abono
+                        {
+                            pa.monto = prestamo.montoActivo; // El monto del par es el resto del prestamo
+                            prestamoNodo = prestamoNodo.Next; // Se pasa a un siguiente prestamo
+                        }
+                        db.Prestamo_Abono.Add(pa); //Se guarda el par asociativo de prestamo y abono
+                        nuevasAsociaciones.Add(pa);
+                    }
+
+                }//Fin de ciclo mientras prestamo y abono no sean nulos
+                
+                if (pagarInteres.Value) { 
+                    pagarInteres = false;//Transicion de pago de interes a pago de capital
+                    prestamos = new LinkedList<MovimientoFinanciero>(prestamos.Where(mov=>!mov.agotado).OrderBy(mov=>mov.fechaMovimiento));
+                    abonos = new LinkedList<PrestamoYAbonoCapital>(abonos.Where(mov => !mov.agotado).OrderBy(mov => mov.fechaMovimiento));
                 }
-                else //Si el prestamo se agota al recibir el abono
-                {
-                    pa.monto = prestamo.montoActivo; // El monto del par es el resto del prestamo
-                    prestamoNodo = prestamoNodo.Next; // Se pasa a un siguiente prestamo
-                }
-                db.Prestamo_Abono.Add(pa); //Se guarda el par asociativo de prestamo y abono
-            }
+                else
+                    pagarInteres = null;//Transicion de pago de capital terminar ciclo
+
+            } while (pagarInteres != null);
+            
             numRegs = db.SaveChanges(); //Se guardan todos los pares marcados
-            return numRegs;
+            return nuevasAsociaciones;
         }
 
         public override string ToString()
@@ -434,13 +517,6 @@ namespace CampanasDelDesierto_v1.Models
         /// <returns></returns>
         internal MovimientoFinanciero getUltimoMovimiento(DateTime fechaMovimiento, MovimientoFinanciero.TipoDeBalance tipoBalance)
         {
-            /*
-            var movs = this.MovimientosFinancieros
-                .Where(mov => mov.isAbonoOPrestamo())
-                .Where(mov => mov.fechaMovimiento <= fechaMovimiento)
-                .OrderByDescending(mov => mov.fechaMovimiento)
-                .Take(2).ToList();*/
-
             //Se busca el ultimo movimiento anterior a la fecha de referencia dentro del mismo tipo de balance
             var movs = this.MovimientosFinancieros
                 .Where(mov => tipoBalance == MovimientoFinanciero.TipoDeBalance.NONE?

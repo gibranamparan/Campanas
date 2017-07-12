@@ -82,7 +82,6 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
         public DbSet<Retencion> Retenciones { get; set; }
         public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
-        public DbSet<PrestamoYAbonoCapital.CargoDeInteres> CargosDeInteres { get; set; }
         public DbSet<PrestamoYAbonoCapital.Prestamo_Abono> Prestamo_Abono { get; set; }
 
         //Sistema de activos

@@ -12,6 +12,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 using System.IO;
 using OfficeOpenXml;
 using System.ComponentModel;
+using static CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -227,13 +228,33 @@ namespace CampanasDelDesierto_v1.Controllers
                 && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
                 && (mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION || retencionAbonoEliminado))
             {
-                //Se calcula el ultimo movimiento anterior al que se desea eliminar
-                MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(mov.fechaMovimiento, mov.tipoDeBalance);
+                List<Prestamo_Abono> nuevasAsoc = new List<Prestamo_Abono>();
+                //Se re-asocia los prestamos y abonos del balance
+                if (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                    nuevasAsoc = prod.asociarAbonosConPrestamos(db, mov);
+
+                MovimientoFinanciero ultimoMovimiento;
+                //se busca el movimiento mas viejo afectado la redistribucion de prestamos y abonos.
+                var abonos = nuevasAsoc.Where(m => m.abono != null).OrderBy(m=>m.abono.fechaMovimiento);
+                var prestamos = nuevasAsoc.Where(m => m.prestamo != null).OrderBy(m => m.prestamo.fechaMovimiento);
+
+                var abono = abonos != null && abonos.Count() > 0 ? abonos.FirstOrDefault() : null; //Abono mas viejo
+                var prestamo = prestamos != null && prestamos.Count() > 0 ? prestamos.FirstOrDefault() : null; //Prestamo mas viejo
+
+                if(abono==null && prestamo == null)
+                    ultimoMovimiento = mov;
+                else if (abono == null) //Si no existe uno, es el otro
+                    ultimoMovimiento = prestamo.prestamo;
+                else if (prestamo == null)
+                    ultimoMovimiento = abono.abono;
+                else //Si existen ambos, se toma el mas viejo
+                    ultimoMovimiento = abono.abono.fechaMovimiento <= prestamo.prestamo.fechaMovimiento ? abono.abono : prestamo.prestamo;
+
+                //Se calcula el ultimo movimiento anterior al movimiento mas viejo afectado por la re distribucion
+                ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento, ultimoMovimiento.tipoDeBalance);
 
                 //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                 numReg = prod.ajustarBalances(ultimoMovimiento, db, mov.tipoDeBalance);
-                if(mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-                    prod.asociarAbonosConPrestamos(db, mov);
             }
             
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor, temporada= temporadaID });

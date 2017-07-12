@@ -266,10 +266,10 @@ tr.liquidacion{
 tr:hover.liquidacion{
     background-color: #b6ff00 !important;
 }
-tr.cosechaPagada{
+tr.pagado{
     background-color: #c7c7c7 !important;
 }
-tr:hover.cosechaPagada{
+tr:hover.pagado{
     background-color: #858585 !important;
 }
 

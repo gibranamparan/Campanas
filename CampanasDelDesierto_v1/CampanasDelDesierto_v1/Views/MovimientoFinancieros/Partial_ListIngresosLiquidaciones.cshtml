@@ -38,7 +38,7 @@
 {
                 <tr class="@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION?"liquidacion":"")
                     @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"cosechaPagada":"")">
+                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"pagado":"")">
                     <td>
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>

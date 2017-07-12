@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -29,8 +30,18 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [Display(Name = "Balance (USD)")]
+        [Display(Name = "Balance Capital (USD)")]
         public decimal balance { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [Display(Name = "Balance (USD)")]
+        public decimal balanceMasInteres { get {
+                decimal interes = 0;
+                if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
+                    interes = -this.getInteresRestante(DateTime.Today);
+                return this.balance + interes;
+            } }
 
         /// <summary>
         /// Fecha en la que se realizó el movimiento.
@@ -120,6 +131,41 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
+        /// Regresa el primer movimiento asociado dentro de su coleccion de abonos recibidos
+        /// o prestamos abonados (segun si es abono o prestamo), en caso de no existir, regresa
+        /// por defecto a si mismo.
+        /// </summary>
+        /// <returns></returns>
+        public MovimientoFinanciero primerMovimientoAsociado()
+        {
+            MovimientoFinanciero res = this;
+            List<Prestamo_Abono> movs = new List<Prestamo_Abono>();
+            if(this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS)
+            {
+                if (this.isAbonoCapital && ((PrestamoYAbonoCapital)this).prestamosAbonados != null
+                        && ((PrestamoYAbonoCapital)this).prestamosAbonados.Count() > 0)
+                {
+                    movs = ((PrestamoYAbonoCapital)this).prestamosAbonados
+                        .OrderBy(mov => mov.prestamo.fechaMovimiento)
+                        .ToList();
+                    res = (MovimientoFinanciero)(movs.FirstOrDefault() == null ?
+                        this : movs.FirstOrDefault().prestamo);
+                }
+                else if(this.abonosRecibidos != null && this.abonosRecibidos.Count() > 0)
+                {
+                    movs = this.abonosRecibidos
+                        .OrderBy(mov => mov.abono.fechaMovimiento)
+                        .ToList();
+
+                    res = (MovimientoFinanciero)(movs.FirstOrDefault() == null ?
+                        this : movs.FirstOrDefault().abono);
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Enumeracion de tipos de balances bajo los que se que agrupan los diferentes movimientos financieros.
         /// </summary>
         public enum TipoDeBalance
@@ -162,11 +208,16 @@ namespace CampanasDelDesierto_v1.Models
 
         public MovimientoFinanciero() { }
 
+        /// <summary>
+        /// Determina el total liquidado del saldo capital de un prestamo. De todos los abonos hechos a este movimiento, se
+        /// suma  solamente aquellos no hechos a intereses.
+        /// </summary>
         public decimal totalLiquidadoPrestamo
         {
             get
             {
-                return this.abonosRecibidos != null ? this.abonosRecibidos.Sum(mov => mov.monto) : 0;
+                return this.abonosRecibidos != null ? 
+                    this.abonosRecibidos.Where(mov=>!mov.pagoAInteres).Sum(mov => mov.monto) : 0;
             }
         }
 
@@ -221,7 +272,7 @@ namespace CampanasDelDesierto_v1.Models
         /// Indica TRUE si el monto del abono ya ha sido distribuido completamente en un conjunto de prestamos o si
         /// la instancia de prestamo ya ha sido saldada por un conjunto de abonos. En caso contrario, arroja FALSE.
         /// </summary>
-        public bool agotado { get { return this.montoActivo <= 0; } }
+        public bool agotado { get { return Math.Round(this.montoActivo,2) <= 0; } }
 
         internal int liberarPrestamo(ApplicationDbContext db)
         {
@@ -381,7 +432,7 @@ namespace CampanasDelDesierto_v1.Models
 
             //Se establece como fecha a pagar el 15 de agosto mas próximo
             //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
-            if(this.isAbonoOPrestamo() && !this.isAbonoCapital) { 
+            if(this.getTypeOfMovement() == TypeOfMovements.CAPITAL && !this.isAbonoCapital) { 
                 ((PrestamoYAbonoCapital)this).fechaPagar = 
                     new DateTime(((PrestamoYAbonoCapital)this).fechaMovimiento.Year, 8, 15);
                 if (((PrestamoYAbonoCapital)this).fechaMovimiento > ((PrestamoYAbonoCapital)this).fechaPagar)
@@ -421,26 +472,107 @@ namespace CampanasDelDesierto_v1.Models
                 var interesReg = intereses.First;
                 while (interesReg != null)
                 {
+                    decimal totalAbonos = Math.Round(this.getTotalAbonosDelMes(interesReg.Value.numMes),2);
                     //Es el primero, se basa sobre el monto prestado
                     if (interesReg.Previous == null) {
-                        VMInteres inicial = new VMInteres()
-                        {numMes = 0,saldoCapital = this.montoMovimiento,balance = this.montoMovimiento};
-                        interesReg.Value.calcular(inicial);
+                        //Se toman los abonos recibidos por el movimiento
+                        List<Prestamo_Abono> abonosAnteriores = new List<Prestamo_Abono>();
+                        if(this.abonosRecibidos!=null && this.abonosRecibidos.Count > 0) { 
+                            abonosAnteriores = this.abonosRecibidos
+                                .Where(mov => mov.abono.fechaMovimiento.Month <= this.fechaMovimiento.Month)
+                                .Where(mov => !mov.pagoAInteres).ToList();
+                        }
+
+                        //Si este mes recibio abonos a capital dentro del mes de su origen o antes
+                        decimal montoInicial;
+                        if (abonosAnteriores.Count() > 0) {
+                            var sumaDeAbonosAnteriores = abonosAnteriores.Sum(mov => mov.monto);
+                            montoInicial = Math.Abs(this.montoMovimiento) - sumaDeAbonosAnteriores;
+                        }
+                        else
+                            montoInicial = Math.Abs(this.montoMovimiento);
+
+                        VMInteres inicial = new VMInteres(){numMes = 0,saldoCapital = Math.Abs(montoInicial),
+                            balance = Math.Abs(montoInicial)};
+
+                        interesReg.Value.calcular(inicial, totalAbonos);
                     }
                     else //No es el primero, se basa sobre el saldo capital del mes anterior
-                        interesReg.Value.calcular(interesReg.Previous.Value);
+                        interesReg.Value.calcular(interesReg.Previous.Value, totalAbonos);
 
                     //Siguiente mes
                     interesReg = interesReg.Next;
                 }
-                return intereses.ToList();
+                var res = intereses.ToList();
+                res.RemoveAll(mov => Math.Round(mov.deuda,2) == 0);
+                return res;
             }
             return null;
         }
 
+        public decimal getTotalAbonosDelMes(int numMes)
+        {
+            DateTime dt = this.fechaMovimiento.AddMonths(numMes);
+            return getTotalAbonosDelMes(dt);
+        }
+
+        private decimal getTotalAbonosDelMes(DateTime dt)
+        {
+            decimal totalAbonos = 0;
+            DateTime startDate = new DateTime(dt.Year, dt.Month, 1);
+            DateTime endDate = new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month));
+            TimePeriod tp = new TimePeriod(startDate, endDate);
+            if (this.abonosRecibidos != null && this.abonosRecibidos.Count() > 0)
+            {
+                totalAbonos = this.abonosRecibidos.Where(mov => tp.hasInside(mov.abono.fechaMovimiento))
+                    .Sum(mov => mov.monto);
+            }
+            return totalAbonos;
+        }
+
+        /// <summary>
+        /// Arroja el interes acumulado a a la fecha actual de la deuda en cuestion,
+        /// dentro del balance de anticipos.
+        /// </summary>
+        /// <param name="fechaActual"></param>
+        /// <returns></returns>
+        public decimal getInteresRestante(DateTime fechaActual)
+        {
+            if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
+            {
+                var intereses = this.generarSeguimientoPagosConInteres(fechaActual);
+                var interesDevengado = (intereses != null && intereses.Count() > 0) ?
+                    intereses.Last().interesRestante : 0;
+                return interesDevengado;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Arroja el interes acumulado a a la fecha actual de la deuda en cuestion,
+        /// dentro del balance de anticipos.
+        /// </summary>
+        /// <param name="fechaActual"></param>
+        /// <returns></returns>
+        public VMInteres getInteresReg(DateTime fechaActual)
+        {
+            if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
+            {
+                var intereses = this.generarSeguimientoPagosConInteres(fechaActual);
+                return intereses.LastOrDefault()==null?new VMInteres():intereses.LastOrDefault();
+            }
+            return new VMInteres();
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Fecha: {0}, Monto: {1}, Tipo: {2}", 
+                this.fechaMovimiento,this.montoMovimiento, this.nombreDeMovimiento);
+        }
+
         public class VMInteres
         {
-            const decimal INTERES_ANUAL = (decimal).10, INTERES_MENSUAL = INTERES_ANUAL / 12;
+            const decimal INTERES_ANUAL = .10M, INTERES_MENSUAL = INTERES_ANUAL / 12;
             
             [DisplayName("Mes")]
             public int numMes { get; set; }
@@ -479,9 +611,22 @@ namespace CampanasDelDesierto_v1.Models
                 this.interesAcum = this.interes + mesAnterior.interesRestante;
                 this.deuda = this.interes + mesAnterior.balance;
                 this.pago = pago;
-                this.interesRestante = this.pago > this.interesRestante ? 0 : this.interesAcum - this.pago;
-                this.saldoCapital = mesAnterior.saldoCapital - (this.pago >= this.interesAcum ? this.pago - this.interesAcum : 0);
+                this.interesRestante = this.pago > this.interesAcum ? 0 : this.interesAcum - this.pago;
+                this.saldoCapital = mesAnterior.saldoCapital - (this.pago >= this.interesAcum ? 
+                    this.pago - this.interesAcum : 0);
                 this.balance = this.interesRestante + this.saldoCapital;
+
+                //this.round();
+            }
+
+            public void round()
+            {
+                this.interes = Math.Round(this.interes,2);
+                this.interesAcum = Math.Round(this.interesAcum, 2);
+                this.deuda = Math.Round(this.deuda, 2);
+                this.interesRestante = Math.Round(this.interesRestante, 2);
+                this.saldoCapital = Math.Round(this.saldoCapital, 2);
+                this.balance = Math.Round(this.balance, 2);
             }
         }
     }

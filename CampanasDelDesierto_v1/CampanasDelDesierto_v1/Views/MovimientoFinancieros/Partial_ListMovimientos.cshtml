@@ -2,7 +2,7 @@
 @using CampanasDelDesierto_v1.Models;
 
 @{ 
-    DateTime fechaActual = DateTime.Today.AddMonths(5);
+    DateTime fechaActual = DateTime.Today;
     int temporada = ViewBag.temporada;
 
     @*Solo prestamos y abonos*@
@@ -32,7 +32,7 @@
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
                 <th>
-                    Monto Activo
+                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoActivo)
                 </th>
                 <th>
                     Interes Devengado
@@ -45,9 +45,11 @@
 
             @foreach (var item in movimientos)
             {
+                bool retencionDeLiquidacion = (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                                && ((PrestamoYAbonoCapital)item).abonoEnliquidacionID != null);
                 <tr >
                     <td>
-                        @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) { 
+                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) {
                             @Html.DisplayFor(model => ((PrestamoYAbonoCapital)item).pagare)
                         }
                         else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
@@ -76,12 +78,10 @@
                         }
                     </td>
                     <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                        @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
                         || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                         {
-                            var intereses = item.generarSeguimientoPagosConInteres(fechaActual);
-                            var interesDevengado = (intereses != null && intereses.Count() > 0) ? 
-                                intereses.Last().interesAcum : 0;
+                            var interesDevengado = item.getInteresRestante(fechaActual);
                             @Math.Abs(interesDevengado).ToString("C");
                         }
                     </td>
@@ -91,30 +91,31 @@
                     <td>
                         @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
                             ademas no es un ingreso de de cosecha ya reportado como liquidado*@
-                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                                && ((PrestamoYAbonoCapital)item).abonoEnliquidacionID != null)
-                            ) {
-                            <div class="dropdown_actions">
-                                <button onclick="openActionsDropDown(this)"
-                                        class="dropbtn btn btn-default">
-                                    <i class="glyphicon glyphicon-option-horizontal"></i>
-                                </button>
-                                <div id="myDropdown"
-                                     class="dropdown-content">
-                                    <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-edit"></i> Editar
-                                    </a>
+                        <div class="dropdown_actions">
+                            <button onclick="openActionsDropDown(this)"
+                                    class="dropbtn btn btn-default">
+                                <i class="glyphicon glyphicon-option-horizontal"></i>
+                            </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                @if (!retencionDeLiquidacion) {
+                                <a href="@Url.Action("Edit", item.getNombreControlador(), new { id = item.idMovimiento })">
+                                    <i class="glyphicon glyphicon-edit"></i> Editar
+                                </a>
+                                }
 
-                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-print"></i> Detalles
-                                    </a>
+                                <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                    <i class="glyphicon glyphicon-print"></i> Detalles
+                                </a>
 
-                                    <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                @if (!retencionDeLiquidacion)
+                                {
+                                    <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
                                         <i class="glyphicon glyphicon-remove"></i> Borrar
                                     </a>
-                                </div>
+                                }
                             </div>
-                        }
+                        </div>
+                        
                     </td>
                 </tr>
             }

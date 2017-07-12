@@ -233,6 +233,10 @@ namespace CampanasDelDesierto_v1.Controllers
                         //Se calcula el movimiento anterior al que se esta registrando
                         var prod = db.Productores.Find(abonoAnticipo.idProductor);
                         MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoAnticipo.fechaMovimiento, abonoAnticipo.tipoDeBalance);
+                        
+                        //Se asocia el nuevo abono a los prestamos existentes en el balance
+                        if (abonoAnticipo.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                            prod.asociarAbonosConPrestamos(db, abonoAnticipo);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db, abonoAnticipo.tipoDeBalance);
@@ -434,6 +438,10 @@ namespace CampanasDelDesierto_v1.Controllers
                         //Se calcula el movimiento anterior al que se esta registrando
                         var prod = db.Productores.Find(abonoAnticipo.idProductor);
                         MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(abonoAnticipo.fechaMovimiento, abonoAnticipo.tipoDeBalance);
+                        
+                        //Se asocia el nuevo abono a los prestamos existentes en el balance
+                        if (abonoAnticipo.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                            prod.asociarAbonosConPrestamos(db, abonoAnticipo);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db, abonoAnticipo.tipoDeBalance);

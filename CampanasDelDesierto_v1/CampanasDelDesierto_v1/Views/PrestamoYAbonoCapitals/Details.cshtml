@@ -1,12 +1,15 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
-@{ 
+@{
     //Simulacion de tiempo para recopilar intereses
-    DateTime fechaActual = DateTime.Now.AddMonths(5);
+    DateTime fechaActual = DateTime.Today;
+    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = new List<MovimientoFinanciero.VMInteres>();
+    
+    if (!Model.isAbonoCapital)
+    {
+        intereses = Model.generarSeguimientoPagosConInteres(fechaActual);
+    }
 
-
-    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses =
-        Model.generarSeguimientoPagosConInteres(fechaActual);
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("fechaInicial", Model.fechaMovimiento);
 }
@@ -32,7 +35,7 @@
 <div class="form-group col-md-4">
     @Html.LabelFor(model => model.fechaPagar, new { @class = "control-label col-md-3" })
     <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.fechaPagar)</p>
+        <p class="form-control-static">@(Model.fechaPagar.HasValue?Model.fechaPagar.Value.ToString("dd/MMM/yyyy"):"") </ p >
     </div>
 </div>
 <div class="form-group col-md-4">
@@ -54,7 +57,9 @@
     </div>
 </div>
 
-@Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses,vdd)
+@if (!Model.isAbonoCapital) { 
+    @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses,vdd)
+}
 
 <div class="row">
     @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
@@ -69,14 +74,14 @@
                         <th>No. Pagaré/Compra</th>
                         <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.fechaMovimiento)</th>
                         <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoMovimiento)</th>
-                        <th>Monto Saldado</th>
+                        <th>Monto Abonado</th>
                         @if (showMontoActivo) { 
-                            <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoActivo)</th>
+                            <th>Monto por saldar</th>
                         }
                     </tr>
                     @foreach (var mov in Model.prestamosAbonados)
                     {
-                        <tr>
+                        <tr class="@(mov.pagoAInteres? "pagado" : "")">
                             <td>
                                 <a href="@Url.Action("Details",new { id = mov.prestamoID })" target="_blank">
                                     Ver: 
@@ -89,7 +94,7 @@
                                     }
                                 </a>
                             </td>
-                            <td>@Html.DisplayFor(model => mov.prestamo.fechaMovimiento)</td>
+                            <td>@mov.prestamo.fechaMovimiento.ToString("dd/MMMM/yyyy")</td>
                             <td>@Math.Abs(mov.prestamo.montoMovimiento).ToString("C")</td>
                             <td>@Html.DisplayFor(model => mov.monto)</td>
                             @if (showMontoActivo)
@@ -114,7 +119,6 @@
         <h4>Abonos recibidos</h4>
         if (Model.abonosRecibidos.Count() > 0)
         {
-            bool showMontoActivo = Model.abonosRecibidos.Sum(mov => mov.abono.montoActivo) > 0;
             <div class="col-md-12">
                 <table class="table table-hover table-striped">
                     <tr>
@@ -122,26 +126,18 @@
                         <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.fechaMovimiento)</th>
                         <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoMovimiento)</th>
                         <th>Monto Distribuido</th>
-                        @if (showMontoActivo)
-                        {
-                            <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoActivo)</th>
-                        }
                     </tr>
                     @foreach (var mov in Model.abonosRecibidos)
                     {
-                        <tr>
+                        <tr class="@(mov.pagoAInteres? "pagado" : "")">
                             <td>
                                 <a href="@Url.Action("Details",new { id = mov.abonoID })" target="_blank">
                                     Ver: @Html.DisplayFor(model=>mov.abono.pagare)
                                 </a>
                             </td>
-                            <td>@Html.DisplayFor(model => mov.abono.fechaMovimiento)</td>
+                            <td>@mov.abono.fechaMovimiento.ToString("dd/MMM/yyyy")</td>
                             <td>@Html.DisplayFor(model => mov.abono.montoMovimiento)</td>
                             <td>@Html.DisplayFor(model => mov.monto)</td>
-                            @if (showMontoActivo)
-                            {
-                                <td>@Html.DisplayFor(model => mov.abono.montoActivo)</td>
-                            }
                         </tr>
                     }
                 </table>

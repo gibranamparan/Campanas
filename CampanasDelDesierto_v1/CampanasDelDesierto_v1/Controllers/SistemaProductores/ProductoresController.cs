@@ -232,14 +232,27 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [AllowAnonymous]
+        public JsonResult ajustaBalancesAnticipos(int id)
+        {
+            var prod = db.Productores.Find(id);
+            int numRegs = prod.ajustarBalances(null,db,MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+            return Json(new { registrosModificados = numRegs }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
         public JsonResult restaurarDistribucionesParaTodos()
         {
-            var prods = db.Productores;
-            int numRegs = 0;
-            foreach(var prod in prods) { 
-                numRegs += prod.restaurarDistribuciones(db);
+            var prods = db.Productores.ToList();
+            int numRegsDistribuciones = 0;
+            int numRegsBalances = 0;
+            foreach (var prod in prods)
+            {
+                numRegsDistribuciones += prod.restaurarDistribuciones(db);
+                numRegsBalances += prod.ajustarBalances(null,db,MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
             }
-            return Json(new { registrosModificados = numRegs }, JsonRequestBehavior.AllowGet);
+            return Json(new { numRegsDistribuciones = numRegsDistribuciones,
+                numRegsBalances = numRegsBalances
+            }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Productores/Delete/5

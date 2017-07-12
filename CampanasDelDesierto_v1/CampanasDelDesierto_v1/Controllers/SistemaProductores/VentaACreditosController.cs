@@ -98,16 +98,25 @@ namespace CampanasDelDesierto_v1.Controllers
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
+                    //Se recargan las entidades de productos asociadass a cada compra dentro de la venta a credito
                     ventaACredito.ComprasProductos.ToList().ForEach(com => db.Entry(com).Reference(p => p.producto).Load());
+
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(ventaACredito.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento,ventaACredito.tipoDeBalance);
 
-                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db,ventaACredito.tipoDeBalance);
-
+                    //Se asocia el nuevo abono a los prestamos existentes en el balance
                     if (ventaACredito.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
                         prod.asociarAbonosConPrestamos(db, ventaACredito);
+
+                    MovimientoFinanciero ultimoMovimiento;
+                    ultimoMovimiento = ventaACredito.primerMovimientoAsociado();
+
+                    //Se determina el ultimo movimiento modificado por la distrubcion y asociacion de abonos con prestamos
+                    ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento,
+                        ultimoMovimiento.tipoDeBalance);
+
+                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
+                    prod.ajustarBalances(ultimoMovimiento, db, ventaACredito.tipoDeBalance);
 
                     return RedirectToAction("Details", "MovimientoFinancieros", new { id = ventaACredito.idMovimiento });
                 }
@@ -176,13 +185,20 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se calcula el movimiento anterior al que se esta registrando
                     var prod = db.Productores.Find(ventaACredito.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(ventaACredito.fechaMovimiento, ventaACredito.tipoDeBalance);
+
+                    //Se asocia el nuevo abono a los prestamos existentes en el balance
+                    if (ventaACredito.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                        prod.asociarAbonosConPrestamos(db, ventaACredito);
+
+                    MovimientoFinanciero ultimoMovimiento;
+                    ultimoMovimiento = ventaACredito.primerMovimientoAsociado();
+
+                    //Se determina el ultimo movimiento modificado por la distrubcion y asociacion de abonos con prestamos
+                    ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento,
+                        ultimoMovimiento.tipoDeBalance);
 
                     //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                     prod.ajustarBalances(ultimoMovimiento, db, ventaACredito.tipoDeBalance);
-
-                    if (ventaACredito.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-                        prod.asociarAbonosConPrestamos(db, ventaACredito,true);
 
                     return RedirectToAction("Details", "Productores", 
                         new { id = ventaACredito.idProductor, temporada = ventaACredito.TemporadaDeCosechaID });

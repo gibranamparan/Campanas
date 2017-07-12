@@ -1,7 +1,11 @@
 ﻿@model CampanasDelDesierto_v1.Models.VentaACredito
 @{ 
     var compras = Model.ComprasProductos;
-    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = Model.generarSeguimientoPagosConInteres(DateTime.Now);
+
+    //Simulacion de tiempo para recopilar intereses
+    DateTime fechaActual = DateTime.Today;
+
+    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = Model.generarSeguimientoPagosConInteres(fechaActual);
 }
 
 <div class="form-group col-md-4">

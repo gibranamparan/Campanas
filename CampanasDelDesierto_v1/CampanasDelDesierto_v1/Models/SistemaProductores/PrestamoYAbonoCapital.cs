@@ -41,8 +41,6 @@ namespace CampanasDelDesierto_v1.Models
         public new string concepto {
             get {
                 string res = this.conceptoCapital;
-                /* if (this.tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                     res = this.tipoDeMovimientoDeCapital;*/
                 return res;
             }
             set { this.conceptoCapital = value; } }
@@ -69,12 +67,7 @@ namespace CampanasDelDesierto_v1.Models
         public string divisa { get; set; }
 
         public int? abonoEnliquidacionID { get; set; }
-
-        /// <summary>
-        /// Conjunto de intereses generados para este prestamo
-        /// </summary>
-        public ICollection<CargoDeInteres> intereses { get; set; }
-
+        
         /// <summary>
         /// Si es abono, prestamos sobre los cuales se distribuye el abono
         /// </summary>
@@ -136,17 +129,7 @@ namespace CampanasDelDesierto_v1.Models
 
             return abono;
         }
-
-        //TODO: Terminar de desarrollar metodo para generar movimientos de interes
-        internal void incrementarInteres(ApplicationDbContext db)
-        {
-            double totalPays = 12;
-            double interest = .1 / totalPays;
-
-            double toPay = Financial.Pmt(interest, totalPays, (double)this.montoMovimiento / totalPays);
-            //CargoDeInteres  
-        }
-
+        
         public static SelectList getConceptosSelectList()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -219,32 +202,26 @@ namespace CampanasDelDesierto_v1.Models
             public string nombreConcepto { get; set; }
         }
 
-        public class CargoDeInteres
-        {
-            [Key]
-            public int cargoDeInteresID { get; set; }
-
-            [DisplayFormat(DataFormatString = "{0:C}",
-            ApplyFormatInEditMode = true)]
-            [Display(Name = "Monto (USD)")]
-            public decimal monto { get; set; }
-
-            [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
-            ApplyFormatInEditMode = true)]
-            [DataType(DataType.Date)]
-            public DateTime fecha { get; set; }
-
-            [ForeignKey("anticipo")]
-            public int anticipoID { get; set; }
-            public virtual PrestamoYAbonoCapital anticipo { get; set; }
-        }
-
         public int liberarAbono(ApplicationDbContext db)
         {
             var prestamoAbonos = db.Prestamo_Abono.Where(mov => mov.abonoID == this.idMovimiento);
             db.Prestamo_Abono.RemoveRange(prestamoAbonos);
             return db.SaveChanges();
         }
+
+        public decimal capitalAbonado
+        {
+            get
+            {
+                decimal res = 0;
+                if (this.prestamosAbonados != null && this.prestamosAbonados.Count() > 0)
+                    res = this.prestamosAbonados.Where(mov => !mov.pagoAInteres)
+                        .Sum(mov => mov.monto);
+
+                return res;
+            }
+        }
+
 
         public class Prestamo_Abono
         {
@@ -269,6 +246,7 @@ namespace CampanasDelDesierto_v1.Models
 
             [DisplayFormat(DataFormatString = "{0:C}",
             ApplyFormatInEditMode = true)]
+            [DecimalPrecision(18, 4)]
             [Display(Name = "Monto (USD)")]
             public decimal monto { get; set; }
 
