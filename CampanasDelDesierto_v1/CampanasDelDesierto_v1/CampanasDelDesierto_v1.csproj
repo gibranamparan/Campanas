@@ -374,9 +374,18 @@
     <Compile Include="Migrations\201707110322052_monto_pago_abono_preciosion4digitos.Designer.cs">
       <DependentUpon>201707110322052_monto_pago_abono_preciosion4digitos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707130627211_productores_newFields_adeudosAnteriores.cs" />
+    <Compile Include="Migrations\201707130627211_productores_newFields_adeudosAnteriores.Designer.cs">
+      <DependentUpon>201707130627211_productores_newFields_adeudosAnteriores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707140811394_nueva_entidad_AdeudoInicial.cs" />
+    <Compile Include="Migrations\201707140811394_nueva_entidad_AdeudoInicial.Designer.cs">
+      <DependentUpon>201707140811394_nueva_entidad_AdeudoInicial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
+    <Compile Include="Models\SistemaProductores\AdeudoInicial.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
     <Compile Include="Models\SistemaActivos\Activo.cs" />
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
@@ -626,7 +635,6 @@
     <Content Include="Views\VentaACreditos\Create.cshtml" />
     <Content Include="Views\VentaACreditos\Delete.cshtml" />
     <Content Include="Views\VentaACreditos\Details.cshtml" />
-    <Content Include="Views\VentaACreditos\Index.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
@@ -812,6 +820,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707110322052_monto_pago_abono_preciosion4digitos.resx">
       <DependentUpon>201707110322052_monto_pago_abono_preciosion4digitos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707130627211_productores_newFields_adeudosAnteriores.resx">
+      <DependentUpon>201707130627211_productores_newFields_adeudosAnteriores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707140811394_nueva_entidad_AdeudoInicial.resx">
+      <DependentUpon>201707140811394_nueva_entidad_AdeudoInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -11,6 +11,8 @@ using System.ComponentModel;
 using static CampanasDelDesierto_v1.Models.TemporadaDeCosecha;
 using Prestamo_Abono = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Prestamo_Abono;
 using static CampanasDelDesierto_v1.Models.MovimientoFinanciero;
+using CampanasDelDesierto_v1.Models.SistemaProductores;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -55,10 +57,45 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Desactivado")]
         public bool Desactivado { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:C}",
-        ApplyFormatInEditMode = true)]
-        [Display(Name = "Adeudo Anterior (USD)")]
-        public decimal? adeudoAnterior { get; set; }
+        public AdeudoInicial adeudoInicialArboles
+        {
+            get
+            {
+                var movimientos = this.MovimientosFinancieros;
+                if (movimientos != null && movimientos.Count() > 0)
+                {
+                    var res = movimientos.FirstOrDefault(mov => mov.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
+                    && mov.tipoDeBalance == TipoDeBalance.VENTA_OLIVO);
+                    return res != null ? (AdeudoInicial)res : null;
+                }
+                return null;
+            }
+        }
+        public AdeudoInicial adeudoInicialAnticipos
+        {
+            get
+            {
+                var movimientos = this.MovimientosFinancieros;
+                if (movimientos != null && movimientos.Count() > 0)
+                {
+                    var res = movimientos.FirstOrDefault(mov => mov.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
+                    && mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS);
+                    return res != null ? (AdeudoInicial)res : null;
+                }
+                return null;
+            }
+        }
+
+        /*
+        [Display(Name = "Balance de Anticipos")]
+        [ForeignKey("adeudoAnteriorAnticipos")]
+        public int? adeudoAnteriorAnticiposID { get; set; }
+        public virtual AdeudoInicial adeudoAnteriorAnticipos { get; set; }
+        
+        [Display(Name = "Balance de Arboles de Olivo")]
+        [ForeignKey("adeudoAnteriorArboles")]
+        public int? adeudoAnteriorArbolesID { get; set; }
+        public virtual AdeudoInicial adeudoAnteriorArboles { get; set; }*/
 
         [DisplayName("Balance Actual (USD)")]
         public decimal balanceActual
@@ -82,10 +119,11 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                var movimientos = this.MovimientosFinancieros
-                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
+                var movimientos = this.MovimientosFinancieros;
                 if (movimientos != null && movimientos.Count() > 0)
                 {
+                    movimientos = movimientos
+                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
                     decimal balance = movimientos
                         .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
                     return balance;

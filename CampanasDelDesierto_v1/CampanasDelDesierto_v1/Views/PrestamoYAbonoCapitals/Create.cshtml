@@ -250,13 +250,25 @@
             }
 
             function recalcularMontoDolares() {
-                var montoPesos = $("#montoPesos").val();
+                var divisa = $('#divisa').val();
+                var montoMXN = $("#montoPesos").val();
+                var montoUSD = $("#montoMovimiento").val();
                 var precioDolar = $("#precioDelDolar").val()
-                //var num = Math.trunc((montoPesos / precioDolar) * 100) / 100
-                var num = montoPesos / precioDolar;
-                $('#montoMovimiento')
-                    .val(numeral(num).format('0.00')).trigger('input');
-                $('#montoMovimiento').attr('value',num);
+                
+                //Si la divisa seleccionada es en pesos, se cambian los dolares
+                if (divisa == '@PrestamoYAbonoCapital.Divisas.MXN') {
+                    var num = montoMXN / precioDolar;
+                    $('#montoMovimiento')
+                        .val(numeral(num).format('0.00')).trigger('input');
+                    $('#montoMovimiento').attr('value', num);
+                }
+                //Si la divisa seleccionada es en USD, se cambian los pesos
+                else if (divisa == '@PrestamoYAbonoCapital.Divisas.USD') {
+                    var num = montoUSD * precioDolar;
+                    $('#montoPesos')
+                        .val(numeral(num).format('0.00')).trigger('input');
+                    $('#montoPesos').attr('value', num);
+                }
             }
 
             function recalcularMontoPesos() {

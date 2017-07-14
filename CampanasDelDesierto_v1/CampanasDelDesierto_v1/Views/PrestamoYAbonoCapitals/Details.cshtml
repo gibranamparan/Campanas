@@ -64,9 +64,10 @@
 <div class="row">
     @if (Model.tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
     {
+        if(Model.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) { 
         <h4>Anticipos Abonados</h4>
-        if (Model.prestamosAbonados.Count() > 0)
-        {
+            if (Model.prestamosAbonados.Count() > 0)
+            {
             bool showMontoActivo = Model.prestamosAbonados.Sum(mov => mov.prestamo.montoActivo) > 0;
             <div class="col-md-12">
                 <table class="table table-hover table-striped">
@@ -105,6 +106,7 @@
                     }
                 </table>
             </div>
+            }
         }
         else
         {

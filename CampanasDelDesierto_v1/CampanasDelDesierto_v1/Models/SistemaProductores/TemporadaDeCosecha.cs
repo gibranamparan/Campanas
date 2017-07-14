@@ -235,6 +235,13 @@ namespace CampanasDelDesierto_v1.Models
             return opciones;
         }
 
+        public static TemporadaDeCosecha temporadaMasAntigua(ApplicationDbContext db)
+        {
+            var temporadas = db.TemporadaDeCosechas.OrderBy(tem=>tem.fechaInicio);
+            var temporada = temporadas.FirstOrDefault();
+            return temporada;
+        }
+
         public override string ToString()
         {
             return this.periodo.ToString();

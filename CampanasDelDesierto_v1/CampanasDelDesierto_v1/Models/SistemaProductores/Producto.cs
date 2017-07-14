@@ -133,7 +133,7 @@ namespace CampanasDelDesierto_v1.Models
                         //Si el registro no se encontró, se agrega
                         if (productoDB == null)
                             db.Productos.Add(productoReg);
-                        else
+                        else //El producto fue encontrado, se modifica con los datos del excel
                         {
                             productoDB.costo = productoReg.costo;
                             productoDB.descripcion = productoReg.descripcion;

@@ -1,20 +1,43 @@
 ﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.Models.SistemaProductores
 @model CampanasDelDesierto_v1.Models.Productor
 
 @{
-    ViewBag.Title = "Create";
+    bool editMode = Model.idProductor > 0;
+    ViewBag.Title = (editMode?"Editar": "Nuevo") + " Productor";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //Se obtiene las instancias de los adeudos
+    AdeudoInicial adeudoAnticipos = Model.adeudoInicialAnticipos;
+    if (adeudoAnticipos == null) { adeudoAnticipos = new AdeudoInicial(); }
+    AdeudoInicial adeudoArboles = Model.adeudoInicialArboles;
+    if (adeudoArboles == null) { adeudoArboles = new AdeudoInicial(); }
 }
-<h2>Crear</h2>
 
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="glyphicon glyphicon-arrow-left"></i> Volver a la lista de productores
+    </a>
+    @if (editMode) { 
+         <span>|</span>
+        <a href="@Url.Action("Details",new { id = Model.idProductor})">
+            <i class="fa fa-money"></i> Movimientos financieros
+        </a>
+    }
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @(editMode ? "Editar" : "Nuevo") Productor
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.idProductor)
+            @Html.HiddenFor(model => adeudoAnticipos.idMovimiento)
+            @Html.HiddenFor(model => adeudoArboles.idMovimiento)
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-        <h4>Productor</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    
             <div class="form-horizontal">
                 <div class="row">
                     <div class="form-group col-md-6">
@@ -85,7 +108,7 @@
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.zona, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.zona,Productor.getZonasSelectList(), 
+                            @Html.DropDownListFor(model => model.zona, Productor.getZonasSelectList(),
                            new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.zona, "", new { @class = "text-danger" })
                         </div>
@@ -105,26 +128,78 @@
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.nombreRepresentanteLegal, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.nombreRepresentanteLegal, new {htmlAttributes = new { @class = "form-control"}})
+                            @Html.EditorFor(model => model.nombreRepresentanteLegal, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.nombreRepresentanteLegal, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
 
+                <fieldset>
+                    <legend>Adeudos Anteriores</legend>
+                    <fieldset>
+                        <h4>Anticipos</h4>
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => adeudoAnticipos.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => adeudoAnticipos.montoMovimiento, new
+                           {
+                               htmlAttributes = new
+                               {
+                                   @class = "form-control",
+                                   data_mask = "###0.00",
+                                   data_mask_reverse = "true",
+                               }
+                           })
+                                @Html.ValidationMessageFor(model => adeudoAnticipos.montoMovimiento, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => adeudoAnticipos.interesInicial, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => adeudoAnticipos.interesInicial, new
+                           {
+                               htmlAttributes = new
+                               {
+                                   @class = "form-control",
+                                   data_mask = "###0.00",
+                                   data_mask_reverse = "true",
+                               }
+                           })
+                                @Html.ValidationMessageFor(model => adeudoAnticipos.interesInicial, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <h4>Compras de Árboles de Olivo</h4>
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => adeudoArboles.montoMovimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => adeudoArboles.montoMovimiento, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                           }
+                       })
+                                @Html.ValidationMessageFor(model => adeudoArboles.montoMovimiento, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+
                 <div class="form-group">
                     <div class="col-md-10">
-                        <button class="btn btn-primary">Crear</button>
+                        <button class="btn btn-primary">@(editMode? "Guardar" : "Crear")</button>
                     </div>
                 </div>
             </div>
         }
-
-    <div>
-        <a href="@Url.Action("Index")">
-            <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista
-        </a>
     </div>
+</div>
 
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
-        }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

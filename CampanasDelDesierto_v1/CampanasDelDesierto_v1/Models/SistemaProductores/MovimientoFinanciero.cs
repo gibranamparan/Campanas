@@ -1,4 +1,5 @@
 ﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using CampanasDelDesierto_v1.Models.SistemaProductores;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -100,6 +101,8 @@ namespace CampanasDelDesierto_v1.Models
                     res = ((Retencion)this).concepto;
                 else if (this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO)
                     res = ((VentaACredito)this).concepto;
+                else if (this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL)
+                    res = ((AdeudoInicial)this).concepto;
 
                 return string.IsNullOrEmpty(res)?String.Empty:res;
             } }
@@ -122,8 +125,13 @@ namespace CampanasDelDesierto_v1.Models
                     return "VENTA A CREDITO";
                 else if (tom == TypeOfMovements.LIQUIDACION)
                     return "LIQUIDACION";
-                else if (tom == TypeOfMovements.RENTENCION) {
-                    return "RETENCION" ;
+                else if (tom == TypeOfMovements.RENTENCION)
+                {
+                    return "RETENCION";
+                }
+                else if (tom == TypeOfMovements.ADEUDO_INICIAL)
+                {
+                    return "ADEUDO INICIAL";
                 }
                 else
                     return "";
@@ -189,6 +197,9 @@ namespace CampanasDelDesierto_v1.Models
                 } else if (this.isVentaDeOlivo())
                 {
                     return TipoDeBalance.VENTA_OLIVO;
+                }else if(this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL)
+                {
+                    return ((AdeudoInicial)this).balanceAdeudado;
                 }
                 return TipoDeBalance.NONE;
             } }
@@ -202,8 +213,9 @@ namespace CampanasDelDesierto_v1.Models
             PAGO_POR_PRODUCTO,
             CAPITAL,
             VENTA_A_CREDITO,
-            LIQUIDACION, 
-            RENTENCION
+            LIQUIDACION,
+            RENTENCION,
+            ADEUDO_INICIAL
         };
 
         public MovimientoFinanciero() { }
@@ -297,6 +309,8 @@ namespace CampanasDelDesierto_v1.Models
                 return TypeOfMovements.LIQUIDACION;
             else if (this is Retencion)
                 return TypeOfMovements.RENTENCION;
+            else if (this is AdeudoInicial)
+                return TypeOfMovements.ADEUDO_INICIAL;
             else
                 return TypeOfMovements.NONE;
         }
@@ -421,7 +435,14 @@ namespace CampanasDelDesierto_v1.Models
         {
             this.temporadaDeCosecha = tem;
             this.TemporadaDeCosechaID = tem.TemporadaDeCosechaID;
-            int anioCosecha = tem.fechaInicio.Year;
+
+            //La fecha por defecto de los anticipos tendra como tope el inicio o fin de la temporada
+            int anioCosecha = this.fechaMovimiento.Year;
+            if (anioCosecha > tem.fechaFin.Year)
+                anioCosecha = tem.fechaFin.Year;
+            else if (anioCosecha < tem.fechaInicio.Year)
+                anioCosecha = tem.fechaInicio.Year;
+
             //Si la fecha determinada no entra dentro del periodo de cosecha
             this.fechaMovimiento = new DateTime(anioCosecha, DateTime.Now.Month, DateTime.Now.Day);
             //Si es mayor al rango de periodo de cosecha
@@ -434,7 +455,7 @@ namespace CampanasDelDesierto_v1.Models
             //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
             if(this.getTypeOfMovement() == TypeOfMovements.CAPITAL && !this.isAbonoCapital) { 
                 ((PrestamoYAbonoCapital)this).fechaPagar = 
-                    new DateTime(((PrestamoYAbonoCapital)this).fechaMovimiento.Year, 8, 15);
+                    new DateTime(((PrestamoYAbonoCapital)this).fechaMovimiento.Year, this.MES_PERIODO, this.DIA_PAGO);
                 if (((PrestamoYAbonoCapital)this).fechaMovimiento > ((PrestamoYAbonoCapital)this).fechaPagar)
                     ((PrestamoYAbonoCapital)this).fechaPagar = ((PrestamoYAbonoCapital)this).fechaPagar.Value.AddYears(1);
             }
@@ -442,6 +463,7 @@ namespace CampanasDelDesierto_v1.Models
 
         private int DIA_INICIO_PERIODO = 30;
         private int MES_PERIODO = 8;
+        private int DIA_PAGO = 15;
         public int anioCosecha
         {
             get

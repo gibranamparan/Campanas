@@ -8,6 +8,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 using Proveedores = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Proveedores;
 using Conceptos = CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.Conceptos;
 using System.ComponentModel;
+using CampanasDelDesierto_v1.Models.SistemaProductores;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -83,6 +84,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Retencion> Retenciones { get; set; }
         public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
         public DbSet<PrestamoYAbonoCapital.Prestamo_Abono> Prestamo_Abono { get; set; }
+        public DbSet<AdeudoInicial> AdeudosIniciales { get; set; }
 
         //Sistema de activos
         public DbSet<Activo> Activos { get; set; }

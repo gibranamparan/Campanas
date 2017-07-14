@@ -4,12 +4,15 @@
 @{ 
     DateTime fechaActual = DateTime.Today;
     int temporada = ViewBag.temporada;
+    
+    MovimientoFinanciero adeudo = Model.adeudoInicialAnticipos;
 
     @*Solo prestamos y abonos*@
     var movimientos = Model.MovimientosFinancieros
-        .Where(mov => mov.TemporadaDeCosechaID == temporada)
-        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-        .OrderBy(mov=>mov.fechaMovimiento).ToList();
+    .Where(mov => mov.TemporadaDeCosechaID == temporada)
+    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+    .OrderBy(mov => mov.fechaMovimiento).ToList();
+
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }
 
@@ -79,7 +82,8 @@
                     </td>
                     <td>
                         @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO
+                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL)
                         {
                             var interesDevengado = item.getInteresRestante(fechaActual);
                             @Math.Abs(interesDevengado).ToString("C");

@@ -57,7 +57,7 @@
             marque el archivo Excel.
             <ul>
                 <li>
-                    <strong>En caso de encontrarlo</strong>, el registro de Excel será ignorado.
+                    <strong>En caso de encontrarlo</strong>, el registro de la base de datos es modificado acorde al Excel.
                 </li>
                 <li>
                     <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de producto
@@ -104,9 +104,6 @@
             <td>
                 <a href="@Url.Action("Edit", "Productos", new { id = item.idProducto })">
                     <i class="glyphicon glyphicon-pencil"></i> Editar
-                </a><br />
-                <a href="@Url.Action("Details", "Productos", new { id = item.idProducto })">
-                    <i class="glyphicon glyphicon-eye-open"></i> Detalles
                 </a><br />
                 <a href="@Url.Action("Delete", "Productos", new { id = item.idProducto })">
                     <i class="glyphicon glyphicon-remove"></i> Eliminar
