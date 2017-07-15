@@ -134,7 +134,7 @@
 @Html.Partial("../Productores/Partial_InfoProductor", productor, vddProductorInfo)
 
 @*Datos globales*@
-<div class="panel panel-primary">
+<div class="panel panel-primary" >
     <div class="panel-heading">
         <h3 class="panel-title">
             <strong style="color: white">@(reportMode?"Reporte de":editMode ? "Editar" : "Registrar")</strong>
@@ -520,7 +520,15 @@
         </script>
 
         <style>
+
+
             @@media print{
+                /*extensión CSS no estándar para forzar la impresión*/
+                .panel-heading {
+                background-color:#31708f !important;
+                -webkit-print-color-adjust:exact;
+                }
+
                 input{
                     max-height: 1.5em !important;
                 }
@@ -541,7 +549,10 @@
                 #main > .inner > section{
                     padding: 0;
                 }
+                
             }
         </style>
+
+       
     }
 }
