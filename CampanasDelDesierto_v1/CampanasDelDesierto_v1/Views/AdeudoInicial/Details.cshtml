@@ -1,0 +1,72 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.SistemaProductores.AdeudoInicial
+@{
+    //Simulacion de tiempo para recopilar intereses
+    DateTime fechaActual = DateTime.Today;
+    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = new List<MovimientoFinanciero.VMInteres>();
+
+    if (!Model.isAbonoCapital)
+    {
+        intereses = Model.generarSeguimientoPagosConInteres(fechaActual);
+    }
+
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("fechaInicial", Model.fechaMovimiento);
+}
+
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.balanceAdeudado, new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        <p class="form-control-static">@Html.DisplayFor(model => model.balanceAdeudado)</p>
+    </div>
+</div>
+@if(Model.balanceAdeudado == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) { 
+    <div class="form-group col-md-4">
+        @Html.LabelFor(model => model.interesInicial, new { @class = "control-label col-md-3" })
+        <div class="col-md-9">
+            <p class="form-control-static">@Html.DisplayFor(model => model.interesInicial)</p>
+        </div>
+    </div>
+}
+
+@if (!Model.isAbonoCapital)
+{
+    @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses, vdd)
+}
+
+<div class="row">
+    <h4>Abonos recibidos</h4>
+    @if(Model.abonosRecibidos.Count() > 0)
+    {
+        <div class="col-md-12">
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>No. Pagaré/Compra</th>
+                    <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.fechaMovimiento)</th>
+                    <th>@Html.DisplayNameFor(model => model.abonosRecibidos.FirstOrDefault().abono.montoMovimiento)</th>
+                    <th>Monto Distribuido</th>
+                </tr>
+                @foreach (var mov in Model.abonosRecibidos)
+                {
+                    <tr class="@(mov.pagoAInteres? "pagado" : "")">
+                        <td>
+                            <a href="@Url.Action("Details",new { id = mov.abonoID })" target="_blank">
+                                Ver: @Html.DisplayFor(model => mov.abono.pagare)
+                            </a>
+                        </td>
+                        <td>@mov.abono.fechaMovimiento.ToString("dd/MMM/yyyy")</td>
+                        <td>@Html.DisplayFor(model => mov.abono.montoMovimiento)</td>
+                        <td>@Html.DisplayFor(model => mov.monto)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning col-md-12">
+            Este prestamo <strong>no ha recibido</strong> ningún abono.
+        </div>
+    }
+    
+</div>

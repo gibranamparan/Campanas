@@ -264,14 +264,15 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 decimal suma = 0;
-                if (this.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                var tom = this.getTypeOfMovement();
+                if ( tom == TypeOfMovements.CAPITAL)
                 {
                     suma = ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO
                     ? this.totalGastadoAbono :
                     ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO ?
                     this.totalLiquidadoPrestamo : 0;
                 }
-                else if (this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO)
+                else if (tom == TypeOfMovements.VENTA_A_CREDITO || tom == TypeOfMovements.ADEUDO_INICIAL)
                 {
                     suma = this.totalLiquidadoPrestamo;
                 }
@@ -285,6 +286,20 @@ namespace CampanasDelDesierto_v1.Models
         /// la instancia de prestamo ya ha sido saldada por un conjunto de abonos. En caso contrario, arroja FALSE.
         /// </summary>
         public bool agotado { get { return Math.Round(this.montoActivo,2) <= 0; } }
+
+
+        public static System.Data.Entity.EntityState determinarEstadoMovimiento(MovimientoFinanciero adeudo)
+        {
+            bool hayMonto = Math.Abs(adeudo.montoMovimiento) > 0, existe = adeudo.idMovimiento > 0;
+            if (hayMonto && existe)
+                return System.Data.Entity.EntityState.Modified;
+            else if (hayMonto && !existe)
+                return System.Data.Entity.EntityState.Added;
+            else if (!hayMonto && existe)
+                return System.Data.Entity.EntityState.Deleted;
+            else
+                return System.Data.Entity.EntityState.Detached;
+        }
 
         internal int liberarPrestamo(ApplicationDbContext db)
         {
@@ -326,6 +341,8 @@ namespace CampanasDelDesierto_v1.Models
                 return "VentaACreditos";
             else if (tom == TypeOfMovements.LIQUIDACION)
                 return "LiquidacionSemanal";
+            else if (tom == TypeOfMovements.ADEUDO_INICIAL)
+                return "AdeudoInicial";
             else
                 return "";
         }
@@ -369,6 +386,14 @@ namespace CampanasDelDesierto_v1.Models
                 && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital 
                     != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
                 || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
+        }
+
+        public bool isAnticipoDeCapital
+        {
+            get {
+                return this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital &&
+                       this.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO && this.isAbonoOPrestamo();
+            }
         }
 
         /// <summary>
@@ -514,8 +539,14 @@ namespace CampanasDelDesierto_v1.Models
                         else
                             montoInicial = Math.Abs(this.montoMovimiento);
 
+                        //En caso de ser adeudo inicial, se debe incluir el interes inicial ya adeudado por el productor
+                        //al ser ingresado al sistema
+                        decimal interesRestante = 0;
+                        if (this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL)
+                            interesRestante = ((AdeudoInicial)this).interesInicial;
+
                         VMInteres inicial = new VMInteres(){numMes = 0,saldoCapital = Math.Abs(montoInicial),
-                            balance = Math.Abs(montoInicial)};
+                            balance = Math.Abs(montoInicial)+ interesRestante, interesRestante = interesRestante};
 
                         interesReg.Value.calcular(inicial, totalAbonos);
                     }
@@ -560,7 +591,7 @@ namespace CampanasDelDesierto_v1.Models
         /// <returns></returns>
         public decimal getInteresRestante(DateTime fechaActual)
         {
-            if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
+            if (this.isAnticipoDeCapital)
             {
                 var intereses = this.generarSeguimientoPagosConInteres(fechaActual);
                 var interesDevengado = (intereses != null && intereses.Count() > 0) ?

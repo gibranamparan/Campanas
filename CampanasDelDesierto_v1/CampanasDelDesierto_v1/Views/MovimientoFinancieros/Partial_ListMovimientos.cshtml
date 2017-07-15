@@ -63,7 +63,7 @@
                     <td >
                         @Html.DisplayFor(modelItem => item.fechaMovimiento)
                     </td>
-                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")' 
+                    <td class='@(item.montoMovimiento < 0 ? "montoNegativo" : "")' 
                         @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
                         @Html.DisplayFor(modelItem => item.montoMovimiento)
                     </td>
@@ -75,6 +75,7 @@
                     </td>
                     <td>
                         @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                            || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL
                         || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                         {
                             @Html.DisplayFor(modelItem => item.montoActivo)
@@ -82,7 +83,6 @@
                     </td>
                     <td>
                         @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO
                         || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL)
                         {
                             var interesDevengado = item.getInteresRestante(fechaActual);

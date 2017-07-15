@@ -16,8 +16,14 @@ namespace CampanasDelDesierto_v1.Controllers
     public class ProductoresController : Controller
     {
         private const string BIND_FIELDS = "idProductor,numProductor,nombreProductor,domicilio," +
-            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal"+
-            ",adeudoAnteriorAnticipos,adeudoAnteriorArboles";
+            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal";
+        private const string ERRORMSG_NUMPRODUCTOR = "El numero de productor ingresado ya se encuentra registrado a {0}," +
+                    " ingrese uno diferente porfavor.";
+        private const string ERRORMSG_FECHA_ADEUDOS_INICIALES = "No es posible agregar deudas anteriores si no existe al menos una temporada " +
+                    "antes que incluya la fecha de integración registrada para el productor. Si desea ingresar adeudos iniciales para este productor, " +
+                    "modifique la fecha de integración por una que entre dentor de las temporadas registradas o bien, " +
+                    "cree una temporada que incluya dicha fecha.";
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Productores
@@ -128,44 +134,36 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult Create([Bind(Include = BIND_FIELDS)] Productor productor, 
             AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles)
         {
+            //Se determina si el numero de productor ingresado ya corresponde a un productor guardado
             var prodBuscado = db.Productores.FirstOrDefault(prod => prod.numProductor == productor.numProductor);
-            bool numProdYaExiste = prodBuscado!=null && prodBuscado.numProductor == prodBuscado.numProductor;
+            bool numProdYaExiste = prodBuscado!=null && prodBuscado.numProductor.ToUpper() == prodBuscado.numProductor.ToUpper();
             if (numProdYaExiste)
-            {
-                ModelState.AddModelError("", 
-                    String.Format("El numero de productor ingresado ya se encuentra registrado a {0}, ingrese uno diferente porfavor.", 
-                    prodBuscado.nombreProductor));
-            }
+                ModelState.AddModelError("", String.Format(ERRORMSG_NUMPRODUCTOR, prodBuscado.nombreProductor));
 
-            var temporadaMasVieja = db.TemporadaDeCosechas.OrderBy(tem => tem.fechaInicio).FirstOrDefault();
+            //Se determina la temporada de cosecha sobre la cual se comenzara a contar la deuda y se empezara el balance del productor
+            TemporadaDeCosecha temporadaRegistro = TemporadaDeCosecha.findTemporada(db,productor.fechaIntegracion);
             bool hayAdeudoAnterior = adeudoAnticipos.montoActivo > 0 || adeudoArboles.montoActivo > 0;
-            bool noHayTemporada = temporadaMasVieja == null && hayAdeudoAnterior;
+            bool noHayTemporada = temporadaRegistro == null && hayAdeudoAnterior;
             if (noHayTemporada)
-                ModelState.AddModelError("", "No es posible agregar deudas anteriores si no existe al menos una temporada antes.");
+                ModelState.AddModelError("", ERRORMSG_FECHA_ADEUDOS_INICIALES);
 
             //Es valido el registro si sus datos generales lo son, no hay un productor con el mismo numero y 
             //en caso de haber sido introducido un adeudo, haya ademas registrada al menos una temporada en el sistema
             if (ModelState.IsValid && !numProdYaExiste && !noHayTemporada)
             {
-                //Se determina el tipo de balance al que corresponde cada adeudo
-                adeudoAnticipos.balanceAdeudado = MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS;
-                adeudoArboles.balanceAdeudado = MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO;
-
                 //Se establece una fecha inicial a los movimientos para garantizar que sean los 1ros en el balance
                 DateTime fechaInicial;
-                fechaInicial = temporadaMasVieja.fechaInicio;
+                fechaInicial = temporadaRegistro.fechaInicio;
 
-                adeudoAnticipos.fechaMovimiento = fechaInicial;
-                adeudoArboles.fechaMovimiento = fechaInicial;
-                //Se introducen dentro de la temporada mas vieja
-                adeudoAnticipos.TemporadaDeCosechaID = temporadaMasVieja.TemporadaDeCosechaID;
-                adeudoArboles.TemporadaDeCosechaID = temporadaMasVieja.TemporadaDeCosechaID;
+                //Se asocia a la fecha de integracion y temporada correspondiente, asi como al productor
+                adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
 
                 //Se asocian los adeudos inciales al productor
                 productor.MovimientosFinancieros = new List<MovimientoFinanciero>();
-                if(adeudoAnticipos.montoMovimiento!=0)
+                if(Math.Abs(adeudoAnticipos.montoMovimiento)>0)
                     productor.MovimientosFinancieros.Add(adeudoAnticipos);
-                if (adeudoArboles.montoMovimiento != 0)
+                if (Math.Abs(adeudoArboles.montoMovimiento) > 0)
                     productor.MovimientosFinancieros.Add(adeudoArboles);
 
                 //Se hacen ajustes generales
@@ -176,7 +174,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 //Se guarda nuevo productor
                 db.Productores.Add(productor);
-                db.SaveChanges();
+                int numRegs = db.SaveChanges();
                 return RedirectToAction("Details", "Productores", new { id = productor.idProductor });
             }
 
@@ -203,15 +201,56 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = BIND_FIELDS)]
-                Productor productor)
+        public ActionResult Edit([Bind(Include = BIND_FIELDS)] Productor productor,
+            AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles)
         {
-            if (ModelState.IsValid)
+            //Se determina si el numero de productor ingresado ya corresponde a un productor guardado
+            var prodBuscado = db.Productores.FirstOrDefault(prod => prod.numProductor == productor.numProductor);
+            bool numProdYaExiste = prodBuscado != null && prodBuscado.idProductor != prodBuscado.idProductor
+                && prodBuscado.numProductor.ToUpper() == prodBuscado.numProductor.ToUpper();
+            db.Entry(prodBuscado).State = EntityState.Detached;
+
+            if (numProdYaExiste) //Si ya existen un productor con el mismo numero
+                ModelState.AddModelError("", String.Format(ERRORMSG_NUMPRODUCTOR, 
+                        prodBuscado.nombreProductor));
+
+            //Se determina la temporada de cosecha sobre la cual se comenzara a contar la deuda y se empezara el balance del productor
+            TemporadaDeCosecha temporadaRegistro = TemporadaDeCosecha.findTemporada(db, productor.fechaIntegracion);
+            bool hayAdeudoAnterior = adeudoAnticipos.montoActivo > 0 || adeudoArboles.montoActivo > 0;
+            bool noHayTemporada = temporadaRegistro == null && hayAdeudoAnterior;
+            if (noHayTemporada)
+                ModelState.AddModelError("", ERRORMSG_FECHA_ADEUDOS_INICIALES);
+
+            //Es valido el registro si sus datos generales lo son, no hay un productor con el mismo numero y 
+            //en caso de haber sido introducido un adeudo, haya ademas registrada al menos una temporada en el sistema
+            if (ModelState.IsValid && !numProdYaExiste && !noHayTemporada)
             {
+                //Se hacen ajustes generales
+                productor.RFC = productor.RFC.ToUpper();
+                productor.nombreCheque = productor.nombreCheque.ToUpper();
+                productor.nombreProductor = productor.nombreProductor.ToUpper();
                 productor.numProductor = productor.numProductor.Trim();
+
+                //Se asocia a la fecha de integracion y temporada correspondiente, asi como al productor
+                adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                adeudoArboles.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+
+                //Si el registro ya existia y el monto es cero, se elimina, si el monto no es cero
+                db.Entry(adeudoAnticipos).State = AdeudoInicial.determinarEstadoMovimiento(adeudoAnticipos);
+                db.Entry(adeudoArboles).State = AdeudoInicial.determinarEstadoMovimiento(adeudoArboles);
+
                 db.Entry(productor).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Details", new { id = productor.idProductor});
+                int numRegs = db.SaveChanges();
+                if (numRegs > 0)
+                {
+                    db.Entry(productor).Collection(prod => prod.MovimientosFinancieros).Load();
+                    productor.restaurarDistribuciones(db);
+
+                    productor.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                    productor.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                }
+                return RedirectToAction("Details", new { id = productor.idProductor,
+                    temporada = temporadaRegistro.TemporadaDeCosechaID});
             }
             return View("Create",productor);
         }

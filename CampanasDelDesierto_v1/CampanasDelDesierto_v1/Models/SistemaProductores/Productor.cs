@@ -331,9 +331,13 @@ namespace CampanasDelDesierto_v1.Models
         /// <param name="editMode">Introducir TRUE si se quiere indicar que un movimiento editado 
         ///     afectara la distribucion.</param>
         /// <returns></returns>
-        public List<Prestamo_Abono> asociarAbonosConPrestamos(ApplicationDbContext db, MovimientoFinanciero nuevoMovimiento=null, bool editMode = false)
+        public List<Prestamo_Abono> asociarAbonosConPrestamos(ApplicationDbContext db,
+            MovimientoFinanciero nuevoMovimiento=null, bool editMode = false)
         {
             int numRegs = 0;
+
+            //Si el movimiento que esta siendo editado es un abono, es necesario eliminar tambien
+            //sus distribuciones para redistribuir.
             if(nuevoMovimiento!=null)
                 numRegs = limpiarDistribuiciones(db, nuevoMovimiento, editMode);
 
@@ -369,8 +373,9 @@ namespace CampanasDelDesierto_v1.Models
                     MovimientoFinanciero prestamo = prestamoNodo.Value;
                     PrestamoYAbonoCapital abono = abonoNodo.Value;
 
+                    interesAlAbonar = 0;
                     //Se determina el interes a la fecha en la que se hizo el abono
-                    if (pagarInteres.Value) { //Ciclo de pago de interes
+                    if (pagarInteres.Value && prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO) { //Ciclo de pago de interes
                         interesReg = prestamo.getInteresReg(abono.fechaMovimiento);
                         interesAlAbonar = interesReg.interesRestante;
                     }

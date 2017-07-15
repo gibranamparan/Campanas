@@ -237,6 +237,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
+    <Compile Include="Controllers\SistemaProductores\AdeudoInicialController.cs" />
     <Compile Include="Controllers\SistemaProductores\AdminDepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\LiquidacionSemanalController.cs" />
     <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
@@ -726,6 +727,7 @@
     <Content Include="Views\Shared\Partial_LineaFirmaReportes.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListarIntereses.cshtml" />
     <Content Include="Views\ReportesProductores\AdeudosRecuperacionDetallado.cshtml" />
+    <Content Include="Views\AdeudoInicial\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -180,6 +180,33 @@ namespace CampanasDelDesierto_v1.Models
             return regsSaved;
         }
 
+        /// <summary>
+        /// Encuentra el 1er registro de periodo o temporada que contenga la fecha indicada. Permite
+        /// ademas arrojar por defecto la ultima fecha 
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos.</param>
+        /// <param name="fechaBusqueda">Fecha que se buscada si entrada dentro de cada uno de las temporadas.</param>
+        /// <param name="modoBusqueda">Enumerador de opcion en TemporadaDeCosecha.ModoBusquedaTemporada que indica
+        /// en caso de no encontrarse una temporada que contenga la fecha indicada, se arrojara por defecto la temporada
+        /// mas reciente o la temporada mas entigua registrada en el sistema.</param>
+        /// <returns></returns>
+        public static TemporadaDeCosecha findTemporada(ApplicationDbContext db, DateTime fechaBusqueda, ModoBusquedaTemporada modoBusqueda = ModoBusquedaTemporada.NONE)
+        {
+            TemporadaDeCosecha temporada = db.TemporadaDeCosechas.ToList()
+                .Where(tem => tem.periodo.hasInside(fechaBusqueda)).FirstOrDefault();
+            if(temporada==null && modoBusqueda == ModoBusquedaTemporada.DEFAULT_MAS_ANTIGUA)
+                temporada = temporadaMasAntigua(db);
+            else if(temporada == null && modoBusqueda == ModoBusquedaTemporada.DEFAULT_MAS_RECIENTE)
+                temporada = getUltimaTemporada(db);
+
+            return temporada;
+        }
+
+        public enum ModoBusquedaTemporada
+        {
+            NONE, DEFAULT_MAS_ANTIGUA, DEFAULT_MAS_RECIENTE
+        }
+
         private int DIA_INICIO_PERIODO = 30;
         private int MES_PERIODO = 8;
 

@@ -2,11 +2,6 @@
 @using CampanasDelDesierto_v1.Models
 @{ 
     var compras = Model.ComprasProductos;
-
-    //Simulacion de tiempo para recopilar intereses
-    DateTime fechaActual = DateTime.Today;
-
-    List<CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital.VMInteres> intereses = Model.generarSeguimientoPagosConInteres(fechaActual);
 }
 
 <div class="form-group col-md-4">
@@ -74,10 +69,6 @@
             }
         </tbody>
     </table>
-
-    @if (Model.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) { 
-        @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses)
-    }
 
     <h4>Abonos recibidos</h4>
     @if (Model.abonosRecibidos.Count() > 0)
