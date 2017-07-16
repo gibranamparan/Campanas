@@ -17,10 +17,11 @@
 <div class="form-group col-md-4">
     @Html.LabelFor(model => model.balanceAdeudado, new { @class = "control-label col-md-3" })
     <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.balanceAdeudado)</p>
+        <p class="form-control-static">@MovimientoFinanciero.getNombreDeTipoBalance(Model.tipoDeBalance)</p>
     </div>
 </div>
-@if(Model.balanceAdeudado == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) { 
+@if(Model.isAdeudoInicialAnticiposCapital)
+{
     <div class="form-group col-md-4">
         @Html.LabelFor(model => model.interesInicial, new { @class = "control-label col-md-3" })
         <div class="col-md-9">
@@ -29,7 +30,7 @@
     </div>
 }
 
-@if (!Model.isAbonoCapital)
+@if (Model.isAdeudoInicialAnticiposCapital)
 {
     @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses, vdd)
 }

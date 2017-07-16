@@ -71,6 +71,7 @@ namespace CampanasDelDesierto_v1.Models
                 return null;
             }
         }
+
         public AdeudoInicial adeudoInicialAnticipos
         {
             get
@@ -86,16 +87,20 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
-        /*
-        [Display(Name = "Balance de Anticipos")]
-        [ForeignKey("adeudoAnteriorAnticipos")]
-        public int? adeudoAnteriorAnticiposID { get; set; }
-        public virtual AdeudoInicial adeudoAnteriorAnticipos { get; set; }
-        
-        [Display(Name = "Balance de Arboles de Olivo")]
-        [ForeignKey("adeudoAnteriorArboles")]
-        public int? adeudoAnteriorArbolesID { get; set; }
-        public virtual AdeudoInicial adeudoAnteriorArboles { get; set; }*/
+
+        public AdeudoInicial adeudoInicialMateriales
+        {
+            get
+            {
+                var movimientos = this.MovimientosFinancieros;
+                if (movimientos != null && movimientos.Count() > 0)
+                {
+                    var res = movimientos.FirstOrDefault(mov => mov.isAdeudoInicialMaterial);
+                    return res != null ? (AdeudoInicial)res : null;
+                }
+                return null;
+            }
+        }
 
         [DisplayName("Balance Actual (USD)")]
         public decimal balanceActual
@@ -114,6 +119,30 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        /// <summary>
+        /// Arroja el balance correspondiente a la fecha de consulta sobre el balance de anticipos y ventas de material.
+        /// </summary>
+        /// <param name="fecha">Fecha de consulta sobre al cual se determinara el balance actual</param>
+        /// <returns></returns>
+        public decimal balanceDeAnticiposEnFecha(DateTime? fecha)
+        {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                IEnumerable<MovimientoFinanciero> movimientos;
+                if (!fecha.HasValue)
+                    movimientos = this.MovimientosFinancieros;
+                else
+                    movimientos = this.MovimientosFinancieros.Where(mov => mov.fechaMovimiento <= fecha.Value);
+
+                if (movimientos.Count() > 0) { 
+                    movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
+                    res = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                }
+            }
+            return res;
+        }
+
         [DisplayName("Balance Actual por Árboles (USD)")]
         public decimal balanceActualArboles
         {
@@ -130,6 +159,29 @@ namespace CampanasDelDesierto_v1.Models
                 }
                 else return 0;
             }
+        }
+
+
+        public decimal balanceArbolesEnFecha(DateTime? fecha)
+        {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                IEnumerable<MovimientoFinanciero> movimientos;
+                if (!fecha.HasValue)
+                    movimientos = this.MovimientosFinancieros;
+                else
+                    movimientos = this.MovimientosFinancieros.Where(mov => mov.fechaMovimiento <= fecha.Value);
+                
+                if (movimientos.Count() > 0)
+                {
+                    movimientos = movimientos
+                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
+                    res = movimientos
+                        .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                }
+            }
+            return res;
         }
 
         public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
@@ -375,7 +427,11 @@ namespace CampanasDelDesierto_v1.Models
 
                     interesAlAbonar = 0;
                     //Se determina el interes a la fecha en la que se hizo el abono
-                    if (pagarInteres.Value && prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO) { //Ciclo de pago de interes
+                    //No pagan interes las ventas de material ni las deudas iniciales de venta de material
+                    if (pagarInteres.Value 
+                        && (prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO 
+                            && !prestamo.isAdeudoInicialMaterial))
+                    { //Ciclo de pago de interes
                         interesReg = prestamo.getInteresReg(abono.fechaMovimiento);
                         interesAlAbonar = interesReg.interesRestante;
                     }
@@ -443,6 +499,26 @@ namespace CampanasDelDesierto_v1.Models
             
             numRegs = db.SaveChanges(); //Se guardan todos los pares marcados
             return nuevasAsociaciones;
+        }
+
+        /// <summary>
+        /// Calcula el interes total que debe un productor a la fecha consultada
+        /// </summary>
+        /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados.</param>
+        /// <returns></returns>
+        public decimal interesTotal(DateTime? fecha)
+        {
+            decimal res = 0;
+            DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Now;
+            var movs = this.MovimientosFinancieros;
+            if(movs!=null && movs.Count() > 0)
+            {
+                res = movs.Where(mov => mov.isAnticipoDeCapital || mov.isAdeudoInicialAnticiposCapital)
+                    .Where(mov=>mov.fechaMovimiento<=dt)
+                    .Sum(mov => mov.getInteresRestante(dt));
+            }
+
+            return res;
         }
 
         public override string ToString()

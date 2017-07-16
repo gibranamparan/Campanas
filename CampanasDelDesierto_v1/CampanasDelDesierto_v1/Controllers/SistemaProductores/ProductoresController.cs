@@ -16,7 +16,7 @@ namespace CampanasDelDesierto_v1.Controllers
     public class ProductoresController : Controller
     {
         private const string BIND_FIELDS = "idProductor,numProductor,nombreProductor,domicilio," +
-            "fechaIntegracion,RFC,zona,nombreCheque,adeudoAnterior,poblacion,telefono,nombreRepresentanteLegal";
+            "fechaIntegracion,RFC,zona,nombreCheque,poblacion,telefono,nombreRepresentanteLegal";
         private const string ERRORMSG_NUMPRODUCTOR = "El numero de productor ingresado ya se encuentra registrado a {0}," +
                     " ingrese uno diferente porfavor.";
         private const string ERRORMSG_FECHA_ADEUDOS_INICIALES = "No es posible agregar deudas anteriores si no existe al menos una temporada " +
@@ -132,7 +132,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = BIND_FIELDS)] Productor productor, 
-            AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles)
+            AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles, AdeudoInicial adeudoMateriales)
         {
             //Se determina si el numero de productor ingresado ya corresponde a un productor guardado
             var prodBuscado = db.Productores.FirstOrDefault(prod => prod.numProductor == productor.numProductor);
@@ -157,7 +157,11 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 //Se asocia a la fecha de integracion y temporada correspondiente, asi como al productor
                 adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                adeudoMateriales.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
                 adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                adeudoMateriales.isVentas = true;
+                adeudoMateriales.fechaMovimiento = adeudoAnticipos.fechaMovimiento.AddSeconds(1);
+                adeudoArboles.fechaMovimiento = adeudoMateriales.fechaMovimiento.AddSeconds(1);
 
                 //Se asocian los adeudos inciales al productor
                 productor.MovimientosFinancieros = new List<MovimientoFinanciero>();
@@ -165,6 +169,8 @@ namespace CampanasDelDesierto_v1.Controllers
                     productor.MovimientosFinancieros.Add(adeudoAnticipos);
                 if (Math.Abs(adeudoArboles.montoMovimiento) > 0)
                     productor.MovimientosFinancieros.Add(adeudoArboles);
+                if (Math.Abs(adeudoArboles.montoMovimiento) > 0)
+                    productor.MovimientosFinancieros.Add(adeudoMateriales);
 
                 //Se hacen ajustes generales
                 productor.RFC = productor.RFC.ToUpper();
@@ -202,7 +208,7 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = BIND_FIELDS)] Productor productor,
-            AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles)
+            AdeudoInicial adeudoAnticipos, AdeudoInicial adeudoArboles, AdeudoInicial adeudoMateriales)
         {
             //Se determina si el numero de productor ingresado ya corresponde a un productor guardado
             var prodBuscado = db.Productores.FirstOrDefault(prod => prod.numProductor == productor.numProductor);
@@ -233,11 +239,16 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 //Se asocia a la fecha de integracion y temporada correspondiente, asi como al productor
                 adeudoAnticipos.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                adeudoMateriales.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
                 adeudoArboles.ajustarMovimiento(productor, temporadaRegistro, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                adeudoMateriales.fechaMovimiento = adeudoAnticipos.fechaMovimiento.AddSeconds(1);
+                adeudoArboles.fechaMovimiento = adeudoMateriales.fechaMovimiento.AddSeconds(1);
 
                 //Si el registro ya existia y el monto es cero, se elimina, si el monto no es cero
                 db.Entry(adeudoAnticipos).State = AdeudoInicial.determinarEstadoMovimiento(adeudoAnticipos);
+                db.Entry(adeudoMateriales).State = AdeudoInicial.determinarEstadoMovimiento(adeudoMateriales);
                 db.Entry(adeudoArboles).State = AdeudoInicial.determinarEstadoMovimiento(adeudoArboles);
+                adeudoMateriales.isVentas = true;
 
                 db.Entry(productor).State = EntityState.Modified;
                 int numRegs = db.SaveChanges();

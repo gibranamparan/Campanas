@@ -58,8 +58,9 @@ namespace CampanasDelDesierto_v1.Models
         public LiquidacionSemanal()
         {
             this.semanaLiquidada = new TimePeriod();
-            this.semanaLiquidada.endDate = DateTime.Today.AddDays(1).AddMilliseconds(-1);
+            this.semanaLiquidada.endDate = DateTime.Today.AddMilliseconds(-1);
             this.semanaLiquidada.startDate = this.semanaLiquidada.endDate.AddDays(-8).AddMilliseconds(1);
+            this.fechaMovimiento = semanaLiquidada.endDate.AddMilliseconds(2);
         }
 
         public new void ajustarMovimiento()

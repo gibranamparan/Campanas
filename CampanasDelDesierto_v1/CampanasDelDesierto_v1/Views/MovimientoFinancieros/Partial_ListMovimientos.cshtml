@@ -83,7 +83,7 @@
                     </td>
                     <td>
                         @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL)
+                        || item.isAdeudoInicialAnticiposCapital)
                         {
                             var interesDevengado = item.getInteresRestante(fechaActual);
                             @Math.Abs(interesDevengado).ToString("C");

@@ -12,14 +12,20 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
         [DisplayName("Balance Adeudado")]
         public TipoDeBalance balanceAdeudado { get; set; }
 
+        public Boolean? isVentas { get; set; }
+
         [DisplayName("Concepto")]
-        public new string concepto
-        {
-            get
-            {
-                return this.nombreDeMovimiento;
-            }
-        }
+        public new string concepto { get {
+                string res = string.Empty;
+                res = this.nombreDeMovimiento;
+                if (this.isAdeudoInicialAnticiposCapital)
+                    res += " ANTICIPOS";
+                else if (this.isAdeudoInicialMaterial)
+                    res += " COMPRA MATERIAL";
+                else if (this.isAdeudoInicialVentaOlivo)
+                    res += " COMPRA ARBOLES OLIVO";
+                return res;
+            } }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]

@@ -84,19 +84,21 @@
         retenciones.garantiaLimpieza = Model.getMontoRetencion(Retencion.TipoRetencion.SANIDAD);
         retenciones.retencionEjidal = Model.getMontoRetencion(Retencion.TipoRetencion.EJIDAL);
         retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
-        
+
         retencionTotal = retenciones.total;
         retencionAbono = retenciones.abonoAnticipos;
         Model.montoMovimiento -= retencionTotal;
     }
 
-    Model.fechaMovimiento = Model.semanaLiquidada.endDate.AddDays(1);
 
     decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0;
+    //Se calcula el interes a la fecha del movimiento actual
+    decimal interesALaFecha = -productor.interesTotal(Model.fechaMovimiento);
     //Estado actual de finanzas del productor
-    decimal balanceActual = ViewBag.balanceActual;
+    decimal balanceActual = ViewBag.balanceActual+ interesALaFecha;
     //Estado actual del balance por arboles de olivo del productor
     decimal balanceActualArboles = ViewBag.balanceActualArboles;
+
 
     if (editMode)
     {
@@ -307,8 +309,8 @@
                 <div class="panel-body fixLabelsPrint" id="pnlSaldoAnticipos">
                     @*Balance Actual*@
                     <div class="form-group col-xs-4">
-                        @Html.LabelFor(model => model.Productor.balanceActual)
-                        <input id="balanceActual" class="form-control"
+                        <label for="balanceActual">Balance a la Fecha + Intereses (USD)</label>
+                        <input id="balanceActual" name="balanceActual" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
                                 value="@balanceActual.ToString("C")" readonly />
                     </div>
@@ -329,7 +331,7 @@
 
                     @*MOnto total a pagar*@
                     <div class="form-group col-xs-3">
-                        <label>Saldo a Liquidar (USD): </label>
+                        <label>Monto a Liquidar (USD): </label>
                         <input id="inputSaldoLiquidar" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
                                 value='@((balanceActual + abonoBalanceAnticipos).ToString("C"))' readonly />

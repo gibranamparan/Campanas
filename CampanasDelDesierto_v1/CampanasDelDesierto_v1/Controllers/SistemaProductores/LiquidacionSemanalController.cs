@@ -46,11 +46,11 @@ namespace CampanasDelDesierto_v1.Controllers
         /// <returns></returns>
         private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada)
         {
-            ViewBag.balanceActual = productor.balanceActual;
-            ViewBag.balanceActualArboles = productor.balanceActualArboles;
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
             mov.Productor = productor;
+            ViewBag.balanceActual = productor.balanceDeAnticiposEnFecha(mov.fechaMovimiento);
+            ViewBag.balanceActualArboles = productor.balanceArbolesEnFecha(mov.fechaMovimiento);
 
             if (semanaLiquidada.isNotDefaultInstance())
                 mov.semanaLiquidada = semanaLiquidada; //Se asocia al nuevo registro de liquidacion semanal

@@ -57,7 +57,7 @@
     </div>
 </div>
 
-@if (!Model.isAbonoCapital) { 
+@if (Model.isAnticipoDeCapital || Model.isAdeudoInicialAnticiposCapital) { 
     @Html.Partial("../MovimientoFinancieros/Partial_ListarIntereses", intereses,vdd)
 }
 

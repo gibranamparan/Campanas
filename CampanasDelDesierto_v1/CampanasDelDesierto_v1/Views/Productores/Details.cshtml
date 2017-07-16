@@ -1,4 +1,5 @@
-﻿@model CampanasDelDesierto_v1.Models.Productor
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.Productor
 
 @{
     ViewBag.Title = "Productor";
@@ -57,19 +58,19 @@
         </div>
         @*Prestamos y abonos*@
         <div class="row">
-            <h4>Prestamos y Abonos</h4>
+            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos")
         </div>
 
-        @*Prestamos y abonos*@
+        @*Ventas de arbol de olivo*@
         <div class="row">
-            <h4>Ventas de Arbol de Olivo</h4>
+            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
         </div>
 
         @*Ingresos de productos y liquidaciones*@
         <div class="row">
-            <h4>Ingreso de cosecha y Liquidaciones</h4>
+            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones")
         </div>
     </div>

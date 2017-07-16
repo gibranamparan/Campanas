@@ -181,6 +181,18 @@ namespace CampanasDelDesierto_v1.Models
             NONE, CAPITAL_VENTAS, VENTA_OLIVO, MOV_LIQUIDACION
         }
 
+        public static string getNombreDeTipoBalance(TipoDeBalance t)
+        {
+            string res = string.Empty;
+            if (t == TipoDeBalance.CAPITAL_VENTAS)
+                res = "Anticipos de capital y ventas de material";
+            if (t == TipoDeBalance.VENTA_OLIVO)
+                res = "Ventas de arboles de olivo";
+            if (t == TipoDeBalance.MOV_LIQUIDACION)
+                res = "Ingresos de cosecha y liquidaciones";
+            return res;
+        }
+
         /// <summary>
         /// Arroja el tipo de balance correspondiente a esta instancia segun su tipo de movimiento y
         /// características particulares. Ver los metodos isVentaDeOlivo(), isAbonoOPrestamo() y 
@@ -489,6 +501,37 @@ namespace CampanasDelDesierto_v1.Models
         private int DIA_INICIO_PERIODO = 30;
         private int MES_PERIODO = 8;
         private int DIA_PAGO = 15;
+
+        public bool isAdeudoInicialMaterial
+        {
+            get
+            {
+                return this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
+                    && this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS
+                    && ((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value;
+            }
+        }
+
+        public bool isAdeudoInicialAnticiposCapital
+        {
+            get
+            {
+                return this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
+                    && this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS
+                    && !(((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value);
+            }
+        }
+
+        public bool isAdeudoInicialVentaOlivo
+        {
+            get
+            {
+                return this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
+                    && this.tipoDeBalance == TipoDeBalance.VENTA_OLIVO
+                    && !(((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value);
+            }
+        }
+
         public int anioCosecha
         {
             get
@@ -503,8 +546,8 @@ namespace CampanasDelDesierto_v1.Models
 
         public List<VMInteres> generarSeguimientoPagosConInteres(DateTime fechaActual)
         {
-            //Para ventas y prestamos dentro del balance de anticipos
-            if(this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital) { 
+            //Para vprestamos dentro del balance de anticipos
+            if(this.isAnticipoDeCapital || this.isAdeudoInicialAnticiposCapital) { 
                 //Se determina la cantidad de meses entre la fecha original del movimiento la fecha de consulta
                 int cantMeses = ((fechaActual.Year - this.fechaMovimiento.Year) * 12) + fechaActual.Month - this.fechaMovimiento.Month;
                 cantMeses = cantMeses < 0 ? 0 : cantMeses;
@@ -553,6 +596,10 @@ namespace CampanasDelDesierto_v1.Models
                     else //No es el primero, se basa sobre el saldo capital del mes anterior
                         interesReg.Value.calcular(interesReg.Previous.Value, totalAbonos);
 
+                    //Si uno de los registros de intereses da la deuda en 0, no es necesario seguir iterando
+                    if (Math.Round(interesReg.Value.deuda, 2) == 0)
+                        break;
+
                     //Siguiente mes
                     interesReg = interesReg.Next;
                 }
@@ -591,7 +638,7 @@ namespace CampanasDelDesierto_v1.Models
         /// <returns></returns>
         public decimal getInteresRestante(DateTime fechaActual)
         {
-            if (this.isAnticipoDeCapital)
+            if (this.isAnticipoDeCapital || this.isAdeudoInicialAnticiposCapital)
             {
                 var intereses = this.generarSeguimientoPagosConInteres(fechaActual);
                 var interesDevengado = (intereses != null && intereses.Count() > 0) ?

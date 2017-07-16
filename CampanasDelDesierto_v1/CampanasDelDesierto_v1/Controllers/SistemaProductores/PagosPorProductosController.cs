@@ -66,6 +66,7 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.productor = productor;
             PagoPorProducto mov = new PagoPorProducto();
             mov.idProductor = productor.idProductor;
+            mov.fechaMovimiento = DateTime.Now;
 
             return mov;
         }
