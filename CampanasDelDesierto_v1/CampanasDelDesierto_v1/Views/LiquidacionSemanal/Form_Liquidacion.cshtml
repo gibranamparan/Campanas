@@ -244,7 +244,7 @@
                 <div class="panel-body fixLabelsPrint">
                     @*Monto de cosecha*@
                     <div class="form-group col-xs-3">
-                        <label>Total por Cosecha (USD):</label>
+                        <label>Cosecha de la Semana (USD):</label>
                         <input id="inputCostoCosechaSemana" class = "form-control"
                                 data-mask = "###0.00" data-mask-reverse = "true" 
                                 value="@costoCosechaSemana.ToString("C")" readonly/>
@@ -255,7 +255,7 @@
 
                     @*Retenciones*@
                     <div class="form-group col-xs-3">
-                        <label>Retenciones Totales (USD): </label>
+                        <label>Deducciones Totales (USD): </label>
                         <input id="inputTotalRetencion" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
                                 value="@retencionTotal.ToString("C")" readonly />
@@ -378,7 +378,7 @@
 
                     @*MOnto total a pagar*@
                     <div class="form-group col-xs-3">
-                        <label>Saldo a Liquidar (USD): </label>
+                        <label>Monto a Liquidar (USD): </label>
                         <input id="inputSaldoLiquidar" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
                                 value='@((balanceActualArboles + abonoBalanceArbolOlivo).ToString("C"))' readonly />
