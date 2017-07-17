@@ -550,15 +550,22 @@
 
         <style>
 
-
+            
             @@media print{
                 /*extensión CSS no estándar para forzar la impresión*/
-                .panel-heading {
+                 .panel-heading {
                 background-color:#31708f !important;
                 -webkit-print-color-adjust:exact;
                 }
-
-                input{
+               #formLiquidacionSemanal h3.panel-title{
+                 color:white !important;
+                 -webkit-print-color-adjust:exact;
+                }
+               h3 strong {
+                   color:white !important;
+                 -webkit-print-color-adjust:exact;
+               }
+               input{
                     max-height: 1.5em !important;
                 }
 
