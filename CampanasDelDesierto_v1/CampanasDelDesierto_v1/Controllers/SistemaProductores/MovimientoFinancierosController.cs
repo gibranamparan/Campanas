@@ -245,6 +245,7 @@ namespace CampanasDelDesierto_v1.Controllers
                     {
                         nuevasAsoc = prod.asociarAbonosConPrestamos(db, abonoAnticiposEliminado); //Se redistribuyen abonos
                         ultimoMovimiento = encontrarPrimerMovimientoAfectado(nuevasAsoc); //Se determina el movimiento afectado mas viejo en la redistribucion
+                        ultimoMovimiento = ultimoMovimiento == null ? mov : ultimoMovimiento;
                         //A partir del movimiento anterior las mas viejo, se recalculan balances
                         ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
                         numReg = prod.ajustarBalances(ultimoMovimiento, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);

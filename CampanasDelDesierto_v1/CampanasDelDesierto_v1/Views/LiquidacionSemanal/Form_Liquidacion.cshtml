@@ -549,13 +549,15 @@
         </script>
 
         <style>
-
-
             @@media print{
                 /*extensión CSS no estándar para forzar la impresión*/
                 .panel-heading {
-                background-color:#31708f !important;
-                -webkit-print-color-adjust:exact;
+                    background-color:#31708f !important;
+                    -webkit-print-color-adjust:exact;
+                }
+
+                .panel-primary>.panel-heading>h3.panel-title *{
+                    color:white !important;
                 }
 
                 input{

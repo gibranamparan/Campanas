@@ -387,6 +387,10 @@
     <Compile Include="Migrations\201707152340209_isVenta_Field_AdeudoInicial.Designer.cs">
       <DependentUpon>201707152340209_isVenta_Field_AdeudoInicial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707171838551_added_field_VariedadOrganica1.cs" />
+    <Compile Include="Migrations\201707171838551_added_field_VariedadOrganica1.Designer.cs">
+      <DependentUpon>201707171838551_added_field_VariedadOrganica1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -834,6 +838,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707152340209_isVenta_Field_AdeudoInicial.resx">
       <DependentUpon>201707152340209_isVenta_Field_AdeudoInicial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707171838551_added_field_VariedadOrganica1.resx">
+      <DependentUpon>201707171838551_added_field_VariedadOrganica1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
