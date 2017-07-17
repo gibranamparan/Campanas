@@ -93,17 +93,25 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " BAJA")]
         public decimal precioProducto6 { get; set; }
-        
+
         /*MANZANITA CABORCA ORGANICA*/
-        
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "ORGANICA (ton.)")]
-        public string tipoProducto7 { get { return TiposDeProducto.PRODUCTO1; } }
+        public string tipoProducto7 { get { return TiposDeProducto.PRODUCTO1 + " ORGANICA"; } }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA")]
         public decimal precioProducto7 { get; set; }
-        
+
+        /*MANZANITA BAJA ORGANICA*/
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "ORGANICA BAJA (ton.)")]
+        public string tipoProducto8 { get { return TiposDeProducto.PRODUCTO1 + " ORGANICA BAJA"; } }
+
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA BAJA")]
+        public decimal precioProducto8 { get; set; }
+
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
 

@@ -47,6 +47,10 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd3 { get; set; }
 
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (ton.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}")]
+        public double cantidadTonsProd4 { get; set; }
+
         [Required]
         [DisplayName("Fecha")]
         [DataType(DataType.Date)]

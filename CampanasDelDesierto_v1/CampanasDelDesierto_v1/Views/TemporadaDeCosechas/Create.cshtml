@@ -1,7 +1,8 @@
 ﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
-    ViewBag.Title = "Registro de Nueva Temporada de Cosecha";
+    bool editMode = Model.TemporadaDeCosechaID > 0;
+    ViewBag.Title = (editMode?"Registro":"Edición")+" de Nueva Temporada de Cosecha";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -142,7 +143,7 @@
             <div class="form-group col-md-6">
                 <label class="control-label col-md-2">@Model.tipoProducto7</label>
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.tipoProducto7, new
+                    @Html.EditorFor(model => model.precioProducto7, new
                {
                    htmlAttributes = new
                    {
@@ -151,13 +152,29 @@
                        data_mask_reverse = "true"
                    }
                })
-                    @Html.ValidationMessageFor(model => model.tipoProducto7, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.precioProducto7, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label col-md-2">@Model.tipoProducto8</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto8, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto8, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>
         <div class="form-group">
             <div class="col-md-10">
-                <button class="btn btn-success">Registrar</button>
+                <button class="btn btn-success">@(editMode? "Guardar" : "Registrar")</button>
             </div>
         </div>
     </div>

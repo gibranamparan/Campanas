@@ -16,6 +16,8 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class TemporadaDeCosechasController : Controller
     {
+        private const string BIND_FIELDS = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1," +
+            "precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6,precioProducto7";
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TemporadaDeCosechas
@@ -78,8 +80,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1,"+
-            "precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6")]
+        public ActionResult Create([Bind(Include = BIND_FIELDS)]
             TemporadaDeCosecha temporadaDeCosecha)
         {
             if (ModelState.IsValid)
@@ -109,7 +110,7 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.productorID = productorID;
             ViewBag.temporadaID = temporadaID;
 
-            return View(temporadaDeCosecha);
+            return View("Create",temporadaDeCosecha);
         }
 
         // POST: TemporadaDeCosechas/Edit/5
@@ -117,8 +118,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1,"+
-            " precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6")]
+        public ActionResult Edit([Bind(Include = BIND_FIELDS)]
             TemporadaDeCosecha temporadaDeCosecha)
         {
             if (ModelState.IsValid)
@@ -127,7 +127,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(temporadaDeCosecha);
+            return View("Create", temporadaDeCosecha);
         }
 
         // GET: TemporadaDeCosechas/Delete/5

@@ -232,9 +232,9 @@ namespace CampanasDelDesierto_v1.Controllers
             if (ModelState.IsValid && !numProdYaExiste && !noHayTemporada)
             {
                 //Se hacen ajustes generales
-                productor.RFC = productor.RFC.ToUpper();
-                productor.nombreCheque = productor.nombreCheque.ToUpper();
-                productor.nombreProductor = productor.nombreProductor.ToUpper();
+                productor.RFC = productor.RFC==null?string.Empty:productor.RFC.ToUpper();
+                productor.nombreCheque = productor.nombreCheque == null ? string.Empty : productor.nombreCheque.ToUpper();
+                productor.nombreProductor = productor.nombreProductor==null?string.Empty: productor.nombreProductor.ToUpper();
                 productor.numProductor = productor.numProductor.Trim();
 
                 //Se asocia a la fecha de integracion y temporada correspondiente, asi como al productor

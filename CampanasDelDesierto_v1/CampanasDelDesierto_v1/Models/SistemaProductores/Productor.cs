@@ -178,8 +178,9 @@ namespace CampanasDelDesierto_v1.Models
                 {
                     movimientos = movimientos
                         .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
-                    res = movimientos
-                        .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                    var lastMov = movimientos
+                        .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
+                    res = lastMov==null?0 : lastMov.balance;
                 }
             }
             return res;

@@ -38,6 +38,10 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto3 { get; set; }
 
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (USD)")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto7 { get; set; }
+
         [DisplayName("Semana")]
         [Range(1,53)] //Rango de semanas en 1 año
         [Required]
