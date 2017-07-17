@@ -67,15 +67,17 @@
     //Se genera el reporte semanal
     var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
 
-    //Se calcula el total de ingreso por la cosecha registrada
+    //Se calcula el total de ingreso por la cosecha registrada y se registra 
+    //por defecto como el monto de la liquidacion
     decimal costoCosechaSemana = ingresoSemanal.Sum(ingreso => ingreso.monto);
     Model.montoMovimiento = costoCosechaSemana; //Calculo de monto total por producto
 
     //Retenciones
-    decimal retencionTotal = 0;
-    decimal retencionAbono = 0;
+    decimal retencionTotal = 0, retencionAbono = 0, retencionAbonoArboles=0;
     PrestamoYAbonoCapital abonoRetenido = new PrestamoYAbonoCapital();
     PrestamoYAbonoCapital abonoArboles = new PrestamoYAbonoCapital();
+
+    //En caso de ser edicion, se retoman las retenciones registradas a la liqudacion
     if (editMode)
     {
         //Calculo de retenciones capturadas
@@ -86,25 +88,32 @@
         retenciones.retencionOtro = Model.getMontoRetencion(Retencion.TipoRetencion.OTRO);
 
         retencionTotal = retenciones.total;
-        retencionAbono = retenciones.abonoAnticipos;
+        retencionAbono = retenciones.abonoAnticipos; //ABONO A ANTICIPOS
+        retencionAbonoArboles = retenciones.abonoArboles; //ABONO A ARBOLES
+
+        //Se muestra al editar el monto total de la cosecha menos sus retenciones registradas
         Model.montoMovimiento -= retencionTotal;
     }
 
+    decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0, interesALaFecha=0;
 
-    decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0;
-    //Se calcula el interes a la fecha del movimiento actual
-    decimal interesALaFecha = -productor.interesTotal(Model.fechaMovimiento);
     //Estado actual de finanzas del productor
-    decimal balanceActual = ViewBag.balanceActual+ interesALaFecha;
+    decimal balanceActualAnticipos = ViewBag.balanceActual;
+
     //Estado actual del balance por arboles de olivo del productor
     decimal balanceActualArboles = ViewBag.balanceActualArboles;
 
+    balanceActualAnticipos -= retencionAbono;
+    balanceActualArboles -= retencionAbonoArboles;
 
-    if (editMode)
+    //Se calcula el interes a la fecha del movimiento actual si es modo de creacion
+    if (!editMode)
     {
-        balanceActual -= abonoBalanceAnticipos;
-        balanceActualArboles -= abonoBalanceArbolOlivo;
+        interesALaFecha = -productor.interesTotal(Model.fechaMovimiento);
     }
+
+    //Se suman los intereses al balance de anticipos, intereses es 0 por defecto
+    balanceActualAnticipos += interesALaFecha;
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();
@@ -158,12 +167,12 @@
                 <div class="form-group col-xs-3">
                     @Html.LabelFor(model => model.semanaLiquidada.startDate)
                     @Html.EditorFor(model => model.semanaLiquidada.startDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger hidden-print" })
                 </div>
                 <div class="form-group col-xs-3">
                     @Html.LabelFor(model => model.semanaLiquidada.endDate)
                     @Html.EditorFor(model => model.semanaLiquidada.endDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.semanaLiquidada.startDate, "", new { @class = "text-danger hidden-print" })
                 </div>
 
                 <div class="form-group @(reportMode?"col-xs-2":"col-xs-1")">
@@ -171,7 +180,7 @@
                     @Html.EditorFor(model => model.semana, new { htmlAttributes = new { @class = "form-control", min = 0,
                         oninput = "$('#formLiquidacionSemanal input#semana').val($(this).val())"
                } })
-                    @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger hidden-print" })
                 </div>
                 <div class="form-group col-xs-3">
                     <div id="divPrecioDelDolar" class="@(reportMode?"col-xs-12":"col-xs-7")">
@@ -186,7 +195,7 @@
                            onkeyup= "refreshRetenciones(this)"
                        }
                    })
-                        @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger hidden-print" })
                     </div>
                     <div class="col-xs-5 @(reportMode?"hidden":"")">
                         <a class="satLogo" target="_blank"
@@ -268,7 +277,7 @@
                                    @readonly = "readonly"
                                }
                            })
-                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.montoMovimiento, "", new { @class = "text-danger hidden-print" })
                     </div>
 
                     @*Liquidacion*@
@@ -276,19 +285,19 @@
                     <div class="form-group col-xs-4">
                         @Html.LabelFor(model => model.fechaMovimiento)
                         @Html.EditorFor(model => model.fechaMovimiento, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.fechaMovimiento, "", new { @class = "text-danger hidden-print" })
                     </div>
 
                     <div class="form-group col-xs-4">
                         @Html.LabelFor(model => model.cheque)
                         @Html.EditorFor(model => model.cheque, new { htmlAttributes = new { @class = "form-control", oninput="$(this).val($(this).val().toUpperCase())" } })
-                        @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.cheque, "", new { @class = "text-danger hidden-print" })
                     </div>
 
                     <div class="form-group col-xs-4">
                         @Html.LabelFor(model => model.semana)
                         @Html.EditorFor(model => model.semana, new { htmlAttributes = new {@readonly = "readonly", min = 0 } })
-                        @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.semana, "", new { @class = "text-danger hidden-print" })
                     </div>
 
                     <div class="form-group @(reportMode?"hidden":"")">
@@ -312,7 +321,7 @@
                         <label for="balanceActual">Balance a la Fecha + Intereses (USD)</label>
                         <input id="balanceActual" name="balanceActual" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
-                                value="@balanceActual.ToString("C")" readonly />
+                                value="@balanceActualAnticipos.ToString("C")" readonly />
                     </div>
 
                     @*Menos*@
@@ -334,7 +343,7 @@
                         <label>Monto a Liquidar (USD): </label>
                         <input id="inputSaldoLiquidar" class="form-control"
                                 data-mask="###0.00" data-mask-reverse="true"
-                                value='@((balanceActual + abonoBalanceAnticipos).ToString("C"))' readonly />
+                                value='@((balanceActualAnticipos + abonoBalanceAnticipos).ToString("C"))' readonly />
                     </div>
                 </div>
             </div>
@@ -498,9 +507,10 @@
             $("#formRetenciones input:even").trigger("keyup");
             $.each($("table#tblReporteSemanaCosecha td.montoUSDReporte"), function (idx, celdaUSD) {
                 celdaUSD = $(celdaUSD);
-                var montoUSD = Number(numeral(celdaUSD.html()).format("0.00"));
-                var celdaMXN = celdaUSD.siblings("td.montoMXNReporte");
-                var precioDolar = Number($(inputDolar).val());
+                var montoUSD = Number(numeral(celdaUSD.html()).format("0.00"));//Se toma monto en dolares
+                var celdaMXN = celdaUSD.siblings("td.montoMXNReporte");//Se toma la celda donde se muestran los pesos
+                var precioDolar = Number($(inputDolar).val());//Se toman tipo de cambio
+                //Se hace la transformacion de tipo de cambio y se guarda en la celda de pesos
                 celdaMXN.html(numeral(montoUSD * precioDolar).format('$0,0.00'));
             })
         }
@@ -509,7 +519,7 @@
             @("setPrecioDolar()");
         }
     </script>
-    @if (editMode || editMode)
+    @if (editMode)
     {
         <script>
             $("#formRetenciones input:even").trigger("keyup")
@@ -519,6 +529,23 @@
     {
         <script>
             $("input, select").attr("readonly", true);
+            $.each($('input[data-mask]'), function (idx, item) {
+                if ($(item).attr('id') != "precioDelDolarEnLiquidacion") {
+                    $(item).val(numberToCurrency($(item).val()))
+                }
+            })
+            $.each($('div[id*="pnlRetencion"] input'), function (idx, item) {
+                $(item).val(numberToCurrency($(item).val()))
+            })
+            $.each($("input[type=date]"), function (idx, item) {
+                $(item).attr("type", "text")
+                var dt = new Date($(item).val())
+                var dtStr = numeral(dt.getDate()).format("00") + "/" + numeral(dt.getMonth()).format("00") + "/" + dt.getFullYear()
+                $(item).val(dtStr)
+            })
+            $("#precioDelDolarEnLiquidacion").val(numeral(currencyToNumber($("#precioDelDolarEnLiquidacion").val())).format("$0,0.0000"))
+            $("#pnlRetencionEJIDAL").closest('.panel').css('page-break-before', 'always')
+            $("span.field-validation-error").remove()
         </script>
 
         <style>

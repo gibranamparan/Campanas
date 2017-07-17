@@ -2,7 +2,6 @@
     $('.datatablejs').DataTable();
 });
 
-
 function changeIcon(bar) {
     $(bar).find("i").toggleClass("fa-window-minimize fa-window-maximize")
 }
@@ -69,4 +68,16 @@ $.fn.slideDownOrUp = function (show) {
 
 $.fn.fadeInOrOut = function (status) {
     return status ? this.fadeIn() : this.fadeOut();
+}
+
+function currencyToNumber(numStr) {
+    numStr = numStr.trim().replace("$", "").replace(",", "");
+    var num = isNaN(numStr) ? 0 : Number(numStr);
+    return num;
+}
+
+function numberToCurrency(num) {    
+    //num = !num ? 0 : numeral(num).format(formatNum)
+    num = !num ? 0 : numeral(num).format("$0,0.00")
+    return num;
 }

@@ -61,7 +61,7 @@
                     <td></td>
 
                     <td width="1em">
-                        <input type="number" id="producto@(item.idProducto)"
+                        <input type="number" id="producto@(item.idProducto)" min="0"
                                onkeyup="funcionRecalcularMontos()" onchange="funcionRecalcularMontos()"
                                oninput="funcionRecalcularMontos()"
                                value="@(editMode && found?compraIndex.cantidadMaterial:0)"

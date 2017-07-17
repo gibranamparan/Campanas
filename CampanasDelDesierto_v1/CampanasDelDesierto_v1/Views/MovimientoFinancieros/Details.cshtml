@@ -8,10 +8,11 @@
 
 <h2>Detalles</h2>
 <p class="hidden-print">
+    @if (!Model.isNoDirectamenteModificable) { 
     <a href="@Url.Action("Edit",Model.getNombreControlador(), new { id = Model.idMovimiento })">
         <i class="fa fa-pencil"></i> Editar
-    </a>
-    |
+    </a> <span>|</span>
+    }
     <a href="@Url.Action("Details","Productores", new { id=Model.idProductor, temporada = Model.TemporadaDeCosechaID })">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a movimientos del productor
     </a>
@@ -25,14 +26,14 @@
         string actionName = Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL?"PagareAnticipo":
             Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO?"PagareVenta":"Details";
 
-        @(" | ")
+        <span>|</span>
         <a href="@Url.Action(actionName,"MovimientoFinancieros",new { id = Model.idMovimiento })" target="_blank">
             <i class="glyphicon glyphicon-print"></i> Imprimir Pagaré
         </a>
     }
     @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
     {
-        @(" | ")
+        <span>|</span>
         <a href="@Url.Action("PrintCheque","LiquidacionSemanal",new { id = Model.idMovimiento })" target="_blank">
             <i class="glyphicon glyphicon-print"></i> Imprimir Cheque
         </a>

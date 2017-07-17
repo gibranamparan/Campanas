@@ -502,6 +502,15 @@ namespace CampanasDelDesierto_v1.Models
         private int MES_PERIODO = 8;
         private int DIA_PAGO = 15;
 
+        public bool isAbonoRetenidoEnLiquidacion { get
+            {
+                bool res = this.getTypeOfMovement() == TypeOfMovements.CAPITAL && ((PrestamoYAbonoCapital)this).abonoEnliquidacionID.HasValue 
+                    && ((PrestamoYAbonoCapital)this).abonoEnliquidacionID.Value > 0;
+
+                return res;
+            }
+        }
+
         public bool isAdeudoInicialMaterial
         {
             get
@@ -541,6 +550,18 @@ namespace CampanasDelDesierto_v1.Models
                       this.MES_PERIODO, this.DIA_INICIO_PERIODO))
                   anioCosecha++;
                return anioCosecha;
+            }
+        }
+
+        public bool isAdeudoInicial { get {
+                return isAdeudoInicialAnticiposCapital || isAdeudoInicialMaterial || isAdeudoInicialVentaOlivo;
+            } }
+
+        public bool isNoDirectamenteModificable
+        {
+            get
+            {
+                return this.isAbonoRetenidoEnLiquidacion || this.isAdeudoInicial;
             }
         }
 

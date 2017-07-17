@@ -171,93 +171,120 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             MovimientoFinanciero mov = db.MovimientosFinancieros.Find(id);
-            int temporadaID = mov.TemporadaDeCosechaID;
+            int temporadaID = mov.TemporadaDeCosechaID, numReg = 0;
             var prod = db.Productores.Find(mov.idProductor);
-            bool retencionAbonoEliminado = false; int numReg = 0;
+            MovimientoFinanciero abonoAnticiposEliminado=null, abonoArbolesEliminado = null;
 
-            //Los registros de recibos se desasocian de los registro de PagoPorProducto para estar disponibles
-            //nuevamente para otros registros.
-            if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
-                ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
+            if(!mov.isNoDirectamenteModificable) { 
+                //Los registros de recibos se desasocian de los registro de PagoPorProducto para estar disponibles
+                //nuevamente para otros registros.
+                if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
+                    ((PagoPorProducto)mov).eliminarAsociacionConRecepciones(db);
 
-            //En caso de se la eliminacion de un movimiento de liquidacion
-            if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
-            {
-                //Se eliminan sus correspondientes retenciones
-                if (((LiquidacionSemanal)mov).retenciones != null && ((LiquidacionSemanal)mov).retenciones.Count() > 0)
-                    db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
-
-                //Se libera la sociacion de los ingresos de cosecha de la liquidacion que se esta eliminando
-                if (((LiquidacionSemanal)mov).ingresosDeCosecha != null && ((LiquidacionSemanal)mov).ingresosDeCosecha.Count() > 0)
-                    ((LiquidacionSemanal)mov).ingresosDeCosecha.ToList()
-                        .ForEach(ing => {
-                            ing.liquidacionDeCosechaID = null;
-                            db.Entry(ing).State = EntityState.Modified;
-                        });
-
-                //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
-                if (((LiquidacionSemanal)mov).abonoAnticipo != null)
+                //En caso de se la eliminacion de un movimiento de liquidacion
+                if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
                 {
-                    db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
-                    retencionAbonoEliminado = true;
+                    //Se eliminan sus correspondientes retenciones
+                    if (((LiquidacionSemanal)mov).retenciones != null && ((LiquidacionSemanal)mov).retenciones.Count() > 0)
+                        db.Retenciones.RemoveRange(((LiquidacionSemanal)mov).retenciones);
+
+                    //Se libera la sociacion de los ingresos de cosecha de la liquidacion que se esta eliminando
+                    if (((LiquidacionSemanal)mov).ingresosDeCosecha != null && ((LiquidacionSemanal)mov).ingresosDeCosecha.Count() > 0)
+                        ((LiquidacionSemanal)mov).ingresosDeCosecha.ToList()
+                            .ForEach(ing => {
+                                ing.liquidacionDeCosechaID = null;
+                                db.Entry(ing).State = EntityState.Modified;
+                            });
+
+                    //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
+                    if (((LiquidacionSemanal)mov).abonoAnticipo != null)
+
+                    {
+                        //Se guarda la instancia del abono eliminado para uso en ajustes de balances y distribuciones
+                        abonoAnticiposEliminado = ((LiquidacionSemanal)mov).abonoAnticipo;
+                        //Se libera el abono de los posibles pagos que se hayan tomado de el
+                        numReg = ((LiquidacionSemanal)mov).abonoAnticipo.liberarAbono(db);
+                        //Se remueve el abono de la base de datos
+                        db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoAnticipo);
+                        //retencionAbonoEliminado = true;
+                    }
+                    //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
+                    if (((LiquidacionSemanal)mov).abonoArboles != null)
+                    {
+                        //Se guarda la instancia del abono eliminado para uso en ajustes de balances
+                        abonoArbolesEliminado = ((LiquidacionSemanal)mov).abonoArboles;
+                        //Se remueve el abono de la base de datos
+                        db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoArboles);
+                        //retencionAbonoArbolesEliminado = true;
+                    }
                 }
-                //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
-                if (((LiquidacionSemanal)mov).abonoArboles != null)
+
+                //Si es esta eliminando un abono del balance de anticipos, 
+                //se elimina su asociacion de pagos a anticipos
+                if(mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) {
+                    if (mov.isAbonoCapital)
+                        numReg = ((PrestamoYAbonoCapital)mov).liberarAbono(db);
+                    else
+                        numReg = mov.liberarPrestamo(db);
+                }
+
+                //se elimina el movimiento
+                db.MovimientosFinancieros.Remove(mov);
+                numReg = db.SaveChanges();
+
+                //Si la eliminacion del movimiento se realizo satisfactoriamente
+                if (numReg > 0 && prod.MovimientosFinancieros.Count() > 0)
                 {
-                    db.PrestamosYAbonosCapital.Remove(((LiquidacionSemanal)mov).abonoArboles);
-                    retencionAbonoEliminado = true;
+                    List<Prestamo_Abono> nuevasAsoc = new List<Prestamo_Abono>();
+                    MovimientoFinanciero ultimoMovimiento;
+                
+                    //Si se elimina un movimiento del balance de anticipos y materiales o bien
+                    //al eliminar una liquidacion, se elimino una retencion de abono para dicho balance
+                    if (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS 
+                        || (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION && abonoAnticiposEliminado != null))
+                    {
+                        nuevasAsoc = prod.asociarAbonosConPrestamos(db, abonoAnticiposEliminado); //Se redistribuyen abonos
+                        ultimoMovimiento = encontrarPrimerMovimientoAfectado(nuevasAsoc); //Se determina el movimiento afectado mas viejo en la redistribucion
+                        //A partir del movimiento anterior las mas viejo, se recalculan balances
+                        ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                        numReg = prod.ajustarBalances(ultimoMovimiento, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                    }
+
+                    //Si se elimina un movimiento del balance de anticipos y materiales o bien
+                    //al eliminar una liquidacion, se elimino una retencion de abono para dicho balance
+                    if (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO
+                        || (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION && abonoArbolesEliminado != null))
+                    {
+                        //A partir del movimiento anterior al abono a arboles eliminado, se recalculan balances
+                        ultimoMovimiento = prod.getUltimoMovimiento(abonoArbolesEliminado.fechaMovimiento, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                        numReg = prod.ajustarBalances(ultimoMovimiento, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                    }
                 }
             }
 
-            //Si es esta eliminando un abono del balance de anticipos, 
-            //se elimina su asociacion de pagos a anticipos
-            if(mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS) {
-                if (mov.isAbonoCapital)
-                    numReg = ((PrestamoYAbonoCapital)mov).liberarAbono(db);
-                else
-                    numReg = mov.liberarPrestamo(db);
-            }
-
-            //se elimina el movimiento
-            db.MovimientosFinancieros.Remove(mov);
-            numReg = db.SaveChanges();
-
-            //Se ajusta el balance si si es un movimiento financierto que no sea registro de cosecha (pago por producto),
-            //se ajusta el balance si se registra una liquidacion en cuyas renteciones se encuentre un abono a deudas
-            if (numReg > 0 && prod.MovimientosFinancieros.Count() > 0
-                && mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                && (mov.getTypeOfMovement() != MovimientoFinanciero.TypeOfMovements.LIQUIDACION || retencionAbonoEliminado))
-            {
-                List<Prestamo_Abono> nuevasAsoc = new List<Prestamo_Abono>();
-                //Se re-asocia los prestamos y abonos del balance
-                if (mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-                    nuevasAsoc = prod.asociarAbonosConPrestamos(db, mov);
-
-                MovimientoFinanciero ultimoMovimiento;
-                //se busca el movimiento mas viejo afectado la redistribucion de prestamos y abonos.
-                var abonos = nuevasAsoc.Where(m => m.abono != null).OrderBy(m=>m.abono.fechaMovimiento);
-                var prestamos = nuevasAsoc.Where(m => m.prestamo != null).OrderBy(m => m.prestamo.fechaMovimiento);
-
-                var abono = abonos != null && abonos.Count() > 0 ? abonos.FirstOrDefault() : null; //Abono mas viejo
-                var prestamo = prestamos != null && prestamos.Count() > 0 ? prestamos.FirstOrDefault() : null; //Prestamo mas viejo
-
-                if(abono==null && prestamo == null)
-                    ultimoMovimiento = mov;
-                else if (abono == null) //Si no existe uno, es el otro
-                    ultimoMovimiento = prestamo.prestamo;
-                else if (prestamo == null)
-                    ultimoMovimiento = abono.abono;
-                else //Si existen ambos, se toma el mas viejo
-                    ultimoMovimiento = abono.abono.fechaMovimiento <= prestamo.prestamo.fechaMovimiento ? abono.abono : prestamo.prestamo;
-
-                //Se calcula el ultimo movimiento anterior al movimiento mas viejo afectado por la re distribucion
-                ultimoMovimiento = prod.getUltimoMovimiento(ultimoMovimiento.fechaMovimiento, ultimoMovimiento.tipoDeBalance);
-
-                //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                numReg = prod.ajustarBalances(ultimoMovimiento, db, mov.tipoDeBalance);
-            }
-            
             return RedirectToAction("Details", "Productores", new { id = mov.idProductor, temporada= temporadaID });
+        }
+
+        private MovimientoFinanciero encontrarPrimerMovimientoAfectado(List<Prestamo_Abono> nuevasAsoc)
+        {
+            MovimientoFinanciero res;
+            //se busca el movimiento mas viejo afectado la redistribucion de prestamos y abonos.
+            var abonos = nuevasAsoc.Where(m => m.abono != null).OrderBy(m => m.abono.fechaMovimiento);
+            var prestamos = nuevasAsoc.Where(m => m.prestamo != null).OrderBy(m => m.prestamo.fechaMovimiento);
+
+            var abono = abonos != null && abonos.Count() > 0 ? abonos.FirstOrDefault() : null; //Abono mas viejo
+            var prestamo = prestamos != null && prestamos.Count() > 0 ? prestamos.FirstOrDefault() : null; //Prestamo mas viejo
+
+            if (abono == null && prestamo == null)
+                res = null; //SI NO
+            else if (abono == null) //Si no existe uno, es el otro
+                res = prestamo.prestamo;
+            else if (prestamo == null)
+                res = abono.abono;
+            else //Si existen ambos, se toma el mas viejo
+                res = abono.abono.fechaMovimiento <= prestamo.prestamo.fechaMovimiento ? abono.abono : prestamo.prestamo;
+
+            return res;
         }
 
         /// <summary>

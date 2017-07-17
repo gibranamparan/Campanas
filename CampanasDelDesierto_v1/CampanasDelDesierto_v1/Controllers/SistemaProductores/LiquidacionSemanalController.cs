@@ -147,7 +147,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 var liquidaciones = db.LiquidacionesSemanales.Where(liq => liq.TemporadaDeCosechaID == temporada);
                 int noSemana = 0;
                 if (liquidaciones.Count() > 0)
-                    noSemana = liquidaciones.OrderBy(liq => liq.semana).FirstOrDefault().semana;
+                    noSemana = liquidaciones.OrderByDescending(liq => liq.semana).FirstOrDefault().semana;
                 mov.semana = noSemana + 1;
             }
             else

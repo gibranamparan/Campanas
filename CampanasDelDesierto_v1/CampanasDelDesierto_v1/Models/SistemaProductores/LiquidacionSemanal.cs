@@ -34,7 +34,7 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                return String.Format($"CHEQUE: {this.cheque}");
+                return String.Format($"SEMANA: {this.semana}, CHEQUE: {this.cheque}");
             }
         }
 

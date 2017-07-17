@@ -48,8 +48,6 @@
 
             @foreach (var item in movimientos)
             {
-                bool retencionDeLiquidacion = (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                                && ((PrestamoYAbonoCapital)item).abonoEnliquidacionID != null);
                 <tr >
                     <td>
                         @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) {
@@ -101,7 +99,7 @@
                                 <i class="glyphicon glyphicon-option-horizontal"></i>
                             </button>
                             <div id="myDropdown" class="dropdown-content">
-                                @if (!retencionDeLiquidacion) {
+                                @if (!item.isNoDirectamenteModificable) {
                                 <a href="@Url.Action("Edit", item.getNombreControlador(), new { id = item.idMovimiento })">
                                     <i class="glyphicon glyphicon-edit"></i> Editar
                                 </a>
@@ -111,7 +109,7 @@
                                     <i class="glyphicon glyphicon-print"></i> Detalles
                                 </a>
 
-                                @if (!retencionDeLiquidacion)
+                                @if (!item.isNoDirectamenteModificable)
                                 {
                                     <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
                                         <i class="glyphicon glyphicon-remove"></i> Borrar

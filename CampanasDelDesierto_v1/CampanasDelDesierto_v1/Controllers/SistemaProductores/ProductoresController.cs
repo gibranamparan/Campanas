@@ -306,7 +306,8 @@ namespace CampanasDelDesierto_v1.Controllers
             foreach (var prod in prods)
             {
                 numRegsDistribuciones += prod.restaurarDistribuciones(db);
-                numRegsBalances += prod.ajustarBalances(null,db,MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
             }
             return Json(new { numRegsDistribuciones = numRegsDistribuciones,
                 numRegsBalances = numRegsBalances
