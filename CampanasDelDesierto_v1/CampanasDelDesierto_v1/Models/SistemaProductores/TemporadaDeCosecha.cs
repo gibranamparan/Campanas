@@ -95,21 +95,21 @@ namespace CampanasDelDesierto_v1.Models
         public decimal precioProducto6 { get; set; }
 
         /*MANZANITA CABORCA ORGANICA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "ORGANICA (ton.)")]
-        public string tipoProducto7 { get { return TiposDeProducto.PRODUCTO1 + " ORGANICA"; } }
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (ton.)")]
+        public string tipoProducto7 { get { return TiposDeProducto.PRODUCTO4 ; } }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA")]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4)]
         public decimal precioProducto7 { get; set; }
 
         /*MANZANITA BAJA ORGANICA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "ORGANICA BAJA (ton.)")]
-        public string tipoProducto8 { get { return TiposDeProducto.PRODUCTO1 + " ORGANICA BAJA"; } }
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " BAJA (ton.)")]
+        public string tipoProducto8 { get { return TiposDeProducto.PRODUCTO4 + " BAJA"; } }
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA BAJA")]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " BAJA")]
         public decimal precioProducto8 { get; set; }
 
         //Los movimientos financieros se registran dentro de una temporada de cosecha
@@ -265,16 +265,23 @@ namespace CampanasDelDesierto_v1.Models
             public const string PRODUCTO1 = "MANZANITA";
             public const string PRODUCTO2 = "OBLIZA";
             public const string PRODUCTO3 = "MISSION";
-            public const string OTRO = "MISSION-BAJA";
+            public const string PRODUCTO4 = "MANZANITA ORGANICA";
         }
 
+        /// <summary>
+        /// Arroja una lista de objetos VMTipoProducto donde se muestra las variedades de aceituna asociada 
+        /// a su precio segun su zona.
+        /// </summary>
+        /// <param name="zona">La zona del producto, la cual se utiliza para determinar el precio.</param>
+        /// <returns></returns>
         public List<VMTipoProducto> getListaProductos(string zona)
         {
             VMPreciosProductos vmPrecios = new VMPreciosProductos(this, zona);
             List<VMTipoProducto> opciones = new List<VMTipoProducto>();
-            opciones.Add(new VMTipoProducto(this.tipoProducto1, vmPrecios.precioProducto1));
-            opciones.Add(new VMTipoProducto(this.tipoProducto2, vmPrecios.precioProducto2));
-            opciones.Add(new VMTipoProducto(this.tipoProducto3, vmPrecios.precioProducto3));
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1, vmPrecios.precioProducto1)); //manzanita
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2, vmPrecios.precioProducto2)); //obliza
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3, vmPrecios.precioProducto3)); //mission
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4, vmPrecios.precioManzanitaOrg)); //manzanita organica
 
             return opciones;
         }
@@ -331,6 +338,12 @@ namespace CampanasDelDesierto_v1.Models
             public decimal precioMission { get; set; }
             public decimal precioProducto3 { get { return this.precioMission; } }
 
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4)]
+            public decimal precioManzanitaOrg { get; set; }
+            public decimal precioProducto4 { get { return this.precioManzanitaOrg; } }
+
             [DisplayName("Zona")]
             public string zona { get; set; }
 
@@ -339,17 +352,19 @@ namespace CampanasDelDesierto_v1.Models
             public VMPreciosProductos() { this.zona = Productor.Zonas.ZONA1; }
             public VMPreciosProductos(TemporadaDeCosecha temporada, string zona)
             {
-                if(zona == Productor.Zonas.ZONA1)
+                if(zona == Productor.Zonas.ZONA1) //CABORCA
                 {
                     this.precioManzanita = temporada.precioProducto1;
                     this.precioObliza= temporada.precioProducto2;
                     this.precioMission = temporada.precioProducto3;
+                    this.precioManzanitaOrg = temporada.precioProducto7;//Manzanita organica
                 }
-                else if(zona == Productor.Zonas.ZONA2)
+                else if(zona == Productor.Zonas.ZONA2) //BAJA
                 {
                     this.precioManzanita = temporada.precioProducto4;
                     this.precioObliza = temporada.precioProducto5;
                     this.precioMission = temporada.precioProducto6;
+                    this.precioManzanitaOrg = temporada.precioProducto8;//Manzanita organica
                 }
                 this.zona = zona;
                 this.temporada = temporada;

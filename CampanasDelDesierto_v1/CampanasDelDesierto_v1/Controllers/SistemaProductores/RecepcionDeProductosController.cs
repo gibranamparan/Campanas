@@ -14,6 +14,8 @@ namespace CampanasDelDesierto_v1.Controllers
     [Authorize(Roles = ApplicationUser.RoleNames.ADMIN)]
     public class RecepcionDeProductosController : Controller
     {
+        public const string BIND_FIELDS = "numeroRecibo,numProductor,cantidadTonsProd1," +
+            "cantidadTonsProd2,cantidadTonsProd3,cantidadTonsProd4,fecha,semana,TemporadaDeCosechaID,idProductor";
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // POST: RecepcionDeProductos
@@ -52,8 +54,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateHeaderAntiForgeryToken]
-        public JsonResult Create([Bind(Include = "numeroRecibo,numProductor,cantidadTonsProd1,"+
-            "cantidadTonsProd2,cantidadTonsProd3,fecha,semana,TemporadaDeCosechaID,idProductor")]
+        public JsonResult Create([Bind(Include = BIND_FIELDS)]
         RecepcionDeProducto recepcionDeProducto)
         {
             int numReg = 0;

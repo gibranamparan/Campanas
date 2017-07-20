@@ -539,8 +539,10 @@
             })
             $.each($("input[type=date]"), function (idx, item) {
                 $(item).attr("type", "text")
-                var dt = new Date($(item).val())
-                var dtStr = numeral(dt.getDate()).format("00") + "/" + numeral(dt.getMonth()).format("00") + "/" + dt.getFullYear()
+                var arrDt = $(item).val().split("-");
+                /*var dt = new Date($(item).val())
+                var dtStr = numeral(dt.getDate()).format("00") + "/" + numeral(dt.getMonth()+1).format("00") + "/" + dt.getFullYear()*/
+                var dtStr = arrDt[2] + "/" + arrDt[1] + "/" + arrDt[0];
                 $(item).val(dtStr)
             })
             $("#precioDelDolarEnLiquidacion").val(numeral(currencyToNumber($("#precioDelDolarEnLiquidacion").val())).format("$0,0.0000"))

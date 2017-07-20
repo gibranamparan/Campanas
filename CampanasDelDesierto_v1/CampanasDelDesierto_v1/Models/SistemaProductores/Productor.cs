@@ -112,7 +112,8 @@ namespace CampanasDelDesierto_v1.Models
                     var movimientos = this.MovimientosFinancieros
                         .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
 
-                    decimal balance = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                    var lastMov = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
+                    decimal balance = lastMov==null?0: lastMov.balance;
                     return balance;
                 }
                 else return 0;
@@ -137,7 +138,8 @@ namespace CampanasDelDesierto_v1.Models
 
                 if (movimientos.Count() > 0) { 
                     movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
-                    res = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                    var lastMov = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
+                    res = lastMov==null?0:lastMov.balance;
                 }
             }
             return res;
@@ -150,18 +152,19 @@ namespace CampanasDelDesierto_v1.Models
             {
                 if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
                 {
+                    decimal balance = 0;
                     var movimientos = this.MovimientosFinancieros
-                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
-
-                    movimientos = movimientos.ToList();
-                    decimal balance = movimientos
-                        .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault().balance;
+                        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO).ToList();
+                    if (movimientos.Count() > 0) {
+                        var lastMov = movimientos
+                            .OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
+                        balance = lastMov == null?0: lastMov.balance;
+                    }
                     return balance;
                 }
                 else return 0;
             }
         }
-
 
         public decimal balanceArbolesEnFecha(DateTime? fecha)
         {
@@ -666,9 +669,12 @@ namespace CampanasDelDesierto_v1.Models
             foreach(var producto in productos)
             {
                 var total = totales.FirstOrDefault(tot => tot.producto == producto.producto);
+                double cantidadTotal = total==null?0:total.cantidad;
                 RecepcionDeProducto.VMTotalDeEntregas totalReg = new RecepcionDeProducto.VMTotalDeEntregas() { producto = producto.producto,
-                precio = producto.precio, monto = producto.precio*(decimal)total.cantidad,
-                    montoMXN = producto.precio * (decimal)total.cantidad*precioDolar, toneladasRecibidas = total.cantidad};
+                precio = producto.precio, monto = producto.precio*(decimal)cantidadTotal,
+                    montoMXN = producto.precio * (decimal)cantidadTotal * precioDolar, toneladasRecibidas = cantidadTotal
+                };
+
                 report.Add(totalReg);
             }
 
@@ -697,25 +703,36 @@ namespace CampanasDelDesierto_v1.Models
             total.pagoProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto1);
             total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
             total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
+            total.pagoProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto4);
             total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
             total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
             total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
+            total.cantidadProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto4);
             //Se presenta la informacion en una lista de 3 tipos de productos con su correspondiente cantidad, precio y nombre
             List<VMTipoProducto> totalesProducto = new List<VMTipoProducto>();
             totalesProducto.Add(new VMTipoProducto
             {
                 producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1,
-                precio = total.pagoProducto1, cantidad = total.cantidadProducto1
+                precio = total.pagoProducto1,
+                cantidad = total.cantidadProducto1
             });
             totalesProducto.Add(new VMTipoProducto
             {
                 producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2,
-                precio = total.pagoProducto2, cantidad = total.cantidadProducto2
+                precio = total.pagoProducto2,
+                cantidad = total.cantidadProducto2
             });
             totalesProducto.Add(new VMTipoProducto
             {
                 producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3,
-                precio = total.pagoProducto3, cantidad = total.cantidadProducto3
+                precio = total.pagoProducto3,
+                cantidad = total.cantidadProducto3
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO4,
+                precio = total.pagoProducto4,
+                cantidad = total.cantidadProducto4
             });
 
             return totalesProducto;

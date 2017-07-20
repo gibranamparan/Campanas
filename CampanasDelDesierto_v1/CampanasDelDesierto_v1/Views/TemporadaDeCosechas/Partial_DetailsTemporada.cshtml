@@ -28,16 +28,19 @@
         decimal precioProducto1 = pagoPorProducto.pagoProducto1 == 0 ? Model.precioManzanita :
             (decimal)Math.Round((double)pagoPorProducto.pagoProducto1 / pagoPorProducto.cantidadProducto1);
         decimal precioProducto2 = pagoPorProducto.pagoProducto2 == 0 ? Model.precioObliza :
-    (decimal)Math.Round((double)pagoPorProducto.pagoProducto2 / pagoPorProducto.cantidadProducto2);
+        (decimal)Math.Round((double)pagoPorProducto.pagoProducto2 / pagoPorProducto.cantidadProducto2);
         decimal precioProducto3 = pagoPorProducto.pagoProducto3 == 0 ? Model.precioMission :
-    (decimal)Math.Round((double)pagoPorProducto.pagoProducto3 / pagoPorProducto.cantidadProducto3);
+        (decimal)Math.Round((double)pagoPorProducto.pagoProducto3 / pagoPorProducto.cantidadProducto3);
+            decimal precioProducto4 = pagoPorProducto.pagoProducto4 == 0 ? Model.precioManzanitaOrg :
+        (decimal)Math.Round((double)pagoPorProducto.pagoProducto4 / pagoPorProducto.cantidadProducto4);
 
-        preciosProductosEditados = precioProducto1 != Model.precioManzanita
-            || precioProducto2 != Model.precioObliza || precioProducto3 != Model.precioMission;
+        preciosProductosEditados = precioProducto1 != Model.precioManzanita || precioProducto2 != Model.precioObliza
+            || precioProducto3 != Model.precioMission || precioProducto4 != Model.precioManzanitaOrg;
 
         Model.precioManzanita = precioProducto1;
         Model.precioObliza = precioProducto2;
         Model.precioMission = precioProducto3;
+        Model.precioManzanitaOrg = precioProducto4;
     }
 
     int? productorID = (int)ViewData["productorID"];
@@ -51,43 +54,72 @@
         </h3>
     </div>
     <div class="panel-body">
-        <div class="form-inline" id="formCostosProducto">
-            <div class="form-group col-md-4">
+        <div id="formCostosProducto">
+            <div class="form-group col-md-3">
                 @Html.LabelFor(model => model.precioManzanita)
-                @Html.EditorFor(model => model.precioManzanita, new { htmlAttributes = new { disabled= "disabled",
+                @Html.EditorFor(model => model.precioManzanita, new
+           {
+               htmlAttributes = new
+               {
+                   disabled = "disabled",
                    @class = "form-control",
                    data_mask = "###0.00",
                    data_mask_reverse = "true"
-               } })
+               }
+           })
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 @Html.LabelFor(model => model.precioObliza)
-                @Html.EditorFor(model => model.precioObliza, new { htmlAttributes = new { disabled = "disabled",
-                   @class = "form-control",
-                   data_mask = "###0.00",
-                   data_mask_reverse = "true"
-               } })
+                @Html.EditorFor(model => model.precioObliza, new
+               {
+                   htmlAttributes = new
+                   {
+                       disabled = "disabled",
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 @Html.LabelFor(model => model.precioMission)
-                @Html.EditorFor(model => model.precioMission, new { htmlAttributes = new { disabled= "disabled",
-                   @class = "form-control",
-                   data_mask = "###0.00",
-                   data_mask_reverse = "true"
-               } })
+                @Html.EditorFor(model => model.precioMission, new
+               {
+                   htmlAttributes = new
+                   {
+                       disabled = "disabled",
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
             </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.precioManzanitaOrg)
+                @Html.EditorFor(model => model.precioManzanitaOrg, new
+               {
+                   htmlAttributes = new
+                   {
+                       disabled = "disabled",
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+            </div>
+
+            <a class="pull-right" href="@Url.Action("Edit","TemporadaDeCosechas",
+                new { id = Model.temporada.TemporadaDeCosechaID, pagoPorProductoID = movimientoID,
+                    productorID =productorID, temporadaID = Model.temporada.TemporadaDeCosechaID })">
+                <i class="fa fa-pencil"></i> Editar temporada
+            </a>
+            @if (editable)
+            {
+                <input type="checkbox" id="cbEditarCostos" name="cbEditarCostos"
+                       class="hidden" onchange="cbChangeEditarCostos(this)" @(preciosProductosEditados ? "checked" : "") />
+                    <label for="cbEditarCostos">Editar costos para este registro</label>
+            }
         </div>
-        <a class="pull-right" href="@Url.Action("Edit","TemporadaDeCosechas",
-                                   new { id = Model.temporada.TemporadaDeCosechaID, pagoPorProductoID = movimientoID,
-                                       productorID =productorID, temporadaID = Model.temporada.TemporadaDeCosechaID })">
-            <i class="fa fa-pencil"></i> Editar temporada
-        </a>
-        @if (editable)
-        {
-            <input type="checkbox" id="cbEditarCostos" name="cbEditarCostos" 
-                   class="hidden" onchange="cbChangeEditarCostos(this)" @(preciosProductosEditados?"checked":"")/>
-            <label for="cbEditarCostos">Editar costos para este registro</label>
-        }
     </div>
 </div>
 
@@ -95,7 +127,7 @@
     var costoOriginalProducto1 = @precioOriginal1;
     var costoOriginalProducto2 = @precioOriginal2;
     var costoOriginalProducto3 = @precioOriginal3;
-    var selector = "#formCostosProducto input";
+    var selector = "#formCostosProducto input[type!='checkbox']";
 
     function cbChangeEditarCostos(cb){
         var val = $(cb).is(':checked');

@@ -51,6 +51,7 @@
             <tbody>
                 @foreach (var ingreso in Model)
                 {
+                    if (ingreso.toneladasRecibidas > 0) { 
                     <tr>
                         <td>
                             @Html.DisplayFor(model => ingreso.producto)
@@ -68,6 +69,7 @@
                             @Html.DisplayFor(model => ingreso.montoMXN)
                         </td>
                     </tr>
+                    }
                 }
             </tbody>
         </table>

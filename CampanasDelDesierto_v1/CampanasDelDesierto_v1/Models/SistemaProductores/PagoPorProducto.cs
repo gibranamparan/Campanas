@@ -14,33 +14,45 @@ namespace CampanasDelDesierto_v1.Models
     /// </summary>
     public class PagoPorProducto : MovimientoFinanciero
     {
+        /*CANTIDAD MANZANITA*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (tons.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto1 { get; set; }
 
+        /*CANTIDAD OBLISSA*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (tons.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto2 { get; set; }
 
+        /*CANTIDAD MISSION*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (tons.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto3 { get; set; }
 
+        /*CANTIDAD MANZANITA ORG*/
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
+        public double cantidadProducto4 { get; set; }
+
+        /*PAGO MANZANITA*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto1 { get; set; }
 
+        /*PAGO OBLISSA*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto2 { get; set; }
 
+        /*PAGO MISSION*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto3 { get; set; }
 
+        /*PAGO MANZANITA ORG*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
-        public decimal pagoProducto7 { get; set; }
+        public decimal pagoProducto4 { get; set; }
 
         [DisplayName("Semana")]
         [Range(1,53)] //Rango de semanas en 1 año

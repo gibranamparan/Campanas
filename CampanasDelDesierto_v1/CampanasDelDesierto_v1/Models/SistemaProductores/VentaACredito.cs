@@ -14,6 +14,13 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name = "Pagaré")]
         public string pagareVenta { get; set; }
+        
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
+        ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha a pagar")]
+        public DateTime? fechaPagar { get; set; }
+
         [Display(Name = "Orden de Compra")]
         public string ordenCompra { get; set; }
 

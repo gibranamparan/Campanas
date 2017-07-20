@@ -270,6 +270,40 @@
                             @Html.ValidationMessageFor(model => model.pagoProducto3, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    @***PRODUCTO 4***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto4, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto4, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto4, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto4, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto4, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto4, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </fieldset>
                 <div class="form-group col-md-12">
                     <div class="col-md-10">
@@ -290,7 +324,7 @@
     var selectedIngresosIDs = new Array();
 
     @*Enumeracion de cada columna del datatable*@
-    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5, SEMANA:7})
+    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5, PROD4: 6, SEMANA:8})
 
     @*Definicion de la tabla*@
     var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable({
@@ -329,27 +363,32 @@
         selectedIngresosIDs = new Array();
         var selectedRows = tblIngresoAcumulado.rows({selected:true});
         var data = selectedRows.data();
-        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, montoNeto = 0;
+        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, totalCant4 = 0, montoNeto = 0;
 
         @*Se toman los costos por tipo de producto marcado para esta temporada*@
         var precioProducto1 = $(selectorInputsPrecios+"Manzanita").val();
         var precioProducto2 = $(selectorInputsPrecios+"Obliza").val();
         var precioProducto3 = $(selectorInputsPrecios+"Mission").val();
+        var precioProducto4 = $(selectorInputsPrecios+"ManzanitaOrg").val();
 
         for(var c=0;c<data.length;c++){
             totalCant1 += Number(data[c][COLS_ENUM.PROD1]);
             totalCant2 += Number(data[c][COLS_ENUM.PROD2]);
             totalCant3 += Number(data[c][COLS_ENUM.PROD3]);
+            totalCant4 += Number(data[c][COLS_ENUM.PROD4]);
             selectedIngresosIDs.push(Number(data[c][COLS_ENUM.ID]));
         }
-        var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, pp3 = totalCant3*precioProducto3;
+        var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, 
+            pp3 = totalCant3*precioProducto3, pp4 = totalCant4*precioProducto4;
         $("#cantidadProducto1").val(numeral(totalCant1).format('0.000')).trigger('input');
         $("#cantidadProducto2").val(numeral(totalCant2).format('0.000')).trigger('input');
         $("#cantidadProducto3").val(numeral(totalCant3).format('0.000')).trigger('input');
+        $("#cantidadProducto4").val(numeral(totalCant4).format('0.000')).trigger('input');
         $("#pagoProducto1").val(numeral(pp1).format('0.00')).trigger('input');
         $("#pagoProducto2").val(numeral(pp2).format('0.00')).trigger('input');
         $("#pagoProducto3").val(numeral(pp3).format('0.00')).trigger('input');
-        $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3).format('0.00')).trigger('input');
+        $("#pagoProducto4").val(numeral(pp4).format('0.00')).trigger('input');
+        $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3 + pp4).format('0.00')).trigger('input');
 
         $("#btnRegistrar").attr('disabled', data.length == 0)
         $("#btnEliminarRecepciones").attr('disabled', data.length == 0)

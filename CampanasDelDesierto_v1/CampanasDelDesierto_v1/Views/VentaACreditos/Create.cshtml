@@ -75,6 +75,14 @@
                 </div>
 
                 <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.fechaPagar, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fechaPagar, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.fechaPagar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
                     @Html.LabelFor(model => model.pagareVenta, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.pagareVenta, new { htmlAttributes = new { @class = "form-control" } })
@@ -113,70 +121,138 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        //Data table select sigle row
         var COLS_ENUM = Object.freeze({ CANTIDAD: 1, ID: 2, PROD1: 4 })
         var table = $('#Productos').DataTable({
             columnDefs: [{
-                    orderable: false,
+                orderable: false,
                     className: 'select-checkbox',
                     targets: 0
                 }, {
-                    visible: false,
+                visible: false,
                     searchable: false
                 }],
                 select: {
-                    style: 'os',
+                style: 'os',
                     selector: 'td:first-child'
                 },
                 order: [[1, 'asc']]
             });
 
-            table.on('select', function (e, dt, type, indexes) {
+        table.on('select', function (e, dt, type, indexes) {
+            var selRow = dt.data()
+            var inputCantidad = $('input[productoID='+selRow[COLS_ENUM.ID]+']');
+            introducirNuevaCantidad(inputCantidad[0]);
             funcionRecalcularMontos();
-        })
-        .on('deselect',function(e, dt, type, indexes){
+        }).on('deselect', function (e, dt, type, indexes) {
+            var unSelRows = dt.data();
+            removerSeleccion(unSelRows);
             funcionRecalcularMontos();
         });
 
+        //Data table select sigle row
+        var compras = new Array();
+
+        //Metodo que elimina del estado de compras los elementos desseleccionados
+        function removerSeleccion(rows) {
+            var renglonesAEliminar = new Array();
+            if (!rows.rows) {
+                renglonesAEliminar.push(rows);
+            } else {
+                renglonesAEliminar = rows;
+            }
+            $.each(renglonesAEliminar, function (idx, row) {
+                compras = $.grep(compras, function (item, idx) {
+                    return item.idProducto == row[COLS_ENUM.ID]
+                }, true)
+            })
+        }
+
+        //Recalcula el total de la venta segun los costos de cantidad de material comprado
+        //selecciondos en la tabla
         function funcionRecalcularMontos() {
-            compras = new Array();
-            var selectedRows = table.rows({selected:true});
+            var selectedRows = table.rows({ selected: true });
             var data = selectedRows.data();
             var totalCant1 = 0; var costoUnitario = 0;
 
             var cantidad = $('#cantidadMaterial').val();
-            if (data.length==0) {
+            if (data.length==0)
                 $('#crear').attr('disabled', true);
-            }
             else
             {
-                for (var c = 0; c < data.length; c++) {
-                    costoUnitario = Number(data[c][COLS_ENUM.PROD1].replace('$', ''));
-                    newItem = {
-                        idProducto: Number(data[c][COLS_ENUM.ID]),
-                        cantidadMaterial: $('#producto' + data[c][COLS_ENUM.ID]).val(),
-                        costo: costoUnitario
-                    };
-                    compras.push(newItem);
-                    totalCant1 += newItem.cantidadMaterial * newItem.costo;
-                }
+                $.each(compras, function (idx, item) {
+                    totalCant1 += item.cantidadMaterial * item.costo;
+                })
                 $('#crear').attr('disabled', false);
             }
 
             $('#montoMovimiento').val(numeral(totalCant1).format('0.00')).trigger('input');
             $('#montoMovimiento').attr('value', totalCant1);
-            console.log(JSON.stringify(compras))
             $('#compras').val(JSON.stringify(compras))
         }
 
-        $("#cantidadMaterial").change(function () {
+        function introducirNuevaCantidad(inputCantidad) {
+            var selRow = buscarRenglonSeleccionado(inputCantidad)
+            //Se el input editado se encontraba seleccionado
+            if (selRow)
+                nuevoRenglonDeCompras(selRow, inputCantidad)
+        }
+
+        function nuevoRenglonDeCompras(selRow, inputCantidad){
+            var cantidadMaterial = inputCantidad?inputCantidad.valueAsNumber:Number($(selRow[COLS_ENUM.CANTIDAD]).val());
+            //Se agrega el nuevo elemento al arreglo
+            var newItem = {
+                idProducto: selRow[COLS_ENUM.ID],
+                cantidadMaterial: cantidadMaterial,
+                costo: Number(selRow[COLS_ENUM.PROD1].replace('$', ''))
+            };
+            compras.push(newItem);
+        }
+
+        function editarElemento(inputEditado) {
+            var selRow = buscarRenglonSeleccionado(inputEditado);
+            if (selRow) {
+                var compraIDX
+                $.each(compras, function (idx, item) {
+                    if (selRow[COLS_ENUM.ID] == item.idProducto)
+                        compraIDX = idx;
+                })
+                compras[compraIDX].cantidadMaterial = inputEditado.valueAsNumber;
+
+                console.log(JSON.stringify(compras));
+            }
+
             funcionRecalcularMontos();
-        });
+        }
+
+        function buscarRenglonSeleccionado(input){
+            //Se toman los datos de los renglones seleccionados
+            var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data()
+
+            //Se busca si el input editado se encuentra seleccionado
+            var selRow = $.grep(data, function (item, idx) {
+                return item[COLS_ENUM.ID] == $(input).attr('productoID');
+            })[0];
+
+            return selRow;
+        }
     </script>
 
-    @if(editMode){
+    @if (editMode){
     <script>
         $('#Productos').DataTable().table().rows('[default-selected]').select();
+
+        inicializarListadoDeCompras();
+
+        function inicializarListadoDeCompras(){
+            var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data();
+            compras = new Array();
+            $.each(data, function (idx, item) {
+                nuevoRenglonDeCompras(item)
+            })
+            funcionRecalcularMontos();
+        }
     </script>
     }
 }

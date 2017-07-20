@@ -488,13 +488,22 @@ namespace CampanasDelDesierto_v1.Models
             else if (this.fechaMovimiento < tem.fechaInicio)
                 this.fechaMovimiento = tem.fechaInicio; //Se le suma un año
 
-            //Se establece como fecha a pagar el 15 de agosto mas próximo
-            //TODO: Panel de control de configuraciones generales deberá permitir la modificacion de esta fecha
-            if(this.getTypeOfMovement() == TypeOfMovements.CAPITAL && !this.isAbonoCapital) { 
-                ((PrestamoYAbonoCapital)this).fechaPagar = 
+            //Se establece como fecha a pagar el 15 de agosto mas próximo para anticipos de capital
+            if (this.getTypeOfMovement() == TypeOfMovements.CAPITAL && !this.isAbonoCapital)
+            {
+                ((PrestamoYAbonoCapital)this).fechaPagar =
                     new DateTime(((PrestamoYAbonoCapital)this).fechaMovimiento.Year, this.MES_PERIODO, this.DIA_PAGO);
                 if (((PrestamoYAbonoCapital)this).fechaMovimiento > ((PrestamoYAbonoCapital)this).fechaPagar)
                     ((PrestamoYAbonoCapital)this).fechaPagar = ((PrestamoYAbonoCapital)this).fechaPagar.Value.AddYears(1);
+            }
+
+            //Se establece como fecha a pagar el 15 de agosto mas próximo para ventas a credito
+            if (this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO)
+            {
+                ((VentaACredito)this).fechaPagar =
+                    new DateTime(((VentaACredito)this).fechaMovimiento.Year, this.MES_PERIODO, this.DIA_PAGO);
+                if (((VentaACredito)this).fechaMovimiento > ((VentaACredito)this).fechaPagar)
+                    ((VentaACredito)this).fechaPagar = ((VentaACredito)this).fechaPagar.Value.AddYears(1);
             }
         }
 

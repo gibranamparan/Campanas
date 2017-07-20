@@ -4,85 +4,72 @@
     string costoTonelada1 = (Model.pagoProducto1 == 0 ? 0 : Math.Round((double)Model.pagoProducto1 / Model.cantidadProducto1)).ToString("C");
     string costoTonelada2 = (Model.pagoProducto2 == 0 ? 0 : Math.Round((double)Model.pagoProducto2 / Model.cantidadProducto2)).ToString("C");
     string costoTonelada3 = (Model.pagoProducto3 == 0 ? 0 : Math.Round((double)Model.pagoProducto3 / Model.cantidadProducto3)).ToString("C");
+    string costoTonelada4 = (Model.pagoProducto4 == 0 ? 0 : Math.Round((double)Model.pagoProducto4 / Model.cantidadProducto4)).ToString("C");
 }
 @*TONELADAS*@
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.cantidadProducto1, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto1)</p>
-    </div>
+    @Html.LabelFor(model => model.cantidadProducto1)
+    <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto1)</p>
 </div>
 
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.cantidadProducto2, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto2)</p>
-    </div>
+    @Html.LabelFor(model => model.cantidadProducto2)
+    <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto2)</p>
 </div>
 
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.cantidadProducto3, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto3)</p>
-    </div>
+    @Html.LabelFor(model => model.cantidadProducto3)
+    <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto3)</p>
+</div>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.cantidadProducto4)
+    <p class="form-control-static">@Html.DisplayFor(model => model.cantidadProducto4)</p>
 </div>
 
 @*PAGOS*@
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.pagoProducto1, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto1)</p>
-    </div>
+    @Html.LabelFor(model => model.pagoProducto1)
+    <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto1)</p>
 </div>
 
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.pagoProducto2, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto2)</p>
-    </div>
+    @Html.LabelFor(model => model.pagoProducto2)
+    <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto2)</p>
 </div>
 
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.pagoProducto3, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto3)</p>
-    </div>
+    @Html.LabelFor(model => model.pagoProducto3)
+    <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto3)</p>
+</div>
+<div class="form-group col-md-4">
+    @Html.LabelFor(model => model.pagoProducto4)
+    <p class="form-control-static">@Html.DisplayFor(model => model.pagoProducto4)</p>
 </div>
 
 <div class="form-group col-md-4">
-    @Html.LabelFor(model => model.semana, new { @class = "control-label col-md-4" })
-    <div class="col-md-8">
-        <p class="form-control-static">@Html.DisplayFor(model => model.semana)</p>
-    </div>
+    @Html.LabelFor(model => model.semana)
+    <p class="form-control-static">@Html.DisplayFor(model => model.semana)</p>
 </div>
 
 @*COSTO POR TONELADA*@
 <fieldset class="col-md-12">
     <legend>Costos por tonelada manejados</legend>
-    <div class="form-group col-md-4">
-        @Html.LabelFor(model => model.pagoProducto1, new { @class = "control-label col-md-4" })
-        <div class="col-md-8">
-            <p class="form-control-static">
-                @(costoTonelada1)
-            </p>
-        </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.pagoProducto1)
+        <p class="form-control-static">@(costoTonelada1)</p>
     </div>
 
-    <div class="form-group col-md-4">
-        @Html.LabelFor(model => model.pagoProducto2, new { @class = "control-label col-md-4" })
-        <div class="col-md-8">
-            <p class="form-control-static">
-                @(costoTonelada2)
-            </p>
-        </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.pagoProducto2)
+        <p class="form-control-static">@(costoTonelada2)</p>
     </div>
 
-    <div class="form-group col-md-4">
-        @Html.LabelFor(model => model.pagoProducto3, new { @class = "control-label col-md-4" })
-        <div class="col-md-8">
-            <p class="form-control-static">
-                @(costoTonelada3)
-            </p>
-        </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.pagoProducto3)
+        <p class="form-control-static">@(costoTonelada3)</p>
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.pagoProducto4)
+        <p class="form-control-static">@(costoTonelada4)</p>
     </div>
 </fieldset>
