@@ -379,6 +379,10 @@ namespace CampanasDelDesierto_v1.Controllers
                         else if (oldRet != null && newRet == null)
                         {
                             abono = db.PrestamosYAbonosCapital.Find(emisionDeCheque.abonoAnticipoID);
+                            
+                            //Se desasocia de prestamos que se hayan pagado
+                            abono.liberarAbono(db);
+
                             emisionDeCheque.abonoAnticipoID = null;
                             //Se marca para ser borrada la retencion
                             db.Entry(abono).State = EntityState.Deleted;

@@ -298,7 +298,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         [AllowAnonymous]
-        public JsonResult restaurarDistribucionesParaTodos()
+        public JsonResult restaurarDistribucionesYBalancesParaTodos()
         {
             var prods = db.Productores.ToList();
             int numRegsDistribuciones = 0;
@@ -309,7 +309,26 @@ namespace CampanasDelDesierto_v1.Controllers
                 numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
                 numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
             }
-            return Json(new { numRegsDistribuciones = numRegsDistribuciones,
+            return Json(new
+            {
+                numRegsDistribuciones = numRegsDistribuciones,
+                numRegsBalances = numRegsBalances
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        public JsonResult restaurarDistribucionesYBalances(int id)
+        {
+            var prod = db.Productores.Find(id);
+            int numRegsDistribuciones = 0;
+            int numRegsBalances = 0;
+            numRegsDistribuciones += prod.restaurarDistribuciones(db);
+            numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+            numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+
+            return Json(new
+            {
+                numRegsDistribuciones = numRegsDistribuciones,
                 numRegsBalances = numRegsBalances
             }, JsonRequestBehavior.AllowGet);
         }
