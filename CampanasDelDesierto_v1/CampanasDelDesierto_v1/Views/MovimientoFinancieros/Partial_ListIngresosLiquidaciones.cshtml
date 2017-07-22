@@ -52,11 +52,7 @@
                         @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                     <td>
-                        @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION
-                            || (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                                && ((PagoPorProducto)item).liquidacionDeCosechaID != null
-                                && ((PagoPorProducto)item).liquidacionDeCosechaID > 0)
-                            )) { 
+                        @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION)) { 
                             <div class="dropdown_actions">
                                 <button onclick="openActionsDropDown(this)"
                                         class="dropbtn btn btn-default">
@@ -64,17 +60,22 @@
                                 </button>
                                 <div id="myDropdown"
                                      class="dropdown-content">
+                                    @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado)) { 
                                     <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
                                         <i class="glyphicon glyphicon-edit"></i> Editar
                                     </a>
+                                    }
 
                                     <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
                                         <i class="glyphicon glyphicon-print"></i> Detalles
                                     </a>
 
-                                    <a href="@Url.Action("Delete","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                    @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                    {
+                                    <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
                                         <i class="glyphicon glyphicon-remove"></i> Borrar
                                     </a>
+                                    }
                                 </div>
                             </div>
                         }

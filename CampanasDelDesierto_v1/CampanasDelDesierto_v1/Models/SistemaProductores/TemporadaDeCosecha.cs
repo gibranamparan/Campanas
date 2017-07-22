@@ -41,76 +41,76 @@ namespace CampanasDelDesierto_v1.Models
         //TIPOS DE PRODUCTO
 
         /*MANZANITA CABORCA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + "(ton.)")]
-        public string tipoProducto1 { get { return TiposDeProducto.PRODUCTO1; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1)]
         public decimal precioProducto1 { get; set; }
 
         /*OBLIZA CABORCA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2+ "(ton.)")]
-        public string tipoProducto2 { get { return TiposDeProducto.PRODUCTO2; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2)]
         public decimal precioProducto2 { get; set; }
 
         /*MISSION CABORCA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + "(ton.)")]
-        public string tipoProducto3 { get { return TiposDeProducto.PRODUCTO3; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3)]
         public decimal precioProducto3 { get; set; }
 
         /*MANZANITA BAJA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " BAJA (ton.)")]
-        public string tipoProducto4 { get { return TiposDeProducto.PRODUCTO1 + " BAJA"; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " BAJA")]
         public decimal precioProducto4 { get; set; }
 
         /*OBLIZA BAJA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " BAJA (ton.)")]
-        public string tipoProducto5 { get { return TiposDeProducto.PRODUCTO2 + " BAJA"; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " BAJA")]
         public decimal precioProducto5 { get; set; }
 
         /*MISSION BAJA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " BAJA (ton.)")]
-        public string tipoProducto6 { get { return TiposDeProducto.PRODUCTO3 + " BAJA"; } }
-
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " BAJA")]
         public decimal precioProducto6 { get; set; }
 
-        /*MANZANITA CABORCA ORGANICA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (ton.)")]
-        public string tipoProducto7 { get { return TiposDeProducto.PRODUCTO4 ; } }
-
+        /*MANZANITA ORGANICA CABORCA*/
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4)]
         public decimal precioProducto7 { get; set; }
 
-        /*MANZANITA BAJA ORGANICA*/
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " BAJA (ton.)")]
-        public string tipoProducto8 { get { return TiposDeProducto.PRODUCTO4 + " BAJA"; } }
-
+        /*MANZANITA ORGANICA BAJA*/
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " BAJA")]
         public decimal precioProducto8 { get; set; }
+
+        /*OBLIZA ORGANICA CABORCA*/
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5)]
+        public decimal precioProducto9 { get; set; }
+
+        /*OBLIZA ORGANICA BAJA*/
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5 + " BAJA")]
+        public decimal precioProducto10 { get; set; }
+
+        /*MISSION ORGANICA CABORCA*/
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6)]
+        public decimal precioProducto11 { get; set; }
+
+        /*MISSION ORGANICA BAJA*/
+        [DisplayFormat(DataFormatString = "{0:C}",
+        ApplyFormatInEditMode = true)]
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6 + " BAJA")]
+        public decimal precioProducto12 { get; set; }
 
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
@@ -266,7 +266,18 @@ namespace CampanasDelDesierto_v1.Models
             public const string PRODUCTO2 = "OBLIZA";
             public const string PRODUCTO3 = "MISSION";
             public const string PRODUCTO4 = "MANZANITA ORGANICA";
+            public const string PRODUCTO5 = "OBLIZA ORGANICA";
+            public const string PRODUCTO6 = "MISSION ORGANICA";
         }
+
+        public static string[] TiposDeProductoArray = new string []{
+            TiposDeProducto.PRODUCTO1,
+            TiposDeProducto.PRODUCTO2,
+            TiposDeProducto.PRODUCTO3,
+            TiposDeProducto.PRODUCTO4,
+            TiposDeProducto.PRODUCTO5,
+            TiposDeProducto.PRODUCTO6,
+        };
 
         /// <summary>
         /// Arroja una lista de objetos VMTipoProducto donde se muestra las variedades de aceituna asociada 
@@ -282,6 +293,8 @@ namespace CampanasDelDesierto_v1.Models
             opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2, vmPrecios.precioProducto2)); //obliza
             opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3, vmPrecios.precioProducto3)); //mission
             opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4, vmPrecios.precioManzanitaOrg)); //manzanita organica
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5, vmPrecios.precioOblizaOrg)); //obliza organica
+            opciones.Add(new VMTipoProducto(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6, vmPrecios.precioMissionOrg)); //mission organica
 
             return opciones;
         }
@@ -344,6 +357,18 @@ namespace CampanasDelDesierto_v1.Models
             public decimal precioManzanitaOrg { get; set; }
             public decimal precioProducto4 { get { return this.precioManzanitaOrg; } }
 
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5)]
+            public decimal precioOblizaOrg { get; set; }
+            public decimal precioProducto5 { get { return this.precioOblizaOrg; } }
+
+            [DisplayFormat(DataFormatString = "{0:C}",
+            ApplyFormatInEditMode = true)]
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6)]
+            public decimal precioMissionOrg { get; set; }
+            public decimal precioProducto6 { get { return this.precioMissionOrg; } }
+
             [DisplayName("Zona")]
             public string zona { get; set; }
 
@@ -358,6 +383,8 @@ namespace CampanasDelDesierto_v1.Models
                     this.precioObliza= temporada.precioProducto2;
                     this.precioMission = temporada.precioProducto3;
                     this.precioManzanitaOrg = temporada.precioProducto7;//Manzanita organica
+                    this.precioOblizaOrg = temporada.precioProducto9;//Obliza organica
+                    this.precioMissionOrg= temporada.precioProducto11;//Mission organica
                 }
                 else if(zona == Productor.Zonas.ZONA2) //BAJA
                 {
@@ -365,6 +392,8 @@ namespace CampanasDelDesierto_v1.Models
                     this.precioObliza = temporada.precioProducto5;
                     this.precioMission = temporada.precioProducto6;
                     this.precioManzanitaOrg = temporada.precioProducto8;//Manzanita organica
+                    this.precioOblizaOrg = temporada.precioProducto10;//Obliza organica
+                    this.precioMissionOrg = temporada.precioProducto12;//Mission organica
                 }
                 this.zona = zona;
                 this.temporada = temporada;

@@ -91,13 +91,6 @@ namespace CampanasDelDesierto_v1.Controllers
 
                 if (numReg > 0)
                 {
-                    /*
-                    //Se calcula el movimiento anterior al que se esta registrando
-                    var prod = db.Productores.Find(pagoPorProducto.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
-                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);*/
-
                     return RedirectToAction("Details", "Productores", 
                         new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });
                 }
@@ -223,8 +216,11 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult Edit(PagoPorProducto pagoPorProducto, string selectedIngresos)
         {
             int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
+            var pagoTemp = db.PagosPorProductos.Find(pagoPorProducto.idMovimiento);
+            bool yaLiquidado = pagoTemp.yaLiquidado;
+            db.Entry(pagoTemp).State = EntityState.Detached;
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !yaLiquidado)
             {
                 //Ajuste de movimiento para entrar dentro de la lista de balances
                 pagoPorProducto.ajustarMovimiento();
@@ -251,13 +247,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         db.Entry(recepcion).State = EntityState.Modified;
                     }
 
-                    db.SaveChanges();
-                    /*
-                    //Se calcula el movimiento anterior al que se esta registrando
-                    var prod = db.Productores.Find(pagoPorProducto.idProductor);
-                    MovimientoFinanciero ultimoMovimiento = prod.getUltimoMovimiento(pagoPorProducto.fechaMovimiento);
-                    //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
-                    prod.ajustarBalances(ultimoMovimiento, db);*/
+                    int numRegs = db.SaveChanges();
 
                     return RedirectToAction("Details", "Productores",
                         new { id = pagoPorProducto.idProductor, temporada = pagoPorProducto.TemporadaDeCosechaID });

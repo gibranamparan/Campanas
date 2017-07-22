@@ -17,6 +17,7 @@
     @Html.HiddenFor(model => model.movimientoID)
     @Html.HiddenFor(model => model.TemporadaDeCosechaID)
     @Html.HiddenFor(model => model.numProductor)
+    @Html.HiddenFor(model => model.nombreProductor)
 
     <div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -94,6 +95,34 @@
             @Html.ValidationMessageFor(model => model.cantidadTonsProd4, "", new { @class = "text-danger" })
         </div>
 
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.cantidadTonsProd5)
+            @Html.EditorFor(model => model.cantidadTonsProd5, new
+       {
+           htmlAttributes = new
+           {
+               @class = "form-control",
+               data_mask = "###0.000",
+               data_mask_reverse = "true"
+           }
+       })
+            @Html.ValidationMessageFor(model => model.cantidadTonsProd5, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.cantidadTonsProd6)
+            @Html.EditorFor(model => model.cantidadTonsProd6, new
+       {
+           htmlAttributes = new
+           {
+               @class = "form-control",
+               data_mask = "###0.000",
+               data_mask_reverse = "true"
+           }
+       })
+            @Html.ValidationMessageFor(model => model.cantidadTonsProd6, "", new { @class = "text-danger" })
+        </div>
+
         <div class="form-group col-md-12">
             <button class="btn btn-success" type="button"
                      onclick="crearNuevaRecepcion(this)">Registrar</button>
@@ -116,7 +145,10 @@
             cantidadTonsProd1: forma.find("#cantidadTonsProd1").val(),
             cantidadTonsProd2: forma.find("#cantidadTonsProd2").val(),
             cantidadTonsProd3: forma.find("#cantidadTonsProd3").val(),
-            cantidadTonsProd4: forma.find("#cantidadTonsProd4").val(), fecha: forma.find("#fecha").val(),
+            cantidadTonsProd4: forma.find("#cantidadTonsProd4").val(),
+            cantidadTonsProd5: forma.find("#cantidadTonsProd5").val(),
+            cantidadTonsProd6: forma.find("#cantidadTonsProd6").val(),
+            fecha: forma.find("#fecha").val(),
             semana: forma.find("#semana").val(), TemporadaDeCosechaID: forma.find("#TemporadaDeCosechaID").val(),
             idProductor: forma.find("#idProductor").val(),
         }

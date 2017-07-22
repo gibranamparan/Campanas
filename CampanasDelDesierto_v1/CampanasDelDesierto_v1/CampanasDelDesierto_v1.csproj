@@ -407,6 +407,22 @@
     <Compile Include="Migrations\201707181955187_addField_FechaApagar_VentaACredito.Designer.cs">
       <DependentUpon>201707181955187_addField_FechaApagar_VentaACredito.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707201947468_addFeilds_VariedadesOrganicas3.cs" />
+    <Compile Include="Migrations\201707201947468_addFeilds_VariedadesOrganicas3.Designer.cs">
+      <DependentUpon>201707201947468_addFeilds_VariedadesOrganicas3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707202044365_addedField_VariedadesOrganicas_RecepcionesProducto.cs" />
+    <Compile Include="Migrations\201707202044365_addedField_VariedadesOrganicas_RecepcionesProducto.Designer.cs">
+      <DependentUpon>201707202044365_addedField_VariedadesOrganicas_RecepcionesProducto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707202120360_addedField_VariedadesOrganicas4.cs" />
+    <Compile Include="Migrations\201707202120360_addedField_VariedadesOrganicas4.Designer.cs">
+      <DependentUpon>201707202120360_addedField_VariedadesOrganicas4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.cs" />
+    <Compile Include="Migrations\201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.Designer.cs">
+      <DependentUpon>201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -663,7 +679,6 @@
     <Content Include="Views\PrestamoYAbonoCapitals\Create.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Details.cshtml" />
     <Content Include="Views\PrestamoYAbonoCapitals\Edit.cshtml" />
-    <Content Include="Views\PagosPorProductos\Index.cshtml" />
     <Content Include="Views\PagosPorProductos\Details.cshtml" />
     <Content Include="Views\PagosPorProductos\Delete.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Delete.cshtml" />
@@ -869,6 +884,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707181955187_addField_FechaApagar_VentaACredito.resx">
       <DependentUpon>201707181955187_addField_FechaApagar_VentaACredito.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707201947468_addFeilds_VariedadesOrganicas3.resx">
+      <DependentUpon>201707201947468_addFeilds_VariedadesOrganicas3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707202044365_addedField_VariedadesOrganicas_RecepcionesProducto.resx">
+      <DependentUpon>201707202044365_addedField_VariedadesOrganicas_RecepcionesProducto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707202120360_addedField_VariedadesOrganicas4.resx">
+      <DependentUpon>201707202120360_addedField_VariedadesOrganicas4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.resx">
+      <DependentUpon>201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

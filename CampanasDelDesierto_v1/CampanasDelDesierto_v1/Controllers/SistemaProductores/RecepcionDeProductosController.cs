@@ -15,7 +15,8 @@ namespace CampanasDelDesierto_v1.Controllers
     public class RecepcionDeProductosController : Controller
     {
         public const string BIND_FIELDS = "numeroRecibo,numProductor,cantidadTonsProd1," +
-            "cantidadTonsProd2,cantidadTonsProd3,cantidadTonsProd4,fecha,semana,TemporadaDeCosechaID,idProductor";
+            "cantidadTonsProd2,cantidadTonsProd3,cantidadTonsProd4,cantidadTonsProd5,cantidadTonsProd6,"+
+            "fecha,semana,TemporadaDeCosechaID,idProductor";
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // POST: RecepcionDeProductos
@@ -83,6 +84,33 @@ namespace CampanasDelDesierto_v1.Controllers
             numReg = db.SaveChanges();
             return RedirectToAction("IngresoProducto","PagosPorProductos", 
                 new { id= idProductor, temporada = TemporadaDeCosechaID });
+        }
+
+        [HttpGet]
+        public ActionResult borrarTodos(int? temporadaID = 0)
+        {
+            if (temporadaID == null || temporadaID == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TemporadaDeCosecha temporadaDeCosecha = db.TemporadaDeCosechas.Find(temporadaID);
+            if (temporadaDeCosecha == null)
+            {
+                return HttpNotFound();
+            }
+
+            //Se buscan todas las recepciones importadas desde excel de la temporada indicada que aun no hayan sido asociadas
+            //con ningun pago.
+            List<RecepcionDeProducto> recepciones = db.RecepcionesDeProducto.Where(rec => rec.TemporadaDeCosechaID == temporadaID)
+                .Where(rec => rec.importadoDesdeExcel).Where(rec => rec.movimientoID == null || rec.movimientoID == 0).ToList();
+            
+            int numRegs = 0;
+            if(recepciones.Count()> 0) { 
+                db.RecepcionesDeProducto.RemoveRange(recepciones);
+                numRegs = db.SaveChanges();
+            }
+
+            return RedirectToAction("Details", "TemporadaDeCosechas", new { id = temporadaID });
         }
 
         protected override void Dispose(bool disposing)

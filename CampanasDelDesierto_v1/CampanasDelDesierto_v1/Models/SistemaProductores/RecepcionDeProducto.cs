@@ -14,11 +14,19 @@ namespace CampanasDelDesierto_v1.Models
     public class RecepcionDeProducto
     {
         public enum ExcelCols {
-            NUM_RECIBO = 0, DIA = 4, SEMANA = 5,
-            NOMBRE_PRODUCTOR = 6, PROD_NOMBRE = 8,
-            TONS_MANZANA = 10, TONS_OBLISSA = 11, TONS_MISION = 12,
-            ROW_COSTOS = 2, PRECIO_PROD1 = 12, PRECIO_PROD2 = 13,
-            PRECIO_PROD3 = 14, PRECIO_PROD_OTRO = 15,
+            //Datos del registro de cosecha
+            NUM_RECIBO = 0, DIA = 7, SEMANA = 8,
+            NUM_PRODUCTOR = 9, PROD_NOMBRE = 11,
+            ROW_COSTOS = 2,
+            //Toneladas de producto
+            TONS_MANZANA = 13, TONS_OBLISA = 14, TONS_MISSION = 15,
+            TONS_MANZANA_ORG = 16, TONS_OBLIZA_ORG = 17, TONS_MISSION_ORG = 18,
+            //Precios
+            PRECIO_PROD_MANZANA = 14, PRECIO_PROD_OBLIZA = 15,
+            PRECIO_PROD_MISSION = 16, PRECIO_PROD_MISSION_BAJA = 17,
+            //Precios Organicos
+            PRECIO_PROD_MANZANA_ORG = 19, PRECIO_PROD_OBLIZA_ORG = 20,
+            PRECIO_PROD_MISSION_ORG = 21, PRECIO_PROD_MISSION_BAJA_ORG = 22
         }
 
         [Key]
@@ -35,21 +43,35 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Nombre de Productor")]
         public string nombreProductor { get; set; }
 
+        //Manzana Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd1 { get; set; }
 
+        //Obliza Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd2 { get; set; }
 
+        //Mission Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd3 { get; set; }
 
-        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (ton.)")]
+        //Manzana Organica
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public double cantidadTonsProd4 { get; set; }
+
+        //Obliza Organica
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5 + " (ton.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}")]
+        public double cantidadTonsProd5 { get; set; }
+
+        //Mission Organica
+        [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6 + " (ton.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}")]
+        public double cantidadTonsProd6 { get; set; }
 
         [Required]
         [DisplayName("Fecha")]
@@ -74,6 +96,26 @@ namespace CampanasDelDesierto_v1.Models
         public int? movimientoID { get; set; }
         public virtual PagoPorProducto pago { get; set;}
 
+        [DisplayName("Importado desde Excel")]
+        public bool importadoDesdeExcel { get; set; }
+
+        public bool pagoYaRegistrado
+        {
+            get
+            {
+                return this.movimientoID != null && this.pago != null;
+            }
+        }
+
+        public bool liquidacionYaEmitada
+        {
+            get
+            {
+                return this.pagoYaRegistrado && this.pago.liquidacionDeCosechaID != null 
+                    && this.pago.liquidacionDeCosecha != null;
+            }
+        }
+
         public RecepcionDeProducto() { }
         /// <summary>
         /// Crea un registro de ingreso de producto basado de la importación de un excel.
@@ -89,26 +131,29 @@ namespace CampanasDelDesierto_v1.Models
                 this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString().Trim());
                 this.fecha = DateTime.Parse(excelRange.ElementAt((int)ExcelCols.DIA).Value.ToString());
                 this.semana = int.Parse(excelRange.ElementAt((int)ExcelCols.SEMANA).Value.ToString());
-                this.numeroRecibo = int.Parse(excelRange.ElementAt((int)ExcelCols.NUM_RECIBO).Value.ToString().Trim());
-                this.numProductor = excelRange.ElementAt((int)ExcelCols.NOMBRE_PRODUCTOR).Value.ToString();
+                this.numProductor = excelRange.ElementAt((int)ExcelCols.NUM_PRODUCTOR).Value.ToString();
                 this.nombreProductor = excelRange.ElementAt((int)ExcelCols.PROD_NOMBRE).Value.ToString().Trim();
                 this.cantidadTonsProd1 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MANZANA).Value.ToString());
-                this.cantidadTonsProd2 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_OBLISSA).Value.ToString());
-                this.cantidadTonsProd3 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MISION).Value.ToString());
+                this.cantidadTonsProd2 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_OBLISA).Value.ToString());
+                this.cantidadTonsProd3 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MISSION).Value.ToString());
+                this.cantidadTonsProd4 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MANZANA_ORG).Value.ToString());
+                this.cantidadTonsProd5 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_OBLIZA_ORG).Value.ToString());
+                this.cantidadTonsProd6 = double.Parse(excelRange.ElementAt((int)ExcelCols.TONS_MISSION_ORG).Value.ToString());
                 this.TemporadaDeCosechaID = temporadaID;
+                this.importadoDesdeExcel = true;
                 error.registro = this;
             }
-            catch (NullReferenceException exc)
+            catch (NullReferenceException exc) //Error con celdas vacias
             {
                 error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
                 error.registro = new RecepcionDeProducto(this);
             }
-            catch (FormatException exc)
+            catch (FormatException exc) //Error con celdas numericas no transformables a numeros
             {
                 error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
                 error.registro = new RecepcionDeProducto(this);
             }
-            catch (Exception exc)
+            catch (Exception exc) //Errores desconocidos
             {
                 error = ExcelTools.ExcelParseError.errorFromException(exc, excelRange);
                 error.registro = new RecepcionDeProducto(this);
@@ -148,24 +193,38 @@ namespace CampanasDelDesierto_v1.Models
                 TemporadaDeCosecha tc = new TemporadaDeCosecha();
 
                 int rowNum = (int)ExcelNums.ROW_COSTOS;
-                int inicio = (int)ExcelNums.PRECIO_PROD1;
-                int fin = (int)ExcelNums.PRECIO_PROD_OTRO;
+                int inicio = (int)ExcelNums.PRECIO_PROD_MANZANA;
+                int fin = (int)ExcelNums.PRECIO_PROD_MISSION_ORG;
                 var rowNombre = workSheet.Cells[rowNum-1, inicio, rowNum-1, fin];
                 var rowCostos = workSheet.Cells[rowNum, inicio, rowNum, fin];
 
                 try { 
-                    VMCostosDeProducto p1 = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
-                        (int)ExcelNums.PRECIO_PROD1, rowNum, (int)ExcelNums.PRECIO_PROD1]);
-                    VMCostosDeProducto p2 = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
-                        (int)ExcelNums.PRECIO_PROD2, rowNum, (int)ExcelNums.PRECIO_PROD2]);
-                    VMCostosDeProducto p3 = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
-                        (int)ExcelNums.PRECIO_PROD3, rowNum, (int)ExcelNums.PRECIO_PROD3]);
-                    VMCostosDeProducto p4 = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
-                        (int)ExcelNums.PRECIO_PROD_OTRO, rowNum, (int)ExcelNums.PRECIO_PROD_OTRO]);
-                    tc.precioProducto1 = p1.costo;
-                    tc.precioProducto2 = p2.costo;
-                    tc.precioProducto3 = p3.costo;
-                }catch(Exception exc)
+                    VMCostosDeProducto pManzana = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MANZANA, rowNum, (int)ExcelNums.PRECIO_PROD_MANZANA]);
+                    VMCostosDeProducto pObliza = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_OBLIZA, rowNum, (int)ExcelNums.PRECIO_PROD_OBLIZA]);
+                    VMCostosDeProducto pMission = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MISSION, rowNum, (int)ExcelNums.PRECIO_PROD_MISSION]);
+                    VMCostosDeProducto pMissionBaja = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MISSION_BAJA, rowNum, (int)ExcelNums.PRECIO_PROD_MISSION_BAJA]);
+                    VMCostosDeProducto pManzanaOrg = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MANZANA_ORG, rowNum, (int)ExcelNums.PRECIO_PROD_MANZANA_ORG]);
+                    VMCostosDeProducto pOblizaOrg = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_OBLIZA_ORG, rowNum, (int)ExcelNums.PRECIO_PROD_OBLIZA_ORG]);
+                    VMCostosDeProducto pMissionOrg = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MISSION_ORG, rowNum, (int)ExcelNums.PRECIO_PROD_MISSION_ORG]);
+                    VMCostosDeProducto pMissionOrgBaja = new VMCostosDeProducto(workSheet.Cells[rowNum - 1,
+                        (int)ExcelNums.PRECIO_PROD_MISSION_BAJA_ORG, rowNum, (int)ExcelNums.PRECIO_PROD_MISSION_BAJA_ORG]);
+                    tc.precioProducto1 = pManzana.costo; //manzana
+                    tc.precioProducto2 = pObliza.costo; //obliza
+                    tc.precioProducto3 = pMission.costo; //mission
+                    tc.precioProducto6 = pMissionBaja.costo; //mission baja
+                    tc.precioProducto7 = pManzanaOrg.costo; //manzana organica
+                    tc.precioProducto9 = pOblizaOrg.costo; //obliza organica
+                    tc.precioProducto11 = pMissionOrg.costo; //mission organica
+                    tc.precioProducto12 = pMissionOrgBaja.costo; //mission baja organica
+                }
+                catch(Exception exc)
                 {
                     error.errorMsg = "Se presentaron problemas al tomar los costos del producto";
                     error.errorDetails = exc.Message;
@@ -235,6 +294,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:0.000}")]
             public double cantidadTonsProd3 { get; set; }
 
+            [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (ton.)")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            public double cantidadTonsProd4 { get; set; }
+
             [DisplayName("Fecha")]
             [DataType(DataType.Date)]
             [DisplayFormat(DataFormatString = "yyyy-MM-dd",
@@ -251,6 +314,7 @@ namespace CampanasDelDesierto_v1.Models
                 this.cantidadTonsProd1 = rdp.cantidadTonsProd1;
                 this.cantidadTonsProd2 = rdp.cantidadTonsProd2;
                 this.cantidadTonsProd3 = rdp.cantidadTonsProd3;
+                this.cantidadTonsProd4 = rdp.cantidadTonsProd4;
                 this.fecha = rdp.fecha;
                 this.semana = rdp.semana;
             }

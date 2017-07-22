@@ -1,4 +1,5 @@
-﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
     bool editMode = Model.TemporadaDeCosechaID > 0;
@@ -43,7 +44,7 @@
             <legend>Precio por tonelada</legend>
             @*MANZANITAS*@
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto1</label>
+                @Html.LabelFor(model=>model.precioProducto1, new { @class= "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto1, new
                {
@@ -53,13 +54,13 @@
                        data_mask = "###0.00",
                        data_mask_reverse = "true"
                    }
-               })
+                })
                     @Html.ValidationMessageFor(model => model.precioProducto1, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto4</label>
+                @Html.LabelFor(model => model.precioProducto4, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto4, new
                {
@@ -76,7 +77,7 @@
 
             @*OBLIZAS*@
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto2</label>
+                @Html.LabelFor(model => model.precioProducto2, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto2, new
                {
@@ -92,7 +93,7 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto5</label>
+                @Html.LabelFor(model => model.precioProducto5, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto5, new
                {
@@ -109,7 +110,7 @@
 
             @*MISIONES*@
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto3</label>
+                @Html.LabelFor(model => model.precioProducto3, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto3, new
                {
@@ -125,7 +126,7 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto6</label>
+                @Html.LabelFor(model => model.precioProducto6, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto6, new
                {
@@ -140,8 +141,9 @@
                 </div>
             </div>
 
+            @*MANZANA ORGANICA CABORCA*@
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto7</label>
+                @Html.LabelFor(model => model.precioProducto7, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto7, new
                {
@@ -156,8 +158,9 @@
                 </div>
             </div>
 
+            @*MANZANA ORGANICA BAJA*@
             <div class="form-group col-md-6">
-                <label class="control-label col-md-2">@Model.tipoProducto8</label>
+                @Html.LabelFor(model => model.precioProducto8, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.precioProducto8, new
                {
@@ -169,6 +172,74 @@
                    }
                })
                     @Html.ValidationMessageFor(model => model.precioProducto8, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            @*OBLIZA ORGANICA CABORCA*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioProducto9, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto9, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto9, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            @*OBLIZA ORGANICA BAJA*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioProducto10, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto10, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto10, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*MISSION ORGANICA CABORCA*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioProducto11, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto11, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto11, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*MISSION ORGANICA BAJA*@
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.precioProducto12, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.precioProducto12, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       data_mask = "###0.00",
+                       data_mask_reverse = "true"
+                   }
+               })
+                    @Html.ValidationMessageFor(model => model.precioProducto12, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>

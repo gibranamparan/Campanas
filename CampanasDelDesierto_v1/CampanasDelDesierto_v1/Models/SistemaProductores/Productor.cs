@@ -704,10 +704,14 @@ namespace CampanasDelDesierto_v1.Models
             total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
             total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
             total.pagoProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto4);
+            total.pagoProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto5);
+            total.pagoProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto6);
             total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
             total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
             total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
             total.cantidadProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto4);
+            total.cantidadProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto5);
+            total.cantidadProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto6);
             //Se presenta la informacion en una lista de 3 tipos de productos con su correspondiente cantidad, precio y nombre
             List<VMTipoProducto> totalesProducto = new List<VMTipoProducto>();
             totalesProducto.Add(new VMTipoProducto
@@ -733,6 +737,18 @@ namespace CampanasDelDesierto_v1.Models
                 producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO4,
                 precio = total.pagoProducto4,
                 cantidad = total.cantidadProducto4
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO5,
+                precio = total.pagoProducto5,
+                cantidad = total.cantidadProducto5
+            });
+            totalesProducto.Add(new VMTipoProducto
+            {
+                producto = TemporadaDeCosecha.TiposDeProducto.PRODUCTO6,
+                precio = total.pagoProducto6,
+                cantidad = total.cantidadProducto6
             });
 
             return totalesProducto;

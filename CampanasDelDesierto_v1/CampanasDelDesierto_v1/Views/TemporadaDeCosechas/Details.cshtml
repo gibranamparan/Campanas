@@ -3,22 +3,37 @@
 @model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
-    ExcelTools.ExcelParseError errorPrecios = ViewBag.errorPrecios;
+        ViewBag.Title = "Importación de Recibos por Temporada";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
+        ExcelTools.ExcelParseError errorPrecios = ViewBag.errorPrecios;
 
-    string errorMsgPrimario = "";
-    string erroresModalID = "";
-    if (erroresExcel != null && erroresExcel.Count()>0) {
-        errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
-            + " Revise la tabla de errores de importación en la parte inferior.";
+        string errorMsgPrimario = "";
+        string erroresModalID = "";
+        if (erroresExcel != null && erroresExcel.Count()>0) {
+            errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+                + " Revise la tabla de errores de importación en la parte inferior.";
+        }
+        if (errorPrecios != null && errorPrecios.isError)
+        {
+            errorMsgPrimario = errorPrecios+"<br>" + errorMsgPrimario;
+        }
+
+        VMConfirmModalAttributes modalOptsEliminarTodos = new VMConfirmModalAttributes
+        {
+            modalTitle = "Eliminar Todos los Registros",
+            callType = VMConfirmModalAttributes.CallType.POSTBACK,
+            modalID = "mdlDeleteRecepcion",
+            action = "borrarTodos",
+            controller = "RecepcionDeProductos",
+            routeVals= new { temporadaID = Model.TemporadaDeCosechaID },
+            primaryMessage = "Al confirmar este mensaje, confirma que desea eliminar todos los registros importados"+
+            " por Excel que no han sido registrados como pagados.",
+            modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
+            size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.SMALL),
+        };
     }
-    if (errorPrecios != null && errorPrecios.isError)
-    {
-        errorMsgPrimario = errorPrecios+"<br>" + errorMsgPrimario;
-    }
-}
+    @Html.Partial("Partial_ConfirmationModal", modalOptsEliminarTodos)
 <p>
     <a href="@Url.Action("Index")">
         <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
@@ -31,16 +46,20 @@
     <div class="panel-body">
         <div class="form-inline">
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto1: </label>
+                @Html.LabelFor(model => model.precioProducto1)
                 @Html.DisplayFor(model => model.precioProducto1)
             </div>
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto2: </label>
+                @Html.LabelFor(model => model.precioProducto2)
                 @Html.DisplayFor(model => model.precioProducto2)
             </div>
             <div class="form-group col-md-3">
-                <label>@Model.tipoProducto3: </label>
+                @Html.LabelFor(model => model.precioProducto3)
                 @Html.DisplayFor(model => model.precioProducto3)
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.precioProducto4)
+                @Html.DisplayFor(model => model.precioProducto4)
             </div>
         </div>
         <a href="@Url.Action("Edit", new { id = Model.TemporadaDeCosechaID })">
@@ -49,22 +68,39 @@
     </div>
 </div>
 @using (Html.BeginForm(null, null, FormMethod.Post,
-                new { enctype = "multipart/form-data", @class = "form-inline" }))
+                            new { id="frmImportExcel", enctype = "multipart/form-data", @class = "form-inline" }))
 {
-    @Html.ValidationSummary()
+    <div class="">
+        @Html.ValidationSummary()
+    </div>
     <div class="row">
+        @*Controles para la importacion*@
         <div class="col-md-12">
+            @*Control para subir archivo*@
             <label for="xlsFile">Archivo Excel</label>
             <input id="xlsFile" name="xlsFile" type="file" class="form-control"
                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-            <button class="btn btn-success">
+
+            @*Boton para confirmar la subida del archivo*@
+            <button id="btnUpload" class="btn btn-success" disabled>
                 <i class="fa fa-upload"></i> Subir
             </button>
+
+            @*Boton para desplegar instrucciones*@
             <i class="fa fa-question-circle helpIcon"
                onclick="$('#msgAyudaImportacion').slideToggle();
                     $(this).toggleClass('clicked')"
                style="cursor: pointer"></i>
+            <img id="imgLoading" src="~/images/loading.gif" style="display:none; width: 2.5em" />
+
+            @*Boton para eliminar todas las importaciones de excel*@
+            @if(Model.recepcionesDeProducto == null || Model.recepcionesDeProducto.Count() > 0) { 
+                <a data-toggle="modal" data-target="#@modalOptsEliminarTodos.modalID" 
+                   class="btn btn-danger pull-right"
+                   >Eliminar Todos</a>
+            }
         </div>
+        @*Instrucciones de importacion*@
         <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
             Para importar la información de los productores, cargue en la aplicación el archivo Excel
             de <strong>"Acumulados de recepción de Aceituna"</strong> correspondiente a esta temporada.
@@ -97,6 +133,7 @@
         <h3 class="panel-title">Ingreso de producto (Importado de Excel)</h3>
     </div>
     <div class="panel-body">
+        @if(Model.recepcionesDeProducto!=null && Model.recepcionesDeProducto.Where(rec => rec.importadoDesdeExcel).Count() > 0) { 
         <table class="table table-hover table-striped datatablejs">
             <thead>
                 <tr>
@@ -124,10 +161,20 @@
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd3)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd4)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd5)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd6)
+                    </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var recepcion in Model.recepcionesDeProducto)
+                @foreach (var recepcion in Model.recepcionesDeProducto.Where(rec=>rec.importadoDesdeExcel))
                 {
                     <tr>
                         <td>
@@ -155,10 +202,50 @@
                         <td>
                             @Html.DisplayFor(model => recepcion.cantidadTonsProd3)
                         </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd4)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd5)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => recepcion.cantidadTonsProd6)
+                        </td>
+                        <td>
+                            @if(recepcion.liquidacionYaEmitada || recepcion.pagoYaRegistrado) { 
+                            <div class="dropdown_actions">
+                                <button onclick="openActionsDropDown(this)"
+                                        class="dropbtn btn btn-default">
+                                    <i class="glyphicon glyphicon-option-horizontal"></i>
+                                </button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    @if (recepcion.pagoYaRegistrado)
+                                    {
+                                        <a target="_blank"
+                                           href="@Url.Action("Details", "MovimientoFinancieros", new { id = recepcion.pago.idMovimiento })">
+                                            Registro de Cosecha</a>
+                                    }
+
+                                    @if (recepcion.liquidacionYaEmitada)
+                                    {
+                                        <a target="_blank"
+                                           href="@Url.Action("Details", "MovimientoFinancieros", new { id = recepcion.pago.liquidacionDeCosechaID })">
+                                            Registro de Liquidación</a>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
+        }else
+        {
+            <div class="alert alert-warning">
+                No se han importado desde excel registros para esta temporada.
+            </div>
+        }
     </div>
 </div>
 
@@ -179,4 +266,16 @@
             $('@("#"+ erroresModalID)').modal();
         </script>
     }
+    <script>
+        $('#xlsFile').change(function () {
+            if(this.files.length)
+                $('#btnUpload').prop('disabled',false)
+            else
+                $('#btnUpload').prop('disabled', true)
+        })
+        $('#frmImportExcel').submit(function(){
+            $('#imgLoading').fadeIn();
+            $('#btnUpload').prop('disabled', true)
+        })
+    </script>
 }

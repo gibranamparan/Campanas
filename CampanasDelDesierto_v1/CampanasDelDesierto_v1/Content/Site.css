@@ -273,6 +273,10 @@ tr:hover.pagado{
     background-color: #858585 !important;
 }
 
+.validation-summary-errors {
+    color: red;
+}
+
 @media print{
     #main > .inner {
         padding: 0;

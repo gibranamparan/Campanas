@@ -32,6 +32,12 @@
 
                 <footer  class="hidden-print">
                     <p>&copy; @DateTime.Now.Year - Campanas del Desierto</p>
+                    <p style="font-size: .8em">
+                        Developed by
+                        <a target="_blank" href="http://www.netcodesolutions.net/">
+                            <span class="icon-netcode"><span class="path1"></span><span class="path2"></span></span> Netcode
+                        </a>
+                    </p>
                 </footer>
             </div>
         </div>
@@ -43,13 +49,7 @@
                 <nav id="menu">
                     <header class="major">                        
                         <img src="~/images/LogoCamp.png" alt="Campanas Del Desierto" class="img-responsive">
-                    </header>
-                   <!--< <header class="major">
-                        <ul>
-                            
-                        </ul>
-                    </header>-->
-                    
+                    </header>                    
                     @if (User.IsInRole(ApplicationUser.RoleNames.ADMIN))
                     {
                         <h5><strong>SISTEMA DE PRODUCTORES</strong></h5>

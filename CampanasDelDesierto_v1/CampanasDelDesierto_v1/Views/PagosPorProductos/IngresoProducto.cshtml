@@ -28,7 +28,7 @@
 
     /*Modelo para la forma de creacion de nueva recepcion*/
     RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
-        TemporadaDeCosechaID = Model.TemporadaDeCosechaID, numProductor = productor.numProductor };
+        TemporadaDeCosechaID = Model.TemporadaDeCosechaID, numProductor = productor.numProductor, nombreProductor = productor.nombreProductor };
     ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
     string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
     vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
@@ -78,6 +78,7 @@
             style="cursor:pointer">
     </i>
 </h4>
+@*Panel de instrucciones*@
 <div id="msgAcumuladoRecepcion" class="alert alert-info" style="display:none">
     En esta tabla se muestran los <strong>registros de recepción de aceituna</strong> que no han sido asociados a un pago.
     <ul>
@@ -98,6 +99,7 @@
 </div>
 
 @if(!editMode){ 
+    @*Modal de confirmacion de eliminacion de ingreso de producto*@
 <div>
     <button class="btn btn-info" data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
     <button id="btnEliminarRecepciones" class="btn btn-danger"
@@ -120,6 +122,7 @@
        new TemporadaDeCosecha.VMPreciosProductos(Model.temporadaDeCosecha,productor.zona), vddDetailsTemporada)
     </div>
 
+    @*Forma de alta de ingreso de producto*@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <strong style="color: white">@(editMode ? "Edición" : "Creación")</strong><span> de Registro Ingreso de Producto</span>
@@ -287,7 +290,6 @@
                             @Html.ValidationMessageFor(model => model.cantidadProducto4, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                     <div class="form-group col-md-6">
                         @Html.LabelFor(model => model.pagoProducto4, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
@@ -304,15 +306,94 @@
                             @Html.ValidationMessageFor(model => model.pagoProducto4, "", new { @class = "text-danger" })
                         </div>
                     </div>
+
+                    @***PRODUCTO 5***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto5, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto5, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto5, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto5, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto5, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto5, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @***PRODUCTO 6***@
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.cantidadProducto6, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.cantidadProducto6, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.000",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.cantidadProducto6, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.pagoProducto6, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.pagoProducto6, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask = "###0.00",
+                               data_mask_reverse = "true",
+                               @readonly = "readonly"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.pagoProducto6, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </fieldset>
                 <div class="form-group col-md-12">
                     <div class="col-md-10">
-                        <button class="btn btn-success" id="btnRegistrar" @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>
-                            @(editMode?"Guardar" : "Registrar")
+                        @if (!editMode && Model.yaLiquidado) { 
+                        <button class="btn btn-success" id="btnRegistrar"
+                                @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>
+                            @(editMode ? "Guardar" : "Registrar")
                         </button>
+                        }
                         <button class="btn btn-info" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
                         <button class="btn btn-info" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
                     </div>
+                    @if (editMode && Model.yaLiquidado)
+                    {
+                        <div class="col-md-12 alert alert-danger" style="margin-top: .5em">
+                            Este ingreso de producto no es editable debido a que ya se ha registrado dentro de una
+                            <a href="@Url.Action("ReporteLiquidacionSemanal","LiquidacionSemanal",new { id = Model.liquidacionDeCosechaID })">liquidacion semanal</a>.
+                            Si desea modificar este registro, necesita cancelar la liquidacion semanal.
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -324,7 +405,7 @@
     var selectedIngresosIDs = new Array();
 
     @*Enumeracion de cada columna del datatable*@
-    var COLS_ENUM = Object.freeze({ID:1, PROD1: 3, PROD2: 4, PROD3: 5, PROD4: 6, SEMANA:8})
+    var COLS_ENUM = Object.freeze({ID:1, PROD1: 5, PROD2: 6, PROD3: 7, PROD4: 8, PROD5: 9, PROD6: 10, SEMANA:4})
 
     @*Definicion de la tabla*@
     var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable({
@@ -363,32 +444,42 @@
         selectedIngresosIDs = new Array();
         var selectedRows = tblIngresoAcumulado.rows({selected:true});
         var data = selectedRows.data();
-        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, totalCant4 = 0, montoNeto = 0;
+        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, totalCant4 = 0, 
+            totalCant5 = 0, totalCant6 = 0, montoNeto = 0;
 
         @*Se toman los costos por tipo de producto marcado para esta temporada*@
-        var precioProducto1 = $(selectorInputsPrecios+"Manzanita").val();
-        var precioProducto2 = $(selectorInputsPrecios+"Obliza").val();
-        var precioProducto3 = $(selectorInputsPrecios+"Mission").val();
-        var precioProducto4 = $(selectorInputsPrecios+"ManzanitaOrg").val();
+        var precioProducto1 = Number($(selectorInputsPrecios+"Manzanita").val());
+        var precioProducto2 = Number($(selectorInputsPrecios+"Obliza").val());
+        var precioProducto3 = Number($(selectorInputsPrecios+"Mission").val());
+        var precioProducto4 = Number($(selectorInputsPrecios+"ManzanitaOrg").val());
+        var precioProducto5 = Number($(selectorInputsPrecios+"OblizaOrg").val());
+        var precioProducto6 = Number($(selectorInputsPrecios+"MissionOrg").val());
 
         for(var c=0;c<data.length;c++){
             totalCant1 += Number(data[c][COLS_ENUM.PROD1]);
             totalCant2 += Number(data[c][COLS_ENUM.PROD2]);
             totalCant3 += Number(data[c][COLS_ENUM.PROD3]);
             totalCant4 += Number(data[c][COLS_ENUM.PROD4]);
+            totalCant5 += Number(data[c][COLS_ENUM.PROD5]);
+            totalCant6 += Number(data[c][COLS_ENUM.PROD6]);
             selectedIngresosIDs.push(Number(data[c][COLS_ENUM.ID]));
         }
         var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, 
-            pp3 = totalCant3*precioProducto3, pp4 = totalCant4*precioProducto4;
+            pp3 = totalCant3*precioProducto3, pp4 = totalCant4*precioProducto4,
+            pp5 = totalCant5*precioProducto5, pp6 = totalCant6*precioProducto6;
         $("#cantidadProducto1").val(numeral(totalCant1).format('0.000')).trigger('input');
         $("#cantidadProducto2").val(numeral(totalCant2).format('0.000')).trigger('input');
         $("#cantidadProducto3").val(numeral(totalCant3).format('0.000')).trigger('input');
         $("#cantidadProducto4").val(numeral(totalCant4).format('0.000')).trigger('input');
+        $("#cantidadProducto5").val(numeral(totalCant5).format('0.000')).trigger('input');
+        $("#cantidadProducto6").val(numeral(totalCant6).format('0.000')).trigger('input');
         $("#pagoProducto1").val(numeral(pp1).format('0.00')).trigger('input');
         $("#pagoProducto2").val(numeral(pp2).format('0.00')).trigger('input');
         $("#pagoProducto3").val(numeral(pp3).format('0.00')).trigger('input');
         $("#pagoProducto4").val(numeral(pp4).format('0.00')).trigger('input');
-        $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3 + pp4).format('0.00')).trigger('input');
+        $("#pagoProducto5").val(numeral(pp5).format('0.00')).trigger('input');
+        $("#pagoProducto6").val(numeral(pp6).format('0.00')).trigger('input');
+        $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3 + pp4+ pp5 + pp6).format('0.00')).trigger('input');
 
         $("#btnRegistrar").attr('disabled', data.length == 0)
         $("#btnEliminarRecepciones").attr('disabled', data.length == 0)

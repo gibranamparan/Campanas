@@ -30,9 +30,19 @@ namespace CampanasDelDesierto_v1.Models
         public double cantidadProducto3 { get; set; }
 
         /*CANTIDAD MANZANITA ORG*/
-        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (tons.)")]
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (tons.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
         public double cantidadProducto4 { get; set; }
+
+        /*CANTIDAD OBLIZA ORG*/
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO5 + " (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
+        public double cantidadProducto5 { get; set; }
+
+        /*CANTIDAD MISSION ORG*/
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO6 + " (tons.)")]
+        [DisplayFormat(DataFormatString = "{0:0.000}", ApplyFormatInEditMode = true)]
+        public double cantidadProducto6 { get; set; }
 
         /*PAGO MANZANITA*/
         [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (USD)")]
@@ -50,14 +60,28 @@ namespace CampanasDelDesierto_v1.Models
         public decimal pagoProducto3 { get; set; }
 
         /*PAGO MANZANITA ORG*/
-        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " ORGANICA (USD)")]
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (USD)")]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal pagoProducto4 { get; set; }
+
+        /*PAGO OBLIZA ORG*/
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO5 + " (USD)")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto5 { get; set; }
+
+        /*PAGO MISSION ORG*/
+        [Display(Name = TemporadaDeCosecha.TiposDeProducto.PRODUCTO6 + " (USD)")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal pagoProducto6 { get; set; }
 
         [DisplayName("Semana")]
         [Range(1,53)] //Rango de semanas en 1 año
         [Required]
         public int semana { get; set; }
+
+        public bool yaLiquidado { get {
+                return this.liquidacionDeCosechaID != null && this.liquidacionDeCosechaID != 0;
+            } }
 
         public new string concepto { get {
                 string res = "SEMANA: " + this.semana;

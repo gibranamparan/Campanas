@@ -23,6 +23,12 @@
                 @Html.DisplayNameFor(model => model.numeroRecibo)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.semana)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.cantidadTonsProd1)
             </th>
             <th>
@@ -35,10 +41,10 @@
                 @Html.DisplayNameFor(model => model.cantidadTonsProd4)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.fecha)
+                @Html.DisplayNameFor(model => model.cantidadTonsProd5)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.semana)
+                @Html.DisplayNameFor(model => model.cantidadTonsProd6)
             </th>
         </tr>
     </thead>
@@ -62,6 +68,12 @@
                     @Html.DisplayFor(modelItem => item.numeroRecibo)
                 </td>
                 <td>
+                    @item.fecha.ToShortDateString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.semana)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.cantidadTonsProd1)
                 </td>
                 <td>
@@ -74,10 +86,10 @@
                     @Html.DisplayFor(modelItem => item.cantidadTonsProd4)
                 </td>
                 <td>
-                    @item.fecha.ToShortDateString()
+                    @Html.DisplayFor(modelItem => item.cantidadTonsProd5)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.semana)
+                    @Html.DisplayFor(modelItem => item.cantidadTonsProd6)
                 </td>
             </tr>
         }

@@ -11,7 +11,7 @@
 <a href="@Url.Action("Create")">
     <i class="fa fa-plus-circle"></i> Abrir nueva temporada
 </a>
-<table class="table table-hover table-striped">
+<table class="table table-responsive table-hover table-striped">
     <thead>
         <tr>
             <th>
@@ -34,6 +34,24 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.precioProducto6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto7)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto8)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto9)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto10)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto11)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precioProducto12)
             </th>
             <th></th>
         </tr>
@@ -64,15 +82,43 @@
                     @Html.DisplayFor(modelItem => item.precioProducto6)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto7)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto8)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto9)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto10)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto11)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioProducto12)
+                </td>
+                <td>
                     <a href="@Url.Action("Edit", new { id = item.TemporadaDeCosechaID })">
-                        <i class="fa fa-pencil"></i> Editar
+                        <i class="fa fa-pencil"></i>Editar
                     </a> <br />
                     <a href="@Url.Action("Details", new { id = item.TemporadaDeCosechaID })">
-                        <i class="fa fa-file-excel-o"></i> Importar Datos
+                        <i class="fa fa-file-excel-o"></i>Importar Cosechas
                     </a> <br />
-                    <a href="@Url.Action("AdeudosRecuperacion","ReportesProductores", new { id = item.TemporadaDeCosechaID })">
-                        <i class="fa fa-list"></i> Adeudos y Recuperacion
-                    </a>
+                    <div class="dropdown_actions">
+                        <a href="#" onclick="openActionsDropDown(this)">
+                            <i class="fa fa-list"></i>Reportes
+                        </a>
+                        <div id="myDropdown" class="dropdown-content">
+                            <a href="@Url.Action("AdeudosRecuperacion","ReportesProductores", new { id = item.TemporadaDeCosechaID })">
+                                Adeudos y Recuperacion
+                            </a>
+                            <a href="@Url.Action("AdeudosRecuperacionDetallado","ReportesProductores", new { id = item.TemporadaDeCosechaID })">
+                                Adeudos y Recuperacion Detallado
+                            </a>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }

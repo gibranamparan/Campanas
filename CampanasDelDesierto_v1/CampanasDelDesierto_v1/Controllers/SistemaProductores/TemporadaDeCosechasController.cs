@@ -18,7 +18,7 @@ namespace CampanasDelDesierto_v1.Controllers
     {
         private const string BIND_FIELDS = "TemporadaDeCosechaID,fechaInicio,fechaFin,precioProducto1," +
             "precioProducto2,precioProducto3,precioProducto4,precioProducto5,precioProducto6,"+
-            "precioProducto7,precioProducto8";
+            "precioProducto7,precioProducto8,precioProducto9,precioProducto10,precioProducto11,precioProducto12";
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TemporadaDeCosechas

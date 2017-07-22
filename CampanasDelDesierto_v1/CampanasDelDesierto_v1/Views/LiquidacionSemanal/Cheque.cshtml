@@ -24,10 +24,10 @@
             @Html.DisplayFor(model => model.Productor.nombreCheque)
         </span>
         <span id="montoMovimiento">   
-        @Html.DisplayFor(model => model.montoMovimiento) @currency
+        @Html.DisplayFor(model => model.montoMovimiento)
         </span>
         <span id="montoLetra">
-            <a>Son:</a>  @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
+            <a>Son:</a>  @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency).Replace(",","")) U.S.Cy.
         </span>
         <span id="fechaMovimiento">
             @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -37,7 +37,7 @@
     </span>*@
             <span id="concepto">
                <a>Productor: </a>@Html.DisplayFor(model => model.Productor.numProductor)<br />
-                <a>Semana: </a>@( "No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX")) + " al "+ Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy", CultureInfo.CreateSpecificCulture("es-MX")).Substring(1))
+                <a>Semana: </a>@( "No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX")) + " al "+ Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy", CultureInfo.CreateSpecificCulture("es-MX")))
                  </span>
         </div>
 
