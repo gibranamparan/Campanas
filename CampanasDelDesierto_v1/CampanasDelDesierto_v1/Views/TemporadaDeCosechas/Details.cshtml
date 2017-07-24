@@ -3,37 +3,64 @@
 @model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
 
 @{
-        ViewBag.Title = "Importación de Recibos por Temporada";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-        List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
-        ExcelTools.ExcelParseError errorPrecios = ViewBag.errorPrecios;
+    ViewBag.Title = "Importación de Recibos por Temporada";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
+    ExcelTools.ExcelParseError errorPrecios = ViewBag.errorPrecios;
 
-        string errorMsgPrimario = "";
-        string erroresModalID = "";
-        if (erroresExcel != null && erroresExcel.Count()>0) {
-            errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
-                + " Revise la tabla de errores de importación en la parte inferior.";
-        }
-        if (errorPrecios != null && errorPrecios.isError)
-        {
-            errorMsgPrimario = errorPrecios+"<br>" + errorMsgPrimario;
-        }
-
-        VMConfirmModalAttributes modalOptsEliminarTodos = new VMConfirmModalAttributes
-        {
-            modalTitle = "Eliminar Todos los Registros",
-            callType = VMConfirmModalAttributes.CallType.POSTBACK,
-            modalID = "mdlDeleteRecepcion",
-            action = "borrarTodos",
-            controller = "RecepcionDeProductos",
-            routeVals= new { temporadaID = Model.TemporadaDeCosechaID },
-            primaryMessage = "Al confirmar este mensaje, confirma que desea eliminar todos los registros importados"+
-            " por Excel que no han sido registrados como pagados.",
-            modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
-            size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.SMALL),
-        };
+    string errorMsgPrimario = "";
+    string erroresModalID = "";
+    if (erroresExcel != null && erroresExcel.Count()>0) {
+        errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+            + " Revise la tabla de errores de importación en la parte inferior.";
     }
-    @Html.Partial("Partial_ConfirmationModal", modalOptsEliminarTodos)
+    if (errorPrecios != null && errorPrecios.isError)
+    {
+        errorMsgPrimario = errorPrecios+"<br>" + errorMsgPrimario;
+    }
+    /*Modelo para la forma de creacion de nueva recepcion*/
+    RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto
+    {
+        TemporadaDeCosechaID = Model.TemporadaDeCosechaID,
+    };
+    ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
+    string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
+    string functionBindData = "functionBindData";
+    var selListProductores = ViewBag.productores;
+    vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
+    vddPartialCreacion.Add("functionBindData", functionBindData);
+    vddPartialCreacion.Add("selListProductores", selListProductores);
+
+    VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
+    {
+        modalTitle = "Nuevo Registro de Recepcion de Producto",
+        action = "create",
+        controller = "RecepcionDeProductos",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalID = "mdlCreateRecepcion",
+        primaryMessage = "Rellena la forma para crear ingresar manualmente un nuevo registro de recepcion de producto",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.INFO),
+        size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.LARGE),
+        partialViewURL = "../RecepcionDeProductos/Partial_CreateRecepcionProducto",
+        modelForPartial = nuevaRecepcion,
+        datosDeVista = vddPartialCreacion
+    };
+
+    VMConfirmModalAttributes modalOptsEliminarRecepcion = new VMConfirmModalAttributes
+    {
+        modalTitle = "Eliminar Registros Seleccionados",
+        callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
+        modalID = "mdlDeleteRecepcion",
+        primaryMessage = "Al confirmar este mensaje, confirma que desea eliminar todos los registros seleccionados"+
+        " importados desde Excel que no aún no han sido registrados como pagados.",
+        modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.DANGER),
+        size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.SMALL),
+        partialViewURL = "../RecepcionDeProductos/Partial_ConfirmEliminarProductos",
+        modelForPartial = nuevaRecepcion,
+    };
+}
+@Html.Partial("Partial_ConfirmationModal", modalOptsnuevaRecepcion) @*Modal para nuevo registro de producto*@
+@Html.Partial("Partial_ConfirmationModal", modalOptsEliminarRecepcion) @*Modal para confirmacion de eliminacion de ingreso de producto*@
 <p>
     <a href="@Url.Action("Index")">
         <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
@@ -88,17 +115,11 @@
 
             @*Boton para desplegar instrucciones*@
             <i class="fa fa-question-circle helpIcon"
-               onclick="$('#msgAyudaImportacion').slideToggle();
-                    $(this).toggleClass('clicked')"
+               onclick="$('#msgAyudaImportacion').slideToggle(); $(this).toggleClass('clicked')"
                style="cursor: pointer"></i>
             <img id="imgLoading" src="~/images/loading.gif" style="display:none; width: 2.5em" />
 
-            @*Boton para eliminar todas las importaciones de excel*@
-            @if(Model.recepcionesDeProducto == null || Model.recepcionesDeProducto.Count() > 0) { 
-                <a data-toggle="modal" data-target="#@modalOptsEliminarTodos.modalID" 
-                   class="btn btn-danger pull-right"
-                   >Eliminar Todos</a>
-            }
+            
         </div>
         @*Instrucciones de importacion*@
         <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
@@ -115,42 +136,68 @@
             que marque el archivo Excel.
             <ul>
                 <li>
-                    <strong>En caso de encontrarlo</strong>, modificará la información almacenada
-                    en la base de datos por la informacion del registro Excel.
+                    @*<strong>En caso de encontrarlo</strong>, modificará la información almacenada
+                    en la base de datos por la informacion del registro Excel.*@
+                    <strong>En caso de encontrarlo</strong>, ignorará el registro.
                 </li>
                 <li>
                     <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de ingreso
                     de producto con las datos del archivo Excel.
                 </li>
+                <li>En caso de haber cometido un erro de captura, 
+                utilice las opciones de borrado y de edicion para hacer correcciones a los datos importados.</li>
             </ul>
         </div>
     </div>
 }
-<br />
+
+@*Modal de confirmacion de eliminacion de ingreso de producto*@
+<div style="margin: .5em 0">
+
+    @if (Model.recepcionesDeProducto != null && Model.recepcionesDeProducto.Count() > 0)
+    {
+        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson())"
+                data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID"
+                disabled>
+            Editar
+        </button>
+
+        <button class="btn btn-info" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
+        <button class="btn btn-info" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
+        <button id="btnEliminarRecepciones" class="btn btn-danger"
+                data-toggle="modal" data-target="#@modalOptsEliminarRecepcion.modalID"
+                disabled>
+            Eliminar
+        </button>
+    }
+</div>
+
 @*Panel que muestra la recepcion ingresada en el excel*@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Ingreso de producto (Importado de Excel)</h3>
     </div>
     <div class="panel-body">
-        @if(Model.recepcionesDeProducto!=null && Model.recepcionesDeProducto.Where(rec => rec.importadoDesdeExcel).Count() > 0) { 
-        <table class="table table-hover table-striped datatablejs">
+        @if (Model.recepcionesDeProducto!=null && Model.recepcionesDeProducto.Where(rec => rec.importadoDesdeExcel).Count() > 0) {
+        <table id="tblRecibosCosechaImportados" class="table table-hover table-striped">
             <thead>
                 <tr>
+                    <th></th>
+                    <th></th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().numeroRecibo)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().numProductor)
                     </th>
+                    <th style="width: 15em">
+                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().nombreProductor)
+                    </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().fecha)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().semana)
-                    </th>
-                    <th width="20%">
-                        @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().nombreProductor)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd1)
@@ -171,12 +218,17 @@
                         @Html.DisplayNameFor(model => Model.recepcionesDeProducto.FirstOrDefault().cantidadTonsProd6)
                     </th>
                     <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var recepcion in Model.recepcionesDeProducto.Where(rec=>rec.importadoDesdeExcel))
+                @foreach (var recepcion in Model.recepcionesDeProducto.Where(rec=>rec.importadoDesdeExcel).OrderBy(rec=>rec.numeroRecibo))
                 {
                     <tr>
+                        <td></td>
+                        <td>@Html.DisplayFor(model => recepcion.recepcionID)</td>
                         <td>
                             @Html.DisplayFor(model=>recepcion.numeroRecibo)
                         </td>
@@ -184,14 +236,14 @@
                         <td>
                             @Html.DisplayFor(model => recepcion.numProductor)
                         </td>
+                        <td style="width: 10em">
+                            @recepcion.nombreProductor.Substring(0,14)...
+                        </td>
                         <td>
                             @recepcion.fecha.ToString("dd-MMM-yy")
                         </td>
                         <td>
                             @Html.DisplayFor(model => recepcion.semana)
-                        </td>
-                        <td width="20%">
-                            @Html.DisplayFor(model => recepcion.nombreProductor)
                         </td>
                         <td>
                             @Html.DisplayFor(model => recepcion.cantidadTonsProd1)
@@ -236,6 +288,9 @@
                             </div>
                             }
                         </td>
+                        <td>@Html.DisplayFor(model => recepcion.fecha)</td>
+                        <td>@Html.DisplayFor(model => recepcion.idProductor)</td>
+                        <td>@Html.DisplayFor(model => recepcion.movimientoID)</td>
                     </tr>
                 }
             </tbody>
@@ -261,21 +316,134 @@
 }
 
 @section Scripts{
-    @if (erroresExcel != null && erroresExcel.Count() > 0) {
-        <script>
-            $('@("#"+ erroresModalID)').modal();
-        </script>
-    }
     <script>
+        //Declaracion de tabla y columnas con sus respectivas propiedades
+        var COLS_ENUM = Object.freeze({
+            ID: 1, NUM_RECIBO: 2, NUM_PRODUCTOR: 3, FECHA: 5, SEMANA: 6,
+            PROD1: 7, PROD2: 8, PROD3: 9, PROD4: 10, PROD5: 11, PROD6: 12, 
+            FECHA_STANDAR: 14, ID_PRODUCTOR: 15, ID_PAGO : 16
+        })
+
+        var tblRecibos = $("#tblRecibosCosechaImportados").DataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }, { targets: [COLS_ENUM.ID, COLS_ENUM.FECHA_STANDAR, 
+                COLS_ENUM.ID_PRODUCTOR,COLS_ENUM.ID_PAGO], visible: false }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+        });
+
+        selectedIngresosIDs = new Array();
+        //Se habilita el boton primario si se selecciono un archivo
         $('#xlsFile').change(function () {
             if(this.files.length)
                 $('#btnUpload').prop('disabled',false)
             else
                 $('#btnUpload').prop('disabled', true)
         })
+        //Se muestra loading image y se deshabilita el boton primario
         $('#frmImportExcel').submit(function(){
             $('#imgLoading').fadeIn();
             $('#btnUpload').prop('disabled', true)
         })
+
+        @*Declaracion de evento de selecicon de renglon*@
+        tblRecibos.on('select', function (e, dt, type, indexes) {
+            agregarSeleccion(dt.data())
+            $('.selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
+            console.log(selectedIngresosIDs)
+            refreshState()
+        })
+        @*Declaracion de evento de selecicon de renglon*@
+        .on('deselect', function (e, dt, type, indexes) {
+            removerSeleccion(dt.data())
+            $('.selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
+            console.log(selectedIngresosIDs)
+            refreshState()
+        });
+
+        //Habilita o deshabilita bontones de ediciones y eliminacion si hay registros seleccionados
+        function refreshState(){
+            $('#btnEliminarRecepciones, #btnEditarRecepcion').prop('disabled', !selectedIngresosIDs.length)
+        }
+
+        //Metodo que elimina del estado de compras los elementos desseleccionados
+        function removerSeleccion(rows) {
+            var renglonesAEliminar = new Array();
+            if (!rows.rows) {
+                renglonesAEliminar.push(rows);
+            } else {
+                renglonesAEliminar = rows;
+            }
+            $.each(renglonesAEliminar, function (idx, row) {
+                selectedIngresosIDs = $.grep(selectedIngresosIDs, function (item) {
+                    return item == row[COLS_ENUM.ID]
+                }, true)
+            })
+        }
+
+        //Metodo que elimina del estado de compras los elementos desseleccionados
+        function agregarSeleccion(rows) {
+            var renglones = new Array();
+            if (!rows.rows) {
+                selectedIngresosIDs.push(rows[COLS_ENUM.ID]);
+            } else {
+                renglones = rows;
+                selectedIngresosIDs = new Array();
+                $.each(renglones, function (idx, row) {
+                    selectedIngresosIDs.push(row[COLS_ENUM.ID])
+                })
+            }
+        }
+
+        function selRowToJson() {
+            var rows = tblRecibos.row({ selected: true }).data();
+            var row;
+            var jsonRes = {};
+            row = !rows.rows ? rows : rows[0];
+
+            jsonRes.cantidadTonsProd1 = row[COLS_ENUM.PROD1]
+            jsonRes.cantidadTonsProd2 = row[COLS_ENUM.PROD2]
+            jsonRes.cantidadTonsProd3 = row[COLS_ENUM.PROD3]
+            jsonRes.cantidadTonsProd4 = row[COLS_ENUM.PROD4]
+            jsonRes.cantidadTonsProd5 = row[COLS_ENUM.PROD5]
+            jsonRes.cantidadTonsProd6 = row[COLS_ENUM.PROD6]
+            jsonRes.numeroRecibo = row[COLS_ENUM.NUM_RECIBO]
+            jsonRes.fecha = row[COLS_ENUM.FECHA_STANDAR]
+            jsonRes.numProductor = row[COLS_ENUM.NUM_PRODUCTOR]
+            jsonRes.idProductor = row[COLS_ENUM.ID_PRODUCTOR]
+            jsonRes.semana = row[COLS_ENUM.SEMANA]
+            jsonRes.recepcionID = row[COLS_ENUM.ID]
+            jsonRes.idMovimiento = row[COLS_ENUM.ID_PAGO]
+
+            return jsonRes;
+        }
+
+        function limpiarSeleccionIngresos() {
+            tblRecibos.table().rows().deselect();
+        }
+
+        function seleccionarTodosIngresos() {
+            tblRecibos.table().rows().select();
+        }
+
+        function limpiarSeleccionIngresos() {
+            tblRecibos.table().rows().deselect();
+        }
+
+        function @(funcionProcesarRespuestaCreacion)(){
+            location.reload();
+        }
     </script>
+
+    @if (erroresExcel != null && erroresExcel.Count() > 0)
+    {
+        <script>
+                $('@("#"+ erroresModalID)').modal();
+        </script>
+    }
 }

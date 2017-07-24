@@ -12,11 +12,13 @@
     //Se deteminar productor, temporada e ingresos asociados al movimiento
     Productor productor = ViewBag.productor == null? Model.Productor: ViewBag.productor;
     List<RecepcionDeProducto> ingresos = ViewBag.ingresosProducto; //En caso de ser nuevo, es una lista vacia
-    
+
     /*Datos para partial de detalles de temporada*/
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
-    ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
+    bool showOpts = false;
+    
+ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddDetailsTemporada.Add("editable", true);
     string funcionRecalcularMontos = "recalcularMontos";
     vddDetailsTemporada.Add("funcionAlReestablecer", funcionRecalcularMontos);
@@ -30,8 +32,12 @@
     RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
         TemporadaDeCosechaID = Model.TemporadaDeCosechaID, numProductor = productor.numProductor, nombreProductor = productor.nombreProductor };
     ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
+    var selListProductores = ViewBag.productores;
     string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
+    string functionBindData = "functionBindData";
     vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
+    vddPartialCreacion.Add("functionBindData", functionBindData);
+    vddPartialCreacion.Add("selListProductores", selListProductores);
     VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
     {
         modalTitle = "Nuevo Registro de Recepcion de Producto",
@@ -71,7 +77,8 @@
 @Html.Partial("../Productores/Partial_InfoProductor", productor)
 
 @*Tabla donde se encuentran todos los ingresos de producto reportados*@
-<h4>Acumulado de recepción de aceituna 
+<h4>
+    <span>Acumulado de recepción de aceituna </span>
     <i class="fa fa-question-circle helpIcon" 
             onclick='$("#msgAcumuladoRecepcion").slideToggle();
                     $(this).toggleClass("clicked")'
@@ -100,14 +107,20 @@
 
 @if(!editMode){ 
     @*Modal de confirmacion de eliminacion de ingreso de producto*@
-<div>
-    <button class="btn btn-info" data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
-    <button id="btnEliminarRecepciones" class="btn btn-danger"
-            data-toggle="modal" data-target="#@modalOptsEliminarRecepcion.modalID"
-            disabled>
-        Eliminar
-    </button>
-</div>
+    <div>
+        <button class="btn btn-info" onclick="@(functionBindData)({idProductor:@productor.idProductor})"
+                data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
+        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson())"
+                data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID"
+                disabled>
+            Editar
+        </button>
+        <button id="btnEliminarRecepciones" class="btn btn-danger"
+                data-toggle="modal" data-target="#@modalOptsEliminarRecepcion.modalID"
+                disabled>
+            Eliminar
+        </button>
+    </div>
 }
 
 @Html.Partial("Partial_ConfirmationModal", modalOptsnuevaRecepcion)
@@ -377,7 +390,7 @@
                 </fieldset>
                 <div class="form-group col-md-12">
                     <div class="col-md-10">
-                        @if (!editMode && Model.yaLiquidado) { 
+                        @if ((!Model.yaLiquidado)) { 
                         <button class="btn btn-success" id="btnRegistrar"
                                 @(ingresos != null || ingresos.Count() == 0 ? "disabled" : "")>
                             @(editMode ? "Guardar" : "Registrar")
@@ -386,7 +399,7 @@
                         <button class="btn btn-info" type="button" onclick="limpiarSeleccionIngresos()">Limpiar</button>
                         <button class="btn btn-info" type="button" onclick="seleccionarTodosIngresos()">Seleccionar Todos</button>
                     </div>
-                    @if (editMode && Model.yaLiquidado)
+                    @if (Model.yaLiquidado)
                     {
                         <div class="col-md-12 alert alert-danger" style="margin-top: .5em">
                             Este ingreso de producto no es editable debido a que ya se ha registrado dentro de una
@@ -401,32 +414,34 @@
 }
 @section Scripts{
 <script>
+    $('select#idProductor').attr('disabled',true)
+    hiddenProductorID = $('<input type="hidden" value="@(Model.idProductor)" name="idProductor">')
+    $('#frmNuevaRecepcion').append(hiddenProductorID)
     var selectorInputsPrecios = "#formCostosProducto input#precio";
     var selectedIngresosIDs = new Array();
 
-    @*Enumeracion de cada columna del datatable*@
-    var COLS_ENUM = Object.freeze({ID:1, PROD1: 5, PROD2: 6, PROD3: 7, PROD4: 8, PROD5: 9, PROD6: 10, SEMANA:4})
+   //Declaracion de tabla y columnas con sus respectivas propiedades
+    var COLS_ENUM = Object.freeze({
+        ID: 1, NUM_RECIBO: 2, NUM_PRODUCTOR: 3, FECHA: 5, SEMANA: 6,
+        PROD1: 7, PROD2: 8, PROD3: 9, PROD4: 10, PROD5: 11, PROD6: 12,
+        OPCIONES: 13,FECHA_STANDAR: 14, ID_PRODUCTOR: 15, ID_PAGO : 16
+    })
 
-    @*Definicion de la tabla*@
-    var tblIngresoAcumulado = $('#tblIngresoAcumulado').DataTable({
+    var tblRecibosCosechaImportados = $("#tblRecibosCosechaImportados").DataTable({
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
             targets: 0
-        }, {
-            @*Se hace invisible la columna de ID's*@
-            targets: COLS_ENUM.ID,
-            visible: false,
-            searchable: false
-        }],
+        }, { targets: [COLS_ENUM.ID, COLS_ENUM.FECHA_STANDAR,
+            COLS_ENUM.ID_PRODUCTOR,COLS_ENUM.ID_PAGO,@(!showOpts? "COLS_ENUM.OPCIONES" : "")], visible: false }],
         select: {
             style: 'os',
             selector: 'td:first-child'
         },
-        order: [[COLS_ENUM.SEMANA, 'asc']]
     });
+
     @*Declaracion de evento de selecicon de renglon*@
-    tblIngresoAcumulado.on('select',function(e, dt, type, indexes){
+    tblRecibosCosechaImportados.on('select',function(e, dt, type, indexes){
         @(funcionRecalcularMontos)();
         var noSemana
         if(dt.data()[0])
@@ -442,9 +457,9 @@
 
     function @(funcionRecalcularMontos)() {
         selectedIngresosIDs = new Array();
-        var selectedRows = tblIngresoAcumulado.rows({selected:true});
+        var selectedRows = tblRecibosCosechaImportados.rows({selected:true});
         var data = selectedRows.data();
-        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, totalCant4 = 0, 
+        var totalCant1 = 0, totalCant2 = 0, totalCant3 = 0, totalCant4 = 0,
             totalCant5 = 0, totalCant6 = 0, montoNeto = 0;
 
         @*Se toman los costos por tipo de producto marcado para esta temporada*@
@@ -464,7 +479,7 @@
             totalCant6 += Number(data[c][COLS_ENUM.PROD6]);
             selectedIngresosIDs.push(Number(data[c][COLS_ENUM.ID]));
         }
-        var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2, 
+        var pp1 = totalCant1*precioProducto1, pp2 = totalCant2*precioProducto2,
             pp3 = totalCant3*precioProducto3, pp4 = totalCant4*precioProducto4,
             pp5 = totalCant5*precioProducto5, pp6 = totalCant6*precioProducto6;
         $("#cantidadProducto1").val(numeral(totalCant1).format('0.000')).trigger('input');
@@ -481,19 +496,43 @@
         $("#pagoProducto6").val(numeral(pp6).format('0.00')).trigger('input');
         $("#montoMovimiento").val(numeral(pp1 + pp2 + pp3 + pp4+ pp5 + pp6).format('0.00')).trigger('input');
 
-        $("#btnRegistrar").attr('disabled', data.length == 0)
+        $("#formNuevoPagoProducto #btnRegistrar").attr('disabled', data.length == 0)
         $("#btnEliminarRecepciones").attr('disabled', data.length == 0)
+        $("#btnEditarRecepcion").attr('disabled', data.length == 0)
 
         console.log(JSON.stringify(selectedIngresosIDs))
         $('.selectedIngresos').val(JSON.stringify(selectedIngresosIDs))
     }
 
+    function selRowToJson() {
+        var rows = tblRecibosCosechaImportados.row({ selected: true }).data();
+        var row;
+        var jsonRes = {};
+        row = !rows.rows ? rows : rows[0];
+
+        jsonRes.cantidadTonsProd1 = row[COLS_ENUM.PROD1]
+        jsonRes.cantidadTonsProd2 = row[COLS_ENUM.PROD2]
+        jsonRes.cantidadTonsProd3 = row[COLS_ENUM.PROD3]
+        jsonRes.cantidadTonsProd4 = row[COLS_ENUM.PROD4]
+        jsonRes.cantidadTonsProd5 = row[COLS_ENUM.PROD5]
+        jsonRes.cantidadTonsProd6 = row[COLS_ENUM.PROD6]
+        jsonRes.numeroRecibo = row[COLS_ENUM.NUM_RECIBO]
+        jsonRes.fecha = row[COLS_ENUM.FECHA_STANDAR]
+        jsonRes.numProductor = row[COLS_ENUM.NUM_PRODUCTOR]
+        jsonRes.idProductor = row[COLS_ENUM.ID_PRODUCTOR]
+        jsonRes.semana = row[COLS_ENUM.SEMANA]
+        jsonRes.recepcionID = row[COLS_ENUM.ID]
+        jsonRes.idMovimiento = row[COLS_ENUM.ID_PAGO]
+
+        return jsonRes;
+    }
+
     function limpiarSeleccionIngresos(){
-        $('#tblIngresoAcumulado').DataTable().table().rows().deselect();
+        $('#tblRecibosCosechaImportados').DataTable().table().rows().deselect();
     }
 
     function seleccionarTodosIngresos(){
-        $('#tblIngresoAcumulado').DataTable().table().rows().select();
+        $('#tblRecibosCosechaImportados').DataTable().table().rows().select();
     }
 
     $("#formCostosProducto input").keyup(function(){
@@ -509,7 +548,7 @@
 @if (editMode)
     {
         <script>
-            $('#tblIngresoAcumulado').DataTable().table().rows('[default-selected]').select();
+            $('#tblRecibosCosechaImportados').DataTable().table().rows('[default-selected]').select();
         </script>
     }
 }

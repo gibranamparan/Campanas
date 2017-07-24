@@ -1,26 +1,22 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model IEnumerable<RecepcionDeProducto>
 @{ 
-    bool selectMode = false;
-    if (ViewData["selectMode"] != null)
-    {
-        selectMode = (bool)ViewData["selectMode"];
-    }
+    bool showOpts = ViewData["showOpts"] != null ? (bool)ViewData["showOpts"] : true;
 }
 
-<table id="tblIngresoAcumulado" class="table table-hover table-striped @(!selectMode?"datatablejs":"")">
+<table id="tblRecibosCosechaImportados" class="table table-hover table-striped">
     <thead>
         <tr>
-            @if (selectMode) {
-                <th>
-
-                </th>
-            }
-            <th class="hidden">
-                @Html.DisplayNameFor(model => model.recepcionID)
-            </th>
+            <th></th>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.numeroRecibo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.numProductor)
+            </th>
+            <th style="width: 15em">
+                @Html.DisplayNameFor(model => model.nombreProductor)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.fecha)
@@ -46,51 +42,87 @@
             <th>
                 @Html.DisplayNameFor(model => model.cantidadTonsProd6)
             </th>
+
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.OrderBy(ing=>ing.semana))
+        @foreach (var recepcion in Model.OrderBy(ing => ing.semana))
         {
-            @*Si el registro de ingreso de producto tiene un ID asociado a un movimiento, 
-                significa que esta seleccionado por defecto ya que esta asociado al movimiento
-                que esta siendo registrado*@
-            <tr @((item.movimientoID!=null && item.movimientoID>0)?"default-selected":"")>
-                @if (selectMode)
-                {
-                    <td>
+            @*Si el registro de ingreso de producto tiene un ID asociado a un movimiento,
+    significa que esta seleccionado por defecto ya que esta asociado al movimiento
+    que esta siendo registrado*@
+            <tr @((recepcion.movimientoID != null && recepcion.movimientoID > 0) ? "default-selected" : "")>
+                <td></td>
+                <td>@Html.DisplayFor(model => recepcion.recepcionID)</td>
+                <td>
+                    @Html.DisplayFor(model => recepcion.numeroRecibo)
+                </td>
 
-                    </td>
-                }
-                <td class="hidden">
-                    @Html.DisplayFor(modelItem => item.recepcionID)
+                <td>
+                    @Html.DisplayFor(model => recepcion.numProductor)
+                </td>
+                <td style="width: 10em">
+                    @recepcion.nombreProductor.Substring(0, 14)...
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.numeroRecibo)
+                    @recepcion.fecha.ToString("dd-MMM-yy")
                 </td>
                 <td>
-                    @item.fecha.ToShortDateString()
+                    @Html.DisplayFor(model => recepcion.semana)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.semana)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd1)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd1)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd2)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd2)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd3)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd3)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd4)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd4)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd5)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd5)
+                    @Html.DisplayFor(model => recepcion.cantidadTonsProd6)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.cantidadTonsProd6)
+                    @if (recepcion.liquidacionYaEmitada || recepcion.pagoYaRegistrado)
+                    {
+                        <div class="dropdown_actions">
+                            <button onclick="openActionsDropDown(this)"
+                                    class="dropbtn btn btn-default">
+                                <i class="glyphicon glyphicon-option-horizontal"></i>
+                            </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                @if (recepcion.pagoYaRegistrado)
+                                {
+                                    <a target="_blank"
+                                       href="@Url.Action("Details", "MovimientoFinancieros", new { id = recepcion.pago.idMovimiento })">
+                                        Registro de Cosecha
+                                    </a>
+                                }
+
+                                @if (recepcion.liquidacionYaEmitada)
+                                {
+                                    <a target="_blank"
+                                       href="@Url.Action("Details", "MovimientoFinancieros", new { id = recepcion.pago.liquidacionDeCosechaID })">
+                                        Registro de Liquidación
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
                 </td>
+                <td>@Html.DisplayFor(model => recepcion.fecha)</td>
+                <td>@Html.DisplayFor(model => recepcion.idProductor)</td>
+                <td>@Html.DisplayFor(model => recepcion.movimientoID)</td>
             </tr>
         }
     </tbody>

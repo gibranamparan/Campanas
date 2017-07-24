@@ -169,14 +169,15 @@ namespace CampanasDelDesierto_v1.Models
                         if (recepcionDB == null)
                             db.RecepcionesDeProducto.Add(recepcion);
                         else {
-                            //Si ya existe, se identifica con el mismo ID y se marca como modificado
+                            //**SE IGNORA**
+                           /* //Si ya existe, se identifica con el mismo ID y se marca como modificado
                             recepcion.recepcionID = recepcionDB.recepcionID;
 
                             db.RecepcionesDeProducto.Remove(recepcionDB);
                             //Se deja de trackear el registro existente para poder ser modificado
                             db.Entry(recepcionDB).State = System.Data.Entity.EntityState.Detached;
                             //Se marca como modificado
-                            db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;
+                            db.Entry(recepcion).State = System.Data.Entity.EntityState.Modified;*/
                         }
                     }else //Si existe algun error en la importacion de la columna
                         errores.Add(error);
