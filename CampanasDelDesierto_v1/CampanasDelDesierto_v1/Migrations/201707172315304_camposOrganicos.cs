@@ -7,8 +7,8 @@ namespace CampanasDelDesierto_v1.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.MovimientoFinancieroes", "pagoProducto7", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.RecepcionDeProductoes", "cantidadTonsProd4", c => c.Double(nullable: false));
+            AddColumn("dbo.MovimientoFinancieroes", "pagoProducto7", c => c.Decimal(precision: 18, scale: 2, defaultValue: 0));
+            AddColumn("dbo.RecepcionDeProductoes", "cantidadTonsProd4", c => c.Double(nullable: false, defaultValue: 0));
         }
         
         public override void Down()

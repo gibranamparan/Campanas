@@ -7,7 +7,7 @@ namespace CampanasDelDesierto_v1.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.TemporadaDeCosechas", "precioProducto7", c => c.Decimal(nullable: false, precision: 18, scale: 2));
+            AddColumn("dbo.TemporadaDeCosechas", "precioProducto7", c => c.Decimal(nullable: false, precision: 18, scale: 2, defaultValue: 0));
         }
         
         public override void Down()
