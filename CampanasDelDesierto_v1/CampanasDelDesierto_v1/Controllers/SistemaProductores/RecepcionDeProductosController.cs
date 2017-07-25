@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
 using static CampanasDelDesierto_v1.HerramientasGenerales.FiltrosDeSolicitudes;
+using System.Web.Script.Serialization;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -56,12 +57,26 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateHeaderAntiForgeryToken]
         public JsonResult Create([Bind(Include = BIND_FIELDS)]
-        RecepcionDeProducto recepcionDeProducto)
+        RecepcionDeProducto recepcionDeProducto, int recepcionID=0)
         {
             int numReg = 0;
             if (ModelState.IsValid)
             {
-                db.RecepcionesDeProducto.Add(recepcionDeProducto);
+                var productor = db.Productores.Find(recepcionDeProducto.idProductor);
+                recepcionDeProducto.numProductor = productor!=null?productor.numProductor:"";
+                recepcionDeProducto.nombreProductor = productor != null ? productor.nombreProductor:"";
+                recepcionDeProducto.recepcionID = recepcionID;
+                if (recepcionDeProducto.recepcionID == 0)
+                {
+                    db.RecepcionesDeProducto.Add(recepcionDeProducto);
+                }
+                else
+                {
+                    var recTemp = db.RecepcionesDeProducto.Find(recepcionDeProducto.recepcionID);
+                    recepcionDeProducto.importadoDesdeExcel = recTemp.importadoDesdeExcel;
+                    db.Entry(recTemp).State = EntityState.Detached;
+                    db.Entry(recepcionDeProducto).State = EntityState.Modified;
+                }
                 numReg = db.SaveChanges();
                 return Json(new { numReg = numReg, registro = recepcionDeProducto });
             }
@@ -72,9 +87,13 @@ namespace CampanasDelDesierto_v1.Controllers
         // POST: RecepcionDeProductos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string selectedIngresos, int idProductor, int TemporadaDeCosechaID)
+        public ActionResult Delete(string selectedIngresos, int TemporadaDeCosechaID, int? idProductor)
         {
-            int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
+            //int[] ingresosID = HerramientasGenerales.StringTools.jsonStringToArray(selectedIngresos);
+            //Se deserializa la lista de compras en un objeto
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            List<int> ingresosID = js.Deserialize<List<int>>(selectedIngresos);
+
             int numReg = 0;
             foreach (int id in ingresosID)
             {
@@ -82,8 +101,14 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.RecepcionesDeProducto.Remove(recepcionDeProducto);
             }
             numReg = db.SaveChanges();
-            return RedirectToAction("IngresoProducto","PagosPorProductos", 
-                new { id= idProductor, temporada = TemporadaDeCosechaID });
+            if (idProductor != null) { 
+                return RedirectToAction("IngresoProducto","PagosPorProductos", 
+                    new { id= idProductor, temporada = TemporadaDeCosechaID });
+            }else
+            {
+                return RedirectToAction("Details", "TemporadaDeCosechas",
+                    new { id = TemporadaDeCosechaID });
+            }
         }
 
         [HttpGet]

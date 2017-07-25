@@ -67,7 +67,8 @@ namespace CampanasDelDesierto_v1.Controllers
             PagoPorProducto mov = new PagoPorProducto();
             mov.idProductor = productor.idProductor;
             mov.fechaMovimiento = DateTime.Now;
-
+            ViewBag.productores = new SelectList(db.Productores, "idProductor", "numProductor");
+            
             return mov;
         }
 
@@ -171,6 +172,7 @@ namespace CampanasDelDesierto_v1.Controllers
             var ingresos = db.RecepcionesDeProducto.Where(rec => rec.numProductor == productor.numProductor
             && rec.TemporadaDeCosechaID == temporadaID && (rec.movimientoID == 0 || rec.movimientoID == null)).ToList();
             ViewBag.ingresosProducto = ingresos;
+
             return mov;
         }
 

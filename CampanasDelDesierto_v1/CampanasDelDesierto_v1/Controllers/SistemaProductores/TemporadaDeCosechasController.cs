@@ -39,6 +39,16 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+
+            var productores = db.Productores.ToList();
+            var recepciones = temporadaDeCosecha.recepcionesDeProducto.ToList();
+            recepciones.ForEach(rec =>
+            {
+                var productor = productores.SingleOrDefault(prod => prod.numProductor == rec.numProductor);
+                rec.idProductor = productor == null ? 0 : productor.idProductor;
+            });
+            temporadaDeCosecha.recepcionesDeProducto = recepciones;
+            ViewBag.productores = new SelectList(productores, "idProductor", "numProductor");
             return View(temporadaDeCosecha);
         }
 
