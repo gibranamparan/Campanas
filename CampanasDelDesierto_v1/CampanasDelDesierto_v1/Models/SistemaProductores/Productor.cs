@@ -56,6 +56,81 @@ namespace CampanasDelDesierto_v1.Models
 
         [DisplayName("Desactivado")]
         public bool Desactivado { get; set; }
+        
+        public decimal totalDeudaCapitalYVentaMaterial
+        {
+            get
+            {              
+                return Math.Abs(this.MovimientosFinancieros
+                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS)
+                    .Sum(mon => mon.montoMovimiento)) + Math.Abs(this.MovimientosFinancieros
+                    .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    .Sum(mon => mon.montoMovimiento));
+            }
+        }
+
+        public decimal totalAbonos
+        {
+            get
+            {                
+                return this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    .Where(mov => ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
+                         == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                     .Sum(mov => mov.montoMovimiento);
+            }
+        }
+        public decimal totalDeudaVentaArbolito
+        {
+            get
+            {
+                return Math.Abs(this.MovimientosFinancieros
+                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.VENTA_OLIVO)
+                    .Sum(mov => mov.montoMovimiento));
+            }
+        }
+
+        public decimal totalAbonoArbolito
+        {
+            get
+            {         
+                return this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    .Where(mov=>((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
+                    == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES)
+                    .Sum(mov=>mov.montoMovimiento);
+            }
+        }
+
+        public decimal totalIngresos
+        {
+            get
+            {
+                return this.MovimientosFinancieros
+                    .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.PAGO_POR_PRODUCTO)
+                    .Sum(mon => mon.montoMovimiento); ;
+            }
+        }
+
+        public decimal totalLiquidacion
+        {
+            get
+            {
+                return Math.Abs(this.MovimientosFinancieros
+                    .Where(mov=> mov.getTypeOfMovement() == TypeOfMovements.LIQUIDACION)
+                    .Sum(mon=>mon.montoMovimiento));
+            }
+        }
+
+        public decimal totalRetenido
+        {
+            get
+            {
+                return Math.Abs(this.MovimientosFinancieros
+                    .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.RENTENCION)
+                    .Sum(mon => mon.montoMovimiento));
+            }
+        }
+
+
 
         public AdeudoInicial adeudoInicialArboles
         {
