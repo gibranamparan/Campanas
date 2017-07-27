@@ -43,7 +43,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
                 </th>
-                <th class="actions"></th>
+                <th class="actions hidden-print"></th>
             </tr>
 
             @foreach (var item in movimientos)
@@ -90,7 +90,7 @@
                     <td class='@(item.balance<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.balance)
                     </td>
-                    <td>
+                    <td class="hidden-print">
                         @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
                             ademas no es un ingreso de de cosecha ya reportado como liquidado*@
                         <div class="dropdown_actions">
@@ -117,7 +117,6 @@
                                 }
                             </div>
                         </div>
-                        
                     </td>
                 </tr>
             }

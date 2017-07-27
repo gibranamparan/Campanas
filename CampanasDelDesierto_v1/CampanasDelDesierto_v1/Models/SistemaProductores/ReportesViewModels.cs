@@ -53,13 +53,12 @@ namespace CampanasDelDesierto_v1.Models
                     return String.Format($"{_productor.numProductor} {_productor.nombreProductor} Zona {_productor.zona}");
                 }
             }
-            public VMAdeudosRecuperacionReg(Productor productor, int temporadaID)
+            public VMAdeudosRecuperacionReg(Productor productor, TemporadaDeCosecha temporadaActual)
             {
                 this._productor = productor;
-                var temporadaActual = db.TemporadaDeCosechas.Find(temporadaID);
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
-                    .Where(mov => mov.TemporadaDeCosechaID == temporadaID);
+                    .Where(mov => mov.TemporadaDeCosechaID == temporadaActual.TemporadaDeCosechaID);
 
                 //Filtro de movimientos dentro del balance de anticipos
                 var movimientosBalanceAnticipos = movimientos
@@ -178,7 +177,6 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayName("Retencion Sanidad Vegetal ")]
             public decimal retencionSanidadVegetal { get; set; }
 
-
             [DisplayName("Productor")]
             public string productor
             {
@@ -187,51 +185,38 @@ namespace CampanasDelDesierto_v1.Models
                     return String.Format($"{_productor.numProductor} {_productor.nombreProductor} Zona {_productor.zona}");
                 }
             }
-            public VMAdeudosRecuperacionDetallado(Productor productor, int temporadaID)
+            public VMAdeudosRecuperacionDetallado(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
             {
                 this._productor = productor;
-                var temporadaActual = db.TemporadaDeCosechas.Find(temporadaID);
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
-                    .Where(mov => mov.TemporadaDeCosechaID == temporadaID).ToList();
+                    .Where(mov => mov.TemporadaDeCosechaID == temporadaActual.TemporadaDeCosechaID).ToList();
 
                 //Filtro de movimientos capital
                 var movimientosCapital = movimientos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL);
 
-
-                //Adeudo Anterior cosecha                
-                var tempCosechas = db.TemporadaDeCosechas.Where(temp => temp.fechaFin <= temporadaActual.fechaFin).ToList();
-                var primerasTemporadas = tempCosechas.Take(2);
-                TemporadaDeCosecha cosechaAnterior = primerasTemporadas.ElementAt(1);
-                var movAnteriorCosecha = productor.MovimientosFinancieros
-                    .Where(pro => pro.TemporadaDeCosechaID == cosechaAnterior.TemporadaDeCosechaID)
-                    .ToList().OrderByDescending(mov => mov.fechaMovimiento).ToList().FirstOrDefault();
-                if (movAnteriorCosecha == null)
-                {
-                    this.adeudoAnteriorCosecha = 0;
-                }
-                else
-                {
-                    decimal adeudoAnterior = movAnteriorCosecha.balance;
-                    this.adeudoAnteriorCosecha = (adeudoAnterior) * (-1);
-                }
+                //Adeudo Anterior cosecha   
+                this.adeudoAnteriorCosecha = 0; //Valor por defecto en 0
+                if (temporadaAnterior != null) //Si hay temporada anterior, se calcula su balance final
+                    this.adeudoAnteriorCosecha = Math.Abs(productor.balanceDeAnticiposEnTemporada(temporadaAnterior.TemporadaDeCosechaID));
+                else if(productor.adeudoInicialAnticipos!=null) //Si no, se toma el adeudo anterior registrado para anticipos
+                    this.adeudoAnteriorCosecha = Math.Abs(productor.adeudoInicialAnticipos.montoMovimiento);
 
                 //suma del monto de los  movimientos de anticipos por temporda actual
-                decimal anticipos = movimientos
+                decimal anticipos = Math.Abs(movimientos
                     .Where(mov=>mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                    .Sum(mon=>mon.montoMovimiento);
-                this.anticiposCosechaEfectivo = anticipos * -1;
+                    .Sum(mon=>mon.montoMovimiento));
+                this.anticiposCosechaEfectivo = anticipos;
 
                 //suma del monto de los movimientos de tipo venta a credito por temporada actual
-                decimal ventasACredito = movimientos
+                decimal ventasACredito = Math.Abs(movimientos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                    .Sum(mon => mon.montoMovimiento);
+                    .Sum(mon => mon.montoMovimiento));
                 this.anticiposCosechaMateriales = ventasACredito;
 
-
                 //suma total de adeudos
-                this.totalAdeudos = -1*anticipos + ventasACredito;
+                this.totalAdeudos = anticipos + ventasACredito;
 
                 //Total de adeudo recuperado
                 this.adeudoRecuperado = movimientosCapital

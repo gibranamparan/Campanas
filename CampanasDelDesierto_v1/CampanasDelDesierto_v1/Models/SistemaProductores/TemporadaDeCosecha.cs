@@ -261,6 +261,42 @@ namespace CampanasDelDesierto_v1.Models
             return tem;
         }
 
+        /// <summary>
+        /// Arroja la temporada inmediatamente anterior cronologicamente a esta instancia.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>Arroja otra instancia de tipo TemporadaCosecha, en caso de no existir una temporada anterior, arrojará nulo.</returns>
+        public TemporadaDeCosecha getTemporadaAnterior(ApplicationDbContext db)
+        {
+            TemporadaDeCosecha res = null;
+            var temporadas = db.TemporadaDeCosechas.Where(tem => tem.fechaInicio < this.fechaInicio).OrderByDescending(tem => tem.fechaInicio);
+            if (temporadas != null && temporadas.Count() > 0)
+            {
+                LinkedList<TemporadaDeCosecha> temporadasList = new LinkedList<TemporadaDeCosecha>(temporadas);
+                res = temporadasList.First.Next.Value;
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Arroja la temporada inmediatamente posterior cronologicamente a esta instancia.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>Arroja otra instancia de tipo TemporadaCosecha, en caso de no existir una temporada posterior, arrojará nulo.</returns>
+        public TemporadaDeCosecha getTemporadaSiguiente(ApplicationDbContext db)
+        {
+            TemporadaDeCosecha res = null;
+            var temporadas = db.TemporadaDeCosechas.Where(tem => tem.fechaInicio > this.fechaInicio).OrderBy(tem => tem.fechaInicio);
+            if (temporadas != null && temporadas.Count() > 0)
+            {
+                LinkedList<TemporadaDeCosecha> temporadasList = new LinkedList<TemporadaDeCosecha>(temporadas);
+                res = temporadasList.First.Next.Value;
+            }
+
+            return res;
+        }
+
         public static class TiposDeProducto
         {
             public const string PRODUCTO1 = "MANZANITA";

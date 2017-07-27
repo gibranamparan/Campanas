@@ -130,8 +130,6 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
-
-
         public AdeudoInicial adeudoInicialArboles
         {
             get
@@ -200,21 +198,45 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="fecha">Fecha de consulta sobre al cual se determinara el balance actual</param>
         /// <returns></returns>
-        public decimal balanceDeAnticiposEnFecha(DateTime? fecha)
+        public decimal balanceDeAnticiposEnFecha(DateTime? dt)
         {
             decimal res = 0;
             if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
             {
                 IEnumerable<MovimientoFinanciero> movimientos;
-                if (!fecha.HasValue)
+                if (!dt.HasValue)
                     movimientos = this.MovimientosFinancieros;
-                else
-                    movimientos = this.MovimientosFinancieros.Where(mov => mov.fechaMovimiento <= fecha.Value);
+                else {
+                    DateTime fecha = dt.Value.AddDays(1).AddMilliseconds(-1); //Dentro de toda la totalidad del dia
+                    movimientos = this.MovimientosFinancieros.Where(mov => mov.fechaMovimiento <= fecha);
+                }
 
-                if (movimientos.Count() > 0) { 
+                if (movimientos.Count() > 0)
+                {
                     movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
                     var lastMov = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
-                    res = lastMov==null?0:lastMov.balance;
+                    res = lastMov == null ? 0 : lastMov.balance;
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Arroja el balance correspondiente a la fecha de consulta sobre el balance de anticipos y ventas de material.
+        /// </summary>
+        /// <param name="fecha">Fecha de consulta sobre al cual se determinara el balance actual</param>
+        /// <returns></returns>
+        public decimal balanceDeAnticiposEnTemporada(int temporadaID)
+        {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                var movimientos = this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaID);
+                if (movimientos.Count() > 0)
+                {
+                    movimientos = movimientos.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS).ToList();
+                    var lastMov = movimientos.OrderByDescending(mov => mov.fechaMovimiento).FirstOrDefault();
+                    res = lastMov == null ? 0 : lastMov.balance;
                 }
             }
             return res;

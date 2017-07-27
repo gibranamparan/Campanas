@@ -24,39 +24,38 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
         }
 
         [HttpGet]
-        public ActionResult AdeudosRecuperacion(int id)
+        public ActionResult AdeudosRecuperacion(int? id)
         {
             if (id==null)
-            {
                 return HttpNotFound();
-            }
             else
             {
-                    var productores = db.Productores.ToList();
-                    List<AdeudoRecuperacionReg> reporte = new List<AdeudoRecuperacionReg>();
-                    productores.ForEach(prod => reporte.Add(new AdeudoRecuperacionReg(prod, id)));
-                    ViewBag.temporada = db.TemporadaDeCosechas.Find(id);
-                    return View(reporte);
+                var productores = db.Productores.ToList();
+                TemporadaDeCosecha temporadaConsultada = db.TemporadaDeCosechas.Find(id);
+                TemporadaDeCosecha temporadaAnterior = temporadaConsultada.getTemporadaAnterior(db);
+                List<AdeudoRecuperacionReg> reporte = new List<AdeudoRecuperacionReg>();
+                productores.ForEach(prod => reporte.Add(new AdeudoRecuperacionReg(prod, temporadaConsultada)));
+                ViewBag.temporada = db.TemporadaDeCosechas.Find(id);
+                return View(reporte);
             }
             
         }
 
         [HttpGet]
-        public ActionResult AdeudosRecuperacionDetallado(int id)
+        public ActionResult AdeudosRecuperacionDetallado(int? id)
         {
             if (id == null)
-            {
                 return HttpNotFound();
-            }
             else
             {
                 var productores = db.Productores.ToList();
+                TemporadaDeCosecha temporadaConsultada = db.TemporadaDeCosechas.Find(id);
+                TemporadaDeCosecha temporadaAnterior = temporadaConsultada.getTemporadaAnterior(db);
                 List<AdeudosRecuperacionDetallado> reporte = new List<AdeudosRecuperacionDetallado>();
-                productores.ForEach(prod => reporte.Add(new AdeudosRecuperacionDetallado(prod, id)));
-                ViewBag.temporada = db.TemporadaDeCosechas.Find(id);
+                productores.ForEach(prod => reporte.Add(new AdeudosRecuperacionDetallado(prod, temporadaConsultada, temporadaAnterior)));
+                ViewBag.temporada = temporadaConsultada;
                 return View(reporte);
             }
-
         }
     }
 }

@@ -26,24 +26,27 @@
         <p class="form-control-static">@Html.DisplayFor(model => model.concepto)</p>
     </div>
 </div>
+
 <div class="form-group col-md-4">
     @Html.LabelFor(model => model.proveedor, new { @class = "control-label col-md-3" })
     <div class="col-md-9">
         <p class="form-control-static">@Html.DisplayFor(model => model.proveedor)</p>
     </div>
 </div>
-<div class="form-group col-md-4">
-    @Html.LabelFor(model => model.fechaPagar, new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
-        <p class="form-control-static">@(Model.fechaPagar.HasValue?Model.fechaPagar.Value.ToString("dd/MMM/yyyy"):"") </ p >
+@if (Model.tipoDeMovimientoDeCapital != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO) { 
+    <div class="form-group col-md-4">
+        @Html.LabelFor(model => model.fechaPagar, new { @class = "control-label col-md-3" })
+        <div class="col-md-9">
+            <p class="form-control-static">@(Model.fechaPagar.HasValue?Model.fechaPagar.Value.ToString("dd/MMM/yyyy"):"") </p>
+        </div>
     </div>
-</div>
-<div class="form-group col-md-4">
-    @Html.LabelFor(model => model.pagare, new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
-        <p class="form-control-static">@Html.DisplayFor(model => model.pagare)</p>
+    <div class="form-group col-md-4">
+        @Html.LabelFor(model => model.pagare, new { @class = "control-label col-md-3" })
+        <div class="col-md-9">
+            <p class="form-control-static">@Html.DisplayFor(model => model.pagare)</p>
+        </div>
     </div>
-</div>
+}
 <div class="form-group col-md-4">
     @Html.LabelFor(model => model.montoActivo, new { @class = "control-label col-md-3" })
     <div class="col-md-9">
@@ -72,7 +75,7 @@
             <div class="col-md-12">
                 <table class="table table-hover table-striped">
                     <tr>
-                        <th>No. Pagaré/Compra</th>
+                        <th>No. Pagaré</th>
                         <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.fechaMovimiento)</th>
                         <th>@Html.DisplayNameFor(model => model.prestamosAbonados.FirstOrDefault().prestamo.montoMovimiento)</th>
                         <th>Monto Abonado</th>
@@ -91,7 +94,7 @@
                                     }
                                     else if(mov.prestamo.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                                     {
-                                        @Html.DisplayFor(model => ((VentaACredito)mov.prestamo).ordenCompra)
+                                        @Html.DisplayFor(model => ((VentaACredito)mov.prestamo).pagareVenta)
                                     }
                                 </a>
                             </td>
