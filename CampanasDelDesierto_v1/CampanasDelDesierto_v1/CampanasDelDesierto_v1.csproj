@@ -766,6 +766,7 @@
     <Content Include="Views\MovimientoFinancieros\Partial_ListarIntereses.cshtml" />
     <Content Include="Views\ReportesProductores\AdeudosRecuperacionDetallado.cshtml" />
     <Content Include="Views\AdeudoInicial\Details.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporadaStatic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

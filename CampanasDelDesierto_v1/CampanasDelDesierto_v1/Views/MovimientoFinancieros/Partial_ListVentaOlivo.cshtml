@@ -17,7 +17,7 @@
 @if (Model != null && movimientos.Count() > 0)
 {
     <div class="col-md-12">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped table-responsive">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
@@ -25,13 +25,13 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
                 </th>
-                <th width="25%">
+                <th style="width: 20em">
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
                 </th>
-                <th class="actions"></th>
+                <th class="actions hidden-print"></th>
             </tr>
 
             @foreach (var item in movimientos)
@@ -44,13 +44,13 @@
                         @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
                         @Html.DisplayFor(modelItem => item.montoMovimiento)
                     </td>
-                    <td width="25%">
+                    <td style="width: 20em">
                         @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                     <td class='@(item.balance<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.balance)
                     </td>
-                    <td>
+                    <td class="hidden-print">
                         @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
                             ademas no es un ingreso de de cosecha ya reportado como liquidado*@
                         @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
@@ -83,9 +83,9 @@
 
         </table>         
     </div>
-    <div style="text-align:right">
-        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaVentaArbolito</span>
-        <span><strong style="color:red">TOTAL DE ABONO: </strong>@Model.totalAbonoArbolito</span>
+    <div class="pull-right" style="padding-right:2em">
+        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaVentaArbolito.ToString("C")</span> |
+        <span><strong style="color:red">TOTAL DE ABONO: </strong>@Model.totalAbonoArbolito.ToString("C")</span>
     </div>
 }
 else

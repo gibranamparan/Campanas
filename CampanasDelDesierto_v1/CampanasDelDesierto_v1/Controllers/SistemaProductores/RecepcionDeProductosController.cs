@@ -60,27 +60,36 @@ namespace CampanasDelDesierto_v1.Controllers
         RecepcionDeProducto recepcionDeProducto, int recepcionID=0)
         {
             int numReg = 0;
-            if (ModelState.IsValid)
+            //Se verifica si el numero de recibo ya existe
+            var reciboTemp = db.RecepcionesDeProducto.FirstOrDefault(mov => mov.numeroRecibo == recepcionDeProducto.numeroRecibo);
+            bool numReciboExiste = reciboTemp != null && recepcionID==0; //Si se esta intentando crear un nuevo recibo con numero repetido
+
+            //Si el modelo es valido y el numero de recibo no existe ya en la base de datos
+            if (ModelState.IsValid && !numReciboExiste)
             {
+                db.Entry(reciboTemp).State = EntityState.Detached;
+                //Se introduce la informacion del productor indicado dentro del recibo que se encuentra registrando
                 var productor = db.Productores.Find(recepcionDeProducto.idProductor);
                 recepcionDeProducto.numProductor = productor!=null?productor.numProductor:"";
                 recepcionDeProducto.nombreProductor = productor != null ? productor.nombreProductor:"";
                 recepcionDeProducto.recepcionID = recepcionID;
-                if (recepcionDeProducto.recepcionID == 0)
-                {
+                if (recepcionDeProducto.recepcionID == 0) //Si el recibo no existia, se marca para su creacion
                     db.RecepcionesDeProducto.Add(recepcionDeProducto);
-                }
-                else
+                else //Si el recibo ya existia, se marca para ser editado
                 {
                     var recTemp = db.RecepcionesDeProducto.Find(recepcionDeProducto.recepcionID);
                     recepcionDeProducto.importadoDesdeExcel = recTemp.importadoDesdeExcel;
                     db.Entry(recTemp).State = EntityState.Detached;
                     db.Entry(recepcionDeProducto).State = EntityState.Modified;
                 }
-                numReg = db.SaveChanges();
-                return Json(new { numReg = numReg, registro = recepcionDeProducto });
-            }
+                numReg = db.SaveChanges(); //Guarda cambios
+                return Json(new { numReg = numReg, registro = recepcionDeProducto }); //Responde con numero positivo (success)
+            }else if (numReciboExiste) //Si tento registrar un nuevo recibo con numero ya existente
+                return Json(new { numReg = 0, error = "El numero de recibo ya existe",
+                    registro = reciboTemp, pagoPorProductoID = reciboTemp.pago.idMovimiento,
+                    liquidacionID = reciboTemp.pago.liquidacionDeCosechaID });
 
+            //El modelo no fue válido
             return Json(new { numReg = 0, error = "Favor de rellenar todos los campos." });
         }
 

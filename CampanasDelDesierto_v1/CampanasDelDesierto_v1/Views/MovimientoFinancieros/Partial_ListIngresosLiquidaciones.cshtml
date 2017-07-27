@@ -17,7 +17,7 @@
 @if (Model != null && movimientos.Count() > 0)
 {
     <div class="col-md-12">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped table-responsive">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
@@ -28,10 +28,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
                 </th>
-                <th width="25%">
+                <th style="width: 20em">
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
-                <th class="actions"></th>
+                <th class="actions hidden-print"></th>
             </tr>
 
             @foreach (var item in movimientos)
@@ -48,10 +48,10 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
-                    <td width="25%">
+                    <td style="width: 20em">
                         @Html.DisplayFor(modelItem => item.concepto)
                     </td>
-                    <td>
+                    <td class="hidden-print">
                         @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION)) { 
                             <div class="dropdown_actions">
                                 <button onclick="openActionsDropDown(this)"
@@ -85,10 +85,10 @@
 
         </table>
     </div>
-    <div style="text-align:center">
-        <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Model.totalIngresos</span>
-        <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion</span>
-        <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido</span>
+    <div class="pull-right" style="padding-right:2em">
+        <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Model.totalIngresos.ToString("C")</span> |
+        <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion.ToString("C")</span> |
+        <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido.ToString("C")</span>
     </div>
 }
 else

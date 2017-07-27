@@ -19,9 +19,9 @@
 @if (Model != null && movimientos.Count() > 0)
 {
     <div class="col-md-12">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped table-responsive">
             <tr>
-                <th>No. Pagaré/Compra</th>
+                <th>No. Pagaré</th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
                 </th>
@@ -31,7 +31,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
                 </th>
-                <th>
+                <th style="width: 20em">
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                 </th>
                 <th>
@@ -68,7 +68,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                     </td>
-                    <td>
+                    <td style="width: 20em">
                         @Html.DisplayFor(modelItem => item.concepto)
                     </td>
                     <td>
@@ -123,9 +123,9 @@
 
         </table>          
     </div>
-    <div style="text-align:right">
-        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaCapitalYVentaMaterial</span>
-        <span><Strong style="color:red">TOTAL DE ABONOS: </Strong>@Model.totalAbonos</span>
+    <div class="pull-right" style="padding-right:2em">
+        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaCapitalYVentaMaterial.ToString("C")</span> |
+        <span><Strong style="color:red">TOTAL DE ABONOS: </Strong>@Model.totalAbonos.ToString("C")</span>
     </div>
 }
 else

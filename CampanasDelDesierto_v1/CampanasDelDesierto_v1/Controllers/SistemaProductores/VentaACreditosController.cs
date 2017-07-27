@@ -141,6 +141,8 @@ namespace CampanasDelDesierto_v1.Controllers
 
             prepararVistaCrear(ventaACredito.Productor);
             ViewBag.productos = db.Productos.ToList();
+            if (ventaACredito.fechaPagar == null)
+                ventaACredito.introducirMovimientoEnPeriodo(ventaACredito.temporadaDeCosecha);
 
             return View("Create",ventaACredito);
         }

@@ -62,9 +62,7 @@ namespace CampanasDelDesierto_v1.Models
             get
             {              
                 return Math.Abs(this.MovimientosFinancieros
-                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS)
-                    .Sum(mon => mon.montoMovimiento)) + Math.Abs(this.MovimientosFinancieros
-                    .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !mov.isAbonoCapital)
                     .Sum(mon => mon.montoMovimiento));
             }
         }
@@ -192,6 +190,25 @@ namespace CampanasDelDesierto_v1.Models
                 else return 0;
             }
         }
+        /*
+        public decimal getInteresesPagadosEnLaTemporada(TemporadaDeCosecha tem) {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                var movimientos = this.MovimientosFinancieros
+                    .Where(mov => mov.TemporadaDeCosechaID <= tem.TemporadaDeCosechaID)
+                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS
+                        && mov.isAbonoCapital) // se toman todos los movimientos que han pagado interes
+                        .Where(mov => ((PrestamoYAbonoCapital)mov).prestamosAbonados.Count(pago => pago.pagoAInteres) > 0)
+                        .ToList();
+                if (movimientos.Count() > 0)
+                {
+                    var prestamosAbonados = movimientos.Select(mov => ((PrestamoYAbonoCapital)mov).prestamosAbonados);
+                    var abonos = prestamosAbonados.Where(abo=>abo.)
+                }
+            }
+            return res;
+        }*/
 
         /// <summary>
         /// Arroja el balance correspondiente a la fecha de consulta sobre el balance de anticipos y ventas de material.
@@ -611,7 +628,8 @@ namespace CampanasDelDesierto_v1.Models
         public decimal interesTotal(DateTime? fecha)
         {
             decimal res = 0;
-            DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Now;
+            DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Today;
+            dt = dt.AddDays(1).AddMilliseconds(-1); //Hasta el final del dia
             var movs = this.MovimientosFinancieros;
             if(movs!=null && movs.Count() > 0)
             {

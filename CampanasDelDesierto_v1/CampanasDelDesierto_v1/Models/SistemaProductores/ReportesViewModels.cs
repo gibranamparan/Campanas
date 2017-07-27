@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
     {
         public class VMAdeudosRecuperacionReg
         { ApplicationDbContext db = new ApplicationDbContext();
-            private Productor _productor;
+            public Productor _productor;
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Total de Adeudos, Cosecha")]
@@ -24,6 +24,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Saldo por Recuperar")]
             public decimal saldoPorRecuperar { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Interes Devengado")]
+            public decimal interesGenerado { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo de Arbolitos, Cosecha")]
@@ -75,6 +79,9 @@ namespace CampanasDelDesierto_v1.Models
                         == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                     .Sum(mov => mov.montoMovimiento);
 
+                //Calculo de interes generado a la fecha final de la temporada
+                this.interesGenerado = productor.interesTotal(temporadaActual.fechaFin);
+
                 //Calculo de total de ventas
                   decimal totalVentas = movimientosBalanceAnticipos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
@@ -90,7 +97,12 @@ namespace CampanasDelDesierto_v1.Models
                     .Sum(mov => mov.montoMovimiento);
 
                 //Calculo de saldo por recuperar en balance de anticipos
-                this.saldoPorRecuperar = this.totalAdeudo - this.adeudoRecuperado;
+                //this.saldoPorRecuperar = this.totalAdeudo - this.adeudoRecuperado;
+                this.saldoPorRecuperar = movimientosBalanceAnticipos
+                    .Where(mov => (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL 
+                        && ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO) 
+                        || mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                        .Sum(mov => mov.montoActivo);
 
                 //Filtro de movs en balance de arboles
                 var movimientosBalanceArboles = movimientos

@@ -10,7 +10,7 @@
     vddInfoProductor.Add("temporada", ViewBag.temporadaSeleccionada);
 }
 
-<div>
+<div class="hidden-print">
     <a href="@Url.Action("Index")">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
     </a>
@@ -75,3 +75,4 @@
         </div>
     </div>
 </div>
+@Html.Partial("Partial_LineaFirmaReportes")

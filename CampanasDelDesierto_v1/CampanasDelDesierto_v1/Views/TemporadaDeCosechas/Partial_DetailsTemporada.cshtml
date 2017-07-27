@@ -1,8 +1,8 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model CampanasDelDesierto_v1.Models.TemporadaDeCosecha.VMPreciosProductos
 @{ 
-    bool editable = false;
-    string funcionAlReestablecer = "";
+    bool editable = ViewData["editable"] != null ? (bool)ViewData["editable"] : false;
+    string funcionAlReestablecer = ViewData["funcionAlReestablecer"] != null? (string)ViewData["funcionAlReestablecer"]:"";
 
     decimal precioOriginal1 = Model.precioManzanita;
     decimal precioOriginal2 = Model.precioObliza;
@@ -10,17 +10,7 @@
     decimal precioOriginal4 = Model.precioManzanitaOrg;
     decimal precioOriginal5 = Model.precioOblizaOrg;
     decimal precioOriginal6 = Model.precioMissionOrg;
-
-
-    if (ViewData["editable"] != null)
-    {
-        editable = (bool)ViewData["editable"];
-    }
-    if (ViewData["funcionAlReestablecer"] != null)
-    {
-        funcionAlReestablecer = (string)ViewData["funcionAlReestablecer"];
-    }
-
+    
     int? movimientoID = null;
     bool preciosProductosEditados = false;
     if (ViewData["pagoPorProducto"] != null)

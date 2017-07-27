@@ -140,17 +140,35 @@
 
         table.on('select', function (e, dt, type, indexes) {
             var selRow = dt.data()
-            var inputCantidad = $('input[productoID='+selRow[COLS_ENUM.ID]+']');
-            introducirNuevaCantidad(inputCantidad[0]);
+            agregarSeleccion(selRow)
             funcionRecalcularMontos();
+            console.log(compras)
         }).on('deselect', function (e, dt, type, indexes) {
             var unSelRows = dt.data();
             removerSeleccion(unSelRows);
             funcionRecalcularMontos();
+            console.log(compras)
         });
 
         //Data table select sigle row
         var compras = new Array();
+
+        //Metodo que agrega del estado de compras los elementos desseleccionados
+        function agregarSeleccion(rows) {
+            var renglones = new Array();
+            if (!rows.rows) { //Si es un solo elemento
+                var inputCantidad = $('input[productoID=' + rows[COLS_ENUM.ID] + ']');
+                introducirNuevaCantidad(inputCantidad[0]);
+            } else { //Si son varios
+                renglones = rows;
+                //selectedIngresosIDs = new Array();
+                $.each(renglones, function (idx, row) {
+                    //compras.push(row[COLS_ENUM.ID])
+                    var inputCantidad = $('input[productoID=' + row[COLS_ENUM.ID] + ']');
+                    introducirNuevaCantidad(inputCantidad[0]);
+                })
+            }
+        }
 
         //Metodo que elimina del estado de compras los elementos desseleccionados
         function removerSeleccion(rows) {
@@ -170,12 +188,12 @@
         //Recalcula el total de la venta segun los costos de cantidad de material comprado
         //selecciondos en la tabla
         function funcionRecalcularMontos() {
-            var selectedRows = table.rows({ selected: true });
-            var data = selectedRows.data();
+            /*var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data();*/
             var totalCant1 = 0; var costoUnitario = 0;
 
-            var cantidad = $('#cantidadMaterial').val();
-            if (data.length==0)
+            //var cantidad = $('#cantidadMaterial').val();
+            if (compras.length==0)
                 $('#crear').attr('disabled', true);
             else
             {

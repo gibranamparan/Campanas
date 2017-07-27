@@ -33,12 +33,12 @@
 
     VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
     {
-        modalTitle = "Nuevo Registro de Recepcion de Producto",
+        modalTitle = "Forma de Recepcion de Producto",
         action = "create",
         controller = "RecepcionDeProductos",
         callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
         modalID = "mdlCreateRecepcion",
-        primaryMessage = "Rellena la forma para crear ingresar manualmente un nuevo registro de recepcion de producto",
+        primaryMessage = "Rellena la forma para crear o editar manualmente un nuevo registro de recepcion de producto",
         modalStyle = new VMConfirmModalAttributes.Style(VMConfirmModalAttributes.Style.StyleTypes.INFO),
         size = new VMConfirmModalAttributes.Size(VMConfirmModalAttributes.Size.ModalSize.LARGE),
         partialViewURL = "../RecepcionDeProductos/Partial_CreateRecepcionProducto",
@@ -467,8 +467,9 @@
             tblRecibos.table().rows().deselect();
         }
 
-        function @(funcionProcesarRespuestaCreacion)(){
-            location.reload();
+        function @(funcionProcesarRespuestaCreacion)(res){
+            if(res.numReg>0)
+                location.reload();
         }
     </script>
 

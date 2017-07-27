@@ -13,36 +13,64 @@
 </p>
 
 <h2>Reporte de Adeudo y Recuperacion</h2>
-
-<table class="table table-hover table-striped">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.productor)</th>        
-        <th>@Html.DisplayNameFor(model => model.totalAdeudo) @temporada.fechaInicio.Year</th>
-        <th>@Html.DisplayNameFor(model => model.adeudoRecuperado) @temporada.fechaInicio.Year</th>
-        <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
-        <td style="width:5px; background-color: white;
-                border-left: 1px solid black; border-right: 1px solid black;"></td>
-        <th>@Html.DisplayNameFor(model => model.adeudoArbolitos) @temporada.fechaInicio.Year</th>
-        <th>@Html.DisplayNameFor(model => model.abonoArbolitosRecuperado)</th>
-        <th>@Html.DisplayNameFor(model => model.adeudoPorRecuperarArbolitos)</th>       
-        <td style="width:5px; background-color: white;
-                border-left: 1px solid black; border-right: 1px solid black;"></td>
-        <th>@Html.DisplayNameFor(model => model.totalRecuperado)</th>
-    </tr>
-    @foreach(var item in Model) { 
+<h3>@temporada.ToString().ToUpper()</h3>
+<table id="tblReporte" class="table table-responsive table-hover table-striped">
+    <thead>
         <tr>
-            <td>@Html.DisplayFor(model => item.productor)</td>            
-            <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
-            <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
-            <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
+            <th>Num. Prod.</th>
+            <th>@Html.DisplayNameFor(model => model.productor)</th>
+            <th>@Html.DisplayNameFor(model => model.totalAdeudo) @temporada.fechaInicio.Year</th>
+            <th>@Html.DisplayNameFor(model => model.adeudoRecuperado) @temporada.fechaInicio.Year</th>
+            <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
+            <th>@Html.DisplayNameFor(model => model.interesGenerado)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
-            <td>@Html.DisplayFor(model => item.adeudoArbolitos)</td>
-            <td>@Html.DisplayFor(model => item.abonoArbolitosRecuperado)</td>
-            <td>@Html.DisplayFor(model => item.adeudoPorRecuperarArbolitos)</td>            
+            <th>@Html.DisplayNameFor(model => model.adeudoArbolitos) @temporada.fechaInicio.Year</th>
+            <th>@Html.DisplayNameFor(model => model.abonoArbolitosRecuperado)</th>
+            <th>@Html.DisplayNameFor(model => model.adeudoPorRecuperarArbolitos)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
-            <td>@Html.DisplayFor(model => item.totalRecuperado)</td>
+            <th>@Html.DisplayNameFor(model => model.totalRecuperado)</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item._productor.numProductor.ToUpper().Replace("P","").Replace("-",".")</td>
+                <td>@Html.DisplayFor(model => item.productor)</td>
+                <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
+                <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
+                <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
+                <td>@Html.DisplayFor(model => item.interesGenerado)</td>
+                <td style="width:5px; background-color: white;
+                border-left: 1px solid black; border-right: 1px solid black;"></td>
+                <td>@Html.DisplayFor(model => item.adeudoArbolitos)</td>
+                <td>@Html.DisplayFor(model => item.abonoArbolitosRecuperado)</td>
+                <td>@Html.DisplayFor(model => item.adeudoPorRecuperarArbolitos)</td>
+                <td style="width:5px; background-color: white;
+                border-left: 1px solid black; border-right: 1px solid black;"></td>
+                <td>@Html.DisplayFor(model => item.totalRecuperado)</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $("#tblReporte").DataTable({
+            paging:false,
+            //order: [[0, "asc"]],
+            columnDefs: [
+                { orderable: false, targets: [5, 9] },
+            ]
+        });
+    </script>    
+}
+<style>
+    @@media print{
+        #tblReporte_filter{
+            display:none;
+        }
+    }
+</style>
