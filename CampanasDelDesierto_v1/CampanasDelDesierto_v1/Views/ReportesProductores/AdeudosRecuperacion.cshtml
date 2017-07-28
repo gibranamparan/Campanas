@@ -1,9 +1,9 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model IEnumerable<ReportesViewModels.VMAdeudosRecuperacionReg>
 @{
-    ViewBag.Title = "Adeudo y Recuperación";
-    Layout = "~/Views/Shared/_Layout.cshtml";
     TemporadaDeCosecha temporada = ViewBag.temporada;
+    ViewBag.Title = "Adeudo y Recuperación - "+temporada;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <p class="hidden-print">
@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th>Num. Prod.</th>
-            <th>@Html.DisplayNameFor(model => model.productor)</th>
+            <th>Productor</th>
             <th>@Html.DisplayNameFor(model => model.totalAdeudo) @temporada.fechaInicio.Year</th>
             <th>@Html.DisplayNameFor(model => model.adeudoRecuperado) @temporada.fechaInicio.Year</th>
             <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
@@ -37,8 +37,8 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item._productor.numProductor.ToUpper().Replace("P","").Replace("-",".")</td>
-                <td>@Html.DisplayFor(model => item.productor)</td>
+                <td>@item.productor.numProductor.ToUpper().Replace("P","").Replace("-",".")</td>
+                <td>@item.productor</td>
                 <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
                 <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
                 <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
@@ -62,7 +62,7 @@
             paging:false,
             //order: [[0, "asc"]],
             columnDefs: [
-                { orderable: false, targets: [5, 9] },
+                { orderable: false, targets: [6, 10] },
             ]
         });
     </script>    

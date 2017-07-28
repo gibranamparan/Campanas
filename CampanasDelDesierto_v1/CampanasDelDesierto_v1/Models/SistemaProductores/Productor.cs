@@ -57,34 +57,30 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Desactivado")]
         public bool Desactivado { get; set; }
         
-        public decimal totalDeudaCapitalYVentaMaterial
+        public decimal totalDeudaBalanceAnticiposPorTemporada(int temporadaID)
         {
-            get
-            {
-                decimal res = 0;
-                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) { 
-                    res = Math.Abs(this.MovimientosFinancieros
-                        .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !mov.isAbonoCapital)
-                        .Sum(mon => mon.montoMovimiento));
-                }
-                return res;
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) {
+                var movimientos = this.MovimientosFinancieros
+                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !mov.isAbonoCapital)
+                    .Where(mov=>mov.TemporadaDeCosechaID == temporadaID);
+                res = Math.Abs(movimientos.Sum(mon => mon.montoMovimiento));
             }
+            return res;
         }
 
-        public decimal totalAbonos
+        public decimal totalAbonosBalanceAnticiposPorTemporada(int temporadaID)
         {
-            get
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
             {
-                decimal res = 0;
-                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
-                {
-                    res = this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                res = this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
                     .Where(mov => ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
-                         == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                     .Sum(mov => mov.montoMovimiento);
-                }
-                return res;
+                        == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
+                        .Where(mov=>mov.TemporadaDeCosechaID == temporadaID)
+                        .Sum(mov => mov.montoMovimiento);
             }
+            return res;
         }
 
         /// <summary>

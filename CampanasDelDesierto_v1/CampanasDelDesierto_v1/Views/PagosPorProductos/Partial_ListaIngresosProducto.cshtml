@@ -66,7 +66,7 @@
                     @Html.DisplayFor(model => recepcion.numProductor)
                 </td>
                 <td style="width: 10em">
-                    @recepcion.nombreProductor.Substring(0, 14)...
+                    @(recepcion.nombreProductor.Length>14? recepcion.nombreProductor.Substring(0, 14) + "..." : recepcion.nombreProductor)
                 </td>
                 <td>
                     @recepcion.fecha.ToString("dd-MMM-yy")

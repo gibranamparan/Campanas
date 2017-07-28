@@ -269,12 +269,10 @@ namespace CampanasDelDesierto_v1.Models
         public TemporadaDeCosecha getTemporadaAnterior(ApplicationDbContext db)
         {
             TemporadaDeCosecha res = null;
-            var temporadas = db.TemporadaDeCosechas.Where(tem => tem.fechaInicio < this.fechaInicio).OrderByDescending(tem => tem.fechaInicio);
+            var temporadas = db.TemporadaDeCosechas.Where(tem => tem.fechaInicio < this.fechaInicio)
+                .OrderByDescending(tem => tem.fechaInicio).ToList();
             if (temporadas != null && temporadas.Count() > 0)
-            {
-                LinkedList<TemporadaDeCosecha> temporadasList = new LinkedList<TemporadaDeCosecha>(temporadas);
-                res = temporadasList.First.Next.Value;
-            }
+                res = temporadas.FirstOrDefault();
 
             return res;
         }

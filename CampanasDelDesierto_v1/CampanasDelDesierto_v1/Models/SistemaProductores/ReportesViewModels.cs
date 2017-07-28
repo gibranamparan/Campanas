@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
     {
         public class VMAdeudosRecuperacionReg
         { ApplicationDbContext db = new ApplicationDbContext();
-            public Productor _productor;
+            public Productor productor;
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Total de Adeudos, Cosecha")]
@@ -48,18 +48,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Anterior Cosecha")]
             public decimal adeudoAnteriorCosecha { get; set; }
-
-            [DisplayName("Productor")]
-            public string productor
-            {
-                get
-                {
-                    return String.Format($"{_productor.numProductor} {_productor.nombreProductor} Zona {_productor.zona}");
-                }
-            }
+            
             public VMAdeudosRecuperacionReg(Productor productor, TemporadaDeCosecha temporadaActual)
             {
-                this._productor = productor;
+                this.productor = productor;
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
                     .Where(mov => mov.TemporadaDeCosechaID == temporadaActual.TemporadaDeCosechaID);
@@ -123,7 +115,8 @@ namespace CampanasDelDesierto_v1.Models
         public class VMAdeudosRecuperacionDetallado
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            private Productor _productor;
+            
+            public Productor productor;
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Anterior Cosecha ")]
@@ -184,18 +177,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Retencion Sanidad Vegetal ")]
             public decimal retencionSanidadVegetal { get; set; }
-
-            [DisplayName("Productor")]
-            public string productor
-            {
-                get
-                {
-                    return String.Format($"{_productor.numProductor} {_productor.nombreProductor} Zona {_productor.zona}");
-                }
-            }
+            
             public VMAdeudosRecuperacionDetallado(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
             {
-                this._productor = productor;
+                this.productor = productor;
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
                     .Where(mov => mov.TemporadaDeCosechaID == temporadaActual.TemporadaDeCosechaID).ToList();

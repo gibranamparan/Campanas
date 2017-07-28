@@ -207,16 +207,13 @@
                 var pesosSelected = $(this).val() == '@PrestamoYAbonoCapital.Divisas.MXN';
                 $("#montoMovimiento").prop('readonly', pesosSelected); //Activa dolares
                 $("#montoPesos").prop('readonly', !pesosSelected); //Desactiva pesos
-
-                /*$("#montoMovimiento").val(numeral(0).format('0.00')).trigger('input');
-                $("#montoPesos").val(numeral(0).format('0.00')).trigger('input');*/
             })
 
             $("#tipoDeMovimientoDeCapital").change(function () {
-                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO" )
-                    $("#formGroupDeuda").slideUp();
-                else
+                if ($(this).val() == "@PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO")
                     $("#formGroupDeuda").slideDown();
+                else
+                    $("#formGroupDeuda").slideUp();
 
                 $("#proveedor").trigger("change");
             })
@@ -261,7 +258,7 @@
                 var montoMXN = $("#montoPesos").val();
                 var montoUSD = $("#montoMovimiento").val();
                 var precioDolar = $("#precioDelDolar").val()
-                
+
                 //Si la divisa seleccionada es en pesos, se cambian los dolares
                 if (divisa == '@PrestamoYAbonoCapital.Divisas.MXN') {
                     var num = montoMXN / precioDolar;

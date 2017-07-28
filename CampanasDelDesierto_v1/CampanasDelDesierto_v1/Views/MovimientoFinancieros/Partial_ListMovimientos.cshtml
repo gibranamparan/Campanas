@@ -124,8 +124,8 @@
         </table>          
     </div>
     <div class="pull-right" style="padding-right:2em">
-        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaCapitalYVentaMaterial.ToString("C")</span> |
-        <span><Strong style="color:red">TOTAL DE ABONOS: </Strong>@Model.totalAbonos.ToString("C")</span>
+        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaBalanceAnticiposPorTemporada(temporada).ToString("C")</span> |
+        <span><Strong style="color:red">TOTAL DE ABONOS: </Strong>@Model.totalAbonosBalanceAnticiposPorTemporada(temporada).ToString("C")</span>
     </div>
 }
 else
