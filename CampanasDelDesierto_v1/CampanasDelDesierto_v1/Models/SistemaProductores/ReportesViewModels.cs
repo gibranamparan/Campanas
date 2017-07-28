@@ -109,14 +109,10 @@ namespace CampanasDelDesierto_v1.Models
                     .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
 
                 //Calculo de compra total de arboles
-                this.adeudoArbolitos = Math.Abs(movimientosBalanceArboles
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                    .Sum(mov => mov.montoMovimiento));
+                this.adeudoArbolitos = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
                 //Calculo de abono total a deuda por arboles
-                this.abonoArbolitosRecuperado = Math.Abs(movimientosBalanceArboles
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                    .Sum(mov => mov.montoMovimiento));
+                this.abonoArbolitosRecuperado = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
                 //Calculo total de adeudo por recuperar
                 this.adeudoPorRecuperarArbolitos = (this.adeudoArbolitos - this.abonoArbolitosRecuperado);
@@ -153,19 +149,19 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayName("Saldo por Recuperar")]
             public decimal saldoPorRecuperar { get; set; }
 
-            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
             [DisplayName("Toneladas Manzanita ")]
             public double toneladasManzanita { get; set; }
 
-            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
             [DisplayName("Toneladas Mission")]
             public double toneladasMission { get; set; }
 
-            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
             [DisplayName("Toneladas Obliza ")]
             public double toneladasObliza { get; set; }
 
-            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
             [DisplayName("Total de Aceituna ")]
             public double totalAceituna { get; set; }
 

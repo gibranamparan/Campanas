@@ -83,9 +83,12 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    @Html.LabelFor(model => model.pagareVenta, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.pagareVenta, htmlAttributes: new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.pagareVenta, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.pagareVenta, new { htmlAttributes = new {
+                           @class = "form-control",
+                           style= "text-transform: uppercase"
+                       } })
                         @Html.ValidationMessageFor(model => model.pagareVenta, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -101,7 +104,9 @@
                 <div class="form-group col-md-6">
                     @Html.LabelFor(model => model.ordenCompra, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.ordenCompra, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.ordenCompra, new { htmlAttributes = new { @class = "form-control",
+                       style = "text-transform: uppercase"
+                   } })
                         @Html.ValidationMessageFor(model => model.ordenCompra, "", new { @class = "text-danger" })
                     </div>
                 </div> 

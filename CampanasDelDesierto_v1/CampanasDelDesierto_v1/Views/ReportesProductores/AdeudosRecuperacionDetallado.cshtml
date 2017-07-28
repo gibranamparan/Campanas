@@ -1,7 +1,7 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @model IEnumerable<ReportesViewModels.VMAdeudosRecuperacionDetallado>
 @{
-    ViewBag.Title = "Adeudo y Recuperación Detallado";
+    ViewBag.Title = "Reporte de Adeudo y Recuperación Detallado";
     Layout = "~/Views/Shared/_Layout.cshtml";
     TemporadaDeCosecha temporada = ViewBag.temporada;
 }
@@ -11,8 +11,9 @@
         <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
     </a>
 </p>
-<h2>Reporte de Adeudo y Recuperacion</h2>
+<h2>@ViewBag.Title</h2>
 
+<h3>@temporada.ToString().ToUpper()</h3>
 <table class="table table-hover table-striped">
     <tr>
         <th>@Html.DisplayNameFor(model => model.productor)</th>

@@ -60,51 +60,77 @@ namespace CampanasDelDesierto_v1.Models
         public decimal totalDeudaCapitalYVentaMaterial
         {
             get
-            {              
-                return Math.Abs(this.MovimientosFinancieros
-                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !mov.isAbonoCapital)
-                    .Sum(mon => mon.montoMovimiento));
+            {
+                decimal res = 0;
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count()>0) { 
+                    res = Math.Abs(this.MovimientosFinancieros
+                        .Where(mov => mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !mov.isAbonoCapital)
+                        .Sum(mon => mon.montoMovimiento));
+                }
+                return res;
             }
         }
 
         public decimal totalAbonos
         {
             get
-            {                
-                return this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+            {
+                decimal res = 0;
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
+                    res = this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
                     .Where(mov => ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
                          == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
                      .Sum(mov => mov.montoMovimiento);
-            }
-        }
-        public decimal totalDeudaVentaArbolito
-        {
-            get
-            {
-                return Math.Abs(this.MovimientosFinancieros
-                    .Where(mov => mov.tipoDeBalance == TipoDeBalance.VENTA_OLIVO)
-                    .Sum(mov => mov.montoMovimiento));
+                }
+                return res;
             }
         }
 
-        public decimal totalAbonoArbolito
+        /// <summary>
+        /// Calcula el monto total de arboles de olivo comprados dentro de una temporada indicada
+        /// </summary>
+        /// <param name="temporadaID"></param>
+        /// <returns></returns>
+        public decimal totalDeudaVentaArbolitoPorTemporada(int temporadaID)
         {
-            get
-            {         
-                return this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
-                    .Where(mov=>((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
-                    == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES)
-                    .Sum(mov=>mov.montoMovimiento);
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0) {
+                var movimientos = this.MovimientosFinancieros
+                    .Where(mov => mov.TemporadaDeCosechaID == temporadaID)
+                    .Where(mov => mov.isVentaDeArbolOlivo || mov.isAdeudoInicialVentaOlivo);
+                res = movimientos.Sum(mov => mov.montoMovimiento);
             }
+
+            return res;
+        }
+
+        public decimal totalAbonoArbolitoPorTemporada(int temporadaID)
+        {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                res = this.MovimientosFinancieros.Where(mov=>mov.TemporadaDeCosechaID == temporadaID)
+                    .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.CAPITAL)
+                    .Where(mov => ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
+                        == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES)
+                    .Sum(mov => mov.montoMovimiento);
+            }
+            return res;
         }
 
         public decimal totalIngresos
         {
             get
             {
-                return this.MovimientosFinancieros
+                decimal res = 0;
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
+                    res = this.MovimientosFinancieros
                     .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.PAGO_POR_PRODUCTO)
-                    .Sum(mon => mon.montoMovimiento); ;
+                    .Sum(mon => mon.montoMovimiento);
+                }
+                return res;
             }
         }
 
@@ -112,9 +138,14 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                return Math.Abs(this.MovimientosFinancieros
+                decimal res = 0;
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
+                    res = Math.Abs(this.MovimientosFinancieros
                     .Where(mov=> mov.getTypeOfMovement() == TypeOfMovements.LIQUIDACION)
                     .Sum(mon=>mon.montoMovimiento));
+                }
+                return res;
             }
         }
 
@@ -122,9 +153,14 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                return Math.Abs(this.MovimientosFinancieros
+                decimal res = 0;
+                if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+                {
+                    res = Math.Abs(this.MovimientosFinancieros
                     .Where(mov => mov.getTypeOfMovement() == TypeOfMovements.RENTENCION)
                     .Sum(mon => mon.montoMovimiento));
+                }
+                return res;
             }
         }
 
@@ -190,7 +226,7 @@ namespace CampanasDelDesierto_v1.Models
                 else return 0;
             }
         }
-        /*
+        
         public decimal getInteresesPagadosEnLaTemporada(TemporadaDeCosecha tem) {
             decimal res = 0;
             if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
@@ -198,17 +234,17 @@ namespace CampanasDelDesierto_v1.Models
                 var movimientos = this.MovimientosFinancieros
                     .Where(mov => mov.TemporadaDeCosechaID <= tem.TemporadaDeCosechaID)
                     .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS
-                        && mov.isAbonoCapital) // se toman todos los movimientos que han pagado interes
-                        .Where(mov => ((PrestamoYAbonoCapital)mov).prestamosAbonados.Count(pago => pago.pagoAInteres) > 0)
-                        .ToList();
+                        && mov.isAbonoCapital).Cast<PrestamoYAbonoCapital>();
                 if (movimientos.Count() > 0)
                 {
-                    var prestamosAbonados = movimientos.Select(mov => ((PrestamoYAbonoCapital)mov).prestamosAbonados);
-                    var abonos = prestamosAbonados.Where(abo=>abo.)
+                    //Se almancena dentro de una lista bidimensional la distribucion de cada abono
+                    List<List<Prestamo_Abono>> arrPagos = movimientos.Select(mov => mov.prestamosAbonados.ToList()).ToList();
+                    //Se hace la suma de todos los montos de las distribuciones hechas a intereses
+                    res = arrPagos.Sum(pgs => pgs.Where(mov => mov.pagoAInteres).Sum(mov => mov.monto));
                 }
             }
             return res;
-        }*/
+        }
 
         /// <summary>
         /// Arroja el balance correspondiente a la fecha de consulta sobre el balance de anticipos y ventas de material.

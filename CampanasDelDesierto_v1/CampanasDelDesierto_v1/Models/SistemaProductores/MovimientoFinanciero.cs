@@ -206,7 +206,7 @@ namespace CampanasDelDesierto_v1.Models
                 } else if (this.isMovimientoDeLiquidacion())
                 {
                     return TipoDeBalance.MOV_LIQUIDACION;
-                } else if (this.isVentaDeOlivo())
+                } else if (this.isBalanceDeVentaDeOlivo())
                 {
                     return TipoDeBalance.VENTA_OLIVO;
                 }else if(this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL)
@@ -363,8 +363,19 @@ namespace CampanasDelDesierto_v1.Models
         /// Arroja verdadero si el movimiento es una venta a credito de arbol de olivo.
         /// </summary>
         /// <returns></returns>
-        public bool isVentaDeOlivo()
+        public bool isBalanceDeVentaDeOlivo()
         {
+            bool res = this.isVentaDeArbolOlivo;
+
+            //O si es un abono al balance de olivo
+            if (!res)
+                res = res || (this.getTypeOfMovement() == TypeOfMovements.CAPITAL &&
+                    ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES);
+
+            return res;
+        }
+
+        public bool isVentaDeArbolOlivo { get {
             bool hayOlivo = false; bool res = false;
 
             //Se valida si es una venta de arboles de olivo
@@ -377,14 +388,8 @@ namespace CampanasDelDesierto_v1.Models
                 hayOlivo = VentaACredito.isVentaOlivo(ven.ComprasProductos);
             }
             res = tom && hayOlivo;
-
-            //O si es un abono al balance de olivo
-            if (!res)
-                res = res || (this.getTypeOfMovement() == TypeOfMovements.CAPITAL &&
-                    ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES);
-
             return res;
-        }
+        } }
 
         /// <summary>
         /// Arroja verdadero si el movimiento es un prestamo u abono (movimientos de capital) o 
@@ -397,7 +402,7 @@ namespace CampanasDelDesierto_v1.Models
             return (tom == (TypeOfMovements.CAPITAL) 
                 && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital 
                     != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
-                || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isVentaDeOlivo());
+                || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isBalanceDeVentaDeOlivo());
         }
 
         public bool isAnticipoDeCapital

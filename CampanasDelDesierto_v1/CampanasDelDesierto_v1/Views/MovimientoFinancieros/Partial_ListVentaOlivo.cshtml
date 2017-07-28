@@ -84,8 +84,8 @@
         </table>         
     </div>
     <div class="pull-right" style="padding-right:2em">
-        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaVentaArbolito.ToString("C")</span> |
-        <span><strong style="color:red">TOTAL DE ABONO: </strong>@Model.totalAbonoArbolito.ToString("C")</span>
+        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Math.Abs(Model.totalDeudaVentaArbolitoPorTemporada(temporada)).ToString("C")</span> |
+        <span><strong style="color:red">TOTAL DE ABONO: </strong>@Math.Abs(Model.totalAbonoArbolitoPorTemporada(temporada)).ToString("C")</span>
     </div>
 }
 else
