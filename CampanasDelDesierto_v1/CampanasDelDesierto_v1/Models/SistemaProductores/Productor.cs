@@ -222,8 +222,14 @@ namespace CampanasDelDesierto_v1.Models
                 else return 0;
             }
         }
-        
-        public decimal getInteresesPagadosEnLaTemporada(TemporadaDeCosecha tem) {
+
+        /// <summary>
+        /// Calcula el monto total de interes pagado por los abonos hechos dentro de la temporada indiquada en el argumento.
+        /// </summary>
+        /// <param name="tem">Instancia de TemporadaDeCosecha sobre la cual se quiere calcular los intereses pagados.</param>
+        /// <returns></returns>
+        public decimal getInteresesPagadosEnLaTemporada(TemporadaDeCosecha tem)
+        {
             decimal res = 0;
             if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
             {
@@ -237,6 +243,31 @@ namespace CampanasDelDesierto_v1.Models
                     List<List<Prestamo_Abono>> arrPagos = movimientos.Select(mov => mov.prestamosAbonados.ToList()).ToList();
                     //Se hace la suma de todos los montos de las distribuciones hechas a intereses
                     res = arrPagos.Sum(pgs => pgs.Where(mov => mov.pagoAInteres).Sum(mov => mov.monto));
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Calcula el monto total de interes pagado por los abonos hechos dentro de la temporada indiquada en el argumento.
+        /// </summary>
+        /// <param name="tem">Instancia de TemporadaDeCosecha sobre la cual se quiere calcular los intereses pagados.</param>
+        /// <returns></returns>
+        public decimal getCapitalPagadoEnLaTemporada(TemporadaDeCosecha tem)
+        {
+            decimal res = 0;
+            if (this.MovimientosFinancieros != null && this.MovimientosFinancieros.Count() > 0)
+            {
+                var movimientos = this.MovimientosFinancieros
+                    .Where(mov => mov.TemporadaDeCosechaID <= tem.TemporadaDeCosechaID)
+                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS
+                        && mov.isAbonoCapital).Cast<PrestamoYAbonoCapital>();
+                if (movimientos.Count() > 0)
+                {
+                    //Se almancena dentro de una lista bidimensional la distribucion de cada abono
+                    List<List<Prestamo_Abono>> arrPagos = movimientos.Select(mov => mov.prestamosAbonados.ToList()).ToList();
+                    //Se hace la suma de todos los montos de las distribuciones hechas a intereses
+                    res = arrPagos.Sum(pgs => pgs.Where(mov => !mov.pagoAInteres).Sum(mov => mov.monto));
                 }
             }
             return res;
@@ -657,16 +688,16 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados.</param>
         /// <returns></returns>
-        public decimal interesTotal(DateTime? fecha)
+        public decimal interesTotal(int tempID, DateTime? fecha)
         {
             decimal res = 0;
             DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Today;
             dt = dt.AddDays(1).AddMilliseconds(-1); //Hasta el final del dia
             var movs = this.MovimientosFinancieros;
-            if(movs!=null && movs.Count() > 0)
+            if (movs != null && movs.Count() > 0)
             {
                 res = movs.Where(mov => mov.isAnticipoDeCapital || mov.isAdeudoInicialAnticiposCapital)
-                    .Where(mov=>mov.fechaMovimiento<=dt)
+                    .Where(mov => mov.TemporadaDeCosechaID == tempID)
                     .Sum(mov => mov.getInteresRestante(dt));
             }
 

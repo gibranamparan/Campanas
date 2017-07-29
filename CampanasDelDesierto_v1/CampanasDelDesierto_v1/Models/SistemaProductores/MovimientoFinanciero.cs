@@ -666,8 +666,7 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Arroja el interes acumulado a a la fecha actual de la deuda en cuestion,
-        /// dentro del balance de anticipos.
+        /// Arroja el interes acumulado a la fecha actual de la deuda en cuestion, dentro del balance de anticipos.
         /// </summary>
         /// <param name="fechaActual"></param>
         /// <returns></returns>

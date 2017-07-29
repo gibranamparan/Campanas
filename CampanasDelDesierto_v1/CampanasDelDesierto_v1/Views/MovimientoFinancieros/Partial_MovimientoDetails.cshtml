@@ -27,9 +27,10 @@
 </div>
 
 @*Panel para detalles de registro de cosecha*@
-@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)
-            {
-    @Html.Partial("../PagosPorProductos/Partial_ListaIngresosProducto", ((PagoPorProducto)Model).Recepciones)
+@if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO){
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("showOpts", false);
+    @Html.Partial("../PagosPorProductos/Partial_ListaIngresosProducto", ((PagoPorProducto)Model).Recepciones, vdd)
 }
 
 @section Scripts{

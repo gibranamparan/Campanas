@@ -30,15 +30,15 @@ namespace CampanasDelDesierto_v1.Models
             public decimal interesGenerado { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Adeudo de Arbolitos, Cosecha")]
+            [DisplayName("Adeudo Arboles Olivo, Cosecha")]
             public decimal adeudoArbolitos { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Abono Arbolitos Recuperado")]
+            [DisplayName("Abono Arboles Olivo")]
             public decimal abonoArbolitosRecuperado{ get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Saldo por Recuperar de Arbolitos")]
+            [DisplayName("Saldo por Recuperar Arboles Olivo")]
             public decimal adeudoPorRecuperarArbolitos { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
@@ -72,7 +72,7 @@ namespace CampanasDelDesierto_v1.Models
                     .Sum(mov => mov.montoMovimiento);
 
                 //Calculo de interes generado a la fecha final de la temporada
-                this.interesGenerado = productor.interesTotal(temporadaActual.fechaFin);
+                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,DateTime.Today);
 
                 //Calculo de total de ventas
                   decimal totalVentas = movimientosBalanceAnticipos
@@ -80,7 +80,7 @@ namespace CampanasDelDesierto_v1.Models
                     .Sum(mov => mov.montoMovimiento);              
 
                 //Adeudo total es la suma de prestamos y ventas                
-                this.totalAdeudo = -(totalPrestamos + totalVentas);
+                this.totalAdeudo = Math.Abs(totalPrestamos + totalVentas);
 
                 //Suma de todos los abonos a la deuda
                 this.adeudoRecuperado = movimientosCapital
@@ -123,16 +123,24 @@ namespace CampanasDelDesierto_v1.Models
             public decimal adeudoAnteriorCosecha { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Anticipos Cosecha Efectivo ")]
+            [DisplayName("Anticipos Efectivo ")]
             public decimal anticiposCosechaEfectivo { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Anticipos Cosecha Materiales ")]
+            [DisplayName("Anticipos Materiales ")]
             public decimal anticiposCosechaMateriales { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Total Adeudos ")]
             public decimal totalAdeudos { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Interes Devengado")]
+            public decimal interesGenerado { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Interes Pagado")]
+            public decimal interesPagado { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Recuperado, Cosecha")]
@@ -155,6 +163,18 @@ namespace CampanasDelDesierto_v1.Models
             public double toneladasObliza { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:0.000}")]
+            [DisplayName("Toneladas Manz. Org. ")]
+            public double toneladasManzanitaOrg { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            [DisplayName("Toneladas Obliza Org. ")]
+            public double toneladasOblizaOrg { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
+            [DisplayName("Toneladas Mission Org. ")]
+            public double toneladasMissionOrg { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:0.000}")]
             [DisplayName("Total de Aceituna ")]
             public double totalAceituna { get; set; }
 
@@ -171,13 +191,22 @@ namespace CampanasDelDesierto_v1.Models
             public decimal abonoArbolitosRecuperado { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Adeudo de Arbolitos, Cosecha")]
-            public decimal adeudoArbolitos { get; set; }
+            [DisplayName("Adeudo Arboles Olivo por Recuperar")]
+            public decimal adeudoArbolitosPorRecuperar { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Retencion Sanidad Vegetal ")]
+            [DisplayName("Deducción Sanidad Vegetal ")]
             public decimal retencionSanidadVegetal { get; set; }
-            
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Deducción Ejidal")]
+            public decimal retencionEjidal { get; private set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Otras Deducciones")]
+            public decimal retencionesOtras { get; private set; }
+
+            public VMAdeudosRecuperacionDetallado() { }
             public VMAdeudosRecuperacionDetallado(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
             {
                 this.productor = productor;
@@ -197,25 +226,24 @@ namespace CampanasDelDesierto_v1.Models
                     this.adeudoAnteriorCosecha = Math.Abs(productor.adeudoInicialAnticipos.montoMovimiento);
 
                 //suma del monto de los  movimientos de anticipos por temporda actual
-                decimal anticipos = Math.Abs(movimientos
-                    .Where(mov=>mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                    .Sum(mon=>mon.montoMovimiento));
-                this.anticiposCosechaEfectivo = anticipos;
+                this.anticiposCosechaEfectivo = productor.totalDeudaBalanceAnticiposPorTemporada(temporadaActual.TemporadaDeCosechaID);
 
                 //suma del monto de los movimientos de tipo venta a credito por temporada actual
-                decimal ventasACredito = Math.Abs(movimientos
+                this.anticiposCosechaMateriales = Math.Abs(movimientos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                     .Sum(mon => mon.montoMovimiento));
-                this.anticiposCosechaMateriales = ventasACredito;
 
                 //suma total de adeudos
-                this.totalAdeudos = anticipos + ventasACredito;
+                this.totalAdeudos = this.anticiposCosechaEfectivo + this.anticiposCosechaMateriales;
+
+                //Calculo de interes generado a la fecha final de la temporada
+                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,temporadaActual.fechaFin);
+
+                //Calculo de interes generado a la fecha final de la temporada
+                this.interesPagado = productor.getInteresesPagadosEnLaTemporada(temporadaActual);
 
                 //Total de adeudo recuperado
-                this.adeudoRecuperado = movimientosCapital
-                   .Where(mov => ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
-                       == PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO)
-                   .Sum(mov => mov.montoMovimiento);
+                this.adeudoRecuperado = productor.getCapitalPagadoEnLaTemporada(temporadaActual);
 
                 //Calculo de saldo por recuperar en balance de anticipos
                 this.saldoPorRecuperar = this.totalAdeudos - this.adeudoRecuperado;
@@ -231,50 +259,83 @@ namespace CampanasDelDesierto_v1.Models
                 this.toneladasObliza = movCosecha.Sum(mov => mov.cantidadProducto2);
                 //se suman las toneladas y se saca el costo de mission
                 this.toneladasMission = movCosecha.Sum(mov => mov.cantidadProducto3);
+                //se suman las toneladas y se saca el costo de mission
+                this.toneladasManzanitaOrg = movCosecha.Sum(mov => mov.cantidadProducto4);
+                //se suman las toneladas y se saca el costo de mission
+                this.toneladasOblizaOrg = movCosecha.Sum(mov => mov.cantidadProducto5);
+                //se suman las toneladas y se saca el costo de mission
+                this.toneladasMissionOrg = movCosecha.Sum(mov => mov.cantidadProducto6);
                 //total de toneladas y se saca el costo de aceituna
-                this.totalAceituna = toneladasManzanita + toneladasMission + toneladasObliza;
+                this.totalAceituna = toneladasManzanita + toneladasMission + toneladasObliza+
+                    toneladasManzanitaOrg+ toneladasOblizaOrg+ toneladasMissionOrg;
                 List<decimal> pagosCosechaList = new List<decimal>();
-                foreach (var ingreso in movCosecha)
-                {                    
-                    //manzanita, toneladas y costo del producto                    
-                    decimal pagoPro1 = ingreso.pagoProducto1;
-                    //obliza, toneladas y costo del producto                  
-                    decimal pagoPro2 = ingreso.pagoProducto2;
-                    //mission, toneladas y costo del producto         
-                    decimal pagoPro3 = ingreso.pagoProducto3;
-                    /*Se suman el total de las aceitunas para calcular
-                      el total de pago de los tres tipos de aceitunas*/
-                    decimal pagos = pagoPro1 + pagoPro2 + pagoPro3;
-                    pagosCosechaList.Add(pagos);
 
-                }
-                this.pagoAceitunaCosecha = pagosCosechaList.Sum();//Se le asigna el total de los pagos del productor
+                //CALCULO DE PAGO TOTAL
+                //manzanita, toneladas y costo del producto                    
+                decimal pagoPro1 = movCosecha.Sum(mov=>mov.pagoProducto1);
+                //obliza, toneladas y costo del producto                  
+                decimal pagoPro2 = movCosecha.Sum(mov => mov.pagoProducto2);
+                //mission, toneladas y costo del producto         
+                decimal pagoPro3 = movCosecha.Sum(mov => mov.pagoProducto3);
+                //manzanita org, toneladas y costo del producto                    
+                decimal pagoPro4 = movCosecha.Sum(mov => mov.pagoProducto4);
+                //obliza, toneladas y costo del producto                  
+                decimal pagoPro5 = movCosecha.Sum(mov => mov.pagoProducto5);
+                //mission, toneladas y costo del producto         
+                decimal pagoPro6 = movCosecha.Sum(mov => mov.pagoProducto6);
+                //Se le asigna el total de los pagos del productor
+                this.pagoAceitunaCosecha = pagoPro1 + pagoPro2 + pagoPro3 + pagoPro4 + pagoPro5 + pagoPro6;
 
+                /**********BALANCE DE COMPRAS DE ARBOLES***********/
                 //filtro de movmientos de balance tipo venta olivo
                 var movimientosBalanceArboles = movimientos
                     .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
 
                 //Calculo de compra total de arboles
-                this.adeudoArbolitos = Math.Abs(movimientosBalanceArboles
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                    .Sum(mov => mov.montoMovimiento));
+                this.adeudoArbolitosCosecha = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
                 //Calculo de abono total a deuda por arboles
-                this.abonoArbolitosRecuperado = Math.Abs(movimientosBalanceArboles
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
-                    .Sum(mov => mov.montoMovimiento));
+                this.abonoArbolitosRecuperado = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
-                //Calculo de compra total de arboles
-                this.adeudoArbolitos = Math.Abs(movimientosBalanceArboles
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                    .Sum(mov => mov.montoMovimiento));
+                //Calculo total de adeudo por recuperar
+                this.adeudoArbolitosPorRecuperar = (this.adeudoArbolitosCosecha - this.abonoArbolitosRecuperado);
 
                 //retencion sanidad vegetal
-                var movimientosSanidadVegetal = movimientos
-                    .Where(mov=>mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION);
+                var movimientosRetenciones = movimientos
+                    .Where(mov=>mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION).Cast<Retencion>();
 
-                this.retencionSanidadVegetal = (movimientosSanidadVegetal.Sum(mov=>mov.montoMovimiento)) * -1;
+                this.retencionSanidadVegetal = Math.Abs(movimientosRetenciones.Where(mov=>mov.tipoDeDeduccion == Retencion.TipoRetencion.SANIDAD).Sum(mov=>mov.montoMovimiento));
+                this.retencionEjidal = Math.Abs(movimientosRetenciones.Where(mov => mov.tipoDeDeduccion == Retencion.TipoRetencion.EJIDAL).Sum(mov => mov.montoMovimiento));
+                this.retencionesOtras = Math.Abs(movimientosRetenciones.Where(mov => mov.tipoDeDeduccion == Retencion.TipoRetencion.OTRO).Sum(mov => mov.montoMovimiento));
+            }
 
+            public static VMAdeudosRecuperacionDetallado calcularTotales(List<VMAdeudosRecuperacionDetallado> datos)
+            {
+                VMAdeudosRecuperacionDetallado res = new VMAdeudosRecuperacionDetallado();
+                res.abonoArbolitosRecuperado = datos.Sum(mov => mov.abonoArbolitosRecuperado);
+                res.adeudoAnteriorCosecha = datos.Sum(mov => mov.adeudoAnteriorCosecha);
+                res.adeudoArbolitosCosecha= datos.Sum(mov => mov.adeudoArbolitosCosecha);
+                res.adeudoArbolitosPorRecuperar= datos.Sum(mov => mov.adeudoArbolitosPorRecuperar);
+                res.adeudoRecuperado= datos.Sum(mov => mov.adeudoRecuperado);
+                res.anticiposCosechaEfectivo= datos.Sum(mov => mov.anticiposCosechaEfectivo);
+                res.interesGenerado = datos.Sum(mov => mov.interesGenerado);
+                res.interesPagado = datos.Sum(mov => mov.interesPagado);
+                res.anticiposCosechaMateriales = datos.Sum(mov => mov.anticiposCosechaMateriales);
+                res.pagoAceitunaCosecha= datos.Sum(mov => mov.pagoAceitunaCosecha);
+                res.retencionEjidal= datos.Sum(mov => mov.retencionEjidal);
+                res.retencionesOtras= datos.Sum(mov => mov.retencionesOtras);
+                res.retencionSanidadVegetal= datos.Sum(mov => mov.retencionSanidadVegetal);
+                res.saldoPorRecuperar= datos.Sum(mov => mov.saldoPorRecuperar);
+                res.toneladasManzanita= datos.Sum(mov => mov.toneladasManzanita);
+                res.toneladasManzanitaOrg = datos.Sum(mov => mov.toneladasManzanitaOrg);
+                res.toneladasMission = datos.Sum(mov => mov.toneladasMission);
+                res.toneladasMissionOrg= datos.Sum(mov => mov.toneladasMissionOrg);
+                res.toneladasObliza= datos.Sum(mov => mov.toneladasObliza);
+                res.toneladasOblizaOrg = datos.Sum(mov => mov.toneladasOblizaOrg);
+                res.totalAceituna= datos.Sum(mov => mov.totalAceituna);
+                res.totalAdeudos = datos.Sum(mov => mov.totalAdeudos);
+
+                return res;
             }
         }
     }

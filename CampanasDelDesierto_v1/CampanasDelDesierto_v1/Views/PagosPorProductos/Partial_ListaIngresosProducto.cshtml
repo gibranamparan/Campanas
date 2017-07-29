@@ -7,8 +7,10 @@
 <table id="tblRecibosCosechaImportados" class="table table-hover table-striped">
     <thead>
         <tr>
+            @if (showOpts) {
             <th></th>
             <th></th>
+            }
             <th>
                 @Html.DisplayNameFor(model => model.numeroRecibo)
             </th>
@@ -43,10 +45,13 @@
                 @Html.DisplayNameFor(model => model.cantidadTonsProd6)
             </th>
 
+@if (showOpts)
+{
             <th></th>
             <th></th>
             <th></th>
             <th></th>
+}
         </tr>
     </thead>
     <tbody>
@@ -56,8 +61,12 @@
     significa que esta seleccionado por defecto ya que esta asociado al movimiento
     que esta siendo registrado*@
             <tr @((recepcion.movimientoID != null && recepcion.movimientoID > 0) ? "default-selected" : "")>
+
+@if (showOpts)
+{
                 <td></td>
                 <td>@Html.DisplayFor(model => recepcion.recepcionID)</td>
+}
                 <td>
                     @Html.DisplayFor(model => recepcion.numeroRecibo)
                 </td>
@@ -92,6 +101,9 @@
                 <td>
                     @Html.DisplayFor(model => recepcion.cantidadTonsProd6)
                 </td>
+
+@if (showOpts)
+{
                 <td>
                     @if (recepcion.liquidacionYaEmitada || recepcion.pagoYaRegistrado)
                     {
@@ -120,9 +132,11 @@
                         </div>
                     }
                 </td>
+
                 <td>@Html.DisplayFor(model => recepcion.fecha)</td>
                 <td>@Html.DisplayFor(model => recepcion.idProductor)</td>
                 <td>@Html.DisplayFor(model => recepcion.movimientoID)</td>
+}
             </tr>
         }
     </tbody>

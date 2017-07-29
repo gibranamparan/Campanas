@@ -57,22 +57,29 @@
             }
         </div>
         @*Prestamos y abonos*@
+        <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)</h4>
         <div class="row">
-            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos")
         </div>
 
         @*Ventas de arbol de olivo*@
+        <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
         <div class="row">
-            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
         </div>
 
         @*Ingresos de productos y liquidaciones*@
+        <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)</h4>
         <div class="row">
-            <h4>@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)</h4>
             @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones")
         </div>
     </div>
 </div>
 @Html.Partial("Partial_LineaFirmaReportes")
+<style>
+    /*extensión CSS no estándar para forzar la impresión*/
+    .panel-heading {
+        background-color:#31708f !important;
+        -webkit-print-color-adjust:exact;
+    }
+</style>

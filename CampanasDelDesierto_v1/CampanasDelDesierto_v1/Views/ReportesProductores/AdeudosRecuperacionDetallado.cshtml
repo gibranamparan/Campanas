@@ -4,6 +4,7 @@
     ViewBag.Title = "Reporte de Adeudo y Recuperación Detallado";
     Layout = "~/Views/Shared/_Layout.cshtml";
     TemporadaDeCosecha temporada = ViewBag.temporada;
+    ReportesViewModels.VMAdeudosRecuperacionDetallado rowTotales = ReportesViewModels.VMAdeudosRecuperacionDetallado.calcularTotales(Model.ToList());
 }
 
 <p class="hidden-print">
@@ -17,10 +18,12 @@
 <table id="tblReporte" class="table table-hover table-striped table-responsive">
     <thead>
         <tr>
-            <th>Num. Prod.</th>
+            @*<th>Num. Prod.</th>*@
             <th>Productor</th>
             <th>@Html.DisplayNameFor(model => model.adeudoAnteriorCosecha) @(temporada.fechaInicio.Year - 1)</th>
-            <th>@Html.DisplayNameFor(model => model.anticiposCosechaEfectivo) @temporada.fechaInicio.Year</th>
+            <th>@Html.DisplayNameFor(model => model.anticiposCosechaEfectivo)</th>
+            <th>@Html.DisplayNameFor(model => model.interesGenerado)</th>
+            <th>@Html.DisplayNameFor(model => model.interesPagado)</th>
             <th>@Html.DisplayNameFor(model => model.anticiposCosechaMateriales)</th>
             <th>@Html.DisplayNameFor(model => model.totalAdeudos)</th>
             <th>@Html.DisplayNameFor(model => model.adeudoRecuperado)</th>
@@ -30,27 +33,85 @@
             <th>@Html.DisplayNameFor(model => model.toneladasManzanita)</th>
             <th>@Html.DisplayNameFor(model => model.toneladasMission)</th>
             <th>@Html.DisplayNameFor(model => model.toneladasObliza)</th>
+            @if (Model.Sum(mov => mov.toneladasManzanitaOrg) > 0)
+            {<th>@Html.DisplayNameFor(model => model.toneladasManzanitaOrg)</th>}
+            @if (Model.Sum(mov => mov.toneladasMissionOrg) > 0) { 
+            <th>@Html.DisplayNameFor(model => model.toneladasMissionOrg)</th>}
+            @if (Model.Sum(mov => mov.toneladasOblizaOrg) > 0) { 
+            <th>@Html.DisplayNameFor(model => model.toneladasOblizaOrg)</th>
+            }
             <th>@Html.DisplayNameFor(model => model.totalAceituna)</th>
-            <th>@Html.DisplayNameFor(model => model.pagoAceitunaCosecha) @temporada.fechaInicio.Year</th>
+            <th>@Html.DisplayNameFor(model => model.pagoAceitunaCosecha)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
             <th>@Html.DisplayNameFor(model => model.adeudoArbolitosCosecha)</th>
             <th>@Html.DisplayNameFor(model => model.abonoArbolitosRecuperado)</th>
-            <th>@Html.DisplayNameFor(model => model.adeudoArbolitos)</th>
+            <th>@Html.DisplayNameFor(model => model.adeudoArbolitosPorRecuperar)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
             <th>@Html.DisplayNameFor(model => model.retencionSanidadVegetal)</th>
+            @if (Model.Sum(mov => mov.retencionEjidal) > 0) { 
+            <th>@Html.DisplayNameFor(model => model.retencionEjidal)</th>}
+            @if (Model.Sum(mov => mov.retencionesOtras) > 0)
+            {
+            <th>@Html.DisplayNameFor(model => model.retencionesOtras)</th>}
 
         </tr>
     </thead>
     <tbody>
+        <tr class="rowTotales">
+            <td>TOTALES</td>
+            <td>@Html.DisplayFor(model => rowTotales.adeudoAnteriorCosecha) </td>
+            <td>@Html.DisplayFor(model => rowTotales.anticiposCosechaEfectivo)</td>
+            <td>@Html.DisplayFor(model => rowTotales.interesGenerado)</td>
+            <td>@Html.DisplayFor(model => rowTotales.interesPagado)</td>
+            <td>@Html.DisplayFor(model => rowTotales.anticiposCosechaMateriales)</td>
+            <td>@Html.DisplayFor(model => rowTotales.totalAdeudos)</td>
+            <td>@Html.DisplayFor(model => rowTotales.adeudoRecuperado)</td>
+            <td>@Html.DisplayFor(model => rowTotales.saldoPorRecuperar)</td>
+            <td style="width:5px; background-color: white;
+                border-left: 1px solid black; border-right: 1px solid black;"></td>
+
+            <td>@Html.DisplayFor(model => rowTotales.toneladasManzanita)</td>
+            <td>@Html.DisplayFor(model => rowTotales.toneladasMission)</td>
+            <td>@Html.DisplayFor(model => rowTotales.toneladasObliza)</td>
+            @if (Model.Sum(mov => mov.toneladasManzanitaOrg) > 0)
+            {
+                <td>@Html.DisplayFor(model => rowTotales.toneladasManzanitaOrg)</td>}
+            @if (Model.Sum(mov => mov.toneladasMissionOrg) > 0)
+            {
+                <td>@Html.DisplayFor(model => rowTotales.toneladasMissionOrg)</td>}
+            @if (Model.Sum(mov => mov.toneladasOblizaOrg) > 0)
+            {
+                <td>@Html.DisplayFor(model => rowTotales.toneladasOblizaOrg)</td>}
+            <td>@Html.DisplayFor(model => rowTotales.totalAceituna)</td>
+            <td>@Html.DisplayFor(model => rowTotales.pagoAceitunaCosecha)</td>
+            <td style="width:5px; background-color: white;
+                border-left: 1px solid black; border-right: 1px solid black;"></td>
+
+            <td>@Html.DisplayFor(model => rowTotales.adeudoArbolitosCosecha)</td>
+            <td>@Html.DisplayFor(model => rowTotales.abonoArbolitosRecuperado)</td>
+            <td>@Html.DisplayFor(model => rowTotales.adeudoArbolitosPorRecuperar)</td>
+
+            <td style="width:5px; background-color: white;
+                border-left: 1px solid black; border-right: 1px solid black;"></td>
+            <td>@Html.DisplayFor(model => rowTotales.retencionSanidadVegetal)</td>
+            @if (Model.Sum(mov => mov.retencionEjidal) > 0)
+            {
+            <td>@Html.DisplayFor(model => rowTotales.retencionEjidal)</td>}
+            @if (Model.Sum(mov => mov.retencionesOtras) > 0)
+            {
+            <td>@Html.DisplayFor(model => rowTotales.retencionesOtras)</td>}
+        </tr>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.productor.numProductor.ToUpper().Replace("P", "").Replace("-", ".")</td>
+                @*<td>@item.productor.numProductor.ToUpper().Replace("P", "").Replace("-", ".")</td>*@
                 <td>@item.productor</td>
-                <td>@Html.DisplayFor(model => item.adeudoAnteriorCosecha) </td>
+                <td>@Html.DisplayFor(model => item.adeudoAnteriorCosecha)</td>
                 <td>@Html.DisplayFor(model => item.anticiposCosechaEfectivo)</td>
+                <td>@Html.DisplayFor(model => item.interesGenerado)</td>
+                <td>@Html.DisplayFor(model => item.interesPagado)</td>
                 <td>@Html.DisplayFor(model => item.anticiposCosechaMateriales)</td>
                 <td>@Html.DisplayFor(model => item.totalAdeudos)</td>
                 <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
@@ -61,6 +122,12 @@
                 <td>@Html.DisplayFor(model => item.toneladasManzanita)</td>
                 <td>@Html.DisplayFor(model => item.toneladasMission)</td>
                 <td>@Html.DisplayFor(model => item.toneladasObliza)</td>
+                @if (Model.Sum(mov => mov.toneladasManzanitaOrg) > 0) { 
+                <td>@Html.DisplayFor(model => item.toneladasManzanitaOrg)</td>}
+                @if (Model.Sum(mov => mov.toneladasMissionOrg) > 0){
+                <td>@Html.DisplayFor(model => item.toneladasMissionOrg)</td>}
+                @if (Model.Sum(mov => mov.toneladasOblizaOrg) > 0){
+                <td>@Html.DisplayFor(model => item.toneladasOblizaOrg)</td>}
                 <td>@Html.DisplayFor(model => item.totalAceituna)</td>
                 <td>@Html.DisplayFor(model => item.pagoAceitunaCosecha)</td>
                 <td style="width:5px; background-color: white;
@@ -68,10 +135,15 @@
 
                 <td>@Html.DisplayFor(model => item.adeudoArbolitosCosecha)</td>
                 <td>@Html.DisplayFor(model => item.abonoArbolitosRecuperado)</td>
-                <td>@Html.DisplayFor(model => item.adeudoArbolitos)</td>
+                <td>@Html.DisplayFor(model => item.adeudoArbolitosPorRecuperar)</td>
+
                 <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
                 <td>@Html.DisplayFor(model => item.retencionSanidadVegetal)</td>
+                @if (Model.Sum(mov => mov.retencionEjidal) > 0)
+                {<td>@Html.DisplayFor(model => item.retencionEjidal)</td>}
+                @if (Model.Sum(mov => mov.retencionesOtras) > 0)
+                {<td>@Html.DisplayFor(model => item.retencionesOtras)</td>}
             </tr>
         }
     </tbody>
@@ -79,9 +151,22 @@
 
 @section Scripts{
     <script>
+        $.each($("td"), function (idx,item) {
+            if ($(item).html() == "$0.00" || $(item).html() == "0.000")
+                $(item).html("--")
+        })
     </script>
 }
 <style>
+    .rowTotales td{
+        background-color: #e4fdb8 !important;
+    }
     @@media print {
+        table{
+            font-size: .8em;
+        }
+        body{
+            margin: 0;
+        }
     }
 </style>
