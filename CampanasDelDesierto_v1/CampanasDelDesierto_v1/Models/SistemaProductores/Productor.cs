@@ -599,7 +599,7 @@ namespace CampanasDelDesierto_v1.Models
 
                 //Variables para calcular intereses por prestamo a la fecha del abono
                 VMInteres interesReg = new VMInteres();
-                decimal interesAlAbonar = 0;bool hayInteres;
+                decimal interesAlAbonar = 0, interesTotalGenerado = 0 ;bool hayInteres;
 
                 //Si existen prestamos y abonos activos con monto activo disponible, se procede a asociarlos
                 while (prestamoNodo != null && abonoNodo != null)
@@ -614,7 +614,7 @@ namespace CampanasDelDesierto_v1.Models
                         && (prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO 
                             && !prestamo.isAdeudoInicialMaterial))
                     { //Ciclo de pago de interes
-                        interesReg = prestamo.getInteresReg(abono.fechaMovimiento);
+                        interesReg = prestamo.getInteresReg(abono.fechaMovimiento, out interesTotalGenerado);
                         interesAlAbonar = interesReg.interesRestante;
                     }
                     hayInteres = Math.Round(interesAlAbonar,2) > 0;
@@ -688,20 +688,51 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados.</param>
         /// <returns></returns>
-        public decimal interesTotal(int tempID, DateTime? fecha)
+        public decimal interesTotal(int tempID, DateTime? fecha, out decimal interesTotalGenerado)
         {
-            decimal res = 0;
+            decimal interesTotalQueSeDebe = 0;
+            interesTotalGenerado = 0;
             DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Today;
             dt = dt.AddDays(1).AddMilliseconds(-1); //Hasta el final del dia
-            var movs = this.MovimientosFinancieros;
+            var movs = this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == tempID);
             if (movs != null && movs.Count() > 0)
             {
-                res = movs.Where(mov => mov.isAnticipoDeCapital || mov.isAdeudoInicialAnticiposCapital)
-                    .Where(mov => mov.TemporadaDeCosechaID == tempID)
-                    .Sum(mov => mov.getInteresRestante(dt));
+                movs = movs.Where(mov => mov.isAnticipoDeCapital || mov.isAdeudoInicialAnticiposCapital);
+                foreach (var mov in movs)
+                {
+                    decimal interesGenerado = 0;
+                    decimal interesDebido = mov.getInteresRestante(dt, out interesGenerado);
+                    interesTotalQueSeDebe += interesDebido;
+                    interesTotalGenerado += interesGenerado;
+                }
             }
 
-            return res;
+            return interesTotalQueSeDebe;
+        }
+
+        /// <summary>
+        /// Calcula el interes total que debe un productor a la fecha consultada
+        /// </summary>
+        /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados.</param>
+        /// <returns></returns>
+        public decimal interesTotal(int tempID, DateTime? fecha)
+        {
+            decimal interesTotalQueSeDebe = 0;
+            DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Today;
+            dt = dt.AddDays(1).AddMilliseconds(-1); //Hasta el final del dia
+            var movs = this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == tempID);
+            if (movs != null && movs.Count() > 0)
+            {
+                movs = movs.Where(mov => mov.isAnticipoDeCapital || mov.isAdeudoInicialAnticiposCapital);
+                foreach (var mov in movs)
+                {
+                    decimal interesGenerado = 0;
+                    decimal interesDebido = mov.getInteresRestante(dt, out interesGenerado);
+                    interesTotalQueSeDebe += interesDebido;
+                }
+            }
+
+            return interesTotalQueSeDebe;
         }
 
         public override string ToString()

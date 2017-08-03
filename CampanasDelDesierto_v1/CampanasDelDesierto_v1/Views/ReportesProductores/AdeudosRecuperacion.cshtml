@@ -13,6 +13,7 @@
 </p>
 
 <h2>Reporte de Adeudo y Recuperacion</h2>
+<span class="pull-right"><strong>Generado al día </strong> <span>@DateTime.Today.ToString("dd/MMMM/yyyy")</span></span>
 <h3>@temporada.ToString().ToUpper()</h3>
 <table id="tblReporte" class="table table-responsive table-hover table-striped">
     <thead>
@@ -22,7 +23,6 @@
             <th>@Html.DisplayNameFor(model => model.totalAdeudo) @temporada.fechaInicio.Year</th>
             <th>@Html.DisplayNameFor(model => model.adeudoRecuperado) @temporada.fechaInicio.Year</th>
             <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
-            <th>@Html.DisplayNameFor(model => model.interesGenerado)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
             <th>@Html.DisplayNameFor(model => model.adeudoArbolitos) @temporada.fechaInicio.Year</th>
@@ -42,7 +42,6 @@
                 <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
                 <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
                 <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
-                <td>@Html.DisplayFor(model => item.interesGenerado)</td>
                 <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
                 <td>@Html.DisplayFor(model => item.adeudoArbolitos)</td>
@@ -62,7 +61,7 @@
             paging:false,
             //order: [[0, "asc"]],
             columnDefs: [
-                { orderable: false, targets: [6, 10] },
+                { orderable: false, targets: [5, 9] },
             ]
         });
 /*

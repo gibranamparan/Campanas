@@ -18,7 +18,7 @@
 
 @if (Model != null && movimientos.Count() > 0)
 {
-    <div class="col-md-12">
+    <div class="col-xs-12">
         <table class="table table-hover table-striped table-responsive">
             <tr>
                 <th>No. Pagaré</th>
@@ -38,7 +38,10 @@
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoActivo)
                 </th>
                 <th>
-                    Interes Devengado
+                    Interes Total Generado
+                </th>
+                <th>
+                    Interes Por Pagar
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
@@ -48,6 +51,8 @@
 
             @foreach (var item in movimientos)
             {
+                decimal interesTotalGenerado = 0;
+                decimal interesDevengado = item.getInteresRestante(fechaActual,out interesTotalGenerado);
                 <tr >
                     <td>
                         @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) {
@@ -79,14 +84,22 @@
                             @Html.DisplayFor(modelItem => item.montoActivo)
                         }
                     </td>
-                    <td>
+                    <td> @*Interes total generado*@
                         @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                        || item.isAdeudoInicialAnticiposCapital)
+                    || item.isAdeudoInicialAnticiposCapital)
                         {
-                            var interesDevengado = item.getInteresRestante(fechaActual);
+                            @Math.Abs(interesTotalGenerado).ToString("C");
+                        }
+                    </td>
+
+                    <td> @*Interes por pagar*@
+                        @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
+                    || item.isAdeudoInicialAnticiposCapital)
+                        {
                             @Math.Abs(interesDevengado).ToString("C");
                         }
                     </td>
+
                     <td class='@(item.balance<0?"montoNegativo":"")'>
                         @Html.DisplayFor(modelItem => item.balance)
                     </td>

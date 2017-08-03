@@ -39,8 +39,9 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Balance (USD)")]
         public decimal balanceMasInteres { get {
                 decimal interes = 0;
+                decimal interesTotalGenerado = 0;
                 if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
-                    interes = -this.getInteresRestante(DateTime.Today);
+                    interes = -this.getInteresRestante(DateTime.Today, out interesTotalGenerado);
                 return this.balance + interes;
             } }
 
@@ -666,10 +667,30 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Arroja el interes acumulado a la fecha actual de la deuda en cuestion, dentro del balance de anticipos.
+        /// Arroja el interes por pagar y total generado acumulado a la fecha actual de la deuda en cuestion (balance de anticipos).
         /// </summary>
-        /// <param name="fechaActual"></param>
+        /// <param name="fechaActual">Fecha de consulta de los intereses</param>
+        /// <param name="interesTotalGenerado">Argumento de salida sobre el cual se arroja el total de intereses generados por este anticipo.</param>
         /// <returns></returns>
+        public decimal getInteresRestante(DateTime fechaActual, out decimal interesTotalGenerado)
+        {
+            interesTotalGenerado = 0;
+            if (this.isAnticipoDeCapital || this.isAdeudoInicialAnticiposCapital)
+            {
+                List<VMInteres> intereses = this.generarSeguimientoPagosConInteres(fechaActual);
+                var interesDevengado = (intereses != null && intereses.Count() > 0) ?
+                    intereses.Last().interesRestante : 0;
+                interesTotalGenerado = intereses.Sum(reg => reg.interes);
+                return interesDevengado;
+            }
+            return 0;
+        }
+        
+        /// <summary>
+         /// Arroja el interes acumulado a la fecha actual de la deuda en cuestion, dentro del balance de anticipos.
+         /// </summary>
+         /// <param name="fechaActual"></param>
+         /// <returns></returns>
         public decimal getInteresRestante(DateTime fechaActual)
         {
             if (this.isAnticipoDeCapital || this.isAdeudoInicialAnticiposCapital)
@@ -688,11 +709,13 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="fechaActual"></param>
         /// <returns></returns>
-        public VMInteres getInteresReg(DateTime fechaActual)
+        public VMInteres getInteresReg(DateTime fechaActual, out decimal interesTotalGenerado)
         {
+            interesTotalGenerado = 0;
             if (this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS && !this.isAbonoCapital)
             {
                 var intereses = this.generarSeguimientoPagosConInteres(fechaActual);
+                interesTotalGenerado = intereses.Sum(reg => reg.interes);
                 return intereses.LastOrDefault()==null?new VMInteres():intereses.LastOrDefault();
             }
             return new VMInteres();

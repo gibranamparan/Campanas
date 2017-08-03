@@ -34,7 +34,11 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                return this.PrestamosActivos.Count();
+                int res = 0;
+                if(this.PrestamosActivos!=null && this.PrestamosActivos.Count()>0)
+                    res = this.PrestamosActivos.Count();
+
+                return res;
             }
         }
 

@@ -37,7 +37,7 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 string abonoTipo = this.tipoDeDeduccion.ToString();
-                if(this.tipoDeDeduccion == TipoRetencion.ABONO_ANTICIPO)
+                if(this.tipoDeDeduccion == TipoRetencion.ABONO_ANTICIPO && this.liquidacionSemanal.abonoAnticipo!=null)
                     abonoTipo = this.liquidacionSemanal.abonoAnticipo.tipoDeMovimientoDeCapital;
 
                 return String.Format($"RETENCION: {abonoTipo}. CH: {this.liquidacionSemanal.cheque}");

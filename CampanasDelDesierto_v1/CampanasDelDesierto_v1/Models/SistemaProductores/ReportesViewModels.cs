@@ -58,29 +58,37 @@ namespace CampanasDelDesierto_v1.Models
 
                 //Filtro de movimientos dentro del balance de anticipos
                 var movimientosBalanceAnticipos = movimientos
-                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+                    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS
+                    || mov.isAdeudoInicialMaterial || mov.isAdeudoInicialAnticiposCapital)
                     .ToList();
 
-                //Filtro de movs tipo capital
+                //Filtro de movs tipo capital o anticipos
                 var movimientosCapital = movimientosBalanceAnticipos
                     .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL);
 
                 //Calculo de total de prestamos
-                decimal totalPrestamos = movimientosCapital.
+                decimal totalPrestamos = Math.Abs(movimientosCapital.
                     Where(mov=>((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital
                         == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
-                    .Sum(mov => mov.montoMovimiento);
-
-                //Calculo de interes generado a la fecha final de la temporada
-                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,DateTime.Today);
+                    .Sum(mov => mov.montoMovimiento));
 
                 //Calculo de total de ventas
-                  decimal totalVentas = movimientosBalanceAnticipos
-                    .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                    .Sum(mov => mov.montoMovimiento);              
+                decimal totalVentas = Math.Abs(movimientosBalanceAnticipos
+                  .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                  .Sum(mov => mov.montoMovimiento));
+
+                //Calculo de adeudos anteriores
+                decimal adeudosAnteriores = Math.Abs(movimientosBalanceAnticipos
+                  .Where(mov => mov.isAdeudoInicialMaterial || mov.isAdeudoInicialAnticiposCapital)
+                  .Sum(mov => mov.montoMovimiento));
+
+                //Calculo de interes generado a la fecha final de la temporada
+                decimal interesTotalGenerado = 0;
+                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,
+                    DateTime.Today, out interesTotalGenerado);
 
                 //Adeudo total es la suma de prestamos y ventas                
-                this.totalAdeudo = Math.Abs(totalPrestamos + totalVentas);
+                this.totalAdeudo = totalPrestamos + totalVentas+ adeudosAnteriores + interesTotalGenerado;
 
                 //Suma de todos los abonos a la deuda
                 this.adeudoRecuperado = movimientosCapital
@@ -90,11 +98,13 @@ namespace CampanasDelDesierto_v1.Models
 
                 //Calculo de saldo por recuperar en balance de anticipos
                 //this.saldoPorRecuperar = this.totalAdeudo - this.adeudoRecuperado;
-                this.saldoPorRecuperar = movimientosBalanceAnticipos
-                    .Where(mov => (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL 
-                        && ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO) 
+                /*this.saldoPorRecuperar = movimientosBalanceAnticipos
+                    .Where(mov => (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                        && ((PrestamoYAbonoCapital)mov).tipoDeMovimientoDeCapital == PrestamoYAbonoCapital.TipoMovimientoCapital.PRESTAMO)
                         || mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                        .Sum(mov => mov.montoActivo);
+                        .Sum(mov => mov.montoActivo);*/
+
+                this.saldoPorRecuperar = this.totalAdeudo - this.adeudoRecuperado;
 
                 //Filtro de movs en balance de arboles
                 var movimientosBalanceArboles = movimientos
@@ -137,6 +147,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Interes Devengado")]
             public decimal interesGenerado { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Interes Devengado")]
+            public decimal interesTotalGenerado { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Interes Pagado")]
@@ -237,7 +251,9 @@ namespace CampanasDelDesierto_v1.Models
                 this.totalAdeudos = this.anticiposCosechaEfectivo + this.anticiposCosechaMateriales;
 
                 //Calculo de interes generado a la fecha final de la temporada
-                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,temporadaActual.fechaFin);
+                decimal interesTotal = 0;
+                this.interesGenerado = productor.interesTotal(temporadaActual.TemporadaDeCosechaID,temporadaActual.fechaFin, out interesTotal);
+                this.interesTotalGenerado = interesTotal;
 
                 //Calculo de interes generado a la fecha final de la temporada
                 this.interesPagado = productor.getInteresesPagadosEnLaTemporada(temporadaActual);

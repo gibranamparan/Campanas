@@ -106,8 +106,9 @@
     balanceActualAnticipos -= retencionAbono;
     balanceActualArboles -= retencionAbonoArboles;
 
+    decimal interesTotalGenerado = 0;
     //Se calcula el interes a la fecha del movimiento actual si es modo de creacion
-    interesALaFecha = -productor.interesTotal(Model.TemporadaDeCosechaID, Model.fechaMovimiento);
+    interesALaFecha = -productor.interesTotal(Model.TemporadaDeCosechaID, Model.fechaMovimiento, out interesTotalGenerado);
 
     //Se suman los intereses al balance de anticipos, intereses es 0 por defecto
     balanceActualAnticipos += interesALaFecha;

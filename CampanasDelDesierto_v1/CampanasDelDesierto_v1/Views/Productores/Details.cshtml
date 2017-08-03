@@ -23,38 +23,40 @@
         <h2 class="panel-title">Movimientos</h2>
     </div>
     <div class="panel-body">
-        @*Botones para crear nuevos tipos de movimientos financieros*@
-        <div class="col-md-8 hidden-print" id="pnlNuevosMovimientosBotones">
-            <a class="btn btn-primary"
-               href="@Url.Action("Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporadaID })">
-                <i class="fa fa-handshake-o"></i> Anticipos y Abonos
-            </a>
-            <a class="btn btn-primary"
-               href="@Url.Action("Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporadaID })">
-                <i class="fa fa-shopping-cart"></i> Venta de Material
-            </a>
-            <a class="btn btn-primary"
-               href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporadaID })">
-                <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
-            </a>
-            <a class="btn btn-primary"
-               href="@Url.Action("Create", "LiquidacionSemanal", new { id = Model.idProductor, temporada = temporadaID })">
-                <i class="fa fa-credit-card"></i> Liquidacion Semanal
-            </a>
-        </div>
+        <div class="row">
+            @*Botones para crear nuevos tipos de movimientos financieros*@
+            <div class="col-md-8 hidden-print" id="pnlNuevosMovimientosBotones">
+                <a class="btn btn-primary"
+                   href="@Url.Action("Create", "PrestamoYAbonoCapitals", new { id = Model.idProductor, temporada = temporadaID })">
+                    <i class="fa fa-handshake-o"></i> Anticipos y Abonos
+                </a>
+                <a class="btn btn-primary"
+                   href="@Url.Action("Create", "VentaACreditos", new { id = Model.idProductor, temporada = temporadaID })">
+                    <i class="fa fa-shopping-cart"></i> Venta de Material
+                </a>
+                <a class="btn btn-primary"
+                   href="@Url.Action("IngresoProducto", "PagosPorProductos", new { id = Model.idProductor, temporada = temporadaID })">
+                    <i class="glyphicon glyphicon-grain"></i> Ingreso de producto
+                </a>
+                <a class="btn btn-primary"
+                   href="@Url.Action("Create", "LiquidacionSemanal", new { id = Model.idProductor, temporada = temporadaID })">
+                    <i class="fa fa-credit-card"></i> Liquidacion Semanal
+                </a>
+            </div>
 
-        <div class="col-md-4 hidden-print">
-            @using (Html.BeginForm("Details", "Productores", FormMethod.Post,
-                    new { @class = "form-inline pull-right" }))
-            {
-                <div class="form-group">
-                    <label for="temporadas">
-                        Periodo de Cosecha
-                    </label>
-                    @Html.DropDownList("temporada", new SelectList(temporadas, "TemporadaDeCosechaID",
+            <div class="col-md-4 hidden-print">
+                @using (Html.BeginForm("Details", "Productores", FormMethod.Post,
+                new { @class = "form-inline pull-right" }))
+                {
+                    <div class="form-group">
+                        <label for="temporadas">
+                            Periodo de Cosecha
+                        </label>
+                        @Html.DropDownList("temporada", new SelectList(temporadas, "TemporadaDeCosechaID",
                     "rangoTiempo", temporadaID), new { @class = "form-control", onchange = "submitBusqueda(this)" })
-                </div>
-            }
+                    </div>
+                }
+            </div>
         </div>
         @*Prestamos y abonos*@
         <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)</h4>
