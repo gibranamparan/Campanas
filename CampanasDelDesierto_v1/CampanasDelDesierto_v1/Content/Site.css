@@ -254,7 +254,6 @@ div#pnlDetallesReporteSemanal {
     padding: 0 1.5em;
 }
 
-
 span.signos{
     text-align: center;
     font-size:2em
@@ -271,6 +270,47 @@ tr.pagado{
 }
 tr:hover.pagado{
     background-color: #858585 !important;
+}
+tr.trHeader1 th{
+    background-color: white !important;
+}
+tr.trHeader1 th[colspan] {
+    background-color: #fdec6f !important;
+    border: 1px solid;
+}
+
+table#tblBalanceAnticipos tr>td:nth-child(7),
+table#tblBalanceAnticipos tr>th:nth-child(7){
+    border-left: 1px solid black;
+}
+table#tblBalanceAnticipos tr>td:nth-child(8),
+table#tblBalanceAnticipos tr>th:nth-child(8),
+table#tblBalanceAnticipos tr>td:nth-child(11),
+table#tblBalanceAnticipos tr>th:nth-child(11){
+    border-right: 1px solid black;
+}
+
+table#tblBalanceAnticipos tr:last-child>td:nth-child(7),
+table#tblBalanceAnticipos tr:last-child>td:nth-child(8),
+table#tblBalanceAnticipos tr:last-child>td:nth-child(9),
+table#tblBalanceAnticipos tr:last-child>td:nth-child(10),
+table#tblBalanceAnticipos tr:last-child>td:nth-child(11){
+    border-bottom: 1px solid black;
+}
+
+table#tblBalanceAnticipos tr>td:nth-child(7),
+table#tblBalanceAnticipos tr>td:nth-child(8),
+table#tblBalanceAnticipos tr>td:nth-child(9),
+table#tblBalanceAnticipos tr>td:nth-child(10),
+table#tblBalanceAnticipos tr>td:nth-child(11){
+    background: #fff4dc
+}
+table#tblBalanceAnticipos tr:hover>td:nth-child(7),
+table#tblBalanceAnticipos tr:hover>td:nth-child(8),
+table#tblBalanceAnticipos tr:hover>td:nth-child(9),
+table#tblBalanceAnticipos tr:hover>td:nth-child(10),
+table#tblBalanceAnticipos tr:hover>td:nth-child(11){
+    background: #ffe6b0
 }
 
 .validation-summary-errors {

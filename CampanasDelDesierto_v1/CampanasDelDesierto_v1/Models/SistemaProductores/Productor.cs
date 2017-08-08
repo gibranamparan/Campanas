@@ -444,6 +444,7 @@ namespace CampanasDelDesierto_v1.Models
 
                 movimientosOrdenados.Last.Value.balance = monto
                     + (ultimoMovimiento == null ? 0 : ultimoMovimiento.balance);
+
             }
 
             /*Recorriendo la lista encadenada desde el registro recien modificado hasta el ultimo
@@ -711,11 +712,12 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Calcula el interes total que debe un productor a la fecha consultada
+        /// Calcula el interes total que debe un productor a la fecha consultada dentro de una temporada
         /// </summary>
-        /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados.</param>
+        /// <param name="tempID">Se especifica el ID de la temporada dentro de la cual se calculara el total</param>
+        /// <param name="fecha">Desde la fecha indicada hacia atras, se suman los intereses pendientes de ser liquidados</param>
         /// <returns></returns>
-        public decimal interesTotal(int tempID, DateTime? fecha)
+        public decimal interesTotalPorPagarALaFecha(int tempID, DateTime? fecha)
         {
             decimal interesTotalQueSeDebe = 0;
             DateTime dt = fecha.HasValue ? fecha.Value : DateTime.Today;

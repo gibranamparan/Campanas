@@ -767,6 +767,7 @@
     <Content Include="Views\ReportesProductores\AdeudosRecuperacionDetallado.cshtml" />
     <Content Include="Views\AdeudoInicial\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporadaStatic.cshtml" />
+    <Content Include="Views\MovimientoFinancieros\Partial_ListarMovimientosAnticipos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

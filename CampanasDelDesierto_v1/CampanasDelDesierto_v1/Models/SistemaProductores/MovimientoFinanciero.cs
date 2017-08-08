@@ -33,6 +33,7 @@ namespace CampanasDelDesierto_v1.Models
         ApplyFormatInEditMode = true)]
         [Display(Name = "Balance Capital (USD)")]
         public decimal balance { get; set; }
+        
 
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
@@ -84,6 +85,19 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         [InverseProperty("prestamo")]
         public virtual ICollection<Prestamo_Abono> abonosRecibidos { get; set; }
+
+        public decimal abonoTotalAInteres
+        {
+            get
+            {
+                decimal res = 0;
+
+                if (this.abonosRecibidos != null && this.abonosRecibidos.Count() > 0)
+                    res = this.abonosRecibidos.Where(abo => abo.pagoAInteres).Sum(abo => abo.monto);
+
+                return res;
+            }
+        }
 
         /// <summary>
         /// Propiedad padre de concepto la cual determina que concepto desplegar segun el tipo de movimiento
@@ -580,6 +594,10 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        public bool isVentaDeMaterial { get {
+                return this.getTypeOfMovement() == TypeOfMovements.VENTA_A_CREDITO && this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS;
+            } }
+
         public List<VMInteres> generarSeguimientoPagosConInteres(DateTime fechaActual)
         {
             //Para vprestamos dentro del balance de anticipos
@@ -604,8 +622,9 @@ namespace CampanasDelDesierto_v1.Models
                         //Se toman los abonos recibidos por el movimiento
                         List<Prestamo_Abono> abonosAnteriores = new List<Prestamo_Abono>();
                         if(this.abonosRecibidos!=null && this.abonosRecibidos.Count > 0) { 
+                            //Se toman los abonos que podria haber recibido este movimiento antes de haberse registrado
                             abonosAnteriores = this.abonosRecibidos
-                                .Where(mov => mov.abono.fechaMovimiento.Month <= this.fechaMovimiento.Month)
+                                .Where(mov => mov.abono.fechaMovimiento<= this.fechaMovimiento)
                                 .Where(mov => !mov.pagoAInteres).ToList();
                         }
 
@@ -657,6 +676,7 @@ namespace CampanasDelDesierto_v1.Models
             decimal totalAbonos = 0;
             DateTime startDate = new DateTime(dt.Year, dt.Month, 1);
             DateTime endDate = new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month));
+            endDate = endDate.AddDays(1).AddMilliseconds(-1);
             TimePeriod tp = new TimePeriod(startDate, endDate);
             if (this.abonosRecibidos != null && this.abonosRecibidos.Count() > 0)
             {
@@ -704,11 +724,12 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Arroja el interes acumulado a a la fecha actual de la deuda en cuestion,
-        /// dentro del balance de anticipos.
+        /// Arroja una instancia VMInteres que contiene informacion sobre el estado de los intereses para el movimiento en cuestion
+        /// generado hasta la fecha indicada.
         /// </summary>
-        /// <param name="fechaActual"></param>
-        /// <returns></returns>
+        /// <param name="fechaActual">Fecha hasta la cual se calcula el registro de intereses para la presente instancia.</param>
+        /// <param name="interesTotalGenerado">Argumento de salida donde se muestra el interes total generado durante todo el historial de intereses de la instancia de movimiento.</param>
+        /// <returns>Arroja una instancia VMInteres con la informacion hasta la fecha indicada de los intereses del movimiento.</returns>
         public VMInteres getInteresReg(DateTime fechaActual, out decimal interesTotalGenerado)
         {
             interesTotalGenerado = 0;
@@ -786,5 +807,85 @@ namespace CampanasDelDesierto_v1.Models
                 this.balance = Math.Round(this.balance, 2);
             }
         }
+
+        public class VMMovimientoBalanceAnticipos {
+            public MovimientoFinanciero mov { get; }
+
+            [DisplayName("Fecha")]
+            [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+            public DateTime fecha { get; set; }
+
+            [DisplayName("Pagaré")]
+            public string pagare { get; set; }
+
+            [DisplayName("Anticipo")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal anticipo { get; set; }
+
+            [DisplayName("Interes")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal interes { get; set; } //total generado (pagado o no)
+
+            [DisplayName("Tipo")]
+            public string tipo { get; set; }
+
+            [DisplayName("Concepto")]
+            public string concepto { get; set; }
+
+            [DisplayName("Capital")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal abonoCapital { get; set; }
+
+            [DisplayName("Interes")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal abonoInteres { get; set; } //interes pagado
+
+            [DisplayName("Capital")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal saldoCapital { get; set; }
+
+            [DisplayName("Interes")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal saldoInteres { get; set; } //interes restante
+
+            [DisplayName("Total")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal total { get; set; }
+
+            public static void balancear(ref LinkedList<VMMovimientoBalanceAnticipos> lista, decimal adeudoAnteriorTotal)
+            {
+                var nodo = lista.First;
+                while (nodo != null)
+                {
+                    if (nodo.Previous != null)
+                    {adeudoAnteriorTotal = nodo.Previous.Value.total;}
+
+                    nodo.Value.total = nodo.Value.saldoCapital + nodo.Value.saldoInteres + adeudoAnteriorTotal;
+                    nodo = nodo.Next;
+                }
+            }
+
+            public VMMovimientoBalanceAnticipos(MovimientoFinanciero mov, DateTime fechaConsulta)
+            {
+                this.mov = mov;
+                decimal interesTotalGenerado = 0;
+                decimal interesPendiente = mov.getInteresRestante(fechaConsulta, out interesTotalGenerado);
+                
+                this.fecha = mov.fechaMovimiento;
+                this.pagare = mov.isAnticipoDeCapital ? ((PrestamoYAbonoCapital)mov).pagare
+                    : mov.isVentaDeMaterial ? ((VentaACredito)mov).pagareVenta : "";
+                this.anticipo = mov.montoMovimiento;
+                this.interes = interesTotalGenerado;                
+                this.tipo = mov.nombreDeMovimiento;
+                this.concepto = mov.concepto;
+
+                this.abonoCapital = Math.Abs(this.anticipo) - mov.montoActivo;
+                this.abonoInteres = mov.abonoTotalAInteres;
+
+                this.saldoCapital = mov.montoActivo;
+                this.saldoInteres = this.interes - this.abonoInteres;
+            }
+        }
+
     }
 }
