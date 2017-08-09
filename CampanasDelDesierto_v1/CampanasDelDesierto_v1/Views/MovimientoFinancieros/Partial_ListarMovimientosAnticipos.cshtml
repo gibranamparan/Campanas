@@ -7,19 +7,21 @@
     int temporada = temporadaSeleccionada.TemporadaDeCosechaID;
 
     @*Solo prestamos y abonos*@
-var movimientosFiltrados = Model.MovimientosFinancieros
-.Where(mov => mov.TemporadaDeCosechaID == temporada)
-.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-.OrderBy(mov => mov.fechaMovimiento).ToList();
+    var movimientosFiltrados = Model.MovimientosFinancieros
+    .Where(mov => mov.TemporadaDeCosechaID == temporada)
+    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+    .OrderBy(mov => mov.fechaMovimiento).ToList();
 
-var movs = from mov in movimientosFiltrados
-           select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
-LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
-    new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
+    @*Se prepara un reporte de movimientos de anticipos con los movimientos filtrados*@
+    var movs = from mov in movimientosFiltrados
+               select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
 
-decimal adeudoAnterior = 0;
+    LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
+                new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
 
-MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
+    decimal adeudoAnterior = 0;
+
+    MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
 
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }
@@ -72,6 +74,10 @@ MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, ade
                 <th>
                     @Html.DisplayNameFor(model => movimientos.FirstOrDefault().total)
                 </th>
+                @*TEST
+                <th>
+                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().balance)
+                </th>*@
                 <th class="actions hidden-print"></th>
             </tr>
 
@@ -87,7 +93,8 @@ MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, ade
                     <td>@Html.DisplayFor(model => item.tipo)</td>
                     <td>
                         @if (!item.mov.isAbonoCapital) { 
-                        @Html.DisplayFor(model => item.concepto)}
+                        }
+                        @Html.DisplayFor(model => item.concepto)
                     </td>
                     <td>
                     @if (!item.mov.isAbonoCapital) { 
@@ -102,6 +109,7 @@ MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, ade
                         @if (!item.mov.isAbonoCapital)
                         { @Html.DisplayFor(model => item.saldoInteres)}</td>
                     <td @(item.total<0?"style=color:red":"")>@Html.DisplayFor(model => item.total)</td>
+                    @*<td @(item.total<0?"style=color:red":"")>@Html.DisplayFor(model => item.balance)</td>*@
                     <td class="hidden-print">
                         @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
                             ademas no es un ingreso de de cosecha ya reportado como liquidado*@

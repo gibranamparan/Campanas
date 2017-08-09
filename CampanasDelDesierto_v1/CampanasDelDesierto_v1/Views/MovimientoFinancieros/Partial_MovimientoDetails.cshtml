@@ -29,7 +29,7 @@
 @*Panel para detalles de registro de cosecha*@
 @if (Model.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO){
     ViewDataDictionary vdd = new ViewDataDictionary();
-    vdd.Add("showOpts", false);
+    vdd.Add("showOpts", false); //Bandera para indicar si se muestra la columna de opciones en la tabla
     @Html.Partial("../PagosPorProductos/Partial_ListaIngresosProducto", ((PagoPorProducto)Model).Recepciones, vdd)
 }
 

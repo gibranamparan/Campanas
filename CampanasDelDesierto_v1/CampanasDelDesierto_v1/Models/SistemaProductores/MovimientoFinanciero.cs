@@ -616,15 +616,20 @@ namespace CampanasDelDesierto_v1.Models
                 var interesReg = intereses.First;
                 while (interesReg != null)
                 {
-                    decimal totalAbonos = Math.Round(this.getTotalAbonosDelMes(interesReg.Value.numMes),2);
+                    //decimal totalAbonos = Math.Round(this.getTotalAbonosDelMes(interesReg.Value.numMes),2);
+                    decimal totalAbonos = this.getTotalAbonosDelMes(interesReg.Value.numMes);
                     //Es el primero, se basa sobre el monto prestado
                     if (interesReg.Previous == null) {
                         //Se toman los abonos recibidos por el movimiento
                         List<Prestamo_Abono> abonosAnteriores = new List<Prestamo_Abono>();
-                        if(this.abonosRecibidos!=null && this.abonosRecibidos.Count > 0) { 
-                            //Se toman los abonos que podria haber recibido este movimiento antes de haberse registrado
+                        if (this.abonosRecibidos != null && this.abonosRecibidos.Count > 0) {
+                            DateTime diaUltimoMes = new DateTime(this.fechaMovimiento.Year, this.fechaMovimiento.Month, 
+                                DateTime.DaysInMonth(this.fechaMovimiento.Year, this.fechaMovimiento.Month)).AddDays(1);
+                            //Se toman los abonos que podria haber recibido este movimiento antes de haberse registrado 
+                            //o antes de comenzar a generar interes
                             abonosAnteriores = this.abonosRecibidos
-                                .Where(mov => mov.abono.fechaMovimiento<= this.fechaMovimiento)
+                                //.Where(mov => mov.abono.fechaMovimiento <= this.fechaMovimiento)
+                                .Where(mov => mov.abono.fechaMovimiento < diaUltimoMes)
                                 .Where(mov => !mov.pagoAInteres).ToList();
                         }
 
@@ -643,6 +648,7 @@ namespace CampanasDelDesierto_v1.Models
                         if (this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL)
                             interesRestante = ((AdeudoInicial)this).interesInicial;
 
+                        //Se calcula un registro tomando los parametros iniciales del prestamo, sobre este se calculara cada interes por mes de forma consecutiva
                         VMInteres inicial = new VMInteres(){numMes = 0,saldoCapital = Math.Abs(montoInicial),
                             balance = Math.Abs(montoInicial)+ interesRestante, interesRestante = interesRestante};
 
@@ -665,19 +671,36 @@ namespace CampanasDelDesierto_v1.Models
             return null;
         }
 
+        /// <summary>
+        /// Determina el total de abonos depositados en un mes para la deuda representada por la instancia actual
+        /// dado un numero entero que representa una numeración ordenada de los meses ne los que la deuda esta activa.
+        /// </summary>
+        /// <param name="numMes">Numero indice para abarcar la totalidad del mes indexado.</param>
+        /// <returns></returns>
         public decimal getTotalAbonosDelMes(int numMes)
         {
+            //Se interpreta el indice en un mes especifico a partir del origen de la deuda.
             DateTime dt = this.fechaMovimiento.AddMonths(numMes);
-            return getTotalAbonosDelMes(dt);
-        }
 
-        private decimal getTotalAbonosDelMes(DateTime dt)
-        {
-            decimal totalAbonos = 0;
+            //Se forma el rango de tiempo a partir del indice sobre el que se calculara el abono total recibido
             DateTime startDate = new DateTime(dt.Year, dt.Month, 1);
             DateTime endDate = new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month));
             endDate = endDate.AddDays(1).AddMilliseconds(-1);
             TimePeriod tp = new TimePeriod(startDate, endDate);
+
+            return getTotalAbonosDelMes(tp);
+        }
+
+        /// <summary>
+        /// Dada una fecha 
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        private decimal getTotalAbonosDelMes(TimePeriod tp)
+        {
+            decimal totalAbonos = 0;
+
+            //Se calcula el total si hay abonos registrados.
             if (this.abonosRecibidos != null && this.abonosRecibidos.Count() > 0)
             {
                 totalAbonos = this.abonosRecibidos.Where(mov => tp.hasInside(mov.abono.fechaMovimiento))
@@ -701,6 +724,10 @@ namespace CampanasDelDesierto_v1.Models
                 var interesDevengado = (intereses != null && intereses.Count() > 0) ?
                     intereses.Last().interesRestante : 0;
                 interesTotalGenerado = intereses.Sum(reg => reg.interes);
+
+                interesDevengado = Math.Round(interesDevengado, 2);
+                //interesTotalGenerado = Math.Round(interesTotalGenerado, 2);
+
                 return interesDevengado;
             }
             return 0;
@@ -852,6 +879,10 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             public decimal total { get; set; }
 
+            [DisplayName("Balance Capital + Interes")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal balance { get; set; }
+
             public static void balancear(ref LinkedList<VMMovimientoBalanceAnticipos> lista, decimal adeudoAnteriorTotal)
             {
                 var nodo = lista.First;
@@ -860,7 +891,7 @@ namespace CampanasDelDesierto_v1.Models
                     if (nodo.Previous != null)
                     {adeudoAnteriorTotal = nodo.Previous.Value.total;}
 
-                    nodo.Value.total = nodo.Value.saldoCapital + nodo.Value.saldoInteres + adeudoAnteriorTotal;
+                    nodo.Value.total = Math.Round(nodo.Value.saldoCapital,2) + Math.Round(nodo.Value.saldoInteres,2) + adeudoAnteriorTotal;
                     nodo = nodo.Next;
                 }
             }
@@ -884,6 +915,8 @@ namespace CampanasDelDesierto_v1.Models
 
                 this.saldoCapital = mov.montoActivo;
                 this.saldoInteres = this.interes - this.abonoInteres;
+
+                this.balance = mov.balanceMasInteres;
             }
         }
 
