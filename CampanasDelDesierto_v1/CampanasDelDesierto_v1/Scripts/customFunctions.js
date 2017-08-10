@@ -56,6 +56,12 @@ window.onclick = function (event) {
         return jQuery.ajax(ajax);
     };
 
+function zeroIfEmpty(input) {
+    if (!input.value) {
+        input.value = 0.00;
+    }
+}
+
 /*Llamada asincrona para tomar del servidor el tipo de cambio de forma asincrona*/
 function getTipoCambioAsync(success, error, complete , antiForgeryToken) {
     jQuery.postJSON("/MovimientoFinancieros/getCambioDolar", 0, 'JSON',

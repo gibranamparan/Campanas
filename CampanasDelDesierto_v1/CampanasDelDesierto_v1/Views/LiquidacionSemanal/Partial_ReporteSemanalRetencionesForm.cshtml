@@ -146,10 +146,4 @@
         var mxnInput = $('#' + $(dllInput).attr('id') + 'MXN');
         mxnInput.val(numeral(dllPrice*dllAmount).format('0.00'));
     }
-
-    function zeroIfEmpty(input) {
-        if (!input.value) {
-            input.value = 0.00;
-        }
-    }
 </script>

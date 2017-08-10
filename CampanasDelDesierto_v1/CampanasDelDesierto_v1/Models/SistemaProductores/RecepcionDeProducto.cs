@@ -46,32 +46,32 @@ namespace CampanasDelDesierto_v1.Models
         //Manzana Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO1 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd1 { get; set; }
+        public double cantidadTonsProd1 { get; set; } = 0;
 
         //Obliza Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO2 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd2 { get; set; }
+        public double cantidadTonsProd2 { get; set; } = 0;
 
         //Mission Caborca
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO3 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd3 { get; set; }
+        public double cantidadTonsProd3 { get; set; } = 0;
 
         //Manzana Organica
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO4 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd4 { get; set; }
+        public double cantidadTonsProd4 { get; set; } = 0;
 
         //Obliza Organica
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO5 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd5 { get; set; }
+        public double cantidadTonsProd5 { get; set; } = 0;
 
         //Mission Organica
         [DisplayName(TemporadaDeCosecha.TiposDeProducto.PRODUCTO6 + " (ton.)")]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
-        public double cantidadTonsProd6 { get; set; }
+        public double cantidadTonsProd6 { get; set; } = 0;
 
         [Required]
         [DisplayName("Fecha")]

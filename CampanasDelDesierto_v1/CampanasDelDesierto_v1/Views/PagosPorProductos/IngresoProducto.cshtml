@@ -31,6 +31,7 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     /*Modelo para la forma de creacion de nueva recepcion*/
     RecepcionDeProducto nuevaRecepcion = new RecepcionDeProducto { idProductor= productor.idProductor,
         TemporadaDeCosechaID = Model.TemporadaDeCosechaID, numProductor = productor.numProductor, nombreProductor = productor.nombreProductor };
+
     ViewDataDictionary vddPartialCreacion = new ViewDataDictionary();
     var selListProductores = ViewBag.productores;
     string funcionProcesarRespuestaCreacion = "procesarRespuestaCreacion";
@@ -40,7 +41,7 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     vddPartialCreacion.Add("selListProductores", selListProductores);
     VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
     {
-        modalTitle = "Nuevo Registro de Recepcion de Producto",
+        modalTitle = "Forma de Recepcion de Producto",
         action = "create",
         controller = "RecepcionDeProductos",
         callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
@@ -110,7 +111,7 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     <div>
         <button class="btn btn-info" onclick="@(functionBindData)({idProductor:@productor.idProductor})"
                 data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID">Nuevo</button>
-        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson())"
+        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson(),true)"
                 data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID"
                 disabled>
             Editar
@@ -414,6 +415,7 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
 }
 @section Scripts{
 <script>
+    inicializarFormaNuevaRecepcion()
     $('select#idProductor').attr('disabled',true)
     hiddenProductorID = $('<input type="hidden" value="@(Model.idProductor)" name="idProductor">')
     $('#frmNuevaRecepcion').append(hiddenProductorID)
@@ -519,7 +521,8 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
         jsonRes.numeroRecibo = row[COLS_ENUM.NUM_RECIBO]
         jsonRes.fecha = row[COLS_ENUM.FECHA_STANDAR]
         jsonRes.numProductor = row[COLS_ENUM.NUM_PRODUCTOR]
-        jsonRes.idProductor = row[COLS_ENUM.ID_PRODUCTOR]
+        //jsonRes.idProductor = row[COLS_ENUM.ID_PRODUCTOR]
+        jsonRes.idProductor = '@Model.idProductor'
         jsonRes.semana = row[COLS_ENUM.SEMANA]
         jsonRes.recepcionID = row[COLS_ENUM.ID]
         jsonRes.idMovimiento = row[COLS_ENUM.ID_PAGO]
@@ -540,7 +543,8 @@ ViewDataDictionary vddDetailsTemporada = new ViewDataDictionary();
     })
 
     function @(funcionProcesarRespuestaCreacion)(res){
-        location.reload();
+        if(res.numReg)
+            location.reload();
     }
 </script>
 

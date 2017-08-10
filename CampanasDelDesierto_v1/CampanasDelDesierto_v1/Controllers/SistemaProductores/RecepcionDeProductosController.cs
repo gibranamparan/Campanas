@@ -67,7 +67,6 @@ namespace CampanasDelDesierto_v1.Controllers
             //Si el modelo es valido y el numero de recibo no existe ya en la base de datos
             if (ModelState.IsValid && !numReciboExiste)
             {
-                db.Entry(reciboTemp).State = EntityState.Detached;
                 //Se introduce la informacion del productor indicado dentro del recibo que se encuentra registrando
                 var productor = db.Productores.Find(recepcionDeProducto.idProductor);
                 recepcionDeProducto.numProductor = productor!=null?productor.numProductor:"";
@@ -83,11 +82,17 @@ namespace CampanasDelDesierto_v1.Controllers
                     db.Entry(recepcionDeProducto).State = EntityState.Modified;
                 }
                 numReg = db.SaveChanges(); //Guarda cambios
-                return Json(new { numReg = numReg, registro = recepcionDeProducto }); //Responde con numero positivo (success)
+                return Json(new { numReg = numReg, registro = recepcionDeProducto.ToString() }); //Responde con numero positivo (success)
             }else if (numReciboExiste) //Si tento registrar un nuevo recibo con numero ya existente
-                return Json(new { numReg = 0, error = "El numero de recibo ya existe",
-                    registro = reciboTemp, pagoPorProductoID = reciboTemp.pago.idMovimiento,
-                    liquidacionID = reciboTemp.pago.liquidacionDeCosechaID });
+            {
+                db.Entry(reciboTemp).State = EntityState.Detached;
+                return Json(new
+                {
+                    numReg = 0,
+                    error = "El numero de recibo ya existe",
+                    registro = reciboTemp.ToString(),
+                });
+            }
 
             //El modelo no fue válido
             return Json(new { numReg = 0, error = "Favor de rellenar todos los campos." });

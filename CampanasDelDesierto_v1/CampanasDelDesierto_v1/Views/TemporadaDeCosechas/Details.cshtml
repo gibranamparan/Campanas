@@ -30,7 +30,7 @@
     vddPartialCreacion.Add("funcionRespuesta", funcionProcesarRespuestaCreacion);
     vddPartialCreacion.Add("functionBindData", functionBindData);
     vddPartialCreacion.Add("selListProductores", selListProductores);
-
+    //Configuracion del modal de nueva recepcion de producto
     VMConfirmModalAttributes modalOptsnuevaRecepcion = new VMConfirmModalAttributes
     {
         modalTitle = "Forma de Recepcion de Producto",
@@ -45,7 +45,7 @@
         modelForPartial = nuevaRecepcion,
         datosDeVista = vddPartialCreacion
     };
-
+    //Configuracion del modal para eliminacion de producto
     VMConfirmModalAttributes modalOptsEliminarRecepcion = new VMConfirmModalAttributes
     {
         modalTitle = "Eliminar Registros Seleccionados",
@@ -66,6 +66,8 @@
         <i class="glyphicon glyphicon-arrow-left"></i> Historial de Temporadas
     </a>
 </p>
+
+@*Panel de detalles de la temporada con los costos por tipo de producto*@
 <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title"><strong>Temporada: </strong>@Model.rangoTiempo</h3>
@@ -126,6 +128,8 @@
         </a> 
     </div>
 </div>
+
+@*Forma de importacion de datos excel*@
 @using (Html.BeginForm(null, null, FormMethod.Post,
                             new { id="frmImportExcel", enctype = "multipart/form-data", @class = "form-inline" }))
 {
@@ -183,12 +187,12 @@
     </div>
 }
 
-@*Modal de confirmacion de eliminacion de ingreso de producto*@
+@*Panel de botones para edicion de los recibos ingresados*@
 <div style="margin: .5em 0">
 
     @if (Model.recepcionesDeProducto != null && Model.recepcionesDeProducto.Count() > 0)
     {
-        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson())"
+        <button id="btnEditarRecepcion" class="btn btn-primary" onclick="@(functionBindData)(selRowToJson(),true)"
                 data-toggle="modal" data-target="#@modalOptsnuevaRecepcion.modalID"
                 disabled>
             Editar
@@ -204,7 +208,7 @@
     }
 </div>
 
-@*Panel que muestra la recepcion ingresada en el excel*@
+@*Panel que muestra los recibos ingresados en el excel*@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Ingreso de producto (Importado de Excel)</h3>
@@ -349,27 +353,7 @@
 
 @section Scripts{
     <script>
-        //Declaracion de tabla y columnas con sus respectivas propiedades
-        var COLS_ENUM = Object.freeze({
-            ID: 1, NUM_RECIBO: 2, NUM_PRODUCTOR: 3, FECHA: 5, SEMANA: 6,
-            PROD1: 7, PROD2: 8, PROD3: 9, PROD4: 10, PROD5: 11, PROD6: 12, 
-            FECHA_STANDAR: 14, ID_PRODUCTOR: 15, ID_PAGO : 16
-        })
-
-        var tblRecibos = $("#tblRecibosCosechaImportados").DataTable({
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }, { targets: [COLS_ENUM.ID, COLS_ENUM.FECHA_STANDAR, 
-                COLS_ENUM.ID_PRODUCTOR,COLS_ENUM.ID_PAGO], visible: false }],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-        });
-
-        selectedIngresosIDs = new Array();
+        inicializarFormaNuevaRecepcion()
         //Se habilita el boton primario si se selecciono un archivo
         $('#xlsFile').change(function () {
             if(this.files.length)
@@ -382,6 +366,30 @@
             $('#imgLoading').fadeIn();
             $('#btnUpload').prop('disabled', true)
         })
+
+        //Declaracion de tabla y columnas con sus respectivas propiedades
+        var COLS_ENUM = Object.freeze({
+            ID: 1, NUM_RECIBO: 2, NUM_PRODUCTOR: 3, FECHA: 5, SEMANA: 6,
+            PROD1: 7, PROD2: 8, PROD3: 9, PROD4: 10, PROD5: 11, PROD6: 12, 
+            FECHA_STANDAR: 14, ID_PRODUCTOR: 15, ID_PAGO : 16
+        })
+
+        //Arreglo donde se lamacenan los recibos seleccionados en la tabla
+        selectedIngresosIDs = new Array();
+
+        //Configuracion de tabla de recibos
+        var tblRecibos = $("#tblRecibosCosechaImportados").DataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }, { targets: [COLS_ENUM.ID, COLS_ENUM.FECHA_STANDAR, 
+                COLS_ENUM.ID_PRODUCTOR,COLS_ENUM.ID_PAGO], visible: false }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+        });
 
         @*Declaracion de evento de selecicon de renglon*@
         tblRecibos.on('select', function (e, dt, type, indexes) {

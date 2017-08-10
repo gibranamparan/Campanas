@@ -17,9 +17,9 @@
     @Html.HiddenFor(model => model.TemporadaDeCosechaID)
     @Html.HiddenFor(model => model.numProductor)
     @Html.HiddenFor(model => model.nombreProductor)
-
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    <span id="spanErrorFormRecepcion" class="text-danger" style="display:none"></span>
     <div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group col-md-4">
             @Html.LabelFor(model => model.numeroRecibo)
             @Html.EditorFor(model => model.numeroRecibo, new { htmlAttributes = new { @class = "form-control" } })
@@ -46,7 +46,8 @@
                {
                    @class = "form-control",
                    data_mask = "###0.000",
-                   data_mask_reverse = "true"
+                   data_mask_reverse = "true",
+                   onkeyup = "zeroIfEmpty(this)"
                }
            })
                 @Html.ValidationMessageFor(model => model.cantidadTonsProd1, "", new { @class = "text-danger" })
@@ -55,14 +56,15 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(model => model.cantidadTonsProd2)
             @Html.EditorFor(model => model.cantidadTonsProd2, new
-        {
-            htmlAttributes = new
-            {
-                @class = "form-control",
-                data_mask = "###0.000",
-                data_mask_reverse = "true"
-            }
-        })
+       {
+           htmlAttributes = new
+           {
+               @class = "form-control",
+               data_mask = "###0.000",
+               data_mask_reverse = "true",
+               onkeyup = "zeroIfEmpty(this)"
+           }
+       })
             @Html.ValidationMessageFor(model => model.cantidadTonsProd2, "", new { @class = "text-danger" })
         </div>
 
@@ -74,7 +76,8 @@
            {
                @class = "form-control",
                data_mask = "###0.000",
-               data_mask_reverse = "true"
+               data_mask_reverse = "true",
+               onkeyup = "zeroIfEmpty(this)"
            }
        })
             @Html.ValidationMessageFor(model => model.cantidadTonsProd3, "", new { @class = "text-danger" })
@@ -88,7 +91,8 @@
            {
                @class = "form-control",
                data_mask = "###0.000",
-               data_mask_reverse = "true"
+               data_mask_reverse = "true",
+               onkeyup = "zeroIfEmpty(this)"
            }
        })
             @Html.ValidationMessageFor(model => model.cantidadTonsProd4, "", new { @class = "text-danger" })
@@ -102,7 +106,8 @@
            {
                @class = "form-control",
                data_mask = "###0.000",
-               data_mask_reverse = "true"
+               data_mask_reverse = "true",
+               onkeyup = "zeroIfEmpty(this)"
            }
        })
             @Html.ValidationMessageFor(model => model.cantidadTonsProd5, "", new { @class = "text-danger" })
@@ -116,7 +121,8 @@
            {
                @class = "form-control",
                data_mask = "###0.000",
-               data_mask_reverse = "true"
+               data_mask_reverse = "true",
+               onkeyup = "zeroIfEmpty(this)"
            }
        })
             @Html.ValidationMessageFor(model => model.cantidadTonsProd6, "", new { @class = "text-danger" })
@@ -163,20 +169,30 @@
 
         //Se envia al servidor
         jQuery.postJSON("/RecepcionDeProductos/Create",nuevaRecepcion,"JSON",
-        function (res) {
+        function (res) { //Sucess
             @(funcionRespuesta)(res);
+            $('#spanErrorFormRecepcion').fadeInOrOut(!res.numReg)
+            if(!res.numReg){
+                $('#spanErrorFormRecepcion').html(res.error+" "+(res.registro?res.registro:''))
+            }
             console.log(res);
         },
-        function (res) {
+        function (res) { //Error
             console.log(res);
         },
-        function(res){
-            @(funcionRespuesta)(res);
-            console.log(res);
+        function(res){ //Always
+            @*@(funcionRespuesta)(res);
+            console.log(res);*@
         }
         , token)
 
         //Se procesa la respuesta desde la vista principal
+    }
+
+    function inicializarFormaNuevaRecepcion(){
+        $('#frmNuevaRecepcion input').focus(function(){
+            $('#spanErrorFormRecepcion').fadeOut();
+        })
     }
 
     function setMode(editMode){
@@ -198,19 +214,19 @@
         $('#fecha').val(recepcion.fecha)
         $('#numeroRecibo').val(recepcion.numeroRecibo)
         $('#semana').val(recepcion.semana)
-        $('#cantidadTonsProd1').val(recepcion.cantidadTonsProd1)
-        $('#cantidadTonsProd2').val(recepcion.cantidadTonsProd2)
-        $('#cantidadTonsProd3').val(recepcion.cantidadTonsProd3)
-        $('#cantidadTonsProd4').val(recepcion.cantidadTonsProd4)
-        $('#cantidadTonsProd5').val(recepcion.cantidadTonsProd5)
-        $('#cantidadTonsProd6').val(recepcion.cantidadTonsProd6)
+        $('#cantidadTonsProd1').val(recepcion.cantidadTonsProd1?recepcion.cantidadTonsProd1:0)
+        $('#cantidadTonsProd2').val(recepcion.cantidadTonsProd2?recepcion.cantidadTonsProd2:0)
+        $('#cantidadTonsProd3').val(recepcion.cantidadTonsProd3?recepcion.cantidadTonsProd3:0)
+        $('#cantidadTonsProd4').val(recepcion.cantidadTonsProd4?recepcion.cantidadTonsProd4:0)
+        $('#cantidadTonsProd5').val(recepcion.cantidadTonsProd5?recepcion.cantidadTonsProd5:0)
+        $('#cantidadTonsProd6').val(recepcion.cantidadTonsProd6?recepcion.cantidadTonsProd6:0)
         $('select#idProductor').val(recepcion.idProductor)
-
+        /*
         var idMovimiento = recepcion.idMovimiento;
-        if(idMovimiento)
+        if(!idMovimiento)
             $('#btnRegistrar').hide()
         else
-            $('#btnRegistrar').show()
+            $('#btnRegistrar').show()*/
     }
 </script>
 }
