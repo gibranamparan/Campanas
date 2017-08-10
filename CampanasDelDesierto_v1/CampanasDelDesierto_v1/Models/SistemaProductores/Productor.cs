@@ -862,8 +862,10 @@ namespace CampanasDelDesierto_v1.Models
 
             MovimientoFinanciero m;
             //Si hay resultados, se toma el resultado
-            if (movs.Count() > 0)
-                m = movs.ElementAt(movs.Count() - 1);
+            if (movs.Count() > 0) {
+                m = movs.FirstOrDefault();
+                //m = movs.ElementAt(movs.Count() - 1);
+            }
             else // Si no, se establece como nulo
                 m = null;
 

@@ -28,7 +28,7 @@
                        @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       onkeyup = "fillPesosColumn(this)"
+                       onkeyup = "zeroIfEmpty(this);fillPesosColumn(this)"
                    }
                })
                     @Html.ValidationMessageFor(model => model.abonoAnticipos, "", new { @class = "text-danger" })
@@ -51,7 +51,7 @@
                        @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       onkeyup = "fillPesosColumn(this)"
+                       onkeyup = "zeroIfEmpty(this);fillPesosColumn(this)"
                    }
                })
                     @Html.ValidationMessageFor(model => model.abonoArboles, "", new { @class = "text-danger" })
@@ -74,7 +74,7 @@
                        @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       onkeyup = "fillPesosColumn(this)"
+                       onkeyup = "zeroIfEmpty(this);fillPesosColumn(this)"
                    }
                })
                     @Html.ValidationMessageFor(model => model.garantiaLimpieza, "", new { @class = "text-danger" })
@@ -97,7 +97,7 @@
                        @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       onkeyup = "fillPesosColumn(this)"
+                       onkeyup = "zeroIfEmpty(this);fillPesosColumn(this)"
                    }
                })
                     @Html.ValidationMessageFor(model => model.retencionEjidal, "", new { @class = "text-danger" })
@@ -120,7 +120,7 @@
                        @class = "form-control",
                        data_mask = "###0.00",
                        data_mask_reverse = "true",
-                       onkeyup = "fillPesosColumn(this)"
+                       onkeyup = "zeroIfEmpty(this);fillPesosColumn(this)"
                    }
                })
                     @Html.ValidationMessageFor(model => model.retencionOtro, "", new { @class = "text-danger" })
@@ -145,5 +145,11 @@
         //Se selecciona el input en MXN
         var mxnInput = $('#' + $(dllInput).attr('id') + 'MXN');
         mxnInput.val(numeral(dllPrice*dllAmount).format('0.00'));
+    }
+
+    function zeroIfEmpty(input) {
+        if (!input.value) {
+            input.value = 0.00;
+        }
     }
 </script>

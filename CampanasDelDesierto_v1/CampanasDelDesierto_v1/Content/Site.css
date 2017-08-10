@@ -305,6 +305,13 @@ table#tblBalanceAnticipos tr>td:nth-child(10),
 table#tblBalanceAnticipos tr>td:nth-child(11){
     background: #fff4dc
 }
+table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(7),
+table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(8),
+table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(9),
+table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(10),
+table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(11){
+    background: #feecc7
+}
 table#tblBalanceAnticipos tr:hover>td:nth-child(7),
 table#tblBalanceAnticipos tr:hover>td:nth-child(8),
 table#tblBalanceAnticipos tr:hover>td:nth-child(9),

@@ -26,26 +26,26 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.domicilio, new { @class = "control-label" })
-                <p class="form-control-static">@Html.DisplayFor(model => model.domicilio)</p>
-            </div>
             @if (!resumido) { 
-            <div class="form-group col-md-4">
+            <div class="form-group col-xs-3">
                 @Html.LabelFor(model => model.RFC, new { @class = "control-label" })
                 <p class="form-control-static">@Html.DisplayFor(model => model.RFC)</p>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-xs-3">
                 @Html.LabelFor(model => model.fechaIntegracion, new { @class = "control-label" })
-                <p class="form-control-static">@Html.DisplayFor(model => model.fechaIntegracion)</p>
+                <p class="form-control-static">@Model.fechaIntegracion.ToString("dd/MMM/yy")</p>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-xs-3">
                 @Html.LabelFor(model => model.nombreCheque, new { @class = "control-label" })
                 <p class="form-control-static">@Html.DisplayFor(model => model.nombreCheque)</p>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-xs-3">
                 @Html.LabelFor(model => model.nombreRepresentanteLegal, new { @class = "control-label" })
                 <p class="form-control-static">@Html.DisplayFor(model => model.nombreRepresentanteLegal)</p>
+            </div>
+            <div class="form-group col-xs-12">
+                @Html.LabelFor(model => model.domicilio, new { @class = "control-label" })
+                <p class="form-control-static">@Html.DisplayFor(model => model.domicilio)</p>
             </div>
             }
         </div>

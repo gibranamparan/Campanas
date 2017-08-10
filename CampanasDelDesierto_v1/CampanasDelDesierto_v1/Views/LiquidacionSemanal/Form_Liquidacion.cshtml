@@ -300,9 +300,12 @@
 
                     <div class="form-group @(reportMode?"hidden":"")">
                         <div class="col-xs-12">
-                            <button class="btn btn-success" @(ingresosDeCosecha.Count()==0?"disabled":"")>
+                            <button id="btnGuardar" class="btn btn-success" @(ingresosDeCosecha.Count()==0?"disabled":"")>
                                 @(editMode ? "Guardar" : "Crear")
                             </button>
+                            <span id="spanErrorRetencionMayor" class="validation-summary-errors" style="display:none">
+                                El monto total de retenciones supera el pago por la cosecha.
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -471,7 +474,10 @@
 
             $("#inputTotalRetencion").val(numeral(totalRetencion).format('0.00')).trigger('input');
             var totalAPagar = $("#inputCostoCosechaSemana").val() - totalRetencion;
-            $("#montoMovimiento").val(numeral(totalAPagar).format('0.00')).trigger('input');
+            $("#montoMovimiento").val(numeral(totalAPagar < 0 ? 0 : totalAPagar).format('0.00')).trigger('input');
+
+            $('#btnGuardar').prop('disabled', totalAPagar < 0)
+            $('#spanErrorRetencionMayor').fadeInOrOut(totalAPagar < 0)
 
         })
         function recalcularMonto(tbRetencion) {

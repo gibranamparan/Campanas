@@ -66,7 +66,7 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Divisa")]
         public string divisa { get; set; }
 
-        public int? abonoEnliquidacionID { get; set; }
+        public int? abonoEnLiquidacionID { get; set; }
         
         /// <summary>
         /// Si es abono, prestamos sobre los cuales se distribuye el abono
@@ -124,8 +124,9 @@ namespace CampanasDelDesierto_v1.Models
             abono.montoMovimiento = monto;
             abono.TemporadaDeCosechaID = ls.TemporadaDeCosechaID;
             abono.idProductor = ls.idProductor;
-            abono.abonoEnliquidacionID = ls.idMovimiento;
+            abono.abonoEnLiquidacionID = ls.idMovimiento;
             abono.tipoDeMovimientoDeCapital = tipoCapital;
+            abono.divisa = PrestamoYAbonoCapital.Divisas.USD;
 
             return abono;
         }
@@ -202,11 +203,21 @@ namespace CampanasDelDesierto_v1.Models
             public string nombreConcepto { get; set; }
         }
 
+        /// <summary>
+        /// Limpia la distrubucion del monto del abono representado por esta instancia.
+        /// Elimina todos los registros de asociacion con otros movimientos que hayan sido abonados de este monto.
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns>Cantidad en numero entero de los registros de distribucion de abono eliminados.</returns>
         public int liberarAbono(ApplicationDbContext db)
         {
-            var prestamoAbonos = db.Prestamo_Abono.Where(mov => mov.abonoID == this.idMovimiento);
-            db.Prestamo_Abono.RemoveRange(prestamoAbonos);
-            return db.SaveChanges();
+            int res = 0;
+            var prestamoAbonos = db.Prestamo_Abono.Where(mov => mov.abonoID == this.idMovimiento).ToList();
+            if (prestamoAbonos.Count() > 0) { 
+                db.Prestamo_Abono.RemoveRange(prestamoAbonos);
+                res = prestamoAbonos.Count();
+            }
+            return res;
         }
 
         public decimal capitalAbonado

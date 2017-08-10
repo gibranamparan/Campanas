@@ -175,7 +175,7 @@ namespace CampanasDelDesierto_v1.Controllers
             var prod = db.Productores.Find(mov.idProductor);
             MovimientoFinanciero abonoAnticiposEliminado=null, abonoArbolesEliminado = null;
 
-            if(!mov.isNoDirectamenteModificable) { 
+            if(!mov.isNoDirectamenteModificable || mov.isAbonoRetencionSinLiquidacion(db)) { 
                 //Los registros de recibos se desasocian de los registro de PagoPorProducto para estar disponibles
                 //nuevamente para otros registros.
                 if (mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO)

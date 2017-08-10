@@ -10,7 +10,7 @@
     decimal precioOriginal4 = Model.precioManzanitaOrg;
     decimal precioOriginal5 = Model.precioOblizaOrg;
     decimal precioOriginal6 = Model.precioMissionOrg;
-    
+
     int? movimientoID = null;
     bool preciosProductosEditados = false;
     if (ViewData["pagoPorProducto"] != null)
@@ -19,22 +19,22 @@
         movimientoID = pagoPorProducto.idMovimiento;
 
         decimal precioProducto1 = pagoPorProducto.pagoProducto1 == 0 ? Model.precioManzanita :
-            (decimal)Math.Round((double)pagoPorProducto.pagoProducto1 / pagoPorProducto.cantidadProducto1);
+            (decimal)Math.Round((double)pagoPorProducto.pagoProducto1 / pagoPorProducto.cantidadProducto1,2);
 
         decimal precioProducto2 = pagoPorProducto.pagoProducto2 == 0 ? Model.precioObliza :
-        (decimal)Math.Round((double)pagoPorProducto.pagoProducto2 / pagoPorProducto.cantidadProducto2);
+        (decimal)Math.Round((double)pagoPorProducto.pagoProducto2 / pagoPorProducto.cantidadProducto2, 2);
 
         decimal precioProducto3 = pagoPorProducto.pagoProducto3 == 0 ? Model.precioMission :
-        (decimal)Math.Round((double)pagoPorProducto.pagoProducto3 / pagoPorProducto.cantidadProducto3);
+        (decimal)Math.Round((double)pagoPorProducto.pagoProducto3 / pagoPorProducto.cantidadProducto3, 2);
 
         decimal precioProducto4 = pagoPorProducto.pagoProducto4 == 0 ? Model.precioManzanitaOrg :
-    (decimal)Math.Round((double)pagoPorProducto.pagoProducto4 / pagoPorProducto.cantidadProducto4);
+    (decimal)Math.Round((double)pagoPorProducto.pagoProducto4 / pagoPorProducto.cantidadProducto4, 2);
 
         decimal precioProducto5 = pagoPorProducto.pagoProducto5 == 0 ? Model.precioOblizaOrg :
-    (decimal)Math.Round((double)pagoPorProducto.pagoProducto5 / pagoPorProducto.cantidadProducto5);
+    (decimal)Math.Round((double)pagoPorProducto.pagoProducto5 / pagoPorProducto.cantidadProducto5, 2);
 
         decimal precioProducto6 = pagoPorProducto.pagoProducto6 == 0 ? Model.precioMissionOrg:
-    (decimal)Math.Round((double)pagoPorProducto.pagoProducto6 / pagoPorProducto.cantidadProducto6);
+    (decimal)Math.Round((double)pagoPorProducto.pagoProducto6 / pagoPorProducto.cantidadProducto6, 2);
 
         preciosProductosEditados = precioProducto1 != Model.precioManzanita || precioProducto2 != Model.precioObliza
 || precioProducto3 != Model.precioMission || precioProducto4 != Model.precioManzanitaOrg

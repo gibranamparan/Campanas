@@ -293,11 +293,12 @@ namespace CampanasDelDesierto_v1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = LiquidacionSemanalController.strBindFields)]
-            LiquidacionSemanal emisionDeCheque, TimePeriod semanaLiquidada, 
+            LiquidacionSemanal emisionDeCheque, TimePeriod semanaLiquidada,
             LiquidacionSemanal.VMRetenciones retenciones, int[] ingresosDeCosechaID)
         {
             if (ModelState.IsValid)
             {
+                bool asociarEnEdicion = false;
                 int numReg = 0;
 
                 //Ajuste de movimiento para entrar dentro de la lista de balances
@@ -370,7 +371,13 @@ namespace CampanasDelDesierto_v1.Controllers
                         {
                             //Se crea un nuevo abono como retencion de esta liquidacion
                             abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, montoRetenido, tipoCapital);
-                            emisionDeCheque.abonoAnticipo = abono; //Se asocia el nuevo abono
+                            //emisionDeCheque.abonoAnticipo = abono; //Se asocia el nuevo abono
+
+                            if (tipo == Retencion.TipoRetencion.ABONO_ANTICIPO)
+                                emisionDeCheque.abonoAnticipo = abono;
+
+                            if (tipo == Retencion.TipoRetencion.ABONO_ARBOLES)
+                                emisionDeCheque.abonoArboles = abono;
 
                             //Se agrega nueva retencion
                             db.Entry(abono).State = EntityState.Added;
@@ -378,25 +385,25 @@ namespace CampanasDelDesierto_v1.Controllers
                         //Existia previamente pero en la edicion, se elimina
                         else if (oldRet != null && newRet == null)
                         {
-                            abono = db.PrestamosYAbonosCapital.Find(emisionDeCheque.abonoAnticipoID);
+                            abono = db.PrestamosYAbonosCapital.Find(abonoID);
                             
                             //Se desasocia de prestamos que se hayan pagado
                             abono.liberarAbono(db);
 
-                            emisionDeCheque.abonoAnticipoID = null;
+                            if (tipo == Retencion.TipoRetencion.ABONO_ANTICIPO)
+                                emisionDeCheque.abonoAnticipoID = null;
+
+                            if (tipo == Retencion.TipoRetencion.ABONO_ARBOLES)
+                                emisionDeCheque.abonoArbolesID = null;
+
                             //Se marca para ser borrada la retencion
                             db.Entry(abono).State = EntityState.Deleted;
                         }
                         //Se habia reportado previamente y aparece en edicion
                         else if (oldRet != null && newRet != null)
                         {
-                            abono = db.PrestamosYAbonosCapital.Find(abonoID);
-
-                            //Se modifica y marca para ser editada
-                            abono.montoMovimiento = -newRet.montoMovimiento;
-                            abono.fechaMovimiento = newRet.fechaMovimiento;
-                            abono.concepto = tipoCapital+" EN LIQUIDACION (CH:" + emisionDeCheque.cheque + ")";
-                            abono.tipoDeMovimientoDeCapital = tipoCapital;
+                            abono = PrestamoYAbonoCapital.nuevaRentecionAbono(emisionDeCheque, montoRetenido, tipoCapital);
+                            abono.idMovimiento = abonoID;
                             db.Entry(abono).State = EntityState.Modified;
                         }
 
@@ -407,7 +414,9 @@ namespace CampanasDelDesierto_v1.Controllers
                             abonoArboles = abono;
                     }
                 }
-                
+
+                asociarEnEdicion = db.Entry(abonoAnticipo).State == EntityState.Modified;
+
                 db.Entry(emisionDeCheque).State = EntityState.Modified;
                 numReg = db.SaveChanges();
 
@@ -445,7 +454,7 @@ namespace CampanasDelDesierto_v1.Controllers
                         
                         //Se asocia el nuevo abono a los prestamos existentes en el balance
                         if (abonoAnticipo.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-                            prod.asociarAbonosConPrestamos(db, abonoAnticipo);
+                            prod.asociarAbonosConPrestamos(db, abonoAnticipo, asociarEnEdicion);
 
                         //Se ajusta el balance de los movimientos a partir del ultimo movimiento registrado
                         prod.ajustarBalances(ultimoMovimiento, db, abonoAnticipo.tipoDeBalance);

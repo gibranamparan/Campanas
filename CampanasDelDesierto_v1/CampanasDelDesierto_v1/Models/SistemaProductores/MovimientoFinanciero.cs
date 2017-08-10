@@ -189,6 +189,25 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
+        /// Detecta que la instancia es un movimiento de abono retenido, pero no asociado a ninguna liquidacion.
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos sobre la cual se buscara la liquidacion asociada.</param>
+        /// <returns></returns>
+        internal bool isAbonoRetencionSinLiquidacion(ApplicationDbContext db)
+        {
+            bool res = false;
+
+            if (this.isAbonoRetenidoEnLiquidacion)
+            {
+                var liq = db.LiquidacionesSemanales.Find(((PrestamoYAbonoCapital)this).abonoEnLiquidacionID);
+                if (liq == null)
+                    res = true;
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Enumeracion de tipos de balances bajo los que se que agrupan los diferentes movimientos financieros.
         /// </summary>
         public enum TipoDeBalance
@@ -533,8 +552,8 @@ namespace CampanasDelDesierto_v1.Models
 
         public bool isAbonoRetenidoEnLiquidacion { get
             {
-                bool res = this.getTypeOfMovement() == TypeOfMovements.CAPITAL && ((PrestamoYAbonoCapital)this).abonoEnliquidacionID.HasValue 
-                    && ((PrestamoYAbonoCapital)this).abonoEnliquidacionID.Value > 0;
+                bool res = this.getTypeOfMovement() == TypeOfMovements.CAPITAL && ((PrestamoYAbonoCapital)this).abonoEnLiquidacionID.HasValue 
+                    && ((PrestamoYAbonoCapital)this).abonoEnLiquidacionID.Value > 0;
 
                 return res;
             }

@@ -54,7 +54,7 @@
                         @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
                             ademas no es un ingreso de de cosecha ya reportado como liquidado*@
                         @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                                && ((PrestamoYAbonoCapital)item).abonoEnliquidacionID != null)
+                                && ((PrestamoYAbonoCapital)item).abonoEnLiquidacionID != null)
                             ) {
                             <div class="dropdown_actions">
                                 <button onclick="openActionsDropDown(this)"
