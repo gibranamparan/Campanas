@@ -83,13 +83,13 @@
                         <td>@Html.DisplayFor(model => item.fecha)</td>
                         <td>@Html.DisplayFor(model => item.pagare)</td>
                         <td @(item.anticipo < 0 ? "style=color:red" : "")>
-                            @if (item.mov.isAnticipoDeCapital)
+                            @if (item.mov.isAbonoCapital)
                             {
-                                @Html.DisplayFor(model => item.anticipo)
+                                <span>--</span>
                             }
                             else
                             {
-                                <span>--</span>
+                                @Html.DisplayFor(model => item.anticipo)
                             }
                         </td>
                         <td>

@@ -64,7 +64,7 @@
     //Se determina el costo de el producto segun la zona del productor
     var productos = Model.temporadaDeCosecha.getListaProductos(productor.zona);
 
-    //Se genera el reporte semanal
+    //Se genera el reporte semanal de la cosecha recibida
     var ingresoSemanal = productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, precioDolar);
 
     //Se calcula el total de ingreso por la cosecha registrada y se registra 
@@ -95,23 +95,27 @@
         Model.montoMovimiento -= retencionTotal;
     }
 
-    decimal abonoBalanceArbolOlivo=0, abonoBalanceAnticipos=0, interesALaFecha=0;
+    decimal abonoBalanceArbolOlivo = 0, abonoBalanceAnticipos = 0;
 
     //Estado actual de finanzas del productor
     decimal balanceActualAnticipos = ViewBag.balanceActual;
 
+    //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
+    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
+        productor.generarReporteAnticiposConIntereses(Model.fechaMovimiento, Model.temporadaDeCosecha);
+
+    //Se calculan los montos totales del reporte.
+    MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales =
+        new MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales(movimientos);
+    //Se determina el saldo total a pagar
+    balanceActualAnticipos = totales.saldoCapital + totales.saldoInteres;
+
+    //Se deducen las retenciones
+    balanceActualAnticipos += retencionAbono;
+
     //Estado actual del balance por arboles de olivo del productor
     decimal balanceActualArboles = ViewBag.balanceActualArboles;
-
-    balanceActualAnticipos -= retencionAbono;
     balanceActualArboles -= retencionAbonoArboles;
-
-    decimal interesTotalGenerado = 0;
-    //Se calcula el interes a la fecha del movimiento actual si es modo de creacion
-    interesALaFecha = -productor.interesTotal(Model.TemporadaDeCosechaID, Model.fechaMovimiento, out interesTotalGenerado);
-
-    //Se suman los intereses al balance de anticipos, intereses es 0 por defecto
-    balanceActualAnticipos += interesALaFecha;
 
     //Datos para parcial de informacion de productor
     ViewDataDictionary vddProductorInfo = new ViewDataDictionary();

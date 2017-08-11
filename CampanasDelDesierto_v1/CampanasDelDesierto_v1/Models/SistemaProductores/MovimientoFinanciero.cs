@@ -961,9 +961,9 @@ namespace CampanasDelDesierto_v1.Models
                 public VMBalanceAnticiposTotales() { }
                 public VMBalanceAnticiposTotales(IEnumerable<VMMovimientoBalanceAnticipos> lista)
                 {
-                    this.abonoCapital = lista.Where(i => i.mov.isAnticipoDeCapital).Sum(i => i.abonoCapital);
+                    this.abonoCapital = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoCapital);
                     this.abonoInteres = lista.Sum(i => i.abonoInteres);
-                    this.anticipo = lista.Where(i=>i.mov.isAnticipoDeCapital).Sum(i => i.anticipo);
+                    this.anticipo = lista.Where(i=>!i.mov.isAbonoCapital).Sum(i => i.anticipo);
                     this.interes = lista.Sum(i => i.interes);
                     this.saldoCapital= lista.Sum(i => i.saldoCapital);
                     this.saldoInteres= lista.Sum(i => i.saldoInteres);
