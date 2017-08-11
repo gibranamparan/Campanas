@@ -6,23 +6,15 @@
     TemporadaDeCosecha temporadaSeleccionada = ViewBag.temporadaSeleccionada;
     int temporada = temporadaSeleccionada.TemporadaDeCosechaID;
 
-    @*Solo prestamos y abonos*@
-    var movimientosFiltrados = Model.MovimientosFinancieros
-    .Where(mov => mov.TemporadaDeCosechaID == temporada)
-    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-    .OrderBy(mov => mov.fechaMovimiento).ToList();
+    //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
+    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
+        Model.generarReporteAnticiposConIntereses(fechaActual, temporadaSeleccionada);
 
-    @*Se prepara un reporte de movimientos de anticipos con los movimientos filtrados*@
-    var movs = from mov in movimientosFiltrados
-               select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
+    //Se calculan los montos totales del reporte.
+    MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales = 
+        new MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales(movimientos);
 
-    LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
-                new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
-
-    decimal adeudoAnterior = 0;
-
-    MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
-
+    //Lista de temporadas para menu de seleccion
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
 }
 
@@ -30,117 +22,153 @@
 {
     <div class="col-xs-12">
         <table id="tblBalanceAnticipos" class="table table-hover table-striped table-responsive">
-            <tr class="trHeader1">
-                @for(int c = 0; c < 6; c++) { <th></th>}
-                <th colspan="2" style="text-align:center">
-                    ABONO
-                </th>
-                <th colspan="3" style="text-align:center">
-                    SALDO
-                </th>
-                <th class="actions hidden-print"></th>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().fecha)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().pagare)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().anticipo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().interes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().tipo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().concepto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().abonoCapital)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().abonoInteres)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().saldoCapital)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().saldoInteres)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => movimientos.FirstOrDefault().total)
-                </th>
-                @*TEST
+            <thead>
+                <tr class="trHeader1">
+                    @for (int c = 0; c < 6; c++)
+                    {
+                <th></th>}
+                    <th colspan="2" style="text-align:center">
+                        ABONO
+                    </th>
+                    <th colspan="3" style="text-align:center">
+                        SALDO
+                    </th>
+                    <th class="hidden-print"></th>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().fecha)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().pagare)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().anticipo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().interes)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().tipo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().concepto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().abonoCapital)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().abonoInteres)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().saldoCapital)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().saldoInteres)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => movimientos.FirstOrDefault().total)
+                    </th>
+                    @*TEST
                 <th>
                     @Html.DisplayNameFor(model => movimientos.FirstOrDefault().balance)
                 </th>*@
-                <th class="actions hidden-print"></th>
-            </tr>
-
-            @foreach (var item in movimientos)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(model => item.fecha)</td>
-                    <td>@Html.DisplayFor(model => item.pagare)</td>
-                    <td @(item.anticipo<0?"style=color:red":"")>@Html.DisplayFor(model => item.anticipo)</td>
-                    <td>
-                        @if (!item.mov.isAbonoCapital)
-                        {@Html.DisplayFor(model => item.interes)}</td>
-                    <td>@Html.DisplayFor(model => item.tipo)</td>
-                    <td>
-                        @if (!item.mov.isAbonoCapital) { 
-                        }
-                        @Html.DisplayFor(model => item.concepto)
-                    </td>
-                    <td>
-                    @if (!item.mov.isAbonoCapital) { 
-                        @Html.DisplayFor(model => item.abonoCapital)}</td>
-                    <td>
-                    @if (!item.mov.isAbonoCapital){
-                        @Html.DisplayFor(model => item.abonoInteres)}</td>
-                    <td @(item.saldoCapital<0?"style=color:red":"")>
-                        @if (!item.mov.isAbonoCapital)
-                        { @Html.DisplayFor(model => item.saldoCapital)}</td>
-                    <td>
-                        @if (!item.mov.isAbonoCapital)
-                        { @Html.DisplayFor(model => item.saldoInteres)}</td>
-                    <td @(item.total<0?"style=color:red":"")>@Html.DisplayFor(model => item.total)</td>
-                    @*<td @(item.total<0?"style=color:red":"")>@Html.DisplayFor(model => item.balance)</td>*@
-                    <td class="hidden-print">
-                        @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
-                            ademas no es un ingreso de de cosecha ya reportado como liquidado*@
-                        <div class="dropdown_actions">
-                            <button onclick="openActionsDropDown(this)"
-                                    class="dropbtn btn btn-default">
-                                <i class="glyphicon glyphicon-option-horizontal"></i>
-                            </button>
-                            <div id="myDropdown" class="dropdown-content">
-                                @if (!item.mov.isNoDirectamenteModificable)
-                                {
-                                    <a href="@Url.Action("Edit", item.mov.getNombreControlador(), new { id = item.mov.idMovimiento })">
-                                        <i class="glyphicon glyphicon-edit"></i> Editar
-                                    </a>
-                                }
-
-                                <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.mov.idMovimiento })">
-                                    <i class="glyphicon glyphicon-print"></i> Detalles
-                                </a>
-
-                                @if (!item.mov.isNoDirectamenteModificable)
-                                {
-                                    <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.mov.idMovimiento })">
-                                        <i class="glyphicon glyphicon-remove"></i> Borrar
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                    </td>
+                    <th class="hidden-print"></th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var item in movimientos)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => item.fecha)</td>
+                        <td>@Html.DisplayFor(model => item.pagare)</td>
+                        <td @(item.anticipo < 0 ? "style=color:red" : "")>
+                            @if (item.mov.isAnticipoDeCapital)
+                            {
+                                @Html.DisplayFor(model => item.anticipo)
+                            }
+                            else
+                            {
+                                <span>--</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.mov.isAbonoCapital)
+                            {@Html.DisplayFor(model => item.interes)}
+                        </td>
+                        <td>@Html.DisplayFor(model => item.tipo)</td>
+                        <td>
+                            @Html.DisplayFor(model => item.concepto)
+                            @if (item.mov.isAbonoCapital)
+                            {
+                                <span>(@Html.DisplayFor(model => item.anticipo))</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.mov.isAbonoCapital)
+                            {
+                                @Html.DisplayFor(model => item.abonoCapital)}
+                        </td>
+                        <td>
+                            @if (!item.mov.isAbonoCapital)
+                            {
+                                @Html.DisplayFor(model => item.abonoInteres)}
+                        </td>
+                        <td @(item.saldoCapital < 0 ? "style=color:red" : "")>
+                            @if (!item.mov.isAbonoCapital)
+                            { @Html.DisplayFor(model => item.saldoCapital)}
+                        </td>
+                        <td>
+                            @if (!item.mov.isAbonoCapital)
+                            { @Html.DisplayFor(model => item.saldoInteres)}
+                        </td>
+                        <td @(item.total < 0 ? "style=color:red" : "")>@Html.DisplayFor(model => item.total)</td>
+                        @*<td @(item.total<0?"style=color:red":"")>@Html.DisplayFor(model => item.balance)</td>*@
+                        <td style="text-align: center" class="hidden-print">
+                            @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
+                        ademas no es un ingreso de de cosecha ya reportado como liquidado*@
+                            <div class="dropdown_actions">
+                                <button onclick="openActionsDropDown(this)"
+                                        class="dropbtn btn btn-default">
+                                    <i class="glyphicon glyphicon-option-horizontal"></i>
+                                </button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    @if (!item.mov.isNoDirectamenteModificable)
+                                    {
+                                        <a href="@Url.Action("Edit", item.mov.getNombreControlador(), new { id = item.mov.idMovimiento })">
+                                            <i class="glyphicon glyphicon-edit"></i> Editar
+                                        </a>
+                                    }
+
+                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.mov.idMovimiento })">
+                                        <i class="glyphicon glyphicon-print"></i> Detalles
+                                    </a>
+
+                                    @if (!item.mov.isNoDirectamenteModificable)
+                                    {
+                                        <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.mov.idMovimiento })">
+                                            <i class="glyphicon glyphicon-remove"></i> Borrar
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="">
+                    <td colspan="2"><strong>TOTALES</strong></td>
+                    <td>@Html.DisplayFor(model => totales.anticipo)</td>@*ANTICIPO*@
+                    <td>@Html.DisplayFor(model => totales.interes)</td>@*INTERESES*@
+                    <td colspan="2"></td>
+                    <td>@Html.DisplayFor(model => totales.abonoCapital)</td>@*ABONO CAPITAL*@
+                    <td>@Html.DisplayFor(model => totales.abonoInteres)</td>@*ABONO INTERES*@
+                    <td>@Html.DisplayFor(model => totales.saldoCapital)</td>@*SALDO CAPITAL*@
+                    <td>@Html.DisplayFor(model => totales.saldoInteres)</td>@*SALDO INTERES*@
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
 
         </table>
     </div>

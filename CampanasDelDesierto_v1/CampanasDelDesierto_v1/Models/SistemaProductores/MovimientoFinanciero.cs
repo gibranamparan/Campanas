@@ -937,6 +937,38 @@ namespace CampanasDelDesierto_v1.Models
 
                 this.balance = mov.balanceMasInteres;
             }
+
+            public class VMBalanceAnticiposTotales
+            {
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal anticipo { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal interes { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal abonoCapital { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal abonoInteres { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal saldoCapital { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal saldoInteres { get; set; }
+
+                public VMBalanceAnticiposTotales() { }
+                public VMBalanceAnticiposTotales(IEnumerable<VMMovimientoBalanceAnticipos> lista)
+                {
+                    this.abonoCapital = lista.Where(i => i.mov.isAnticipoDeCapital).Sum(i => i.abonoCapital);
+                    this.abonoInteres = lista.Sum(i => i.abonoInteres);
+                    this.anticipo = lista.Where(i=>i.mov.isAnticipoDeCapital).Sum(i => i.anticipo);
+                    this.interes = lista.Sum(i => i.interes);
+                    this.saldoCapital= lista.Sum(i => i.saldoCapital);
+                    this.saldoInteres= lista.Sum(i => i.saldoInteres);
+                }
+            }
         }
 
     }

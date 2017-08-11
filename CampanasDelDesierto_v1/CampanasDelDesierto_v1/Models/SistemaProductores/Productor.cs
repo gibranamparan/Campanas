@@ -894,6 +894,38 @@ namespace CampanasDelDesierto_v1.Models
             return report;
         }
 
+        /// <summary>
+        /// Genera un reporte de anticipos e intereses dados dentro de una temporada
+        /// </summary>
+        /// <param name="fechaActual"></param>
+        /// <param name="temporadaSeleccionada"></param>
+        /// <returns></returns>
+        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual, TemporadaDeCosecha temporadaSeleccionada)
+        {
+            //TODO: Deteminar el adeudo de la temporada anterior o los movimientos de ese tipo
+            decimal adeudoAnterior = 0;
+
+            //Solo prestamos y abonos
+            var movimientosFiltrados = this.MovimientosFinancieros
+            .Where(mov => mov.TemporadaDeCosechaID == temporadaSeleccionada.TemporadaDeCosechaID)
+            .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+            .OrderBy(mov => mov.fechaMovimiento).ToList();
+
+            //Se prepara un reporte de movimientos de anticipos con los movimientos filtrados
+            var movs = from mov in movimientosFiltrados
+               select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
+
+            //Se genera una lista encandenada de los movimientos filtrados
+            LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
+                        new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
+
+            //Se calcula el balance de deuda
+            MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
+
+
+            return movimientos;
+        }
+
         public List<PagoPorProducto> filtrarPagosPorProducto(TemporadaDeCosecha tem, TimePeriod tp, int noSemana)
         {
             //Se filtran los movimientos dentro del periodo de cosecha, que sean pagos por producto dentro

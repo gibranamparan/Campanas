@@ -274,44 +274,46 @@ tr:hover.pagado{
 tr.trHeader1 th{
     background-color: white !important;
 }
-tr.trHeader1 th[colspan] {
+tr.trHeader1 th[colspan], table#tblBalanceAnticipos tfoot tr td {
     background-color: #fdec6f !important;
+}
+
+tr.trHeader1 th[colspan]{
     border: 1px solid;
 }
 
-table#tblBalanceAnticipos tr>td:nth-child(7),
-table#tblBalanceAnticipos tr>th:nth-child(7){
+/*Margen de titulos de abono y saldo*/
+table#tblBalanceAnticipos tbody>tr>td:nth-child(7),
+table#tblBalanceAnticipos thead>tr>th:nth-child(7){
     border-left: 1px solid black;
 }
-table#tblBalanceAnticipos tr>td:nth-child(8),
-table#tblBalanceAnticipos tr>th:nth-child(8),
-table#tblBalanceAnticipos tr>td:nth-child(11),
-table#tblBalanceAnticipos tr>th:nth-child(11){
+/*Margen de titulos de abono y saldo*/
+table#tblBalanceAnticipos tbody>tr>td:nth-child(8),
+table#tblBalanceAnticipos thead>tr>th:nth-child(8),
+table#tblBalanceAnticipos tbody>tr>td:nth-child(11),
+table#tblBalanceAnticipos thead>tr>th:nth-child(11){
     border-right: 1px solid black;
 }
 
-table#tblBalanceAnticipos tr:last-child>td:nth-child(7),
-table#tblBalanceAnticipos tr:last-child>td:nth-child(8),
-table#tblBalanceAnticipos tr:last-child>td:nth-child(9),
-table#tblBalanceAnticipos tr:last-child>td:nth-child(10),
-table#tblBalanceAnticipos tr:last-child>td:nth-child(11){
-    border-bottom: 1px solid black;
-}
-
-table#tblBalanceAnticipos tr>td:nth-child(7),
-table#tblBalanceAnticipos tr>td:nth-child(8),
-table#tblBalanceAnticipos tr>td:nth-child(9),
-table#tblBalanceAnticipos tr>td:nth-child(10),
-table#tblBalanceAnticipos tr>td:nth-child(11){
+/*Color de seccion de abonos y saldos en tabla de balances*/
+table#tblBalanceAnticipos tbody>tr>td:nth-child(7),
+table#tblBalanceAnticipos tbody>tr>td:nth-child(8),
+table#tblBalanceAnticipos tbody>tr>td:nth-child(9),
+table#tblBalanceAnticipos tbody>tr>td:nth-child(10),
+table#tblBalanceAnticipos tbody>tr>td:nth-child(11){
     background: #fff4dc
 }
-table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(7),
-table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(8),
-table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(9),
-table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(10),
-table#tblBalanceAnticipos tr:nth-of-type(odd)>td:nth-child(11){
+
+/*Stripped de tabla de balances*/
+table#tblBalanceAnticipos tbody>tr:nth-of-type(odd)>td:nth-child(7),
+table#tblBalanceAnticipos tbody>tr:nth-of-type(odd)>td:nth-child(8),
+table#tblBalanceAnticipos tbody>tr:nth-of-type(odd)>td:nth-child(9),
+table#tblBalanceAnticipos tbody>tr:nth-of-type(odd)>td:nth-child(10),
+table#tblBalanceAnticipos tbody>tr:nth-of-type(odd)>td:nth-child(11){
     background: #feecc7
 }
+
+/*Hover de tabla de balances*/
 table#tblBalanceAnticipos tr:hover>td:nth-child(7),
 table#tblBalanceAnticipos tr:hover>td:nth-child(8),
 table#tblBalanceAnticipos tr:hover>td:nth-child(9),
