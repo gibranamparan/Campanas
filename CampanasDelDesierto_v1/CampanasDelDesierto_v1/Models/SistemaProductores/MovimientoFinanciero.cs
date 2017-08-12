@@ -957,13 +957,17 @@ namespace CampanasDelDesierto_v1.Models
 
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal saldoInteres { get; set; }
+                public decimal ventasACredito { get; private set; }
+                public decimal anticiposEfectivo { get; private set; }
 
                 public VMBalanceAnticiposTotales() { }
                 public VMBalanceAnticiposTotales(IEnumerable<VMMovimientoBalanceAnticipos> lista)
                 {
                     this.abonoCapital = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoCapital);
                     this.abonoInteres = lista.Sum(i => i.abonoInteres);
-                    this.anticipo = lista.Where(i=>!i.mov.isAbonoCapital).Sum(i => i.anticipo);
+                    this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial).Sum(i => i.anticipo);
+                    this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital).Sum(i => i.anticipo);
+                    this.anticipo = ventasACredito + anticiposEfectivo; ;
                     this.interes = lista.Sum(i => i.interes);
                     this.saldoCapital= lista.Sum(i => i.saldoCapital);
                     this.saldoInteres= lista.Sum(i => i.saldoInteres);
