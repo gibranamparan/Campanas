@@ -1,0 +1,24 @@
+﻿@model CampanasDelDesierto_v1.Models.TemporadaDeCosecha
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <a href="@Url.Action("Index")">
+        <i class="fa fa-arrow-left"></i><span>Volver al Historial de Años de Cosecha</span>
+    </a>
+</div>
+<h3>¿Estas seguro que desesas eliminar este registro?</h3>
+<strong style="color: red">Si confirma, todos los movimientos y recibos asociados a esta temporada seran eliminados.</strong>
+<div>
+    @Html.Partial("Partial_DetailsTemporadaStatic")
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    }
+</div>

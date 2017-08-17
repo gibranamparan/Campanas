@@ -29,7 +29,7 @@ namespace CampanasDelDesierto_v1.Models
 
         public TimePeriod periodo { get { return new TimePeriod(this.fechaInicio, this.fechaFin); } }
 
-        [Display(Name ="Temporada de Cosecha")]
+        [Display(Name ="Año de Cosecha")]
         public string rangoTiempo { get {
                 System.Globalization.CultureInfo cult = System.Globalization
                     .CultureInfo.CreateSpecificCulture("es-MX");
@@ -334,6 +334,11 @@ namespace CampanasDelDesierto_v1.Models
             return opciones;
         }
 
+        /// <summary>
+        /// Arroja la ultima temporada en orden cronolico registrada en la base de datos.
+        /// </summary>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns></returns>
         public static TemporadaDeCosecha temporadaMasAntigua(ApplicationDbContext db)
         {
             var temporadas = db.TemporadaDeCosechas.OrderBy(tem=>tem.fechaInicio);

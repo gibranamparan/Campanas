@@ -463,6 +463,7 @@
     <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\icomoon.css" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="Content\main.css" />
@@ -720,7 +721,7 @@
     <Content Include="Views\Activos\Edit.cshtml" />
     <Content Include="Views\Activos\Index.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Create.cshtml" />
-    <Content Include="Views\Shared\Delete.cshtml" />
+    <Content Include="Views\TemporadaDeCosechas\Delete.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Edit.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Index.cshtml" />

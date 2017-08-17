@@ -7,8 +7,7 @@
     int temporada = temporadaSeleccionada.TemporadaDeCosechaID;
 
     //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
-    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
-        Model.generarReporteAnticiposConIntereses(fechaActual, temporadaSeleccionada);
+    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos = ViewBag.reporteMovimientos;
 
     //Se calculan los montos totales del reporte.
     MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales = 
@@ -89,7 +88,8 @@
                             }
                             else
                             {
-                                @Html.DisplayFor(model => item.anticipo)
+                                @(Math.Abs(item.anticipo).ToString("C"))
+                                @*Html.DisplayFor(model => item.anticipo)*@
                             }
                         </td>
                         <td>
@@ -159,7 +159,7 @@
             <tfoot>
                 <tr class="">
                     <td colspan="2"><strong>TOTALES</strong></td>
-                    <td>@Html.DisplayFor(model => totales.anticipo)</td>@*ANTICIPO*@
+                    <td>@Math.Abs(totales.anticipo).ToString("C")</td>@*ANTICIPO*@
                     <td>@Html.DisplayFor(model => totales.interes)</td>@*INTERESES*@
                     <td colspan="2"></td>
                     <td>@Html.DisplayFor(model => totales.abonoCapital)</td>@*ABONO CAPITAL*@

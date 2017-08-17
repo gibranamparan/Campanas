@@ -34,7 +34,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
                 TemporadaDeCosecha temporadaConsultada = db.TemporadaDeCosechas.Find(id);
                 TemporadaDeCosecha temporadaAnterior = temporadaConsultada.getTemporadaAnterior(db);
                 List<AdeudoRecuperacionReg> reporte = new List<AdeudoRecuperacionReg>();
-                productores.ForEach(prod => reporte.Add(new AdeudoRecuperacionReg(prod, temporadaConsultada)));
+                productores.ForEach(prod => reporte.Add(new AdeudoRecuperacionReg(prod, temporadaConsultada, temporadaAnterior)));
                 ViewBag.temporada = db.TemporadaDeCosechas.Find(id);
                 return View(reporte);
             }
@@ -54,6 +54,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
                 List<AdeudosRecuperacionDetallado> reporte = new List<AdeudosRecuperacionDetallado>();
                 productores.ForEach(prod => reporte.Add(new AdeudosRecuperacionDetallado(prod, temporadaConsultada, temporadaAnterior)));
                 ViewBag.temporada = temporadaConsultada;
+                ViewBag.temporadaAnterior = temporadaAnterior;
                 return View(reporte);
             }
         }

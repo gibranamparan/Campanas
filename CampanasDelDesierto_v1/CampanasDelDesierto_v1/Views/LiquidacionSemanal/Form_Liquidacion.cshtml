@@ -101,8 +101,7 @@
     decimal balanceActualAnticipos = ViewBag.balanceActual;
 
     //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
-    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
-        productor.generarReporteAnticiposConIntereses(Model.fechaMovimiento, Model.temporadaDeCosecha);
+    IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos = ViewBag.reporteMovimientos;
 
     //Se calculan los montos totales del reporte.
     MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales =

@@ -505,6 +505,7 @@ namespace CampanasDelDesierto_v1.Models
                 //Se eliminan los registros de distribucion de los abonos agotados
                 //var movs = this.MovimientosFinancieros.Where(mov => mov.isAbonoCapital)
                 var movs = this.MovimientosFinancieros
+                    .Where(mov => mov.isAbonoCapital)
                     .Where(mov => mov.fechaMovimiento >= nuevoMovimiento.fechaMovimiento)
                     .Where(mov => mov.agotado).ToList();
 
@@ -611,8 +612,7 @@ namespace CampanasDelDesierto_v1.Models
                     interesAlAbonar = 0;
                     //Se determina el interes a la fecha en la que se hizo el abono
                     //No pagan interes las ventas de material ni las deudas iniciales de venta de material
-                    if (pagarInteres.Value 
-                        && (prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO 
+                    if (pagarInteres.Value && (prestamo.getTypeOfMovement() != TypeOfMovements.VENTA_A_CREDITO 
                             && !prestamo.isAdeudoInicialMaterial))
                     { //Ciclo de pago de interes
                         interesReg = prestamo.getInteresReg(abono.fechaMovimiento, out interesTotalGenerado);
@@ -642,9 +642,7 @@ namespace CampanasDelDesierto_v1.Models
                             nuevasAsociaciones.Add(pa);
                         }
                         else //El interes del prestamo esta pagado, se pasa al siguiente prestamo
-                        { 
                             prestamoNodo = prestamoNodo.Next;
-                        }
 
                     else //Si no es pago a interes, se paga capital
                     { 
@@ -897,13 +895,29 @@ namespace CampanasDelDesierto_v1.Models
         /// <summary>
         /// Genera un reporte de anticipos e intereses dados dentro de una temporada
         /// </summary>
-        /// <param name="fechaActual"></param>
-        /// <param name="temporadaSeleccionada"></param>
+        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
+        /// <param name="temporadaSeleccionada">Temporada reportada</param>
+        /// <param name="db">Contexto de la base de datos</param>
         /// <returns></returns>
-        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual, TemporadaDeCosecha temporadaSeleccionada)
+        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual, 
+            TemporadaDeCosecha temporadaSeleccionada, ApplicationDbContext db)
+        {
+            TemporadaDeCosecha temporadaAnterior = temporadaSeleccionada.getTemporadaAnterior(db);
+            return generarReporteAnticiposConIntereses(fechaActual, temporadaSeleccionada, temporadaAnterior); ;
+        }
+
+        /// <summary>
+        /// Genera un reporte de anticipos e intereses dados dentro de una temporada
+        /// </summary>
+        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
+        /// <param name="temporadaSeleccionada">Temporada reportada</param>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns></returns>
+        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual,
+            TemporadaDeCosecha temporadaSeleccionada, TemporadaDeCosecha temporadaAnterior)
         {
             //TODO: Deteminar el adeudo de la temporada anterior o los movimientos de ese tipo
-            decimal adeudoAnterior = 0;
+            AdeudoInicial adeudoAnterior = new AdeudoInicial();
 
             //Solo prestamos y abonos
             var movimientosFiltrados = this.MovimientosFinancieros
@@ -913,15 +927,15 @@ namespace CampanasDelDesierto_v1.Models
 
             //Se prepara un reporte de movimientos de anticipos con los movimientos filtrados
             var movs = from mov in movimientosFiltrados
-               select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
+                       select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
 
             //Se genera una lista encandenada de los movimientos filtrados
             LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
                         new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
 
             //Se calcula el balance de deuda
-            MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
-
+            //MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
+            MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, 0);
 
             return movimientos;
         }

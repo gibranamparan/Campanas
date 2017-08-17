@@ -55,6 +55,8 @@ namespace CampanasDelDesierto_v1.Controllers
             if (semanaLiquidada.isNotDefaultInstance())
                 mov.semanaLiquidada = semanaLiquidada; //Se asocia al nuevo registro de liquidacion semanal
 
+            ViewBag.reporteMovimientos = productor.generarReporteAnticiposConIntereses(mov.fechaMovimiento, mov.temporadaDeCosecha,db);
+
             return mov;
         }
 
@@ -81,6 +83,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 //Se asocia al nuevo registro de liquidacion semanal
                 mov.semanaLiquidada = semanaLiquidada;
             }
+            ViewBag.reporteMovimientos = mov.Productor.generarReporteAnticiposConIntereses(mov.fechaMovimiento, mov.temporadaDeCosecha, db);
         }
 
         /// <summary>

@@ -322,6 +322,20 @@ table#tblBalanceAnticipos tr:hover>td:nth-child(11){
     background: #ffe6b0
 }
 
+/*Reportes generales y detallados*/
+td.monto-cosecha-anterior{
+    background-color: #c3c3c3
+}
+tr:hover td.monto-cosecha-anterior {
+    background: #d2d2d2;
+}
+tr.rowTotales td.monto-cosecha-anterior{
+    background-color: #cee5a7 !important;
+}
+tr:hover.rowTotales td.monto-cosecha-anterior {
+    background-color: #ddefc0 !important;
+}
+
 .validation-summary-errors {
     color: red;
 }

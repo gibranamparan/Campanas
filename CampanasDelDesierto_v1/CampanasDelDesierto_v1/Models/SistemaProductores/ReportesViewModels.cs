@@ -11,7 +11,7 @@ namespace CampanasDelDesierto_v1.Models
     public class ReportesViewModels
     {
         public class VMAdeudosRecuperacionReg
-        { ApplicationDbContext db = new ApplicationDbContext();
+        {
             public Productor productor;
 
             [DisplayFormat(DataFormatString = "{0:C}")]
@@ -50,7 +50,7 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayName("Adeudo Anterior Cosecha")]
             public decimal adeudoAnteriorCosecha { get; set; }
             
-            public VMAdeudosRecuperacionReg(Productor productor, TemporadaDeCosecha temporadaActual)
+            public VMAdeudosRecuperacionReg(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
             {
                 this.productor = productor;
                 //Filtro de movimientos por cosecha
@@ -69,7 +69,7 @@ namespace CampanasDelDesierto_v1.Models
 
                 //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
                 IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> reporteAnticipos =
-                    productor.generarReporteAnticiposConIntereses(DateTime.Today, temporadaActual);
+                    productor.generarReporteAnticiposConIntereses(DateTime.Today, temporadaActual,temporadaAnterior);
 
                 //Se calculan los montos totales del reporte.
                 MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales =
@@ -107,6 +107,9 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Anterior Cosecha ")]
             public decimal adeudoAnteriorCosecha { get; set; }
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Adeudo Interes Anterior Cosecha ")]
+            public decimal adeudoInteresAnteriorCosecha { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Anticipos de Efectivo")]
@@ -208,14 +211,20 @@ namespace CampanasDelDesierto_v1.Models
                 //Adeudo Anterior cosecha   
                 this.adeudoAnteriorCosecha = 0; //Valor por defecto en 0
                 if (temporadaAnterior != null) //Si hay temporada anterior, se calcula su balance final
+                { 
                     this.adeudoAnteriorCosecha = Math.Abs(productor.balanceDeAnticiposEnTemporada(temporadaAnterior.TemporadaDeCosechaID));
+                    //this.adeudoAnteriorCosecha = Math.Abs(productor.balanceDeAnticiposEnTemporada(temporadaAnterior.TemporadaDeCosechaID));
+                }
                 else if (productor.adeudoInicialAnticipos != null) //Si no, se toma el adeudo anterior registrado para anticipos
+                { 
                     this.adeudoAnteriorCosecha = Math.Abs(productor.adeudoInicialAnticipos.montoMovimiento);
+                    this.adeudoInteresAnteriorCosecha = Math.Abs(productor.adeudoInicialAnticipos.interesInicial);
+                }
 
                 this.anticiposEfectivo = Math.Abs(totales.anticiposEfectivo);
                 this.ventasCredito = Math.Abs(totales.ventasACredito);
                 this.interes = totales.interes;
-                this.totalAdeudos = this.anticiposEfectivo + this.ventasCredito + this.interes + this.adeudoAnteriorCosecha;
+                this.totalAdeudos = this.anticiposEfectivo + this.ventasCredito + this.interes;
             }
 
             private void calcularPagoPorCosecha(List<MovimientoFinanciero> movimientos)
@@ -288,7 +297,8 @@ namespace CampanasDelDesierto_v1.Models
             }
 
             public VMAdeudosRecuperacionDetallado() { }
-            public VMAdeudosRecuperacionDetallado(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
+            public VMAdeudosRecuperacionDetallado(Productor productor,
+                TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
             {
                 this.productor = productor;
                 //Filtro de movimientos por cosecha
@@ -297,7 +307,7 @@ namespace CampanasDelDesierto_v1.Models
                 
                 //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
                 IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> reporteAnticipos =
-                    productor.generarReporteAnticiposConIntereses(DateTime.Today, temporadaActual);
+                    productor.generarReporteAnticiposConIntereses(DateTime.Today, temporadaActual, temporadaAnterior);
 
                 //Se calculan los montos totales del reporte.
                 VMBalanceAnticiposTotales totales = new VMBalanceAnticiposTotales(reporteAnticipos);
@@ -328,6 +338,7 @@ namespace CampanasDelDesierto_v1.Models
                 VMAdeudosRecuperacionDetallado res = new VMAdeudosRecuperacionDetallado();
                 res.abonoArbolitos = datos.Sum(mov => mov.abonoArbolitos);
                 res.adeudoAnteriorCosecha = datos.Sum(mov => mov.adeudoAnteriorCosecha);
+                res.adeudoInteresAnteriorCosecha = datos.Sum(mov => mov.adeudoInteresAnteriorCosecha);
                 res.adeudoArboles= datos.Sum(mov => mov.adeudoArboles);
                 res.adeudoArbolitosPorRecuperar= datos.Sum(mov => mov.adeudoArbolitosPorRecuperar);
                 res.adeudoRecuperado= datos.Sum(mov => mov.adeudoRecuperado);

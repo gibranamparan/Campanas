@@ -3,8 +3,15 @@
 @{
     ViewBag.Title = "Reporte de Adeudo y Recuperación Detallado";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //Se determina el año de la cosecha anterior
     TemporadaDeCosecha temporada = ViewBag.temporada;
-    ReportesViewModels.VMAdeudosRecuperacionDetallado rowTotales = ReportesViewModels.VMAdeudosRecuperacionDetallado.calcularTotales(Model.ToList());
+    TemporadaDeCosecha temporadaAnterior = ViewBag.temporadaAnterior;
+    int anioAnterior = temporadaAnterior == null ? temporada.fechaInicio.Year : temporadaAnterior.fechaFin.Year;
+
+    //Se calcula el registro de sumas totales de todos los campos
+    ReportesViewModels.VMAdeudosRecuperacionDetallado rowTotales =
+        ReportesViewModels.VMAdeudosRecuperacionDetallado.calcularTotales(Model.ToList());
 }
 
 <p class="hidden-print">
@@ -21,7 +28,8 @@
             @*<th>Num. Prod.</th>*@
             <th>Productor</th>
             @*Adeudos*@
-            <th>@Html.DisplayNameFor(model => model.adeudoAnteriorCosecha) @(temporada.fechaInicio.Year - 1)</th>
+            <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoAnteriorCosecha) @(anioAnterior)</th>
+            <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoInteresAnteriorCosecha) @(anioAnterior)</th>
             <th>@Html.DisplayNameFor(model => model.anticiposEfectivo)</th>
             <th>@Html.DisplayNameFor(model => model.interes)</th>
             <th>@Html.DisplayNameFor(model => model.ventasCredito)</th>
@@ -69,7 +77,8 @@
         <tr class="rowTotales">
             <td>TOTALES</td>
             @*Adeudos*@
-            <td>@Html.DisplayFor(model => rowTotales.adeudoAnteriorCosecha) </td>
+            <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoAnteriorCosecha) </td>
+            <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoInteresAnteriorCosecha) </td>
             <td>@Html.DisplayFor(model => rowTotales.anticiposEfectivo)</td>
             <td>@Html.DisplayFor(model => rowTotales.interes)</td>
             <td>@Html.DisplayFor(model => rowTotales.ventasCredito)</td>
@@ -113,10 +122,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.productor</td>
+                <td>
+                    <a href="@Url.Action("Details","Productores", new { id = item.productor.idProductor })" 
+                       class="hidden-print" target="_blank">@item.productor</a>
+                    <span class="visible-print">@item.productor</span>
+                </td>
                 
                 @*Adeudos*@
-                <td>@Html.DisplayFor(model => item.adeudoAnteriorCosecha)</td>
+                <td class="monto-cosecha-anterior">@Html.DisplayFor(model => item.adeudoAnteriorCosecha)</td>
+                <td class="monto-cosecha-anterior">@Html.DisplayFor(model => item.adeudoInteresAnteriorCosecha)</td>
                 <td>@Html.DisplayFor(model => item.anticiposEfectivo)</td>
                 <td>@Html.DisplayFor(model => item.interes)</td>
                 <td>@Html.DisplayFor(model => item.ventasCredito)</td>

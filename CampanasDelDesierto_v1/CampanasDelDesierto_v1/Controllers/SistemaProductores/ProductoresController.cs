@@ -115,6 +115,8 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.temporada = tem.TemporadaDeCosechaID;
             ViewBag.temporadaSeleccionada = tem;
 
+            ViewBag.reporteMovimientos = productor.generarReporteAnticiposConIntereses(DateTime.Today, tem, db);
+
             return View(productor);
         }
 

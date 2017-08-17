@@ -902,24 +902,41 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayFormat(DataFormatString = "{0:C}")]
             public decimal balance { get; set; }
 
+            /// <summary>
+            /// Recibe la lista de movimientos que se visualizaran en el reporte del balance de anticipos. Rellenando el campo
+            /// de totales de cada registro sumando uno tras otro en orden cronologico.
+            /// </summary>
+            /// <param name="lista">Lista encadenada de VMMovimientoBalanceAnticipos, se asume que esta ordenado en orden cronologico.</param>
+            /// <param name="adeudoAnteriorTotal">En caso de haber un adeduo anterior</param>
             public static void balancear(ref LinkedList<VMMovimientoBalanceAnticipos> lista, decimal adeudoAnteriorTotal)
             {
+                if (adeudoAnteriorTotal > 0)
+                {
+                    VMMovimientoBalanceAnticipos adeudoAnterior = new VMMovimientoBalanceAnticipos();
+                }
+
                 var nodo = lista.First;
                 while (nodo != null)
                 {
-                    if (nodo.Previous != null)
-                    {adeudoAnteriorTotal = nodo.Previous.Value.total;}
+                    if (!nodo.Value.mov.isAbonoCapital) { 
+                        if (nodo.Previous != null)
+                        {adeudoAnteriorTotal = nodo.Previous.Value.total;}
 
-                    nodo.Value.total = Math.Round(nodo.Value.saldoCapital,2) + Math.Round(nodo.Value.saldoInteres,2) + adeudoAnteriorTotal;
+                        nodo.Value.total = nodo.Value.saldoCapital + nodo.Value.saldoInteres + adeudoAnteriorTotal;
+                    }
                     nodo = nodo.Next;
                 }
             }
+
+            public VMMovimientoBalanceAnticipos() { }
 
             public VMMovimientoBalanceAnticipos(MovimientoFinanciero mov, DateTime fechaConsulta)
             {
                 this.mov = mov;
                 decimal interesTotalGenerado = 0;
                 decimal interesPendiente = mov.getInteresRestante(fechaConsulta, out interesTotalGenerado);
+                //Si es adeudo inicial de anticipos, el interes es la suma del interes inicial mas el interes generado
+                interesTotalGenerado += this.mov.isAdeudoInicialAnticiposCapital?((AdeudoInicial)this.mov).interesInicial:0;
                 
                 this.fecha = mov.fechaMovimiento;
                 this.pagare = mov.isAnticipoDeCapital ? ((PrestamoYAbonoCapital)mov).pagare
@@ -964,13 +981,15 @@ namespace CampanasDelDesierto_v1.Models
                 public VMBalanceAnticiposTotales(IEnumerable<VMMovimientoBalanceAnticipos> lista)
                 {
                     this.abonoCapital = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoCapital);
-                    this.abonoInteres = lista.Sum(i => i.abonoInteres);
-                    this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial).Sum(i => i.anticipo);
-                    this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital).Sum(i => i.anticipo);
+                    this.abonoInteres = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoInteres);
+                    this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial 
+                        || i.mov.isAdeudoInicialMaterial).Sum(i => i.anticipo);
+                    this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital 
+                        || i.mov.isAdeudoInicialAnticiposCapital).Sum(i => i.anticipo);
                     this.anticipo = ventasACredito + anticiposEfectivo; ;
                     this.interes = lista.Sum(i => i.interes);
-                    this.saldoCapital= lista.Sum(i => i.saldoCapital);
-                    this.saldoInteres= lista.Sum(i => i.saldoInteres);
+                    this.saldoCapital= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoCapital);
+                    this.saldoInteres= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoInteres);
                 }
             }
         }
