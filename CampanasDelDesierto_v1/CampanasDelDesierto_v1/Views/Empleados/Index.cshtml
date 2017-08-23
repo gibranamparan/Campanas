@@ -1,52 +1,63 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Empleado>
+@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Empleados</h2>
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.nombreCompleto)
-            </th>   
-            <th>
-                @Html.DisplayNameFor(model => model.cantidadDePrestamosActivos)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-   
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.nombreCompleto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.cantidadDePrestamosActivos)
-                </td><td>
-                    <a href="@Url.Action("Edit",new { id = item.idEmpleado })">
-                        <i class="glyphicon glyphicon-pencil"></i> Editar
-                    </a><br />
-                    <a href="@Url.Action("Delete",new { id = item.idEmpleado })">
-                        <i class="glyphicon glyphicon-remove"></i> Eliminar
-                    </a><br />
-                    <a href="@Url.Action("Details",new { id = item.idEmpleado })">
-                        <i class="glyphicon glyphicon-eye-open"></i> Prestamos
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@Html.Partial("_PartialCreateEmpleado", new Empleado())
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="panel-title">Empleados</div>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.nombreCompleto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.cantidadDePrestamosActivos)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.cantidadDePrestamosActivos)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit",new { id = item.idEmpleado })">
+                                <i class="glyphicon glyphicon-pencil"></i> Editar
+                            </a><br />
+                            <a href="@Url.Action("Delete",new { id = item.idEmpleado })">
+                                <i class="glyphicon glyphicon-remove"></i> Eliminar
+                            </a><br />
+                            <a href="@Url.Action("Details",new { id = item.idEmpleado })">
+                                <i class="glyphicon glyphicon-eye-open"></i> Prestamos
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 

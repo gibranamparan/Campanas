@@ -21,6 +21,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Departamentos
         public async Task<ActionResult> Index()
         {
+            ViewBag.idSucursal = new SelectList(db.Sucursales.ToList(), "idSucursal", "nombreSucursal", null);
             if (User.IsInRole(ApplicationUser.RoleNames.ADMIN)) {
                 //Se muestra el listado de todos los departamentos si es admin general
                 var departamentos = db.Departamentos.Include(d => d.Sucursal);

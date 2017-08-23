@@ -1,0 +1,66 @@
+﻿@model CampanasDelDesierto_v1.Models.Departamento
+@using CampanasDelDesierto_v1.Models
+
+    <p>
+        <a href="@Url.Action("Index","Sucursales",new { id = Model.idSucursal })">
+            <i class="fa fa-arrow-circle-left"></i> Regresar
+        </a>
+        <a href="@Url.Action("Details","Sucursales",new { id = Model.idSucursal })">
+            <i class="glyphicon glyphicon-pencil"></i> Editar
+        </a>
+    </p>
+   
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title"><strong>Departamento</strong></h2>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Create", "Departamentos"))
+            {
+                @Html.AntiForgeryToken()      
+                <div class="form-horizontal col-md-8">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.nombreDepartamento, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.nombreDepartamento, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.nombreDepartamento, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.domicilio, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.domicilio, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.domicilio, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Sucursal, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
+                           @Html.DropDownList("idSucursal", null, "Seleccionar Sucursal:", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Sucursal, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-success">Crear</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+
+

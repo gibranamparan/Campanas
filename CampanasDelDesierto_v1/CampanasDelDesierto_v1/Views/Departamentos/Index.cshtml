@@ -1,53 +1,64 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Departamento>
+@using CampanasDelDesierto_v1.Models;
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@Html.Partial("_PartialCreateDepartamento", new Departamento())
+
 <h2>Departamentos</h2>
+<div class=" panel panel-info">
+    <div class="panel-heading">
+        <div class="panel-title">Departamentos</div>
+    </div>    
+    <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sucursal.nombreSucursal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nombreDepartamento)
+                </th>
+                <th>
+                    @Html.DisplayName("Activos Disponibles")
+                </th>
+                <th>
+                    @Html.DisplayName("Activos Prestados")
+                </th>
+                <th></th>
+            </tr>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Sucursal.nombreSucursal)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nombreDepartamento)
-        </th>
-        <th>
-            @Html.DisplayName("Activos Disponibles")
-        </th>
-        <th>
-            @Html.DisplayName("Activos Prestados")
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sucursal.nombreSucursal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombreDepartamento)
+                    </td>
+                    <td>
+                        @(item.activosDisponibles())
+                    </td>
+                    <td>@(item.activosPrestados())</td>
+                    <td>
+                        <a href="@Url.Action("Edit","Departamentos",new { id = item.departamentoID })">
+                            <i class="glyphicon glyphicon-pencil"></i> Editar
+                        </a><br />
+                        <a href="@Url.Action("Details","Departamentos",new { id = item.departamentoID })">
+                            <i class="glyphicon glyphicon-eye-open"></i> Informacion
+                        </a><br />
+                        <a href="@Url.Action("Delete","Departamentos",new { id = item.departamentoID })">
+                            <i class="glyphicon glyphicon-remove"></i> Eliminar
+                        </a><br />
+                    </td>
+                </tr>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Sucursal.nombreSucursal)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nombreDepartamento)
-        </td>
-        <td>
-            @(item.activosDisponibles())
-        </td>
-        <td>@(item.activosPrestados())</td>
-        <td>
-            <a href="@Url.Action("Edit","Departamentos",new { id = item.departamentoID })">
-                <i class="glyphicon glyphicon-pencil"></i> Editar
-            </a><br />
-            <a href="@Url.Action("Details","Departamentos",new { id = item.departamentoID })">
-                <i class="glyphicon glyphicon-eye-open"></i> Informacion
-            </a><br />
-            <a href="@Url.Action("Delete","Departamentos",new { id = item.departamentoID })">
-                <i class="glyphicon glyphicon-remove"></i> Eliminar
-            </a><br />           
-        </td>
-    </tr>
-}
+        </table>
+    </div>
+</div>
 
-</table>
