@@ -772,7 +772,11 @@
     <Content Include="Views\AdeudoInicial\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporadaStatic.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListarMovimientosAnticipos.cshtml" />
-    <Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
+	<Content Include="Views\Sucursales\_PartialCrearteSucursal.cshtml" />
+    <Content Include="Views\Departamentos\_PartialCreateDepartamento.cshtml" />
+    <Content Include="Views\Empleados\_PartialCreateEmpleado.cshtml" />
+    <Content Include="Views\Departamentos\_PartialCreateInventario.cshtml" />
+	<Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

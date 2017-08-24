@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Sucursal>
+@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Index";
@@ -7,11 +8,9 @@
 
 <legend>Sucursales</legend>
 
-<p>
-    <a href="@Url.Action("Create")">
-        <i class="glyphicon glyphicon-plus"></i> Crear Sucursal
-    </a>
-</p>
+<div>
+    @Html.Partial("_PartialCrearteSucursal", new Sucursal())
+</div>
 
 <table class="table datablejs">
     <thead>
@@ -52,10 +51,10 @@
                         <i class="glyphicon glyphicon-plus"></i> Crear Departamento
                     </a>
 
-                </td>               
-            </tr>        
+                </td>
+            </tr>
         }
     </tbody>
 </table>
 
-        
+

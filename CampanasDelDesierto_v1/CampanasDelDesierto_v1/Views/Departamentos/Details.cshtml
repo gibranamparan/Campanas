@@ -1,4 +1,5 @@
 ﻿@model CampanasDelDesierto_v1.Models.Departamento
+    @using CampanasDelDesierto_v1.Models;
 
 @{
     ViewBag.Title = "Details";
@@ -83,6 +84,7 @@
         </table>    
    
 
+@Html.Partial("_PartialCreateInventario", new Inventario())
 
 <h2>Inventarios</h2>
 <p>

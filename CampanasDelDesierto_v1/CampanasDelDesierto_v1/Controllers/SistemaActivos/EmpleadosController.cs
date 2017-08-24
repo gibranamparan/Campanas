@@ -20,6 +20,7 @@ namespace CampanasDelDesierto_v1.Controllers
         public async Task<ActionResult> Index()
         {
             var empleados = db.Empleados.Include(e => e.Departamento);
+            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento");
             return View(await empleados.ToListAsync());
         }
 
