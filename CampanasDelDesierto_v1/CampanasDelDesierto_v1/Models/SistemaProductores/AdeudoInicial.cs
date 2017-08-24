@@ -9,10 +9,28 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
 {
     public class AdeudoInicial : MovimientoFinanciero
     {
+        public AdeudoInicial(VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales, TemporadaDeCosecha temporada, Productor productor)
+        {
+            this.montoMovimiento = -totales.saldoCapital;
+            this.interesInicial = totales.saldoInteres;
+            this.idProductor = productor.idProductor;
+            this.Productor = productor;
+            this.TemporadaDeCosechaID = temporada.TemporadaDeCosechaID;
+            this.temporadaDeCosecha = temporada;
+            this.fechaMovimiento = temporada.fechaFin;
+        }
+
+        public AdeudoInicial()
+        {
+        }
+
         [DisplayName("Balance Adeudado")]
         public TipoDeBalance balanceAdeudado { get; set; }
 
         public Boolean? isVentas { get; set; }
+
+        public bool isRegistradoInicialmenteEnProductor
+            {get{return this.idMovimiento > 0;}}
 
         [DisplayName("Concepto")]
         public new string concepto { get {

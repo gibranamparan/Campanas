@@ -3,20 +3,9 @@
 @model CampanasDelDesierto_v1.Models.PrestamoYAbonoCapital
 
 @{
-    ViewBag.Title = "Nuevo Anticipo O Abono";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
     Productor productor = ViewBag.productor;
-
-    /*Just for test*/
-    //Random random = new Random();
-    // decimal montoMovimientoPesos = random.Next(1,10)*50*100;
-    /*const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    Model.cheque = new string(Enumerable.Repeat(chars, 5)
-        .Select(s => s[random.Next(s.Length)]).ToArray());
-    Model.pagare = new string(Enumerable.Repeat(chars, 5)
-        .Select(s => s[random.Next(s.Length)]).ToArray());*/
-
+    ViewBag.Title = "Nuevo Anticipo O Abono: " +productor;
 }
 
 <p>
@@ -38,7 +27,7 @@
             @Html.HiddenFor(model => model.TemporadaDeCosechaID)
             <div class="form-horizontal">
                 <div class="alert alert-info">
-                    <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo) de Temporada: </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
+                    <strong>@Html.DisplayNameFor(model => model.temporadaDeCosecha.rangoTiempo): </strong>@Html.DisplayFor(model => model.temporadaDeCosecha.rangoTiempo).
                 </div>
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-6">

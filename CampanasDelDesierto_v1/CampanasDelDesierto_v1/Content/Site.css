@@ -336,6 +336,24 @@ tr:hover.rowTotales td.monto-cosecha-anterior {
     background-color: #ddefc0 !important;
 }
 
+table.table{
+    box-shadow: 5px 5px rgba(128, 128, 128, 0.52);
+}
+
+.panel table, table tbody tr{
+    border: none;
+    box-shadow:none;
+}
+
+.table tbody tr th{
+    background-color: #feecc7 !important;
+}
+
+tr.squared th, tr.squared td{
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
+}
+
 .validation-summary-errors {
     color: red;
 }

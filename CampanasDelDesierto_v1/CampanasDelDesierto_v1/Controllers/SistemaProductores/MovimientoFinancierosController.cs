@@ -198,7 +198,6 @@ namespace CampanasDelDesierto_v1.Controllers
 
                     //Se elimina el abono a deudas o anticipos registrado como retencion en la liquidacion
                     if (((LiquidacionSemanal)mov).abonoAnticipo != null)
-
                     {
                         //Se guarda la instancia del abono eliminado para uso en ajustes de balances y distribuciones
                         abonoAnticiposEliminado = ((LiquidacionSemanal)mov).abonoAnticipo;

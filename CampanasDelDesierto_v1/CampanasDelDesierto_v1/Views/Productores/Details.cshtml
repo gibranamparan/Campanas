@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     int temporadaID = ViewBag.temporada;
     var temporadas = ViewBag.temporadas;
+    TemporadaDeCosecha temporada = ViewBag.temporadaSeleccionada;
     ViewDataDictionary vddInfoProductor = new ViewDataDictionary();
     vddInfoProductor.Add("temporada", ViewBag.temporadaSeleccionada);
 }
@@ -13,6 +14,10 @@
 <div class="hidden-print">
     <a href="@Url.Action("Index")">
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
+    </a><span>|</span>
+    <a target="_blank" href="@Url.Action("LiquidacionFinal", "ReportesProductores", 
+            new { id = temporadaID, productorID = Model.idProductor })">
+        <i class="fa fa-list"></i>Reporte de Liquidación Final
     </a>
 </div>
 
@@ -68,12 +73,23 @@
         <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
         <div class="row">
             @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
+            <div class="pull-right" style="padding-right:2em">
+                <span><strong style="color:red">TOTAL DE DEUDA: </strong>
+                @Math.Abs(Model.totalDeudaVentaArbolitoPorTemporada(temporada.TemporadaDeCosechaID)).ToString("C")</span> |
+                <span><strong style="color:red">TOTAL DE ABONO: </strong>
+                @Math.Abs(Model.totalAbonoArbolitoPorTemporada(temporada.TemporadaDeCosechaID)).ToString("C")</span>
+            </div>
         </div>
 
         @*Ingresos de productos y liquidaciones*@
         <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)</h4>
         <div class="row">
             @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones")
+        </div>
+        <div class="pull-right" style="padding-right:2em">
+            <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Model.totalIngresos.ToString("C")</span> |
+            <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion.ToString("C")</span> |
+            <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido.ToString("C")</span>
         </div>
     </div>
 </div>

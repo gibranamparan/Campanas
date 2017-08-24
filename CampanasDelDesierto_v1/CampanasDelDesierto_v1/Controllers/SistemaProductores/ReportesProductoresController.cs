@@ -10,9 +10,11 @@ using CampanasDelDesierto_v1.Models;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using AdeudoRecuperacionReg = CampanasDelDesierto_v1.Models.ReportesViewModels.VMAdeudosRecuperacionReg;
 using AdeudosRecuperacionDetallado = CampanasDelDesierto_v1.Models.ReportesViewModels.VMAdeudosRecuperacionDetallado;
+using LiquidacionFinal = CampanasDelDesierto_v1.Models.ReportesViewModels.VMLiquidacionFinal;
 
 namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
 {
+    [Authorize(Roles = ApplicationUser.RoleNames.ADMIN )]
     public class ReportesProductoresController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -38,7 +40,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
                 ViewBag.temporada = db.TemporadaDeCosechas.Find(id);
                 return View(reporte);
             }
-            
+
         }
 
         [HttpGet]
@@ -57,6 +59,19 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
                 ViewBag.temporadaAnterior = temporadaAnterior;
                 return View(reporte);
             }
+        }
+
+        [HttpGet]
+        public ActionResult LiquidacionFinal(int id, int productorID)
+        {
+            var prod = db.Productores.Find(productorID);
+            TemporadaDeCosecha temporadaConsultada = db.TemporadaDeCosechas.Find(id);
+            TemporadaDeCosecha temporadaAnterior = temporadaConsultada.getTemporadaAnterior(db);
+            LiquidacionFinal reporte = new LiquidacionFinal(prod, temporadaConsultada, temporadaAnterior);
+            ViewBag.temporadaSeleccionada = temporadaConsultada;
+            ViewBag.temporadaAnterior = temporadaAnterior;
+            ViewBag.reporte = reporte;
+            return View(prod);
         }
     }
 }

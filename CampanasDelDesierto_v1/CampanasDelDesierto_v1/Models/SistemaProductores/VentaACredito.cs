@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -55,6 +56,11 @@ namespace CampanasDelDesierto_v1.Models
             base.ajustarMovimiento(originalDate);
         }
 
+        /// <summary>
+        /// Indica si en una lista de productos comprados se ha hecho la venta de polen, verificando la propiedad isArbolAceituna en cada producto.
+        /// </summary>
+        /// <param name="comprasProductos">Lista de compras de productos</param>
+        /// <returns></returns>
         internal static bool isVentaOlivo(ICollection<CompraProducto> comprasProductos)
         {
             bool hayOlivo = false;
@@ -66,6 +72,24 @@ namespace CampanasDelDesierto_v1.Models
                         break;
                     }
             return hayOlivo;
+        }
+
+        /// <summary>
+        /// Indica si en una lista de productos comprados se ha hecho la venta de polen, verificando el nombre del producto.
+        /// </summary>
+        /// <param name="comprasProductos">Lista de compras de productos</param>
+        /// <returns></returns>
+        internal static bool isVentaPolen(ICollection<CompraProducto> comprasProductos)
+        {
+            bool hayPolen = false;
+            if (comprasProductos != null)
+                foreach (var com in comprasProductos)
+                    if (com.producto.nombreProducto.Contains("polen",StringComparison.OrdinalIgnoreCase))
+                    {
+                        hayPolen = true;
+                        break;
+                    }
+            return hayPolen;
         }
     }
 

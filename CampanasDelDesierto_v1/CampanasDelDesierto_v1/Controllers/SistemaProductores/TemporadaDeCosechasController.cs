@@ -162,8 +162,22 @@ namespace CampanasDelDesierto_v1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             TemporadaDeCosecha temporadaDeCosecha = db.TemporadaDeCosechas.Find(id);
+            var prestamosYAbonos = db.Prestamo_Abono.Where(mov => mov.prestamo.TemporadaDeCosechaID == id || mov.abono.TemporadaDeCosechaID == id);
+            db.Prestamo_Abono.RemoveRange(prestamosYAbonos);
             db.TemporadaDeCosechas.Remove(temporadaDeCosecha);
-            db.SaveChanges();
+            int numRegs = db.SaveChanges();
+            if (numRegs > 0)
+            {
+                var prods = db.Productores.ToList();
+                int numRegsDistribuciones = 0;
+                int numRegsBalances = 0;
+                foreach (var prod in prods)
+                {
+                    numRegsDistribuciones += prod.restaurarDistribuciones(db);
+                    numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
+                    numRegsBalances += prod.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
+                }
+            }
             return RedirectToAction("Index");
         }
 

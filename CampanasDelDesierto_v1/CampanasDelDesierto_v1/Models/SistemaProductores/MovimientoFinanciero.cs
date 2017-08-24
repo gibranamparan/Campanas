@@ -234,6 +234,7 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         public TipoDeBalance tipoDeBalance { get
             {
+                //if (this.isAbonoOPrestamo() || this.isAdeudoInicialAnticiposCapital)
                 if (this.isAbonoOPrestamo())
                 {
                     return TipoDeBalance.CAPITAL_VENTAS;
@@ -573,9 +574,9 @@ namespace CampanasDelDesierto_v1.Models
         {
             get
             {
-                return this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
-                    && this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS
-                    && !(((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value);
+                bool isAdeudoInicial = this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL;
+                return isAdeudoInicial && !((((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value) || 
+                    this.tipoDeBalance == TipoDeBalance.VENTA_OLIVO);
             }
         }
 
@@ -934,10 +935,15 @@ namespace CampanasDelDesierto_v1.Models
             {
                 this.mov = mov;
                 decimal interesTotalGenerado = 0;
-                decimal interesPendiente = mov.getInteresRestante(fechaConsulta, out interesTotalGenerado);
+                decimal interesPendiente = 0;
+                
+                //Se calcula interes para todos los movimientos menos adeudos iniciales que representan el remantente de temporadas anteriores
+                if(!(mov.isAdeudoInicialAnticiposCapital && !((AdeudoInicial)mov).isRegistradoInicialmenteEnProductor))
+                    interesPendiente = mov.getInteresRestante(fechaConsulta, out interesTotalGenerado);
+
                 //Si es adeudo inicial de anticipos, el interes es la suma del interes inicial mas el interes generado
                 interesTotalGenerado += this.mov.isAdeudoInicialAnticiposCapital?((AdeudoInicial)this.mov).interesInicial:0;
-                
+
                 this.fecha = mov.fechaMovimiento;
                 this.pagare = mov.isAnticipoDeCapital ? ((PrestamoYAbonoCapital)mov).pagare
                     : mov.isVentaDeMaterial ? ((VentaACredito)mov).pagareVenta : "";
@@ -955,13 +961,27 @@ namespace CampanasDelDesierto_v1.Models
                 this.balance = mov.balanceMasInteres;
             }
 
+            //public VMMovimientoBalanceAnticipos(AdeudoInicial adeudoAnterior)
+            //{
+            //    this.mov = adeudoAnterior;
+            //    this.anticipo = adeudoAnterior.montoMovimiento;
+            //    this.interes = adeudoAnterior.interesInicial;
+            //    this.fecha = adeudoAnterior.temporadaDeCosecha.fechaInicio;
+            //    this.tipo = mov.nombreDeMovimiento;
+
+            //}
+
             public class VMBalanceAnticiposTotales
             {
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal anticipo { get; set; }
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal anticipoDentroTemporada { get; set; }
 
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal interes { get; set; }
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal interesDentroTemporada { get; set; }
 
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal abonoCapital { get; set; }
@@ -971,25 +991,66 @@ namespace CampanasDelDesierto_v1.Models
 
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal saldoCapital { get; set; }
-
+                
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal saldoInteres { get; set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal ventasACredito { get; private set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal anticiposEfectivo { get; private set; }
+
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal deudaCapitalInicial { get; set; }
+
+                /// <summary>
+                /// Deuda inicial por interes generado previo a la temporada actual.
+                /// </summary>
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal deudaInteresInicial { get; set; }
+
+                /// <summary>
+                /// Deuda inicial por ventas a credito.
+                /// </summary>
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal deudaVentasInicial { get; set; }
+
+                /// <summary>
+                /// Deuda inicial por venta a credito de arboles de olivo.
+                /// </summary>
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal deudaVentasArbolesInicial { get; set; }
 
                 public VMBalanceAnticiposTotales() { }
                 public VMBalanceAnticiposTotales(IEnumerable<VMMovimientoBalanceAnticipos> lista)
                 {
+                    //Abonos
                     this.abonoCapital = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoCapital);
                     this.abonoInteres = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoInteres);
+
+                    //Deudas
                     this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial 
                         || i.mov.isAdeudoInicialMaterial).Sum(i => i.anticipo);
                     this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital 
                         || i.mov.isAdeudoInicialAnticiposCapital).Sum(i => i.anticipo);
-                    this.anticipo = ventasACredito + anticiposEfectivo; ;
+                    this.anticipo = this.ventasACredito + this.anticiposEfectivo;
                     this.interes = lista.Sum(i => i.interes);
+
+                    //Saldo por pagar
                     this.saldoCapital= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoCapital);
                     this.saldoInteres= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoInteres);
+
+                    //Deuda inicial
+                    var movDeudaInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialAnticiposCapital);
+                    this.deudaCapitalInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.anticipo);
+                    this.deudaInteresInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.interes);
+
+                    var movDeudaVentaInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialMaterial);
+                    this.deudaVentasInicial = movDeudaVentaInicial == null ? 0 : movDeudaVentaInicial.anticipo;
+
+                    var movDeudaArbolesInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialVentaOlivo);
+                    this.deudaVentasArbolesInicial = movDeudaArbolesInicial == null ? 0: movDeudaArbolesInicial.anticipo;
                 }
             }
         }

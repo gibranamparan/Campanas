@@ -175,10 +175,10 @@ namespace CampanasDelDesierto_v1.Controllers
                     productor.MovimientosFinancieros.Add(adeudoMateriales);
 
                 //Se hacen ajustes generales
-                productor.RFC = productor.RFC.ToUpper();
-                productor.nombreCheque = productor.nombreCheque.ToUpper();
-                productor.nombreProductor = productor.nombreProductor.ToUpper();
-                productor.numProductor = productor.numProductor.Trim();
+                productor.RFC = productor.RFC==null?string.Empty:productor.RFC.ToUpper();
+                productor.nombreCheque = productor.nombreCheque == null ? string.Empty : productor.nombreCheque.ToUpper();
+                productor.nombreProductor = productor.nombreProductor == null ? string.Empty : productor.nombreProductor.ToUpper();
+                productor.numProductor = productor.numProductor == null ? string.Empty : productor.numProductor.Trim();
 
                 //Se guarda nuevo productor
                 db.Productores.Add(productor);
@@ -247,23 +247,25 @@ namespace CampanasDelDesierto_v1.Controllers
                 adeudoArboles.fechaMovimiento = adeudoMateriales.fechaMovimiento.AddSeconds(1);
 
                 //Si el registro ya existia y el monto es cero, se elimina, si el monto no es cero
-                db.Entry(adeudoAnticipos).State = AdeudoInicial.determinarEstadoMovimiento(adeudoAnticipos);
+                EntityState estadoDeAnticipo = AdeudoInicial.determinarEstadoMovimiento(adeudoAnticipos);
+                if(estadoDeAnticipo==EntityState.Deleted)
+                    adeudoAnticipos.liberarPrestamo(db);
+
+                db.Entry(adeudoAnticipos).State = estadoDeAnticipo;
                 db.Entry(adeudoMateriales).State = AdeudoInicial.determinarEstadoMovimiento(adeudoMateriales);
                 db.Entry(adeudoArboles).State = AdeudoInicial.determinarEstadoMovimiento(adeudoArboles);
                 adeudoMateriales.isVentas = true;
 
                 db.Entry(productor).State = EntityState.Modified;
                 int numRegs = db.SaveChanges();
-                if (numRegs > 0)
-                {
+                if (numRegs > 0) { 
                     db.Entry(productor).Collection(prod => prod.MovimientosFinancieros).Load();
                     productor.restaurarDistribuciones(db);
 
                     productor.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS);
                     productor.ajustarBalances(null, db, MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
                 }
-                return RedirectToAction("Details", new { id = productor.idProductor,
-                    temporada = temporadaRegistro.TemporadaDeCosechaID});
+                return RedirectToAction("Details", new { id = productor.idProductor, temporada = temporadaRegistro.TemporadaDeCosechaID});
             }
             return View("Create",productor);
         }

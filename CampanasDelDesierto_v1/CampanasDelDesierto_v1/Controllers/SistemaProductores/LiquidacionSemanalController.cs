@@ -44,7 +44,7 @@ namespace CampanasDelDesierto_v1.Controllers
         /// <param name="productor"></param>
         /// <param name="semanaLiquidada"></param>
         /// <returns></returns>
-        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada)
+        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada, TemporadaDeCosecha temporada)
         {
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
@@ -55,6 +55,7 @@ namespace CampanasDelDesierto_v1.Controllers
             if (semanaLiquidada.isNotDefaultInstance())
                 mov.semanaLiquidada = semanaLiquidada; //Se asocia al nuevo registro de liquidacion semanal
 
+            mov.introducirMovimientoEnPeriodo(temporada);
             ViewBag.reporteMovimientos = productor.generarReporteAnticiposConIntereses(mov.fechaMovimiento, mov.temporadaDeCosecha,db);
 
             return mov;
@@ -141,8 +142,8 @@ namespace CampanasDelDesierto_v1.Controllers
             if (productor == null)
                 return HttpNotFound();
 
-            LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada);
-            mov.introducirMovimientoEnPeriodo(temporada);
+            TemporadaDeCosecha temporadaCosecha = db.TemporadaDeCosechas.Find(temporada);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada, temporadaCosecha);
 
             if (semana == 0)
             {
@@ -264,8 +265,8 @@ namespace CampanasDelDesierto_v1.Controllers
             }
 
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
-            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada);
-            mov.introducirMovimientoEnPeriodo(emisionDeCheque.TemporadaDeCosechaID);
+            TemporadaDeCosecha temporadaCosecha = db.TemporadaDeCosechas.Find(emisionDeCheque.TemporadaDeCosechaID);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada, temporadaCosecha);
 
             return View("Form_Liquidacion", emisionDeCheque);
         }

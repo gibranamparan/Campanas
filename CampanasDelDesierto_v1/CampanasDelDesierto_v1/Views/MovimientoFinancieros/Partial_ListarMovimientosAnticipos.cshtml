@@ -2,7 +2,6 @@
 @using CampanasDelDesierto_v1.Models;
 
 @{
-    DateTime fechaActual = DateTime.Today;
     TemporadaDeCosecha temporadaSeleccionada = ViewBag.temporadaSeleccionada;
     int temporada = temporadaSeleccionada.TemporadaDeCosechaID;
 
@@ -127,6 +126,9 @@
                         <td style="text-align: center" class="hidden-print">
                             @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
                         ademas no es un ingreso de de cosecha ya reportado como liquidado*@
+                        @if (!(item.mov.isAdeudoInicialAnticiposCapital &&
+                            !((CampanasDelDesierto_v1.Models.SistemaProductores.AdeudoInicial)item.mov).isRegistradoInicialmenteEnProductor))
+                        {
                             <div class="dropdown_actions">
                                 <button onclick="openActionsDropDown(this)"
                                         class="dropbtn btn btn-default">
@@ -140,9 +142,9 @@
                                         </a>
                                     }
 
-                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.mov.idMovimiento })">
-                                        <i class="glyphicon glyphicon-print"></i> Detalles
-                                    </a>
+                                        <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.mov.idMovimiento })">
+                                            <i class="glyphicon glyphicon-print"></i> Detalles
+                                        </a>
 
                                     @if (!item.mov.isNoDirectamenteModificable)
                                     {
@@ -152,6 +154,7 @@
                                     }
                                 </div>
                             </div>
+                        }
                         </td>
                     </tr>
                 }

@@ -30,6 +30,7 @@
             @*Adeudos*@
             <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoAnteriorCosecha) @(anioAnterior)</th>
             <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoInteresAnteriorCosecha) @(anioAnterior)</th>
+            <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoVentaCreditoAnteriorCosecha) @(anioAnterior)</th>
             <th>@Html.DisplayNameFor(model => model.anticiposEfectivo)</th>
             <th>@Html.DisplayNameFor(model => model.interes)</th>
             <th>@Html.DisplayNameFor(model => model.ventasCredito)</th>
@@ -79,6 +80,7 @@
             @*Adeudos*@
             <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoAnteriorCosecha) </td>
             <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoInteresAnteriorCosecha) </td>
+            <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoVentaCreditoAnteriorCosecha) </td>
             <td>@Html.DisplayFor(model => rowTotales.anticiposEfectivo)</td>
             <td>@Html.DisplayFor(model => rowTotales.interes)</td>
             <td>@Html.DisplayFor(model => rowTotales.ventasCredito)</td>
@@ -131,6 +133,7 @@
                 @*Adeudos*@
                 <td class="monto-cosecha-anterior">@Html.DisplayFor(model => item.adeudoAnteriorCosecha)</td>
                 <td class="monto-cosecha-anterior">@Html.DisplayFor(model => item.adeudoInteresAnteriorCosecha)</td>
+                <td class="monto-cosecha-anterior">@Html.DisplayFor(model => item.adeudoVentaCreditoAnteriorCosecha)</td>
                 <td>@Html.DisplayFor(model => item.anticiposEfectivo)</td>
                 <td>@Html.DisplayFor(model => item.interes)</td>
                 <td>@Html.DisplayFor(model => item.ventasCredito)</td>

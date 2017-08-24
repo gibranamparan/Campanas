@@ -2,11 +2,11 @@
 @using CampanasDelDesierto_v1.Models;
 
 @{
-    int temporada = ViewBag.temporada;
+    TemporadaDeCosecha temporada = ViewBag.temporadaSeleccionada;
 
     @*Solo prestamos y abonos*@
     List<MovimientoFinanciero> movimientos = Model.MovimientosFinancieros
-        .Where(mov => mov.TemporadaDeCosechaID == temporada)
+        .Where(mov => mov.TemporadaDeCosechaID == temporada.TemporadaDeCosechaID)
             .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)
         .OrderBy(mov => mov.fechaMovimiento).ToList();
 
@@ -18,77 +18,76 @@
 {
     <div class="col-xs-12">
         <table class="table table-hover table-striped table-responsive">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
-                </th>
-                <th style="width: 20em">
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
-                </th>
-                <th class="actions hidden-print"></th>
-            </tr>
-
-            @foreach (var item in movimientos)
-{
-                <tr class="@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION?"liquidacion":"")
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
+                    </th>
+                    <th style="width: 20em">
+                        @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
+                    </th>
+                    <th class="actions hidden-print"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in movimientos)
+                {
+                    <tr class="@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION?"liquidacion":"")
                     @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
                     && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"pagado":"")">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.fechaMovimiento)
-                    </td>
-                    <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
-                        @Html.DisplayFor(modelItem => item.montoMovimiento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
-                    </td>
-                    <td style="width: 20em">
-                        @Html.DisplayFor(modelItem => item.concepto)
-                    </td>
-                    <td class="hidden-print">
-                        @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION)) { 
-                            <div class="dropdown_actions">
-                                <button onclick="openActionsDropDown(this)"
-                                        class="dropbtn btn btn-default">
-                                    <i class="glyphicon glyphicon-option-horizontal"></i>
-                                </button>
-                                <div id="myDropdown"
-                                     class="dropdown-content">
-                                    @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado)) { 
-                                    <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-edit"></i> Editar
-                                    </a>
-                                    }
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                        </td>
+                        <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
+                            @Html.DisplayFor(modelItem => item.montoMovimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
+                        </td>
+                        <td style="width: 20em">
+                            @Html.DisplayFor(modelItem => item.concepto)
+                        </td>
+                        <td class="hidden-print">
+                            @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION))
+                            {
+                                <div class="dropdown_actions">
+                                    <button onclick="openActionsDropDown(this)"
+                                            class="dropbtn btn btn-default">
+                                        <i class="glyphicon glyphicon-option-horizontal"></i>
+                                    </button>
+                                    <div id="myDropdown"
+                                         class="dropdown-content">
+                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                        {
+                                            <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
+                                                <i class="glyphicon glyphicon-edit"></i> Editar
+                                            </a>
+                                        }
 
-                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-print"></i> Detalles
-                                    </a>
+                                        <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                            <i class="glyphicon glyphicon-print"></i> Detalles
+                                        </a>
 
-                                    @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
-                                    {
-                                    <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-remove"></i> Borrar
-                                    </a>
-                                    }
+                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                        {
+                                            <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
+                                                <i class="glyphicon glyphicon-remove"></i> Borrar
+                                            </a>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
-
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
-    </div>
-    <div class="pull-right" style="padding-right:2em">
-        <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Model.totalIngresos.ToString("C")</span> |
-        <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion.ToString("C")</span> |
-        <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido.ToString("C")</span>
     </div>
 }
 else

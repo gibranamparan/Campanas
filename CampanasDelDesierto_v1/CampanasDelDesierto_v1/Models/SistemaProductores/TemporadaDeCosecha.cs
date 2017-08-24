@@ -335,7 +335,7 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Arroja la ultima temporada en orden cronolico registrada en la base de datos.
+        /// Arroja el año de cosecha mas antiguo según su fecha de inicio.
         /// </summary>
         /// <param name="db">Contexto de la base de datos</param>
         /// <returns></returns>

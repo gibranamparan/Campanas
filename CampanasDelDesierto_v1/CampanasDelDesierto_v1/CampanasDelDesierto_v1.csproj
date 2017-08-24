@@ -423,6 +423,10 @@
     <Compile Include="Migrations\201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.Designer.cs">
       <DependentUpon>201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708232217532_requieredFields_Productores.cs" />
+    <Compile Include="Migrations\201708232217532_requieredFields_Productores.Designer.cs">
+      <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -740,7 +744,6 @@
     <Content Include="Views\PagosPorProductos\Partial_ListaIngresosProducto.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporada.cshtml" />
     <Content Include="Views\Departamentos\Inventarios.cshtml" />
-    <Content Include="Views\MovimientoFinancieros\Partial_Pagare.cshtml" />
     <Content Include="Views\LiquidacionSemanal\Cheque.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
@@ -769,6 +772,7 @@
     <Content Include="Views\AdeudoInicial\Details.cshtml" />
     <Content Include="Views\TemporadaDeCosechas\Partial_DetailsTemporadaStatic.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_ListarMovimientosAnticipos.cshtml" />
+    <Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -899,6 +903,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.resx">
       <DependentUpon>201707211853181_addfedField_RecepcionProducto_ImportadoDesdeExcel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708232217532_requieredFields_Productores.resx">
+      <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

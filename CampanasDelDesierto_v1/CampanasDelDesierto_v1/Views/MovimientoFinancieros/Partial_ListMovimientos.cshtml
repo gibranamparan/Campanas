@@ -1,146 +1,120 @@
-﻿@model CampanasDelDesierto_v1.Models.Productor
+﻿@model IEnumerable<MovimientoFinanciero>
 @using CampanasDelDesierto_v1.Models;
 
 @{ 
     DateTime fechaActual = DateTime.Today;
-    int temporada = ViewBag.temporada;
-    
-    MovimientoFinanciero adeudo = Model.adeudoInicialAnticipos;
-
-    @*Solo prestamos y abonos*@
-    var movimientos = Model.MovimientosFinancieros
-    .Where(mov => mov.TemporadaDeCosechaID == temporada)
-    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-    .OrderBy(mov => mov.fechaMovimiento).ToList();
-
-    List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
+    Productor productor = (Productor)ViewData["productor"];
+    TemporadaDeCosecha temporada = (TemporadaDeCosecha)ViewData["temporada"];
 }
 
-@if (Model != null && movimientos.Count() > 0)
+@if (Model != null && Model.Count() > 0)
 {
     <div class="col-xs-12">
         <table class="table table-hover table-striped table-responsive">
-            <tr>
-                <th>No. Pagaré</th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().fechaMovimiento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoMovimiento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().nombreDeMovimiento)
-                </th>
-                <th style="width: 20em">
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().montoActivo)
-                </th>
-                <th>
-                    Interes Total Generado
-                </th>
-                <th>
-                    Interes Por Pagar
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
-                </th>
-                <th class="actions hidden-print"></th>
-            </tr>
-
-            @foreach (var item in movimientos)
-            {
-                decimal interesTotalGenerado = 0;
-                decimal interesDevengado = item.getInteresRestante(fechaActual,out interesTotalGenerado);
-                <tr >
-                    <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL) {
-                            @Html.DisplayFor(model => ((PrestamoYAbonoCapital)item).pagare)
-                        }
-                        else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                        {
-                            @Html.DisplayFor(model => ((VentaACredito)item).pagareVenta)
-                        }
-                    </td>
-                    <td >
-                        @Html.DisplayFor(modelItem => item.fechaMovimiento)
-                    </td>
-                    <td class='@(item.montoMovimiento < 0 ? "montoNegativo" : "")' 
-                        @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
-                        @Html.DisplayFor(modelItem => item.montoMovimiento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
-                    </td>
-                    <td style="width: 20em">
-                        @Html.DisplayFor(modelItem => item.concepto)
-                    </td>
-                    <td>
-                        @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                            || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL
-                        || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                        {
-                            @Html.DisplayFor(modelItem => item.montoActivo)
-                        }
-                    </td>
-                    <td> @*Interes total generado*@
-                        @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                    || item.isAdeudoInicialAnticiposCapital)
-                        {
-                            @Math.Abs(interesTotalGenerado).ToString("C");
-                        }
-                    </td>
-
-                    <td> @*Interes por pagar*@
-                        @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-                    || item.isAdeudoInicialAnticiposCapital)
-                        {
-                            @Math.Abs(interesDevengado).ToString("C");
-                        }
-                    </td>
-
-                    <td class='@(item.balance<0?"montoNegativo":"")'>
-                        @Html.DisplayFor(modelItem => item.balance)
-                    </td>
-                    <td class="hidden-print">
-                        @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y 
-                            ademas no es un ingreso de de cosecha ya reportado como liquidado*@
-                        <div class="dropdown_actions">
-                            <button onclick="openActionsDropDown(this)"
-                                    class="dropbtn btn btn-default">
-                                <i class="glyphicon glyphicon-option-horizontal"></i>
-                            </button>
-                            <div id="myDropdown" class="dropdown-content">
-                                @if (!item.isNoDirectamenteModificable) {
-                                <a href="@Url.Action("Edit", item.getNombreControlador(), new { id = item.idMovimiento })">
-                                    <i class="glyphicon glyphicon-edit"></i> Editar
-                                </a>
-                                }
-
-                                <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                    <i class="glyphicon glyphicon-print"></i> Detalles
-                                </a>
-
-                                @if (!item.isNoDirectamenteModificable)
-                                {
-                                    <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
-                                        <i class="glyphicon glyphicon-remove"></i> Borrar
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                    </td>
+            <thead>
+                <tr>
+                    <th>No. Pagaré</th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.fechaMovimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.montoMovimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.nombreDeMovimiento)
+                    </th>
+                    <th style="width: 20em">
+                        @Html.DisplayNameFor(model => model.concepto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.montoActivo)
+                    </th>
+                    <th>
+                        Interes Total Generado
+                    </th>
+                    <th class="actions hidden-print"></th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    decimal interesTotalGenerado = 0;
+                    decimal interesDevengado = item.getInteresRestante(fechaActual, out interesTotalGenerado);
+                    <tr>
+                        <td>
+                            @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL)
+                            {
+                                @Html.DisplayFor(model => ((PrestamoYAbonoCapital)item).pagare)
+                            }
+                            else if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                            {
+                                @Html.DisplayFor(model => ((VentaACredito)item).pagareVenta)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                        </td>
+                        <td class='@(item.montoMovimiento < 0 ? "montoNegativo" : "")'>
+                            @*Html.DisplayFor(modelItem => item.montoMovimiento)*@
+                            @Math.Abs(item.montoMovimiento).ToString("C")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
+                        </td>
+                        <td style="width: 20em">
+                            @Html.DisplayFor(modelItem => item.concepto)
+                        </td>
+                        <td>
+                            @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
+                    || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL
+                || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                            {
+                                @*Html.DisplayFor(modelItem => item.montoActivo)*@
+                                @Math.Abs(item.montoActivo).ToString("C");
+                            }
+                        </td>
+                        <td>
+                            @*Interes total generado*@
+                            @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
+            || item.isAdeudoInicialAnticiposCapital)
+                            {
+                                @Math.Abs(interesTotalGenerado).ToString("C");
+                            }
+                        </td>
+                        <td class="hidden-print">
+                            @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
+                        ademas no es un ingreso de de cosecha ya reportado como liquidado*@
+                            <div class="dropdown_actions">
+                                <button onclick="openActionsDropDown(this)"
+                                        class="dropbtn btn btn-default">
+                                    <i class="glyphicon glyphicon-option-horizontal"></i>
+                                </button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    @if (!item.isNoDirectamenteModificable)
+                                    {
+                                        <a href="@Url.Action("Edit", item.getNombreControlador(), new { id = item.idMovimiento })">
+                                            <i class="glyphicon glyphicon-edit"></i> Editar
+                                        </a>
+                                    }
 
+                                    <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                        <i class="glyphicon glyphicon-print"></i> Detalles
+                                    </a>
+
+                                    @if (!item.isNoDirectamenteModificable)
+                                    {
+                                        <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
+                                            <i class="glyphicon glyphicon-remove"></i> Borrar
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>          
-    </div>
-    <div class="pull-right" style="padding-right:2em">
-        <span><strong style="color:red">TOTAL DE DEUDA: </strong>@Model.totalDeudaBalanceAnticiposPorTemporada(temporada).ToString("C")</span> |
-        <span><Strong style="color:red">TOTAL DE ABONOS: </Strong>@Model.totalAbonosBalanceAnticiposPorTemporada(temporada).ToString("C")</span>
-    </div>
-}
+    </div>}
 else
 {
     <div class="alert alert-warning col-md-12">

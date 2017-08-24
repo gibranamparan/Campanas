@@ -1,0 +1,213 @@
+﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.Models.SistemaProductores
+@using CampanasDelDesierto_v1.HerramientasGenerales
+@model CampanasDelDesierto_v1.Models.Productor
+
+@{
+    TemporadaDeCosecha temporada = ViewBag.temporadaSeleccionada;
+    ReportesViewModels.VMLiquidacionFinal reporte = ViewBag.reporte;
+
+    String title = String.Format("Liquidacion Final Temporada {0}, Productor: {1}", temporada, Model);
+    ViewBag.Title = title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    @*Solo prestamos y abonos*@
+    List<MovimientoFinanciero> movimientos = Model.MovimientosFinancieros
+        .Where(mov => mov.TemporadaDeCosechaID == temporada.TemporadaDeCosechaID)
+        .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+        .OrderBy(mov => mov.fechaMovimiento).ToList();
+
+    decimal totalALiquidar = reporte.saldoPendienteAnticipos + reporte.adeudoArbolitosPorRecuperar;
+
+ViewDataDictionary vddListMovimientos = new ViewDataDictionary();
+vddListMovimientos.Add("productor", Model);
+vddListMovimientos.Add("temporada", temporada);
+}
+
+@Html.Partial("Partial_EncabezadoReporte")
+@*Enlaces de navegacion*@
+<nav class="hidden-print">
+    <a href="@Url.Action("Details","Productores",new { id = Model.idProductor })">
+        <i class="fa fa-arrow-left"></i><span>Volver a Detalles del Productor</span>
+    </a>
+</nav>
+
+<div>
+    <h3>Liquidacion Final</h3>
+    <span>@Model</span>
+</div>
+<span>@temporada.ToString().ToUpper()</span>
+<span class="pull-right"><strong>Generado al día </strong> <span>@DateTime.Today.ToString("dd/MMMM/yyyy")</span></span>
+
+@*Prestamos y abonos*@
+<h4 class="hdrTitle">Anticipos de Capital</h4>
+<div class="row">
+    @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", movimientos, vddListMovimientos)
+</div>
+    
+@*Prestamos y abonos
+<h4 class="hdrTitle">Ventas a Credito</h4>
+<div class="row">
+    @Html.Partial("../MovimientoFinancieros/Partial_ListMovimientos", anticiposMateriales, vddListMovimientos)
+</div>*@
+
+@*Ventas de arbol de olivo*@
+<h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
+<div class="row">
+    @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
+</div>
+
+
+<div class="row">    
+    @*Adeudos de anticipos*@
+    <div class="col-xs-6">
+        <table class="table table-responsive table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>CONCEPTOS</th>
+                    <th>@PrestamoYAbonoCapital.Divisas.USD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.adeudoAnteriorCosecha)</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoAnteriorCosecha)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.adeudoInteresAnteriorCosecha)</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoInteresAnteriorCosecha)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.adeudoVentaCreditoAnteriorCosecha)</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoVentaCreditoAnteriorCosecha)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.anticiposEfectivo)</th>
+                    <td>@Html.DisplayFor(model => reporte.anticiposEfectivo)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.interes)</th>
+                    <td>@Html.DisplayFor(model => reporte.interes)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.ventasCredito)</th>
+                    <td>@Html.DisplayFor(model => reporte.ventasCredito)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.ventaTotalPolen)</th>
+                    <td>@Html.DisplayFor(model => reporte.ventaTotalPolen)</td>
+                </tr>
+                <tr class="squared">
+                    <th>@Html.DisplayNameFor(model => reporte.totalAdeudos)</th>
+                    <td><strong>@((reporte.totalAdeudos + reporte.ventaTotalPolen).ToString("C"))</strong></td>
+                </tr>
+                <tr>
+                    @*<th>@Html.DisplayNameFor(model => reporte.adeudoRecuperado)</th>*@
+                    <th>Abonos</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoRecuperado)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.interesAbonado)</th>
+                    <td>@Html.DisplayFor(model => reporte.interesAbonado)</td>
+                </tr>
+                <tr class="squared">
+                    <th>Total Abonado</th>
+                    <td>
+                        <strong>@((reporte.adeudoRecuperado + reporte.interesAbonado).ToString("C"))</strong>
+                    </td>
+                </tr>
+                <tr class="squared">
+                    <th class="deuda">@Html.DisplayNameFor(model => reporte.saldoPendienteAnticipos)</th>
+                    <td class="deuda">@Html.DisplayFor(model => reporte.saldoPendienteAnticipos) </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @*Compras de arboles*@
+    <div class="col-xs-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>CONCEPTOS</th>
+                    <th>@PrestamoYAbonoCapital.Divisas.USD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.adeudoArboles)</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoArboles)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.abonoArbolitos)</th>
+                    <td>@Html.DisplayFor(model => reporte.abonoArbolitos)</td>
+                </tr>
+                <tr>
+                    <th class="deuda">@Html.DisplayNameFor(model => reporte.adeudoArbolitosPorRecuperar)</th>
+                    <td class="deuda">@Html.DisplayFor(model => reporte.adeudoArbolitosPorRecuperar)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @*Retenciones*@
+    <div class="col-xs-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>RETENCIONES</th>
+                    <th>@PrestamoYAbonoCapital.Divisas.USD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.retencionEjidal)</th>
+                    <td>@Html.DisplayFor(model => reporte.retencionEjidal)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.retencionSanidadVegetal)</th>
+                    <td>@Html.DisplayFor(model => reporte.retencionSanidadVegetal)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.retencionesOtras)</th>
+                    <td>@Html.DisplayFor(model => reporte.retencionesOtras)</td>
+                </tr>
+                <tr>
+                    <th class="pago">
+                        Fruta Pagada</th>
+                    <td class="pago">
+                        <span>
+                            @Html.DisplayFor(model => reporte.pagoAceitunaCosecha)</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @*Total a deber*@
+    <div class="col-xs-6" style="font-size: 1.2em;">
+        <span>Adeudo total a liquidar es de</span> <span class="deuda">@(totalALiquidar.ToString("C"))</span><br />
+        <span>(Son: @NumbersTools.NumberToText.Convert(totalALiquidar, "Dólares") U.S.Cy.)</span>
+    </div>
+</div>
+
+<br/>
+@Html.Partial("Partial_LineaFirmaReportes")
+
+<style>
+    .deuda, td.deuda, th.deuda{
+        color: red !important;
+        font-weight: bold;
+    }
+
+    td.pago,th.pago{
+        color: blue !important;
+        font-weight: bold;
+    }
+
+    @@media print{
+        body {
+          -webkit-print-color-adjust: exact;
+        }
+    }
+</style>
