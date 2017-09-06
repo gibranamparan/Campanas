@@ -184,8 +184,8 @@ namespace CampanasDelDesierto_v1.Models
                 var movimientos = this.MovimientosFinancieros;
                 if (movimientos != null && movimientos.Count() > 0)
                 {
-                    var res = movimientos.FirstOrDefault(mov => mov.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
-                    && mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS);
+                    var res = movimientos.FirstOrDefault(mov => mov.isAdeudoInicialAnticiposCapital 
+                        && mov.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS);
                     return res != null ? (AdeudoInicial)res : null;
                 }
                 return null;
@@ -872,8 +872,13 @@ namespace CampanasDelDesierto_v1.Models
             return m;
         }
 
-        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(List<PagoPorProducto> movs,List<VMTipoProducto> productos, decimal precioDolar)
+        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(List<PagoPorProducto> movs,List<VMTipoProducto> productos, decimal precioDolar, int temporadaID = 0)
         {
+            if (movs == null && temporadaID>0)
+            {
+                movs = this.MovimientosFinancieros.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.PAGO_POR_PRODUCTO)
+                    .Where(mov => mov.TemporadaDeCosechaID == temporadaID).Cast<PagoPorProducto>().ToList();
+            }
             var totales = this.getTotalEntregas(movs);
             var report = new List<RecepcionDeProducto.VMTotalDeEntregas>();
             /*Por cada producto calculado sus totales de entrega y ganancias, se genera una tabla acorde al reporte semanal de liquidacion
@@ -939,36 +944,62 @@ namespace CampanasDelDesierto_v1.Models
 
 
             //TODO: Deteminar el adeudo de la temporada anterior o los movimientos de ese tipo
-            AdeudoInicial adeudoAnterior = this.calcularAdeudoFinal(temporadaAnterior, fechaActual);
-            //adeudoAnterior = adeudoAnterior != null ? adeudoAnterior : this.adeudoInicialAnticipos;
-            VMMovimientoBalanceAnticipos vmAdeudoAnterior = adeudoAnterior == null? null:
-                vmAdeudoAnterior = new VMMovimientoBalanceAnticipos(adeudoAnterior,fechaActual);
+            List<AdeudoInicial> adeudos = this.calcularAdeudoFinal(temporadaAnterior, fechaActual);
+            AdeudoInicial adeudoAnticipos = adeudos.Count()>0?adeudos.ElementAt(0):null;
+            AdeudoInicial adeudoPorVentas = adeudos.Count() > 1?adeudos.ElementAt(1):null;
 
-            if (vmAdeudoAnterior != null && (Math.Abs(Math.Round(vmAdeudoAnterior.anticipo,2)) > 0 || Math.Abs(Math.Round(vmAdeudoAnterior.interes,2)) > 0))
-                movimientos.AddFirst(vmAdeudoAnterior);//Se agrega el movimiento de adeudo anterior al inicio de la lista
+            agregarALaVistaDeBalances(adeudoPorVentas, fechaActual, ref movimientos);
+            agregarALaVistaDeBalances(adeudoAnticipos, fechaActual, ref movimientos);
 
             //Se calcula el balance de deuda
-            //MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, adeudoAnterior);
             MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, 0);
 
             return movimientos;
         }
 
-        private AdeudoInicial calcularAdeudoFinal(TemporadaDeCosecha temporadaActual, DateTime? fechaActual)
+        private void agregarALaVistaDeBalances(AdeudoInicial adeudo,DateTime fechaActual,
+            ref LinkedList<VMMovimientoBalanceAnticipos> movimientos)
+        {
+            //Si el calculo de adeudo no es nulo, se construye una vista del registro para ser agregada a la lista de balances
+            VMMovimientoBalanceAnticipos vmAdeudoAnteriorAnticipos = adeudo == null ? null :
+                vmAdeudoAnteriorAnticipos = new VMMovimientoBalanceAnticipos(adeudo, fechaActual);
+
+            //El registro solamente se agrega a la vita si no es nulo y si alguno de sus campos de moneda no es cero
+            if (vmAdeudoAnteriorAnticipos != null && (Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.anticipo, 2)) > 0
+                || Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.interes, 2)) > 0))
+            {
+                //Se agrega el movimiento de adeudo anterior al inicio de la lista
+                movimientos.AddFirst(vmAdeudoAnteriorAnticipos);
+            }
+        }
+
+        /// <summary>
+        /// Determina el adeudo final resultante de una temporada dada para este productor, calculando los intereses a la fecha dada.
+        /// </summary>
+        /// <param name="temporadaActual">Temporada sobre la cual se calculará la deuda final.</param>
+        /// <param name="fechaActual">Fecha que se toma como referencia para el cálculo de los intereses de los anticipos.</param>
+        /// <returns>Regresa un arreglo de 2 elementos, el 1ro representa el adeudo final correspondiente a los anticipos de capital, el 2do elemento
+        /// corresponde a el adeudo por ventas de material.</returns>
+        private List<AdeudoInicial> calcularAdeudoFinal(TemporadaDeCosecha temporadaActual, DateTime? fechaActual)
         {
             DateTime fecha = fechaActual.HasValue ? fechaActual.Value : DateTime.Today;
             ApplicationDbContext db = new ApplicationDbContext();
             TemporadaDeCosecha temporadaAnterior = temporadaActual==null?null:temporadaActual.getTemporadaAnterior(db);
-            AdeudoInicial adeudo = null; //Por defecto, el adeudo inciial a regresar será 0
+            AdeudoInicial adeudoAnticipo = null, adeudoPorVentas = null; //Por defecto, el adeudo inciial a regresar será 0
+            List<AdeudoInicial> adeudos = new List<AdeudoInicial>();
             if (temporadaActual != null)//Si la temporada actual no es nula, se genera su reporte de balances de anticipos 
             {
                 var reporte = this.generarReporteAnticiposConIntereses(fecha, temporadaActual, temporadaAnterior);
                 VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales = new VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales(reporte);
                 //En base a los totales del reporte, se genera un movimiento de adeudo inicial
-                adeudo = new AdeudoInicial(totales, temporadaActual, this);
+                //TODO: Ajustar el contructor para solo ventas o solo anticipos
+                adeudoAnticipo = new AdeudoInicial(totales, temporadaActual, this);
+                adeudoPorVentas = new AdeudoInicial(totales, temporadaActual, this,true);
+                adeudos.Add(adeudoAnticipo);
+                adeudos.Add(adeudoPorVentas);
             }
 
-            return adeudo;
+            return adeudos;
         }
 
         public List<PagoPorProducto> filtrarPagosPorProducto(TemporadaDeCosecha tem, TimePeriod tp, int noSemana)
@@ -990,18 +1021,20 @@ namespace CampanasDelDesierto_v1.Models
             PagoPorProducto total = new PagoPorProducto();
             //Se reporta dentro de un registro de PagoPorProducto la suma de todas las cantidades y precios
             //filtrados
-            total.pagoProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto1);
-            total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
-            total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
-            total.pagoProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto4);
-            total.pagoProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto5);
-            total.pagoProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto6);
-            total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
-            total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
-            total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
-            total.cantidadProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto4);
-            total.cantidadProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto5);
-            total.cantidadProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto6);
+            if (movs != null) { 
+                total.pagoProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto1);
+                total.pagoProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto2);
+                total.pagoProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto3);
+                total.pagoProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto4);
+                total.pagoProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto5);
+                total.pagoProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).pagoProducto6);
+                total.cantidadProducto1 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto1);
+                total.cantidadProducto2 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto2);
+                total.cantidadProducto3 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto3);
+                total.cantidadProducto4 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto4);
+                total.cantidadProducto5 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto5);
+                total.cantidadProducto6 = movs.Sum(mov => ((PagoPorProducto)mov).cantidadProducto6);
+            }
             //Se presenta la informacion en una lista de 3 tipos de productos con su correspondiente cantidad, precio y nombre
             List<VMTipoProducto> totalesProducto = new List<VMTipoProducto>();
             totalesProducto.Add(new VMTipoProducto

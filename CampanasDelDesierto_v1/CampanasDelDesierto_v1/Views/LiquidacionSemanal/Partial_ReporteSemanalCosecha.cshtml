@@ -1,15 +1,24 @@
 ﻿@using CampanasDelDesierto_v1.Models
 @using CampanasDelDesierto_v1.HerramientasGenerales
 @model IEnumerable<RecepcionDeProducto.VMTotalDeEntregas> 
-@{ 
+@{
     //Se reciben la lista de ingresos de cosecha del productor
-    List<PagoPorProducto> ingresosDeCosecha = new List<PagoPorProducto>();
-    if (ViewData["ingresosDeCosecha"] != null) {
-        ingresosDeCosecha = (List<PagoPorProducto>)ViewData["ingresosDeCosecha"];
-    }
-   
+    List<PagoPorProducto> ingresosDeCosecha = ViewData["ingresosDeCosecha"] != null ?
+        (List<PagoPorProducto>)ViewData["ingresosDeCosecha"] : new List<PagoPorProducto>();
 
-    VMConfirmModalAttributes modalDetalleReporteSemanalOpt = new VMConfirmModalAttributes
+    TimePeriod semanaLiquidada = ViewData["semanaLiquidada"] != null ? (TimePeriod)ViewData["semanaLiquidada"] : new TimePeriod();
+    RecepcionDeProducto.VMTotalDeEntregas totales = ViewData["totales"] != null
+        ? (RecepcionDeProducto.VMTotalDeEntregas)ViewData["totales"] : null;
+
+    bool isReporteLiquidacionFinalFruta = ViewData["isReporteLiquidacionFinalFruta"] != null ? (bool)ViewData["isReporteLiquidacionFinalFruta"] : false;
+    bool isTotalPeriodo = ViewData["isTotalPeriodo"] != null ? (bool)ViewData["isTotalPeriodo"] : false;
+    LiquidacionSemanal liquidacion = ViewData["liquidacion"] != null ? (LiquidacionSemanal)ViewData["liquidacion"] : null;
+
+    @*Se prepara el modal que muestra la lista de recibos que componen este reporte*@
+VMConfirmModalAttributes modalDetalleReporteSemanalOpt = new VMConfirmModalAttributes();
+if (!isReporteLiquidacionFinalFruta)
+{
+    modalDetalleReporteSemanalOpt = new VMConfirmModalAttributes
     {
         modalTitle = "Detalles de Reporte Semanal",
         callType = VMConfirmModalAttributes.CallType.PARTIAL_VIEW,
@@ -20,13 +29,35 @@
         partialViewURL = "../LiquidacionSemanal/Partial_DetallesReporte",
         modelForPartial = ingresosDeCosecha,
     };
-
 }
-<div class="panel panel-info">
+}
+<div class="panel panel-@(isTotalPeriodo?"primary":"info")">
     <div class="panel-heading">
-        <h3 class="panel-title">Reporte de Semana</h3>
+        <div style="display:inline-block"><h3 class="panel-title">Reporte @(isTotalPeriodo?"Total de Temporada de Cosecha":
+            "de Semana "+ (liquidacion!=null?("#"+liquidacion.semana):"")) (@semanaLiquidada)</h3></div>
+        @if (!isReporteLiquidacionFinalFruta) { 
+            <a href="#" class="pull-right hidden-print @(ingresosDeCosecha.Count()==0?"hidden":"")"
+                    data-toggle="modal" data-target="#@modalDetalleReporteSemanalOpt.modalID">
+                <i class="fa fa-list"></i><span>Detalles de reporte</span>
+            </a>
+        }
     </div>
     <div class="panel-body">
+        @if (liquidacion != null)
+        {
+            <div class="form-group col-md-3 col-xs-3">
+                @Html.LabelFor(model => liquidacion.cheque):
+                @Html.DisplayFor(model => liquidacion.cheque)
+            </div>
+            <div class="form-group col-md-3 col-xs-3">
+                @Html.LabelFor(model => liquidacion.precioDelDolarEnLiquidacion):
+                @Html.DisplayFor(model => liquidacion.precioDelDolarEnLiquidacion)
+            </div>
+            <div class="form-group col-md-3 col-xs-3">
+                @Html.LabelFor(model => liquidacion.totalRetenido):
+                @Html.DisplayFor(model => liquidacion.totalRetenido)
+            </div>
+        }
         @*Reporte de totales en el periodo por *@
         <table id="tblReporteSemanaCosecha" class="table table-hover table-striped">
             <thead>
@@ -43,9 +74,10 @@
                     <th>
                         @Html.DisplayNameFor(model => model.monto)
                     </th>
+                    @if (!isTotalPeriodo) { 
                     <th>
                         @Html.DisplayNameFor(model => model.montoMXN)
-                    </th>
+                    </th>}
                 </tr>
             </thead>
             <tbody>
@@ -56,20 +88,45 @@
                         <td>
                             @Html.DisplayFor(model => ingreso.producto)
                         </td>
-                        <td>
+                        <td class="precioTonelada">
                             @Html.DisplayFor(model => ingreso.precio)
                         </td>
-                        <td>
+                        <td class="toneladasRecibidas">
                             @Html.DisplayFor(model => ingreso.toneladasRecibidas)
                         </td>
                         <td class="montoUSDReporte">
                             @Html.DisplayFor(model => ingreso.monto)
                         </td>
+                    @if (!isTotalPeriodo)
+                    {
                         <td class="montoMXNReporte">
                             @Html.DisplayFor(model => ingreso.montoMXN)
-                        </td>
+                        </td>}
                     </tr>
                     }
+                }
+                @if (totales != null)
+                {
+                    <tr class="totales">
+                        <td>
+                            @Html.DisplayFor(model => totales.producto)
+                        </td>
+                        <td class="precioTonelada">
+                            @*Html.DisplayFor(model => totales.precio)*@
+                        </td>
+                        <td class="toneladasRecibidas">
+                            @Html.DisplayFor(model => totales.toneladasRecibidas)
+                        </td>
+                        <td class="montoUSDReporte">
+                            @Html.DisplayFor(model => totales.monto)
+                        </td>
+                        @if (!isTotalPeriodo)
+                        {
+                        <td class="montoMXNReporte">
+                            @Html.DisplayFor(model => totales.montoMXN)
+                        </td>
+                        }
+                    </tr>
                 }
             </tbody>
         </table>
@@ -78,21 +135,34 @@
                 No hay registros de recepcion de cosecha disponibles en la semana consultada.
             </div>
         }
-        <div class="form-group pull-right">
-            <label class="control-label col-md-6">Monto Total por Cosecha (USD): </label>
-            <div class="col-md-6">
-                <p class="form-control-static">@Model.Sum(ingreso => ingreso.monto).ToString("C")</p>
+        @if(totales == null) { 
+            <div class="form-group pull-right">
+                <label class="control-label col-md-6">Monto Total por Cosecha (USD): </label>
+                <div class="col-md-6">
+                    <p class="form-control-static">@Model.Sum(ingreso => ingreso.monto).ToString("C")</p>
+                </div>
             </div>
-        </div>
-        <div class="form-group col-md-2 pull-right">
-            <button class="btn btn-info hidden-print 
-                    @(ingresosDeCosecha.Count()==0?"hidden":"")"
-                    data-toggle="modal"
-                    data-target="#@modalDetalleReporteSemanalOpt.modalID">
-                Detalles de reporte
-            </button>
-        </div>
+        }
+
+        @*Boton que despliega una lista de todos los recibos que componen el reporte
+    <div class="form-group col-md-2 pull-right">
+        <button class="btn btn-info hidden-print
+                @(ingresosDeCosecha.Count()==0?"hidden":"")"
+                data-toggle="modal"
+                data-target="#@modalDetalleReporteSemanalOpt.modalID">
+            Detalles de reporte
+        </button>
+    </div>*@
     </div>
 </div>
 
-@Html.Partial("Partial_ConfirmationModal", modalDetalleReporteSemanalOpt)
+@if(!isReporteLiquidacionFinalFruta)
+{
+    @Html.Partial("Partial_ConfirmationModal", modalDetalleReporteSemanalOpt)
+}
+
+<style>
+    tr.totales td{
+        font-weight: bold;
+    }
+</style>

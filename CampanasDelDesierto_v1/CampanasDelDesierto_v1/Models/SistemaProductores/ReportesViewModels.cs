@@ -129,7 +129,7 @@ namespace CampanasDelDesierto_v1.Models
             public decimal ventasCredito { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Interes")]
+            [DisplayName("Interes por Anticipos")]
             public decimal interes { get; set; }
 
             [DisplayFormat(DataFormatString = "{0:C}")]
@@ -237,7 +237,7 @@ namespace CampanasDelDesierto_v1.Models
 
                 //this.anticiposEfectivo = Math.Abs(totales.anticiposEfectivo)-this.adeudoAnteriorCosecha;
                 this.anticiposEfectivo = Math.Abs(totales.anticiposEfectivo);
-                this.ventasCredito = Math.Abs(totales.ventasACredito)-totales.deudaVentasInicial;
+                this.ventasCredito = Math.Abs(totales.ventasACredito);
                 this.interes = totales.interes - this.adeudoInteresAnteriorCosecha;
                 this.totalAdeudos = this.anticiposEfectivo + this.ventasCredito + this.interes 
                     + this.adeudoInteresAnteriorCosecha + adeudoAnteriorCosecha + adeudoVentaCreditoAnteriorCosecha;
@@ -392,9 +392,39 @@ namespace CampanasDelDesierto_v1.Models
         }
         public class VMLiquidacionFinal : VMAdeudosRecuperacionDetallado
         {
-            public VMLiquidacionFinal(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior) 
+            public VMLiquidacionFinal(Productor productor, TemporadaDeCosecha temporadaActual, TemporadaDeCosecha temporadaAnterior)
                 : base(productor, temporadaActual, temporadaAnterior)
             {
+            }
+        }
+        public class VMLiquidacionDeAceituna
+        {
+            public List<LiquidacionSemanal> liquidaciones { get; set;}
+            public Productor productor { get; set; }
+            public TemporadaDeCosecha temporadaConsultada { get; set; }
+            public TemporadaDeCosecha temporadaAnterior { get; set; }
+
+            public VMLiquidacionDeAceituna(List<LiquidacionSemanal> liquidaciones, Productor prod, 
+                TemporadaDeCosecha temporadaConsultada, TemporadaDeCosecha temporadaAnterior)
+            {
+                this.liquidaciones = liquidaciones;
+                this.productor = prod;
+                this.temporadaConsultada = temporadaConsultada;
+                this.temporadaAnterior = temporadaAnterior;
+            }
+
+            /// <summary>
+            /// Prepara un reporte de cada uno de los tipos de olivo liquidados en esta semana.
+            /// </summary>
+            public static List<RecepcionDeProducto.VMTotalDeEntregas> getReporteDeAceitunaTotal(ref RecepcionDeProducto.VMTotalDeEntregas totales, 
+                Productor prod, TemporadaDeCosecha temporadaConsultada)
+            {
+                List<RecepcionDeProducto.VMTotalDeEntregas> reporte = new List<RecepcionDeProducto.VMTotalDeEntregas>();
+                List<TemporadaDeCosecha.VMTipoProducto> productos = temporadaConsultada.getListaProductos(prod.zona);
+                reporte = prod.generarReporteSemanalIngresosCosecha(null, productos, 0, temporadaConsultada.TemporadaDeCosechaID);
+                totales = LiquidacionSemanal.getTotalesDeReporteDeAceituna(reporte);
+
+                return reporte;
             }
         }
     }

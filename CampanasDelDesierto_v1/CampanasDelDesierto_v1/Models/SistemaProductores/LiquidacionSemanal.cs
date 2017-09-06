@@ -49,6 +49,15 @@ namespace CampanasDelDesierto_v1.Models
         public int? abonoArbolesID { get; set; }
         public virtual PrestamoYAbonoCapital abonoArboles { get; set; }
 
+        [DisplayName("Monto Retenido")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        public decimal totalRetenido { get {
+                decimal res = 0;
+                if (this.retenciones != null && this.retenciones.Count() > 0)
+                    res = Math.Abs(retenciones.Sum(r => r.montoMovimiento));
+                return res;
+            } }
+
         //Lista de retenciones asociadas a la liquidacion
         public virtual ICollection<Retencion> retenciones { get; set; }
 
@@ -82,6 +91,38 @@ namespace CampanasDelDesierto_v1.Models
             }
 
             return monto;
+        }
+
+        /// <summary>
+        /// Prepara un reporte de cada uno de los tipos de olivo liquidados en esta semana.
+        /// </summary>
+        public List<RecepcionDeProducto.VMTotalDeEntregas> getReporteDeAceituna(ref RecepcionDeProducto.VMTotalDeEntregas totales)
+        {
+            List<RecepcionDeProducto.VMTotalDeEntregas> reporte = new List<RecepcionDeProducto.VMTotalDeEntregas>();
+
+            List<PagoPorProducto> ingresosDeCosecha = this.ingresosDeCosecha.ToList();
+            List<TemporadaDeCosecha.VMTipoProducto> productos = this.temporadaDeCosecha.getListaProductos(this.Productor.zona);
+            reporte = this.Productor.generarReporteSemanalIngresosCosecha(ingresosDeCosecha, productos, this.precioDelDolarEnLiquidacion);
+            totales = LiquidacionSemanal.getTotalesDeReporteDeAceituna(reporte);
+
+            return reporte;
+        }
+
+        /// <summary>
+        /// Calcula el total de toneladas entradas y cantidades a pagar de la fruta liquidada.
+        /// </summary>
+        /// <param name="reporte">Reporte de recibos registrados para ser liquidados</param>
+        /// <returns>Una instancia de reporte de VMTotalDeEntregas para mostrar los totales.</returns>
+        public static RecepcionDeProducto.VMTotalDeEntregas getTotalesDeReporteDeAceituna(List<RecepcionDeProducto.VMTotalDeEntregas> reporte)
+        {
+            RecepcionDeProducto.VMTotalDeEntregas res = new RecepcionDeProducto.VMTotalDeEntregas();
+            res.producto = "TOTALES";
+            res.monto = reporte.Sum(r => r.monto);
+            res.montoMXN = reporte.Sum(r => r.montoMXN);
+            res.precio = reporte.Sum(r => r.precio);
+            res.toneladasRecibidas = reporte.Sum(r => r.toneladasRecibidas);
+
+            return res;
         }
 
         public class VMRetenciones

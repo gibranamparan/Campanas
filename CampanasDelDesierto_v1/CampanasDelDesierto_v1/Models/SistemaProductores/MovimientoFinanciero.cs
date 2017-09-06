@@ -434,7 +434,7 @@ namespace CampanasDelDesierto_v1.Models
         public bool isAbonoOPrestamo()
         {
             var tom = this.getTypeOfMovement();
-            return (tom == (TypeOfMovements.CAPITAL) 
+            return (tom == (TypeOfMovements.CAPITAL)  //Si es un movimiento de capital, no abono de arboles
                 && ((PrestamoYAbonoCapital)this).tipoDeMovimientoDeCapital 
                     != PrestamoYAbonoCapital.TipoMovimientoCapital.ABONO_ARBOLES) 
                 || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isBalanceDeVentaDeOlivo());
@@ -560,13 +560,16 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        /// <summary>
+        /// Es verdadero si es un adeudo inicial para ventas de materiales
+        /// </summary>
         public bool isAdeudoInicialMaterial
         {
             get
             {
                 return this.getTypeOfMovement() == TypeOfMovements.ADEUDO_INICIAL
-                    && this.tipoDeBalance == TipoDeBalance.CAPITAL_VENTAS
-                    && ((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value;
+                    && ((AdeudoInicial)this).isVentas.HasValue && ((AdeudoInicial)this).isVentas.Value &&
+                    this.tipoDeBalance != TipoDeBalance.VENTA_OLIVO;
             }
         }
 
@@ -1030,11 +1033,9 @@ namespace CampanasDelDesierto_v1.Models
                     this.abonoInteres = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.abonoInteres);
 
                     //Deudas
-                    this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial 
-                        || i.mov.isAdeudoInicialMaterial).Sum(i => i.anticipo);
-                    this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital 
-                        || i.mov.isAdeudoInicialAnticiposCapital).Sum(i => i.anticipo);
-                    this.anticipo = this.ventasACredito + this.anticiposEfectivo;
+                    this.ventasACredito = lista.Where(i => i.mov.isVentaDeMaterial
+                    && !i.mov.isAdeudoInicialMaterial).Sum(i => i.anticipo); //Venta de material a credito (no inicial)
+                    this.anticiposEfectivo = lista.Where(i => i.mov.isAnticipoDeCapital).Sum(i => i.anticipo);
                     this.interes = lista.Sum(i => i.interes);
 
                     //Saldo por pagar
@@ -1043,14 +1044,18 @@ namespace CampanasDelDesierto_v1.Models
 
                     //Deuda inicial
                     var movDeudaInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialAnticiposCapital);
-                    this.deudaCapitalInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.anticipo);
-                    this.deudaInteresInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.interes);
+                    this.deudaCapitalInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.anticipo); //Deuda incial por anticipos de capital
+                    this.deudaInteresInicial = movDeudaInicial == null ? 0 : Math.Abs(movDeudaInicial.interes); //Deuda incial por intereses de anticipos de capital
 
                     var movDeudaVentaInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialMaterial);
-                    this.deudaVentasInicial = movDeudaVentaInicial == null ? 0 : movDeudaVentaInicial.anticipo;
+                    this.deudaVentasInicial = movDeudaVentaInicial == null ? 0 : movDeudaVentaInicial.anticipo; //Deuda inicial por ventas de material a credito
 
                     var movDeudaArbolesInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialVentaOlivo);
-                    this.deudaVentasArbolesInicial = movDeudaArbolesInicial == null ? 0: movDeudaArbolesInicial.anticipo;
+                    this.deudaVentasArbolesInicial = movDeudaArbolesInicial == null ? 0: movDeudaArbolesInicial.anticipo; //Deuda inicial por compras de arboles de olvio
+
+                    //Total de deuda por anticipos totales
+                    this.anticipo = Math.Abs(this.ventasACredito) + Math.Abs(this.anticiposEfectivo)+
+                        Math.Abs(this.deudaCapitalInicial) + Math.Abs(this.deudaVentasInicial);
                 }
             }
         }

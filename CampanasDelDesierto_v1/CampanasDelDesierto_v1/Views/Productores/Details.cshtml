@@ -18,6 +18,10 @@
     <a target="_blank" href="@Url.Action("LiquidacionFinal", "ReportesProductores", 
             new { id = temporadaID, productorID = Model.idProductor })">
         <i class="fa fa-list"></i>Reporte de Liquidación Final
+    </a><span>|</span>
+    <a target="_blank" href="@Url.Action("LiquidacionDeAceituna", "ReportesProductores",
+                new { id = temporadaID, productorID = Model.idProductor })">
+        <i class="fa fa-list"></i>Reporte de Liquidación de Aceituna
     </a>
 </div>
 

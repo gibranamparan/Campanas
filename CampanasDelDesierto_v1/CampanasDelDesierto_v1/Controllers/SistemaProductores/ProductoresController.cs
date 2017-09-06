@@ -95,24 +95,22 @@ namespace CampanasDelDesierto_v1.Controllers
             return View(db.Productores.ToList());
         }
 
-        // GET: Productores/Details/5
+        // GET: Productores/Details/:id
         public ActionResult Details(int? id, int? temporada)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
             Productor productor = db.Productores.Find(id);
             if (productor == null)
-            {
                 return HttpNotFound();
-            }
 
             TemporadaDeCosecha tem = TemporadaDeCosecha.findTemporada(temporada);
-            
+            //Lista de temporadas ordenadas cronologicamente
             ViewBag.temporadas = db.TemporadaDeCosechas.OrderByDescending(temp=> temp.fechaFin).ToList();
+            //ID de temporada actual
             ViewBag.temporada = tem.TemporadaDeCosechaID;
+            //Instancia de temporada
             ViewBag.temporadaSeleccionada = tem;
 
             ViewBag.reporteMovimientos = productor.generarReporteAnticiposConIntereses(DateTime.Today, tem, db);

@@ -1,0 +1,91 @@
+﻿@using CampanasDelDesierto_v1.Models
+@using CampanasDelDesierto_v1.Models.SistemaProductores
+@using CampanasDelDesierto_v1.HerramientasGenerales
+@model CampanasDelDesierto_v1.Models.Productor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    TemporadaDeCosecha temporada = ViewBag.temporadaSeleccionada;
+    ReportesViewModels.VMLiquidacionDeAceituna reporte = ViewBag.reporte;
+
+    String title = String.Format("Liquidacion Final de Aceituna, Temporada {0}, Productor: {1}", temporada, Model);
+    ViewBag.Title = title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@Html.Partial("Partial_EncabezadoReporte")
+@*Enlaces de navegacion*@
+<nav class="hidden-print">
+    <a href="@Url.Action("Details","Productores",new { id = Model.idProductor })">
+        <i class="fa fa-arrow-left"></i><span>Volver a Detalles del Productor</span>
+    </a>
+</nav>
+
+<div>
+    <h3>Reporte de Liquidacion Final de Fruta</h3>
+    <span>@Model</span>
+</div>
+<span>@temporada.ToString().ToUpper()</span>
+<span class="pull-right"><strong>Generado al día </strong> <span>@DateTime.Today.ToString("dd/MMMM/yyyy")</span></span>
+
+@*
+    <div style="margin-top: 1em">
+        <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion.ToString("C")</span> |
+        <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido.ToString("C")</span>
+    </div>*@
+@*CUERPO DEL REPORTE*@
+@if (reporte.liquidaciones.Count() > 0)
+{
+    //Datos para parcial de reporte semanal
+    ViewDataDictionary vddReporteSemanal = new ViewDataDictionary();
+    List<PagoPorProducto> ingresosDeCosecha;
+    List<RecepcionDeProducto.VMTotalDeEntregas> reportePorLiquidacion = new List<RecepcionDeProducto.VMTotalDeEntregas>();
+    RecepcionDeProducto.VMTotalDeEntregas totales = new RecepcionDeProducto.VMTotalDeEntregas();
+
+    reportePorLiquidacion = ReportesViewModels.VMLiquidacionDeAceituna.getReporteDeAceitunaTotal(ref totales, Model, temporada);
+    //ingresosDeCosecha = liquidacion.ingresosDeCosecha.ToList();
+    //vddReporteSemanal.Add("ingresosDeCosecha", ingresosDeCosecha);
+    vddReporteSemanal.Add("semanaLiquidada", temporada.periodo);
+    vddReporteSemanal.Add("totales", totales);
+    vddReporteSemanal.Add("isReporteLiquidacionFinalFruta", true);
+    vddReporteSemanal.Add("isTotalPeriodo", true);
+    @Html.Partial("../LiquidacionSemanal/Partial_ReporteSemanalCosecha", reportePorLiquidacion, vddReporteSemanal);
+    vddReporteSemanal.Clear();
+
+    foreach (var liquidacion in reporte.liquidaciones)
+    {
+        reportePorLiquidacion = liquidacion.getReporteDeAceituna(ref totales);
+        ingresosDeCosecha = liquidacion.ingresosDeCosecha.ToList();
+        vddReporteSemanal.Add("ingresosDeCosecha", ingresosDeCosecha);
+        vddReporteSemanal.Add("semanaLiquidada", liquidacion.semanaLiquidada);
+        vddReporteSemanal.Add("liquidacion", liquidacion);
+        vddReporteSemanal.Add("totales", totales);
+        vddReporteSemanal.Add("isReporteLiquidacionFinalFruta", true);
+    @Html.Partial("../LiquidacionSemanal/Partial_ReporteSemanalCosecha", reportePorLiquidacion, vddReporteSemanal);
+        vddReporteSemanal.Clear();
+    }
+}else
+{
+    <div class="alert alert-warning">No se han registrado liquidaciones de fruta en esta temporada para este productor.</div>
+}
+@************************@
+
+
+<br />
+@Html.Partial("Partial_LineaFirmaReportes")
+
+<style>
+    @@media print{
+        /*extensión CSS no estándar para forzar la impresión*/
+        .panel-heading {
+            background-color:#31708f !important;
+            -webkit-print-color-adjust:exact;
+        }
+
+        .panel-primary>.panel-heading .panel-title *{
+            color:white !important;
+        }
+    }
+</style>

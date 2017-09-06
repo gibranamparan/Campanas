@@ -11,6 +11,7 @@ using CampanasDelDesierto_v1.HerramientasGenerales;
 using AdeudoRecuperacionReg = CampanasDelDesierto_v1.Models.ReportesViewModels.VMAdeudosRecuperacionReg;
 using AdeudosRecuperacionDetallado = CampanasDelDesierto_v1.Models.ReportesViewModels.VMAdeudosRecuperacionDetallado;
 using LiquidacionFinal = CampanasDelDesierto_v1.Models.ReportesViewModels.VMLiquidacionFinal;
+using LiquidacionDeAceituna = CampanasDelDesierto_v1.Models.ReportesViewModels.VMLiquidacionDeAceituna;
 
 namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
 {
@@ -71,6 +72,23 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
             ViewBag.temporadaSeleccionada = temporadaConsultada;
             ViewBag.temporadaAnterior = temporadaAnterior;
             ViewBag.reporte = reporte;
+            return View(prod);
+        }
+
+        public ActionResult LiquidacionDeAceituna(int id, int productorID)
+        {
+            var prod = db.Productores.Find(productorID);
+            TemporadaDeCosecha temporadaConsultada = db.TemporadaDeCosechas.Find(id);
+            TemporadaDeCosecha temporadaAnterior = temporadaConsultada.getTemporadaAnterior(db);
+            var liquidaciones = prod.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaConsultada.TemporadaDeCosechaID).ToList()
+                .Where(mov => mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION).Cast<LiquidacionSemanal>().ToList();
+            LiquidacionDeAceituna reporte = new LiquidacionDeAceituna(liquidaciones, prod, temporadaConsultada, temporadaAnterior);
+
+            //Se prepara la vista
+            ViewBag.temporadaSeleccionada = temporadaConsultada;
+            ViewBag.temporadaAnterior = temporadaAnterior;
+            ViewBag.reporte = reporte;
+
             return View(prod);
         }
     }

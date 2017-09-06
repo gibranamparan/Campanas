@@ -123,6 +123,7 @@
     //Datos para parcial de reporte semanal
     ViewDataDictionary vddReporteSemanal = new ViewDataDictionary();
     vddReporteSemanal.Add("ingresosDeCosecha", ingresosDeCosecha);
+    vddReporteSemanal.Add("semanaLiquidada", Model.semanaLiquidada);
 }
 <p class="hidden-print">
     <a href="@Url.Action("Details","Productores", new { id = productor.idProductor,
@@ -208,7 +209,8 @@
                 </div>
 
                 <div class="form-group col-xs-1 @(reportMode?"hidden":"")">
-                    <button class="btn btn-primary">@(!editMode?"Buscar":"Actualizar")</button>
+                    <br />
+                    <button class="btn btn-primary">@(!editMode?"Seleccionar":"Actualizar") Semana</button>
                 </div>
             }
         </div>
@@ -433,7 +435,7 @@
 
                 saldo.val(numeral(saldoPagar).format('0.00')).trigger('input');
             })
-        }   
+        }
 
         $("#formRetenciones input:even").keyup(function () {
             var totalRetencion = 0;
@@ -509,19 +511,24 @@
                 }, antiForgeryToken)
         }
 
-        function refreshRetenciones(inputDolar){
+        function refreshRetenciones(inputDolar) {
             $('#frmLiquidacion #precioDelDolarEnLiquidacion').val($(inputDolar).val())
             $("#formRetenciones input:even").trigger("keyup");
-            $.each($("table#tblReporteSemanaCosecha td.montoUSDReporte"), function (idx, celdaUSD) {
-                celdaUSD = $(celdaUSD);
-                var montoUSD = Number(numeral(celdaUSD.html()).format("0.00"));//Se toma monto en dolares
-                var celdaMXN = celdaUSD.siblings("td.montoMXNReporte");//Se toma la celda donde se muestran los pesos
+            $.each($("table#tblReporteSemanaCosecha tr"), function (idx, renglon) {
+                var tdPrecioTon = $(renglon).children('td.precioTonelada')
+                var precioTon = Number(numeral(tdPrecioTon.html()).format("0.0000"));
+                var tdTonRec = $(renglon).children('td.toneladasRecibidas')
+                var tonRecibi = Number(numeral(tdTonRec.html()).format("0.0000"));
+
+                var montoUSD = precioTon * tonRecibi;
+                //var montoUSD = Number(numeral(celdaUSD.html()).format("0.0000"));//Se toma monto en dolares
+                var celdaMXN = $(renglon).children("td.montoMXNReporte");//Se toma la celda donde se muestran los pesos
                 var precioDolar = Number($(inputDolar).val());//Se toman tipo de cambio
                 //Se hace la transformacion de tipo de cambio y se guarda en la celda de pesos
                 celdaMXN.html(numeral(montoUSD * precioDolar).format('$0,0.00'));
             })
         }
-        
+
         @if(!editMode && !reportMode) {
             @("setPrecioDolar()");
         }
@@ -565,7 +572,7 @@
                     -webkit-print-color-adjust:exact;
                 }
 
-                .panel-primary>.panel-heading>h3.panel-title *{
+                .panel-primary>.panel-heading .panel-title *{
                     color:white !important;
                 }
 

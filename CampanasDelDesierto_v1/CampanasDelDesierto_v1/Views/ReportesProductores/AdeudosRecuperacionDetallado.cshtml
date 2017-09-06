@@ -22,7 +22,7 @@
 <h2>@ViewBag.Title</h2>
 
 <h3>@temporada.ToString().ToUpper()</h3>
-<table id="tblReporte" class="table table-hover table-striped table-responsive">
+<table id="tblReporteDetallado" class="table table-hover table-striped table-responsive">
     <thead>
         <tr>
             @*<th>Num. Prod.</th>*@
@@ -34,12 +34,12 @@
             <th>@Html.DisplayNameFor(model => model.anticiposEfectivo)</th>
             <th>@Html.DisplayNameFor(model => model.interes)</th>
             <th>@Html.DisplayNameFor(model => model.ventasCredito)</th>
-            <th>@Html.DisplayNameFor(model => model.totalAdeudos)</th>
+            <th class="totalAdeudos">@Html.DisplayNameFor(model => model.totalAdeudos)</th>
 
             @*Pagos*@
             <th>@Html.DisplayNameFor(model => model.adeudoRecuperado)</th>
             <th>@Html.DisplayNameFor(model => model.interesAbonado)</th>
-            <th>@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
+            <th class="deuda">@Html.DisplayNameFor(model => model.saldoPorRecuperar)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -62,7 +62,7 @@
             @*Deudas de arbolitos*@
             <th>@Html.DisplayNameFor(model => model.adeudoArboles)</th>
             <th>@Html.DisplayNameFor(model => model.abonoArbolitos)</th>
-            <th>@Html.DisplayNameFor(model => model.adeudoArbolitosPorRecuperar)</th>
+            <th class="deuda">@Html.DisplayNameFor(model => model.adeudoArbolitosPorRecuperar)</th>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -84,10 +84,10 @@
             <td>@Html.DisplayFor(model => rowTotales.anticiposEfectivo)</td>
             <td>@Html.DisplayFor(model => rowTotales.interes)</td>
             <td>@Html.DisplayFor(model => rowTotales.ventasCredito)</td>
-            <td>@Html.DisplayFor(model => rowTotales.totalAdeudos)</td>
+            <td class="totalAdeudos">@Html.DisplayFor(model => rowTotales.totalAdeudos)</td>
             <td>@Html.DisplayFor(model => rowTotales.adeudoRecuperado)</td>
             <td>@Html.DisplayFor(model => rowTotales.interesAbonado)</td>
-            <td>@Html.DisplayFor(model => rowTotales.saldoPorRecuperar)</td>
+            <td class="deuda">@Html.DisplayFor(model => rowTotales.saldoPorRecuperar)</td>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -109,7 +109,7 @@
             @*Arbolitos*@
             <td>@Html.DisplayFor(model => rowTotales.adeudoArboles)</td>
             <td>@Html.DisplayFor(model => rowTotales.abonoArbolitos)</td>
-            <td>@Html.DisplayFor(model => rowTotales.adeudoArbolitosPorRecuperar)</td>
+            <td class="deuda">@Html.DisplayFor(model => rowTotales.adeudoArbolitosPorRecuperar)</td>
             <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -137,10 +137,10 @@
                 <td>@Html.DisplayFor(model => item.anticiposEfectivo)</td>
                 <td>@Html.DisplayFor(model => item.interes)</td>
                 <td>@Html.DisplayFor(model => item.ventasCredito)</td>
-                <td>@Html.DisplayFor(model => item.totalAdeudos)</td>
+                <td class="totalAdeudos">@Html.DisplayFor(model => item.totalAdeudos)</td>
                 <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>
                 <td>@Html.DisplayFor(model => item.interesAbonado)</td>
-                <td>@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
+                <td class="deuda">@Html.DisplayFor(model => item.saldoPorRecuperar)</td>
                 <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -162,7 +162,7 @@
                 @*Adeudo por arboles*@
                 <td>@Html.DisplayFor(model => item.adeudoArboles)</td>
                 <td>@Html.DisplayFor(model => item.abonoArbolitos)</td>
-                <td>@Html.DisplayFor(model => item.adeudoArbolitosPorRecuperar)</td>
+                <td class="deuda">@Html.DisplayFor(model => item.adeudoArbolitosPorRecuperar)</td>
                 <td style="width:5px; background-color: white;
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
@@ -189,9 +189,20 @@
     .rowTotales td{
         background-color: #e4fdb8 !important;
     }
-    table#tblReporte{
+    table#tblReporteDetallado{
         font-size:0.75em;
     }
+
+    th.totalAdeudos, td.totalAdeudos{
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+    
+    td.deuda,th.deuda{
+        color: red;
+        font-weight: bold;
+    }
+
     @@media print {
         table{
             font-size: .8em;

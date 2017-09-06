@@ -9,15 +9,25 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
 {
     public class AdeudoInicial : MovimientoFinanciero
     {
-        public AdeudoInicial(VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales, TemporadaDeCosecha temporada, Productor productor)
+        public AdeudoInicial(VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales, 
+            TemporadaDeCosecha temporada, Productor productor, bool isVentas = false)
         {
-            this.montoMovimiento = -totales.saldoCapital;
-            this.interesInicial = totales.saldoInteres;
+            if (isVentas) { //Deuda inicial de venta a credito
+                this.montoMovimiento =- (Math.Abs(totales.ventasACredito) + Math.Abs(totales.deudaCapitalInicial));
+                this.interesInicial = 0;
+            }
+            else //Deuda inicial de anticipos de capital
+            {
+                this.montoMovimiento =-( Math.Abs(totales.anticiposEfectivo) + Math.Abs(totales.deudaVentasInicial));
+                this.interesInicial = totales.interes;
+            }
+
             this.idProductor = productor.idProductor;
             this.Productor = productor;
             this.TemporadaDeCosechaID = temporada.TemporadaDeCosechaID;
             this.temporadaDeCosecha = temporada;
             this.fechaMovimiento = temporada.fechaFin;
+            this.isVentas = isVentas;
         }
 
         public AdeudoInicial()
@@ -32,6 +42,9 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
         public bool isRegistradoInicialmenteEnProductor
             {get{return this.idMovimiento > 0;}}
 
+        /// <summary>
+        /// Muestra el nombre del tipo de adeudo inicial
+        /// </summary>
         [DisplayName("Concepto")]
         public new string concepto { get {
                 string res = string.Empty;
