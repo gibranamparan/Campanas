@@ -5,13 +5,14 @@
     TemporadaDeCosecha temporada = ViewBag.temporadaSeleccionada;
     MovimientoFinanciero adeudo = Model.adeudoInicialArboles;
 
-    @*Solo ventas de olivo*@
-    var movimientos = Model.MovimientosFinancieros
-    .Where(mov => mov.TemporadaDeCosechaID == temporada.TemporadaDeCosechaID)
-    .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
-    .OrderBy(mov => mov.fechaMovimiento).ToList();
+        @*Solo ventas de olivo*@
+    List<MovimientoFinanciero> movimientos = ViewBag.reporteVentasArboles==null?
+        new List<MovimientoFinanciero>(): ViewBag.reporteVentasArboles;
+    MovimientoFinanciero.VMTotalesSimple totales = ViewBag.totalesVentasArboles == null ?
+        new MovimientoFinanciero.VMTotalesSimple() : ViewBag.totalesVentasArboles;
 
     List<TemporadaDeCosecha> temporadas = ViewBag.temporadas;
+    bool showTotals = ViewData["showTotals"] == null ? true : (bool)ViewData["showTotals"];
 }
 
 @if (Model != null && movimientos.Count() > 0)
@@ -30,6 +31,9 @@
                     <th style="width: 20em">
                         @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().concepto)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MovimientosFinancieros.FirstOrDefault().balance)
+                    </th>
                     <th class="actions hidden-print"></th>
                 </tr>
             </thead>
@@ -39,26 +43,25 @@
                     <tr>
                         <td>
                             @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
-                            {
-                                @Html.DisplayFor(model => ((VentaACredito)item).pagareVenta)
-                            }
+                            {@Html.DisplayFor(model => ((VentaACredito)item).pagareVenta)}
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                            @item.fechaMovimiento.ToString("dd/MM/yyyy")
                         </td>
-                        <td class='@(item.montoMovimiento<0?"montoNegativo":"")'
-                            @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION ? "style=color:green" : "")>
+                        <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
                             @(Math.Abs(item.montoMovimiento).ToString("C"))
                         </td>
                         <td style="width: 20em">
                             @Html.DisplayFor(modelItem => item.concepto)
                         </td>
+                        <td class='@(item.balance<0?"montoNegativo":"")'>
+                            @(Math.Abs(item.balance).ToString("C"))
+                        </td>
                         <td class="hidden-print">
                             @*Solo se mostrara el boton de funciones Si el movimiento no es una rentencion y
                         ademas no es un ingreso de de cosecha ya reportado como liquidado*@
                             @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                        && ((PrestamoYAbonoCapital)item).abonoEnLiquidacionID != null)
-                    )
+                                && ((PrestamoYAbonoCapital)item).abonoEnLiquidacionID != null))
                             {
                                 <div class="dropdown_actions">
                                     <button onclick="openActionsDropDown(this)"
@@ -94,9 +97,19 @@ else
         <strong>No existen</strong> movimientos financieros en este periodo para este productor.
     </div>
 }
-
-<script>
-    function submitBusqueda(ddl) {
-        $(ddl).closest("form").submit();
-    }
-</script>
+@if (showTotals) { 
+<div class="pull-right" style="padding-right:2em">
+    <span>
+        <strong style="color:red">TOTAL DE DEUDA: </strong>
+        <span>@Math.Abs(totales.deudas).ToString("C")</span>
+    </span><span>|</span>
+    <span>
+        <strong style="color:red">TOTAL DE ABONO: </strong>
+        <span>@Math.Abs(totales.abonos).ToString("C")</span>
+    </span><span>|</span>
+    <span>
+        <strong style="color:red">DEUDA POR LIQUIDAR: </strong>
+        <span>@Math.Abs(totales.balance).ToString("C")</span>
+    </span>
+</div>
+}

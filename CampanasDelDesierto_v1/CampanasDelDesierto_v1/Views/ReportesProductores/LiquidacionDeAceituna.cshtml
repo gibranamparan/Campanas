@@ -23,10 +23,12 @@
     </a>
 </nav>
 
+@*Titulo del reporte*@
 <div>
-    <h3>Reporte de Liquidacion Final de Fruta</h3>
+    <h3>Reporte de Liquidación Final de Fruta</h3>
     <span>@Model</span>
 </div>
+@*Subtitulos del reporte*@
 <span>@temporada.ToString().ToUpper()</span>
 <span class="pull-right"><strong>Generado al día </strong> <span>@DateTime.Today.ToString("dd/MMMM/yyyy")</span></span>
 
@@ -84,8 +86,8 @@
             -webkit-print-color-adjust:exact;
         }
 
-        .panel-primary>.panel-heading .panel-title *{
-            color:white !important;
+        .panel-primary h3.panel-title {
+            color: white !important;
         }
     }
 </style>

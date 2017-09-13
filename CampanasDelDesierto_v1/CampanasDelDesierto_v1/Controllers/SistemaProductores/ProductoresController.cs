@@ -114,6 +114,9 @@ namespace CampanasDelDesierto_v1.Controllers
             ViewBag.temporadaSeleccionada = tem;
 
             ViewBag.reporteMovimientos = productor.generarReporteAnticiposConIntereses(DateTime.Today, tem, db);
+            MovimientoFinanciero.VMTotalesSimple totalesVentasArboles = new MovimientoFinanciero.VMTotalesSimple();
+            ViewBag.reporteVentasArboles = productor.generarReporteVentasArboles(tem, db, ref totalesVentasArboles);
+            ViewBag.totalesVentasArboles = totalesVentasArboles;
 
             return View(productor);
         }

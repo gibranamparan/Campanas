@@ -16,11 +16,11 @@
         <i class="glyphicon glyphicon-arrow-left"></i>Volver a la lista de productores
     </a><span>|</span>
     <a target="_blank" href="@Url.Action("LiquidacionFinal", "ReportesProductores", 
-            new { id = temporadaID, productorID = Model.idProductor })">
+                            new { id = temporadaID, productorID = Model.idProductor })">
         <i class="fa fa-list"></i>Reporte de Liquidación Final
     </a><span>|</span>
     <a target="_blank" href="@Url.Action("LiquidacionDeAceituna", "ReportesProductores",
-                new { id = temporadaID, productorID = Model.idProductor })">
+                            new { id = temporadaID, productorID = Model.idProductor })">
         <i class="fa fa-list"></i>Reporte de Liquidación de Aceituna
     </a>
 </div>
@@ -55,14 +55,14 @@
 
             <div class="col-md-4 hidden-print">
                 @using (Html.BeginForm("Details", "Productores", FormMethod.Post,
-                new { @class = "form-inline pull-right" }))
+new { @class = "form-inline pull-right" }))
                 {
                     <div class="form-group">
                         <label for="temporadas">
                             Periodo de Cosecha
                         </label>
                         @Html.DropDownList("temporada", new SelectList(temporadas, "TemporadaDeCosechaID",
-                    "rangoTiempo", temporadaID), new { @class = "form-control", onchange = "submitBusqueda(this)" })
+     "rangoTiempo", temporadaID), new { @class = "form-control", onchange = "submitBusqueda(this)" })
                     </div>
                 }
             </div>
@@ -77,23 +77,12 @@
         <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
         <div class="row">
             @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
-            <div class="pull-right" style="padding-right:2em">
-                <span><strong style="color:red">TOTAL DE DEUDA: </strong>
-                @Math.Abs(Model.totalDeudaVentaArbolitoPorTemporada(temporada.TemporadaDeCosechaID)).ToString("C")</span> |
-                <span><strong style="color:red">TOTAL DE ABONO: </strong>
-                @Math.Abs(Model.totalAbonoArbolitoPorTemporada(temporada.TemporadaDeCosechaID)).ToString("C")</span>
-            </div>
         </div>
 
         @*Ingresos de productos y liquidaciones*@
         <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.MOV_LIQUIDACION)</h4>
         <div class="row">
             @Html.Partial("../MovimientoFinancieros/Partial_ListIngresosLiquidaciones")
-        </div>
-        <div class="pull-right" style="padding-right:2em">
-            <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Model.totalIngresos.ToString("C")</span> |
-            <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Model.totalLiquidacion.ToString("C")</span> |
-            <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Model.totalRetenido.ToString("C")</span>
         </div>
     </div>
 </div>
@@ -111,3 +100,9 @@
         }
     }
 </style>
+
+<script>
+    function submitBusqueda(ddl) {
+        $(ddl).closest("form").submit();
+    }
+</script>

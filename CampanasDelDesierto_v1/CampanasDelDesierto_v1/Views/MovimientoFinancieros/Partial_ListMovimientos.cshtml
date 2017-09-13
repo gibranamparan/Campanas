@@ -66,8 +66,8 @@
                         </td>
                         <td>
                             @if (item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL
-                    || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL
-                || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
+                                || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.ADEUDO_INICIAL
+                                || item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.VENTA_A_CREDITO)
                             {
                                 @*Html.DisplayFor(modelItem => item.montoActivo)*@
                                 @Math.Abs(item.montoActivo).ToString("C");
@@ -75,8 +75,8 @@
                         </td>
                         <td>
                             @*Interes total generado*@
-                            @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital)
-            || item.isAdeudoInicialAnticiposCapital)
+                            @if ((item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.CAPITAL && !item.isAbonoCapital) 
+                                || item.isAdeudoInicialAnticiposCapital)
                             {
                                 @Math.Abs(interesTotalGenerado).ToString("C");
                             }
@@ -121,9 +121,3 @@ else
         <strong>No existen</strong> movimientos financieros en este periodo para este productor.
     </div>
 }
-
-<script>
-    function submitBusqueda(ddl) {
-        $(ddl).closest("form").submit();
-    }
-</script>

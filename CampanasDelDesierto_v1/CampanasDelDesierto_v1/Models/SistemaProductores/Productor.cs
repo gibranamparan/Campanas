@@ -100,6 +100,8 @@ namespace CampanasDelDesierto_v1.Models
                 res = movimientos.Sum(mov => mov.montoMovimiento);
             }
 
+
+
             return res;
         }
 
@@ -872,7 +874,63 @@ namespace CampanasDelDesierto_v1.Models
             return m;
         }
 
-        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(List<PagoPorProducto> movs,List<VMTipoProducto> productos, decimal precioDolar, int temporadaID = 0)
+        /// <summary>
+        /// Genera una lista de movimientos financieros correspondientes al balance de compras de arboles de olivo.
+        /// </summary>
+        /// <param name="tem">Temporada actual</param>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns></returns>
+        public List<MovimientoFinanciero> generarReporteVentasArboles(TemporadaDeCosecha tem, ApplicationDbContext db, 
+            ref VMTotalesSimple totales)
+        {
+            var res = this.MovimientosFinancieros;
+            if (res != null && res.Count() > 0)
+            {
+                res = res.Where(mov => mov.TemporadaDeCosechaID == tem.TemporadaDeCosechaID)
+                .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
+                .OrderBy(mov => mov.fechaMovimiento).ToList();
+            }
+            TemporadaDeCosecha temporadaAnterior = tem.getTemporadaAnterior(db);
+            if (temporadaAnterior != null) { 
+                decimal balanceAnteriorArbolesOlivo = this.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID);
+                if (Math.Abs(balanceAnteriorArbolesOlivo) > 0) { 
+                    AdeudoInicial adeudoInicialArbolesOlivoDesdeTemporadaAnterior = new AdeudoInicial(balanceAnteriorArbolesOlivo, 
+                        tem, this, true, TipoDeBalance.VENTA_OLIVO);
+                    LinkedList<MovimientoFinanciero> tempRes = new LinkedList<MovimientoFinanciero>(res);
+                    tempRes.AddFirst(adeudoInicialArbolesOlivoDesdeTemporadaAnterior);
+                    res = tempRes.ToList();
+                }
+            }
+            totales = new VMTotalesSimple(res.ToList());
+            return res.ToList();
+        }
+
+        public decimal getBalanceArbolesOlivo(int temporadaDeCosechaID)
+        {
+            decimal res = 0;
+            var movs = this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaDeCosechaID);
+            if (movs != null && movs.Count() > 0)
+            {
+                movs = movs.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
+                .OrderBy(mov => mov.fechaMovimiento).ToList();
+            }
+            if (movs.Count() > 0)
+                res = movs.Last().balance;
+
+            return res;
+        }
+
+        /// <summary>
+        /// Genera un reporte donde muestra el total de ingresos de cosecha tomando todos los recibos registrados
+        /// dados como argumento
+        /// </summary>
+        /// <param name="movs">Lista de recibos a reportar.</param>
+        /// <param name="productos">Lista detallada de los productos que maneja el productor</param>
+        /// <param name="precioDolar">Precio del dolar que se quiere considerar en este reporte</param>
+        /// <param name="temporadaID">ID de la temporada correspondiente</param>
+        /// <returns></returns>
+        public List<RecepcionDeProducto.VMTotalDeEntregas> generarReporteSemanalIngresosCosecha(List<PagoPorProducto> movs,
+            List<VMTipoProducto> productos, decimal precioDolar, int temporadaID = 0)
         {
             if (movs == null && temporadaID>0)
             {
@@ -900,7 +958,8 @@ namespace CampanasDelDesierto_v1.Models
         }
 
         /// <summary>
-        /// Genera un reporte de anticipos e intereses dados dentro de una temporada
+        /// Metodo recursivo que genera un reporte de anticipos e intereses dados dentro de una temporada. Incluye adeudo de temporada anterior, lo cual
+        /// se determina al vuelo tomando cada una de las temporadas anteriores a la actual de forma recursiva.
         /// </summary>
         /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
         /// <param name="temporadaSeleccionada">Temporada reportada</param>

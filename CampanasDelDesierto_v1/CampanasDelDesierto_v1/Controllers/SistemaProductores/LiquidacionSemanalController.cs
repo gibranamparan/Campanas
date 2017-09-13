@@ -44,11 +44,12 @@ namespace CampanasDelDesierto_v1.Controllers
         /// <param name="productor"></param>
         /// <param name="semanaLiquidada"></param>
         /// <returns></returns>
-        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada, TemporadaDeCosecha temporada)
+        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada, TemporadaDeCosecha temporada, decimal precioDelDolarEnLiquidacion)
         {
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;
             mov.Productor = productor;
+            mov.precioDelDolarEnLiquidacion = precioDelDolarEnLiquidacion;
             ViewBag.balanceActual = productor.balanceDeAnticiposEnFecha(mov.fechaMovimiento);
             ViewBag.balanceActualArboles = productor.balanceArbolesEnFecha(mov.fechaMovimiento);
 
@@ -133,7 +134,7 @@ namespace CampanasDelDesierto_v1.Controllers
         }
 
         // GET: EmisionDeCheques/Create
-        public ActionResult Create(int? id, int? temporada, TimePeriod semanaLiquidada, int semana=0)
+        public ActionResult Create(int? id, int? temporada, TimePeriod semanaLiquidada, int semana=0, decimal precioDelDolarEnLiquidacion = 0)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -143,7 +144,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 return HttpNotFound();
 
             TemporadaDeCosecha temporadaCosecha = db.TemporadaDeCosechas.Find(temporada);
-            LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada, temporadaCosecha);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, semanaLiquidada, temporadaCosecha, precioDelDolarEnLiquidacion);
 
             if (semana == 0)
             {
@@ -266,7 +267,7 @@ namespace CampanasDelDesierto_v1.Controllers
 
             Productor productor = db.Productores.Find(emisionDeCheque.idProductor);
             TemporadaDeCosecha temporadaCosecha = db.TemporadaDeCosechas.Find(emisionDeCheque.TemporadaDeCosechaID);
-            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada, temporadaCosecha);
+            LiquidacionSemanal mov = prepararVistaCrear(productor, emisionDeCheque.semanaLiquidada, temporadaCosecha, emisionDeCheque.precioDelDolarEnLiquidacion);
 
             return View("Form_Liquidacion", emisionDeCheque);
         }

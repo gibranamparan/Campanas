@@ -104,49 +104,90 @@ namespace CampanasDelDesierto_v1.Models
             public Productor productor;
 
             /*Deudas------------*/
+            /// <summary>
+            /// Adeudo por anticipos de capital remanente de la temporada de cosecha anterior a
+            /// la temporada correspondiente a esta instancial del reporte.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Cosecha Anterior")]
             public decimal adeudoAnteriorCosecha { get; set; }
 
+            /// <summary>
+            /// Interes no pagado correspondiente a lo generado por los anticipos de capital, 
+            /// correspondiente a la temporada anterior la del presente reporte.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Interes Cosecha Anterior")]
             public decimal adeudoInteresAnteriorCosecha { get; set; }
 
+            /// <summary>
+            /// Adeudo correspondiente a la venta de materiales (excluyendo arboles de olivo) correpondiente
+            /// a la temporada anterior a la del presenten reporte.
+            /// </summary>
             [DisplayName("Adeudo Venta Materiales Cosecha Anterior")]
             [DisplayFormat(DataFormatString = "{0:C}")]
             public decimal adeudoVentaCreditoAnteriorCosecha { get; set; }
 
-            [DisplayName("Adeudo Venta Arboles Anterior Cosecha ")]
+            /// <summary>
+            /// Adeudo correspondiente a la venta de  arboles de olivo sólamente, correpondiente
+            /// a la temporada anterior a la del presenten reporte.
+            /// </summary>
+            [DisplayName("Adeudo Venta Arboles Cosecha Anterior")]
             [DisplayFormat(DataFormatString = "{0:C}")]
             public decimal adeudoVentaArbolesAnteriorCosecha { get; set; }
 
+            /// <summary>
+            /// Monto total de anticipos en efectivo hechos en esta temporada.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Anticipos de Efectivo")]
             public decimal anticiposEfectivo { get; set; }
-
+            
+            /// <summary>
+            /// Monto total de venta de materiales (excluyendo arboles de olivo)
+            /// hechos en esta temporada.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Ventas a Credito")]
             public decimal ventasCredito { get; set; }
 
+            /// <summary>
+            /// Monto total intereses correspondientes a los generados por los anticipos de capital
+            /// hechos en esta temporada.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Interes por Anticipos")]
             public decimal interes { get; set; }
 
+            /// <summary>
+            /// Suma de todos los adeduso anteriores mas ventas de materiales, anticipos
+            /// y sus intereses.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Total Adeudos ")]
             public decimal totalAdeudos { get; set; }
             /*FIN DE DEUDAS----------*/
 
             /*Abonos -----*/
-            [DisplayFormat(DataFormatString = "{0:C}")]
-            [DisplayName("Interes abonado")]
-            public decimal interesAbonado { get; set; }
-
+            /// <summary>
+            /// Suma de todos los montos de los abonos registrados para al capital de 
+            /// balance de anticipos y ventas de materiales.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo Recuperado")]
             public decimal adeudoRecuperado { get; set; } //En ventas a credito y anticipos de efectivo
+
+            /// <summary>
+            /// Total de la porcion de abonos que fue pagado en intereses.
+            /// </summary>
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            [DisplayName("Interes abonado")]
+            public decimal interesAbonado { get; set; }
             /*FIN DE ABONOS ------------*/
 
+            /// <summary>
+            /// Es el total de adeudos menos el monto total de abonos registrados en esta temporada.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Saldo por Recuperar")]
             public decimal saldoPorRecuperar { get; set; } /*TOTAL POR RECUPERAR*/
@@ -180,16 +221,26 @@ namespace CampanasDelDesierto_v1.Models
             [DisplayName("Total de Aceituna ")]
             public double totalAceituna { get; set; }
 
+            /// <summary>
+            /// Pago por la totalidad de fruta recibida por la empresa.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Pago de Aceituna Cosecha ")]
             public decimal pagoAceitunaCosecha { get; set; }
             /*FIN DE COSECHAS*/
 
             /*Ventas de arbolitos -------------*/
+            /// <summary>
+            /// Monto total por compras de arboles de olivo.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Adeudo de Arbolitos")]
             public decimal adeudoArboles { get; set; }
 
+            /// <summary>
+            /// Monto total por abonos a deuda por compras a credito 
+            /// de arboles de olivo.
+            /// </summary>
             [DisplayFormat(DataFormatString = "{0:C}")]
             [DisplayName("Abono Arbolitos")]
             public decimal abonoArbolitos { get; set; }
@@ -243,8 +294,8 @@ namespace CampanasDelDesierto_v1.Models
                     + this.adeudoInteresAnteriorCosecha + adeudoAnteriorCosecha + adeudoVentaCreditoAnteriorCosecha;
             }
             
-            private void calcularVentasDeOlivo(List<MovimientoFinanciero> movimientos, TemporadaDeCosecha temporadaActual,
-                VMBalanceAnticiposTotales totales)
+            private void calcularVentasDeOlivo(Productor productor,List<MovimientoFinanciero> movimientos, TemporadaDeCosecha temporadaActual,
+                TemporadaDeCosecha temporadaAnterior,VMBalanceAnticiposTotales totales)
             {
                 //filtro de movmientos de balance tipo venta olivo
                 var movimientosBalanceArboles = movimientos
@@ -254,13 +305,16 @@ namespace CampanasDelDesierto_v1.Models
                 this.adeudoArboles = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
                 //Adeudo inicial por venta de arboles
-                this.adeudoVentaArbolesAnteriorCosecha = totales.deudaVentasArbolesInicial;
+                this.adeudoVentaArbolesAnteriorCosecha = totales.deudaVentasArbolesInicial; //Registrado en el productor
+                decimal adedudoArboles = temporadaAnterior==null?0: Math.Abs(productor.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID)); //Deuda debido a temporada anterior
+                this.adeudoVentaArbolesAnteriorCosecha += adedudoArboles;
 
                 //Calculo de abono total a deuda por arboles
                 this.abonoArbolitos = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
 
                 //Calculo total de adeudo por recuperar
-                this.adeudoArbolitosPorRecuperar = this.adeudoArboles < this.abonoArbolitos?0:(this.adeudoArboles - this.abonoArbolitos);
+                this.adeudoArbolitosPorRecuperar = this.adeudoArboles < this.abonoArbolitos?
+                    0:((this.adeudoArboles+ this.adeudoVentaArbolesAnteriorCosecha) - this.abonoArbolitos);
 
                 var ventasPolen = movimientos.Where(mov => mov.isVentaDeMaterial).ToList()
                     .Where(mov => (VentaACredito.isVentaPolen(((VentaACredito)mov).ComprasProductos)));
@@ -354,7 +408,7 @@ namespace CampanasDelDesierto_v1.Models
                 calcularPagoPorCosecha(movimientos);
 
                 //VENTAS DE OLIVO
-                calcularVentasDeOlivo(movimientos, temporadaActual, totales);
+                calcularVentasDeOlivo(productor,movimientos, temporadaActual,temporadaAnterior, totales);
 
                 //retencion sanidad vegetal
                 calcularRetenciones(movimientos);
@@ -363,29 +417,40 @@ namespace CampanasDelDesierto_v1.Models
             public static VMAdeudosRecuperacionDetallado calcularTotales(List<VMAdeudosRecuperacionDetallado> datos)
             {
                 VMAdeudosRecuperacionDetallado res = new VMAdeudosRecuperacionDetallado();
-                res.abonoArbolitos = datos.Sum(mov => mov.abonoArbolitos);
+                //Adeudos de cosecha anterior
                 res.adeudoAnteriorCosecha = datos.Sum(mov => mov.adeudoAnteriorCosecha);
                 res.adeudoInteresAnteriorCosecha = datos.Sum(mov => mov.adeudoInteresAnteriorCosecha);
-                res.adeudoArboles= datos.Sum(mov => mov.adeudoArboles);
-                res.adeudoArbolitosPorRecuperar= datos.Sum(mov => mov.adeudoArbolitosPorRecuperar);
-                res.adeudoRecuperado= datos.Sum(mov => mov.adeudoRecuperado);
-                res.anticiposEfectivo= datos.Sum(mov => mov.anticiposEfectivo);
+                res.adeudoVentaCreditoAnteriorCosecha = datos.Sum(mov => mov.adeudoVentaCreditoAnteriorCosecha);
+
+                //Montos de balance de capital de temporada actual
+                res.anticiposEfectivo = datos.Sum(mov => mov.anticiposEfectivo);
                 res.interes = datos.Sum(mov => mov.interes);
-                res.interesAbonado = datos.Sum(mov => mov.interesAbonado);
                 res.ventasCredito = datos.Sum(mov => mov.ventasCredito);
-                res.pagoAceitunaCosecha= datos.Sum(mov => mov.pagoAceitunaCosecha);
-                res.retencionEjidal= datos.Sum(mov => mov.retencionEjidal);
-                res.retencionesOtras= datos.Sum(mov => mov.retencionesOtras);
-                res.retencionSanidadVegetal= datos.Sum(mov => mov.retencionSanidadVegetal);
-                res.saldoPorRecuperar= datos.Sum(mov => mov.saldoPorRecuperar);
+                res.totalAdeudos = datos.Sum(mov => mov.totalAdeudos);
+
+                //Abonos dentro de temporada actual
+                res.adeudoRecuperado= datos.Sum(mov => mov.adeudoRecuperado);
+                res.interesAbonado = datos.Sum(mov => mov.interesAbonado);
+                res.saldoPorRecuperar = datos.Sum(mov => mov.saldoPorRecuperar);
+
+                //Montos de recepcion y pago de cosechas
                 res.toneladasManzanita= datos.Sum(mov => mov.toneladasManzanita);
                 res.toneladasManzanitaOrg = datos.Sum(mov => mov.toneladasManzanitaOrg);
                 res.toneladasMission = datos.Sum(mov => mov.toneladasMission);
                 res.toneladasMissionOrg= datos.Sum(mov => mov.toneladasMissionOrg);
                 res.toneladasObliza= datos.Sum(mov => mov.toneladasObliza);
                 res.toneladasOblizaOrg = datos.Sum(mov => mov.toneladasOblizaOrg);
-                res.totalAceituna= datos.Sum(mov => mov.totalAceituna);
-                res.totalAdeudos = datos.Sum(mov => mov.totalAdeudos);
+                res.totalAceituna = datos.Sum(mov => mov.totalAceituna);
+                res.pagoAceitunaCosecha = datos.Sum(mov => mov.pagoAceitunaCosecha);
+                res.retencionEjidal = datos.Sum(mov => mov.retencionEjidal);
+                res.retencionesOtras = datos.Sum(mov => mov.retencionesOtras);
+                res.retencionSanidadVegetal = datos.Sum(mov => mov.retencionSanidadVegetal);
+
+                //Montos por compras a credito de arboles de olivo
+                res.adeudoVentaArbolesAnteriorCosecha = datos.Sum(mov => mov.adeudoVentaArbolesAnteriorCosecha);
+                res.adeudoArboles = datos.Sum(mov => mov.adeudoArboles);
+                res.abonoArbolitos = datos.Sum(mov => mov.abonoArbolitos);
+                res.adeudoArbolitosPorRecuperar = datos.Sum(mov => mov.adeudoArbolitosPorRecuperar);
 
                 return res;
             }

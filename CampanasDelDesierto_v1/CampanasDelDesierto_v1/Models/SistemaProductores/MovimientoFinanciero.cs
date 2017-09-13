@@ -440,6 +440,9 @@ namespace CampanasDelDesierto_v1.Models
                 || (tom == TypeOfMovements.VENTA_A_CREDITO && !this.isBalanceDeVentaDeOlivo());
         }
 
+        /// <summary>
+        /// Arroja verdadero si es un movimiento de anticipo de capital.
+        /// </summary>
         public bool isAnticipoDeCapital
         {
             get {
@@ -773,6 +776,20 @@ namespace CampanasDelDesierto_v1.Models
             return 0;
         }
 
+        public class VMTotalesSimple
+        {
+            public decimal abonos { get; set; }
+            public decimal deudas { get; set; }
+            public decimal balance { get; set; }
+            public VMTotalesSimple() { }
+            public VMTotalesSimple(List<MovimientoFinanciero> lista)
+            {
+                this.abonos = lista.Where(mov=>mov.montoMovimiento>0).Sum(mov => mov.montoMovimiento);
+                this.deudas = lista.Where(mov => mov.montoMovimiento<0).Sum(mov => mov.montoMovimiento);
+                this.balance = this.abonos + this.deudas;
+            }
+        }
+
         /// <summary>
         /// Arroja una instancia VMInteres que contiene informacion sobre el estado de los intereses para el movimiento en cuestion
         /// generado hasta la fecha indicada.
@@ -964,43 +981,75 @@ namespace CampanasDelDesierto_v1.Models
                 this.balance = mov.balanceMasInteres;
             }
 
-            //public VMMovimientoBalanceAnticipos(AdeudoInicial adeudoAnterior)
-            //{
-            //    this.mov = adeudoAnterior;
-            //    this.anticipo = adeudoAnterior.montoMovimiento;
-            //    this.interes = adeudoAnterior.interesInicial;
-            //    this.fecha = adeudoAnterior.temporadaDeCosecha.fechaInicio;
-            //    this.tipo = mov.nombreDeMovimiento;
-
-            //}
-
             public class VMBalanceAnticiposTotales
             {
+                /// <summary>
+                /// Toda de los montos registados por movimiento incluyendo adeudos iniciales
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal anticipo { get; set; }
-                [DisplayFormat(DataFormatString = "{0:C}")]
-                public decimal anticipoDentroTemporada { get; set; }
 
+                /// <summary>
+                /// Total de todos los intereses generados por los anticipos de capital, incluyendo
+                /// adeudos iniciales
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal interes { get; set; }
+
+                /// <summary>
+                /// Total de todos los intereses generados por los anticipos de capital, excluyendo
+                /// adeudos iniciales
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal interesDentroTemporada { get; set; }
 
+                /// <summary>
+                /// Total de la distribucion de abonos registrados a capital
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal abonoCapital { get; set; }
 
+                /// <summary>
+                /// Total de la distribucion de abonos registrados a interes
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal abonoInteres { get; set; }
 
+                /// <summary>
+                /// Total de la cantidad total que se debe actualmente a capital.
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal saldoCapital { get; set; }
-                
+
+                /// <summary>
+                /// Total de la cantidad total que se debe actualmente correspondiente sólo a anticipos de capital, 
+                /// incluyendo adeudos iniciales por concepto de anticipos de capital.
+                /// </summary>
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal saldoAnticiposCapital { get; set; }
+
+                /// <summary>
+                /// Total de la cantidad total que se debe actualmente a interes.
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal saldoInteres { get; set; }
 
+                /// <summary>
+                /// Totalidad de montos registrados a ventas a credito.
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal ventasACredito { get; private set; }
 
+                /// <summary>
+                /// Totalidad de montos registrados a ventas a credito incluyendo adeudos iniciales
+                /// de ventas de materiales.
+                /// </summary>
+                [DisplayFormat(DataFormatString = "{0:C}")]
+                public decimal saldoVentasACredito { get; private set; }
+
+                /// <summary>
+                /// Suma de los montos correspondientes a los anticipos generados en este periodo solamente.
+                /// </summary>
                 [DisplayFormat(DataFormatString = "{0:C}")]
                 public decimal anticiposEfectivo { get; private set; }
 
@@ -1039,8 +1088,12 @@ namespace CampanasDelDesierto_v1.Models
                     this.interes = lista.Sum(i => i.interes);
 
                     //Saldo por pagar
-                    this.saldoCapital= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoCapital);
-                    this.saldoInteres= lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoInteres);
+                    this.saldoCapital = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoCapital);
+                    this.saldoInteres = lista.Where(i => !i.mov.isAbonoCapital).Sum(i => i.saldoInteres);
+                    this.saldoVentasACredito = lista.Where(i => i.mov.isVentaDeMaterial || i.mov.isAdeudoInicialMaterial)
+                        .Sum(i => i.saldoCapital);
+                    this.saldoAnticiposCapital = lista.Where(i => i.mov.isAnticipoDeCapital 
+                        || i.mov.isAdeudoInicialAnticiposCapital).Sum(i => i.saldoCapital);
 
                     //Deuda inicial
                     var movDeudaInicial = lista.FirstOrDefault(item => item.mov.isAdeudoInicialAnticiposCapital);

@@ -125,6 +125,25 @@ namespace CampanasDelDesierto_v1.Models
             return res;
         }
 
+        public class VMTotalesLiquidacion
+        {
+            public decimal ingresos { get; set; }
+            public decimal liquidado { get; set; }
+            public decimal retenido { get; set; }
+            public VMTotalesLiquidacion(List<MovimientoFinanciero> lista)
+            {
+                if (lista != null && lista.Count() > 0)
+                {
+                    this.ingresos = lista.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.PAGO_POR_PRODUCTO)
+                    .Sum(mon => mon.montoMovimiento);
+                    this.liquidado = lista.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.LIQUIDACION)
+                    .Sum(mon => mon.montoMovimiento);
+                    this.retenido = lista.Where(mov => mov.getTypeOfMovement() == TypeOfMovements.RENTENCION)
+                    .Sum(mon => mon.montoMovimiento);
+                }
+            }
+        }
+
         public class VMRetenciones
         {
             /// <summary>

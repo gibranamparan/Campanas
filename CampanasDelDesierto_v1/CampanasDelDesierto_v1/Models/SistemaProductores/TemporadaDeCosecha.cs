@@ -31,10 +31,8 @@ namespace CampanasDelDesierto_v1.Models
 
         [Display(Name ="Año de Cosecha")]
         public string rangoTiempo { get {
-                System.Globalization.CultureInfo cult = System.Globalization
-                    .CultureInfo.CreateSpecificCulture("es-MX");
-                string salida = this.fechaInicio.ToString("dd/MMMM/yy", cult);
-                salida+=" - "+ this.fechaFin.ToString("dd/MMMM/yy", cult);
+                string salida = this.fechaInicio.ToString("dd/MMM/yy");
+                salida+=" - "+ this.fechaFin.ToString("dd/MMM/yy");
                 return salida;
             } }
 

@@ -11,7 +11,7 @@
         .OrderBy(mov => mov.fechaMovimiento).ToList();
 
     movimientos = movimientos.OrderBy(mov => mov.fechaMovimiento).ToList();
-
+    LiquidacionSemanal.VMTotalesLiquidacion totales = new LiquidacionSemanal.VMTotalesLiquidacion(movimientos);
 }
 
 @if (Model != null && movimientos.Count() > 0)
@@ -42,7 +42,7 @@
                     @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
                     && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"pagado":"")">
                         <td>
-                            @Html.DisplayFor(modelItem => item.fechaMovimiento)
+                            @item.fechaMovimiento.ToString("dd/MM/yyyy")
                         </td>
                         <td class='@(item.montoMovimiento<0?"montoNegativo":"")'>
                             @Html.DisplayFor(modelItem => item.montoMovimiento)
@@ -96,9 +96,9 @@ else
         <strong>No existen</strong> ingresos ni liquidaciones en este periodo.
     </div>
 }
+<div class="pull-right" style="padding-right:2em">
+    <span><strong style="color:red">TOTAL DE INGRESOS: </strong>@Math.Abs(totales.ingresos).ToString("C")</span> |
+    <span><Strong style="color:red">TOTAL LIQUIDADO: </Strong>@Math.Abs(totales.liquidado).ToString("C")</span> |
+    <span><Strong style="color:red">TOTAL RETENIDO: </Strong>@Math.Abs(totales.retenido).ToString("C")</span>
+</div>
 
-<script>
-    function submitBusqueda(ddl) {
-        $(ddl).closest("form").submit();
-    }
-</script>

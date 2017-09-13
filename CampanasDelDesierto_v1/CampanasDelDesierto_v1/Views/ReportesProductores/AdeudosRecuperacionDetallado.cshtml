@@ -7,6 +7,7 @@
     //Se determina el año de la cosecha anterior
     TemporadaDeCosecha temporada = ViewBag.temporada;
     TemporadaDeCosecha temporadaAnterior = ViewBag.temporadaAnterior;
+    //Se determina el año de la temporada anterior, si no existe temporada anterior, se toma el año de la fecha inicial de la temporada actual
     int anioAnterior = temporadaAnterior == null ? temporada.fechaInicio.Year : temporadaAnterior.fechaFin.Year;
 
     //Se calcula el registro de sumas totales de todos los campos
@@ -23,6 +24,7 @@
 
 <h3>@temporada.ToString().ToUpper()</h3>
 <table id="tblReporteDetallado" class="table table-hover table-striped table-responsive">
+    @***Encabezado del reporte***@
     <thead>
         <tr>
             @*<th>Num. Prod.</th>*@
@@ -60,6 +62,7 @@
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
             @*Deudas de arbolitos*@
+            <th class="monto-cosecha-anterior">@Html.DisplayNameFor(model => model.adeudoVentaArbolesAnteriorCosecha) @(anioAnterior)</th>
             <th>@Html.DisplayNameFor(model => model.adeudoArboles)</th>
             <th>@Html.DisplayNameFor(model => model.abonoArbolitos)</th>
             <th class="deuda">@Html.DisplayNameFor(model => model.adeudoArbolitosPorRecuperar)</th>
@@ -75,6 +78,7 @@
         </tr>
     </thead>
     <tbody>
+        @***Renglon de totales***@
         <tr class="rowTotales">
             <td>TOTALES</td>
             @*Adeudos*@
@@ -107,6 +111,7 @@
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
             @*Arbolitos*@
+            <td class="monto-cosecha-anterior">@Html.DisplayFor(model => rowTotales.adeudoVentaArbolesAnteriorCosecha)</td>
             <td>@Html.DisplayFor(model => rowTotales.adeudoArboles)</td>
             <td>@Html.DisplayFor(model => rowTotales.abonoArbolitos)</td>
             <td class="deuda">@Html.DisplayFor(model => rowTotales.adeudoArbolitosPorRecuperar)</td>
@@ -160,6 +165,7 @@
                 border-left: 1px solid black; border-right: 1px solid black;"></td>
 
                 @*Adeudo por arboles*@
+                <td>@Html.DisplayFor(model => item.adeudoVentaArbolesAnteriorCosecha)</td>
                 <td>@Html.DisplayFor(model => item.adeudoArboles)</td>
                 <td>@Html.DisplayFor(model => item.abonoArbolitos)</td>
                 <td class="deuda">@Html.DisplayFor(model => item.adeudoArbolitosPorRecuperar)</td>

@@ -5,6 +5,7 @@
 @{
     //Determa si la pantalla se encuentra en modo de edicion
     bool editMode = Model.idMovimiento > 0;
+    Productor productor = Model.Productor;
 
     //Es reporte de liquidacion
     bool reportMode = ViewBag.reportMode != null? ViewBag.reportMode : false;
@@ -17,19 +18,17 @@
     string errorMessagePrecioDolar = String.Empty;
     decimal precioDolar = 0;
 
-    if(editMode || reportMode)
+    //Si es edicion o reporte, el precio del dolar sera el ya registrado registrado originalmente
+    if (editMode || reportMode)
     {
         precioDolar = Model.precioDelDolarEnLiquidacion;
-    }else
+    }else //Si no, se toma el dolar de dia
     {
         precioDolar = bws.getCambioDolar(ref errorMessagePrecioDolar);
     }
 
     //Objeto para la forma de retenciones
     LiquidacionSemanal.VMRetenciones retenciones = new LiquidacionSemanal.VMRetenciones();
-
-    Productor productor = Model.Productor;
-
     bool actualizar = false;
     if (editMode)
     {
@@ -200,7 +199,8 @@
                         @Html.ValidationMessageFor(model => model.precioDelDolarEnLiquidacion, "", new { @class = "text-danger hidden-print" })
                     </div>
                     <div class="col-xs-5 @(reportMode?"hidden":"")">
-                        <a class="satLogo" target="_blank"
+                        <br />
+                        <a class="satLogo" target="_blank" title="Ver precio del dólar según el SAT"
                            href="http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Paginas/tipo_cambio.aspx">
                             <img src="/images/sat_logo.png" />
                         </a>
@@ -529,7 +529,7 @@
             })
         }
 
-        @if(!editMode && !reportMode) {
+        @if(!editMode && !reportMode && Model.precioDelDolarEnLiquidacion==0) {
             @("setPrecioDolar()");
         }
     </script>

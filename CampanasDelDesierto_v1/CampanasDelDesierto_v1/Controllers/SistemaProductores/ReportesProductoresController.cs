@@ -75,6 +75,7 @@ namespace CampanasDelDesierto_v1.Controllers.SistemaProductores
             return View(prod);
         }
 
+        [HttpGet]
         public ActionResult LiquidacionDeAceituna(int id, int productorID)
         {
             var prod = db.Productores.Find(productorID);

@@ -52,9 +52,13 @@ vddListMovimientos.Add("temporada", temporada);
 </div>*@
 
 @*Ventas de arbol de olivo*@
+@{ 
+    ViewDataDictionary vddListOlivo = new ViewDataDictionary();
+    vddListOlivo.Add("showTotals", false);
+}
 <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
 <div class="row">
-    @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo")
+    @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo",Model, vddListOlivo)
 </div>
 
 
@@ -134,6 +138,10 @@ vddListMovimientos.Add("temporada", temporada);
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => reporte.adeudoVentaArbolesAnteriorCosecha)</th>
+                    <td>@Html.DisplayFor(model => reporte.adeudoVentaArbolesAnteriorCosecha)</td>
+                </tr>
                 <tr>
                     <th>@Html.DisplayNameFor(model => reporte.adeudoArboles)</th>
                     <td>@Html.DisplayFor(model => reporte.adeudoArboles)</td>

@@ -9,17 +9,19 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
 {
     public class AdeudoInicial : MovimientoFinanciero
     {
+        public AdeudoInicial() {}
+
         public AdeudoInicial(VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales totales, 
             TemporadaDeCosecha temporada, Productor productor, bool isVentas = false)
         {
             if (isVentas) { //Deuda inicial de venta a credito
-                this.montoMovimiento =- (Math.Abs(totales.ventasACredito) + Math.Abs(totales.deudaCapitalInicial));
+                this.montoMovimiento =-(Math.Abs(totales.saldoVentasACredito));
                 this.interesInicial = 0;
             }
             else //Deuda inicial de anticipos de capital
             {
-                this.montoMovimiento =-( Math.Abs(totales.anticiposEfectivo) + Math.Abs(totales.deudaVentasInicial));
-                this.interesInicial = totales.interes;
+                this.montoMovimiento =-( Math.Abs(totales.saldoAnticiposCapital));
+                this.interesInicial = totales.saldoInteres;
             }
 
             this.idProductor = productor.idProductor;
@@ -30,8 +32,18 @@ namespace CampanasDelDesierto_v1.Models.SistemaProductores
             this.isVentas = isVentas;
         }
 
-        public AdeudoInicial()
+        public AdeudoInicial(decimal balanceAnteriorArbolesOlivo, TemporadaDeCosecha tem, Productor productor,
+            bool v,TipoDeBalance tipoBalance)
         {
+            this.montoMovimiento = balanceAnteriorArbolesOlivo;
+            this.balance = balanceAnteriorArbolesOlivo;
+            this.idProductor = productor.idProductor;
+            this.Productor = productor;
+            this.TemporadaDeCosechaID = tem.TemporadaDeCosechaID;
+            this.temporadaDeCosecha = tem;
+            this.fechaMovimiento = tem.fechaFin;
+            this.isVentas = isVentas;
+            this.balanceAdeudado = tipoBalance;
         }
 
         [DisplayName("Balance Adeudado")]
