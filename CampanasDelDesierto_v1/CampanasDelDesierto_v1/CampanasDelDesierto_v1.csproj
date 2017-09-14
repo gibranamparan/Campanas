@@ -254,6 +254,7 @@
     <Compile Include="Controllers\SistemaProductores\RecepcionDeProductosController.cs" />
     <Compile Include="Controllers\SistemaActivos\SucursalesController.cs" />
     <Compile Include="Controllers\SistemaProductores\ReportesProductoresController.cs" />
+    <Compile Include="Controllers\SistemaProductores\RetencionController.cs" />
     <Compile Include="Controllers\SistemaProductores\TemporadaDeCosechasController.cs" />
     <Compile Include="Controllers\SistemaProductores\VentaACreditosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -427,6 +428,10 @@
     <Compile Include="Migrations\201708232217532_requieredFields_Productores.Designer.cs">
       <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.cs" />
+    <Compile Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.Designer.cs">
+      <DependentUpon>201709132017415_nuevatabla_retencionesDeCheques.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
@@ -448,6 +453,7 @@
     <Compile Include="Models\SistemaProductores\ReportesViewModels.cs" />
     <Compile Include="Models\SistemaProductores\Retencion.cs" />
     <Compile Include="Models\SistemaActivos\Sucursal.cs" />
+    <Compile Include="Models\SistemaProductores\RetencionCheque.cs" />
     <Compile Include="Models\SistemaProductores\TemporadaDeCosecha.cs" />
     <Compile Include="Models\SistemaProductores\VentaACredito.cs" />
     <Compile Include="Models\SistemaProductores\Productor.cs" />
@@ -778,6 +784,8 @@
     <Content Include="Views\Departamentos\_PartialCreateInventario.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionDeAceituna.cshtml" />
+    <Content Include="Views\Retencion\cheques.cshtml" />
+    <Content Include="Views\Retencion\Form_RetencionCheque.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -911,6 +919,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708232217532_requieredFields_Productores.resx">
       <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.resx">
+      <DependentUpon>201709132017415_nuevatabla_retencionesDeCheques.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

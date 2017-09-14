@@ -44,7 +44,8 @@ namespace CampanasDelDesierto_v1.Controllers
         /// <param name="productor"></param>
         /// <param name="semanaLiquidada"></param>
         /// <returns></returns>
-        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada, TemporadaDeCosecha temporada, decimal precioDelDolarEnLiquidacion)
+        private LiquidacionSemanal prepararVistaCrear(Productor productor, TimePeriod semanaLiquidada, 
+            TemporadaDeCosecha temporada, decimal precioDelDolarEnLiquidacion)
         {
             LiquidacionSemanal mov = new LiquidacionSemanal();
             mov.idProductor = productor.idProductor;

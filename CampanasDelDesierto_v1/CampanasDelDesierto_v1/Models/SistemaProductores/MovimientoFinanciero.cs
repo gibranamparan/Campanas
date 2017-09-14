@@ -390,6 +390,8 @@ namespace CampanasDelDesierto_v1.Models
                 return "LiquidacionSemanal";
             else if (tom == TypeOfMovements.ADEUDO_INICIAL)
                 return "AdeudoInicial";
+            else if (tom == TypeOfMovements.RENTENCION)
+                return "Retencion";
             else
                 return "";
         }

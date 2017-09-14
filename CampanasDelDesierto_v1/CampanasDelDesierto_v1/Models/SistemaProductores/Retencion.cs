@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CampanasDelDesierto_v1.Models.SistemaProductores;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,8 +15,50 @@ namespace CampanasDelDesierto_v1.Models
         [ForeignKey("liquidacionSemanal")]
         public int liquidacionSemanalID { get; set; }
         public virtual LiquidacionSemanal liquidacionSemanal { get; set; }
-
         public TipoRetencion tipoDeDeduccion { get; set; }
+
+        public Retencion() { }
+        public Retencion(LiquidacionSemanal emisionDeCheque, decimal monto, TipoRetencion td)
+        {
+            this.montoMovimiento = monto;
+            this.fechaMovimiento = emisionDeCheque.fechaMovimiento;
+            this.liquidacionSemanalID = emisionDeCheque.idMovimiento;
+            this.TemporadaDeCosechaID = emisionDeCheque.TemporadaDeCosechaID;
+            this.idProductor = emisionDeCheque.idProductor;
+            this.tipoDeDeduccion = td;
+            this.ajustarMovimiento();
+        }
+
+        /// <summary>
+        /// Cheques generados para liberar el pago de rentecion.
+        /// </summary>
+        [DisplayName("Cheques de Pago de Retención")]
+        public virtual ICollection<RetencionCheque> cheques { get; set; }
+
+        [DisplayName("Monto pagado")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal montoPagado
+        {
+            get
+            {
+                decimal res = 0;
+                if (this.cheques != null && this.cheques.Count() > 0)
+                    res = cheques.Sum(mov => mov.monto);
+                return res;
+            }
+        }
+
+        [DisplayName("Monto por pagar")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
+        public decimal montoPorPagar
+        {
+            get{return Math.Abs(this.montoMovimiento) - Math.Abs(montoPagado);}
+        }
+
+        [DisplayName("Pagada")]
+        public bool estaPagada { get {
+                return this.montoPorPagar <= 0;
+            } }
 
         public string nombreTipoDeduccion { get {
                 if (this.tipoDeDeduccion == TipoRetencion.EJIDAL)
@@ -37,9 +81,6 @@ namespace CampanasDelDesierto_v1.Models
             get
             {
                 string abonoTipo = this.nombreTipoDeduccion;
-                //if(this.tipoDeDeduccion == TipoRetencion.ABONO_ANTICIPO && this.liquidacionSemanal.abonoAnticipo!=null)
-                //abonoTipo = this.liquidacionSemanal.abonoAnticipo.tipoDeMovimientoDeCapital;
-
                 return String.Format($"RETENCION: {abonoTipo}. CH: {this.liquidacionSemanal.cheque}");
             }
         }
@@ -62,18 +103,6 @@ namespace CampanasDelDesierto_v1.Models
         {
             this.montoMovimiento *= -1;
             base.ajustarMovimiento();
-        }
-
-        public Retencion() { }
-        public Retencion(LiquidacionSemanal emisionDeCheque, decimal monto, TipoRetencion td)
-        {
-            this.montoMovimiento = monto;
-            this.fechaMovimiento = emisionDeCheque.fechaMovimiento;
-            this.liquidacionSemanalID = emisionDeCheque.idMovimiento;
-            this.TemporadaDeCosechaID = emisionDeCheque.TemporadaDeCosechaID;
-            this.idProductor = emisionDeCheque.idProductor;
-            this.tipoDeDeduccion = td;
-            this.ajustarMovimiento();
         }
     }
 }

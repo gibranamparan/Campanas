@@ -39,8 +39,10 @@
                 @foreach (var item in movimientos)
                 {
                     <tr class="@(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.LIQUIDACION?"liquidacion":"")
-                    @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
-                    && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"pagado":"")">
+                            @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO
+                                && ((PagoPorProducto)item).liquidacionDeCosechaID!=null?"pagado":"")
+                             @(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION
+                                && ((Retencion)item).estaPagada?"pagado":"")">
                         <td>
                             @item.fechaMovimiento.ToString("dd/MM/yyyy")
                         </td>
@@ -51,11 +53,15 @@
                             @Html.DisplayFor(modelItem => item.nombreDeMovimiento)
                         </td>
                         <td style="width: 20em">
-                            @Html.DisplayFor(modelItem => item.concepto)
+                            <span>@Html.DisplayFor(modelItem => item.concepto)</span>
+                            @*Se muestra en el registro de la retencion el monto por pagar para esta retencion en caso de no estar pagada*@
+                            @if(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION && !((Retencion)item).estaPagada)
+                            {
+                                <span>@Html.DisplayNameFor(model=>((Retencion)item).montoPorPagar): 
+                                    @Html.DisplayFor(model => ((Retencion)item).montoPorPagar)</span>
+                            }
                         </td>
                         <td class="hidden-print">
-                            @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION))
-                            {
                                 <div class="dropdown_actions">
                                     <button onclick="openActionsDropDown(this)"
                                             class="dropbtn btn btn-default">
@@ -63,26 +69,35 @@
                                     </button>
                                     <div id="myDropdown"
                                          class="dropdown-content">
-                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION))
+                                        {   //Opciones para liquidaciones y ingresos de cosecha
+                                            if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                            {
+                                                <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
+                                                    <i class="glyphicon glyphicon-edit"></i> Editar
+                                                </a>
+                                            }
+
+                                            <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
+                                                <i class="glyphicon glyphicon-print"></i> Detalles
+                                            </a>
+
+                                            if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                            {
+                                                <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
+                                                    <i class="glyphicon glyphicon-remove"></i> Borrar
+                                                </a>
+                                            }
+                                        }
+                                        else //Opciones para retenciones
                                         {
-                                            <a href="@Url.Action("Edit",item.getNombreControlador(), new { id = item.idMovimiento })">
-                                                <i class="glyphicon glyphicon-edit"></i> Editar
+                                            <a href="@Url.Action("cheques",item.getNombreControlador(), new { id = item.idMovimiento })">
+                                                <i class="fa fa-money"></i> Cheques
                                             </a>
                                         }
 
-                                        <a href="@Url.Action("Details","MovimientoFinancieros", new { id = item.idMovimiento })">
-                                            <i class="glyphicon glyphicon-print"></i> Detalles
-                                        </a>
-
-                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
-                                        {
-                                            <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
-                                                <i class="glyphicon glyphicon-remove"></i> Borrar
-                                            </a>
-                                        }
                                     </div>
                                 </div>
-                            }
                         </td>
                     </tr>
                 }

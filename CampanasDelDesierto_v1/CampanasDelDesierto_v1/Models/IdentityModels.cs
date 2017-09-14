@@ -82,6 +82,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<LiquidacionSemanal> LiquidacionesSemanales { get; set; }
         public DbSet<RecepcionDeProducto> RecepcionesDeProducto { get; set; }
         public DbSet<Retencion> Retenciones { get; set; }
+        public DbSet<RetencionCheque> ChequesDeRetenciones { get; set; }
         public DbSet<TemporadaDeCosecha> TemporadaDeCosechas { get; set; }
         public DbSet<PrestamoYAbonoCapital.Prestamo_Abono> Prestamo_Abono { get; set; }
         public DbSet<AdeudoInicial> AdeudosIniciales { get; set; }

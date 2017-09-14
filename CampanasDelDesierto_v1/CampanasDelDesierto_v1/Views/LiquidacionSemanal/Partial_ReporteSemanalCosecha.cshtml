@@ -33,8 +33,11 @@ if (!isReporteLiquidacionFinalFruta)
 }
 <div class="panel panel-@(isTotalPeriodo?"primary":"info")">
     <div class="panel-heading">
+        @*Muestra el titulo "Reporte Total de Temporada de Cosecha" o "Reporte De Semana" con el numero correspondinete*@
         <div style="display:inline-block;"><h3 class="panel-title">Reporte @(isTotalPeriodo?"Total de Temporada de Cosecha":
             "de Semana "+ (liquidacion!=null?("#"+liquidacion.semana):"")) (@semanaLiquidada)</h3></div>
+
+        @*Si se esta mostrando un reporte, se da la opcion de abrir un panel de detalles donde se enlistan todos los recibos de fruta liquidados*@
         @if (!isReporteLiquidacionFinalFruta) { 
             <a href="#" class="pull-right hidden-print @(ingresosDeCosecha.Count()==0?"hidden":"")"
                     data-toggle="modal" data-target="#@modalDetalleReporteSemanalOpt.modalID">
@@ -147,16 +150,6 @@ if (!isReporteLiquidacionFinalFruta)
                 </div>
             </div>
         }
-
-        @*Boton que despliega una lista de todos los recibos que componen el reporte
-    <div class="form-group col-md-2 pull-right">
-        <button class="btn btn-info hidden-print
-                @(ingresosDeCosecha.Count()==0?"hidden":"")"
-                data-toggle="modal"
-                data-target="#@modalDetalleReporteSemanalOpt.modalID">
-            Detalles de reporte
-        </button>
-    </div>*@
     </div>
 </div>
 

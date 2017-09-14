@@ -1,0 +1,71 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model CampanasDelDesierto_v1.Models.SistemaProductores.RetencionCheque
+@{ 
+    bool editMode = Model.chequeID > 0;
+    string accion = "crear";
+    Retencion retencion = (Retencion)ViewData["retencion"];
+    Model.fecha = DateTime.Now;
+}
+<div class="panel panel-primary" id="pnlFormaRegistroCheque">
+    <div class="panel-heading" onclick="changeIcon(this)"
+         data-toggle="collapse" data-target="#pnl_body_cheques">
+        <span class="panel-title">Registro de Cheque de Pago</span>
+        <i class="pull-right fa fa-window-maximize"></i>
+    </div>
+    <div class="panel-body collapse in" id="pnl_body_cheques">
+        @using (@Html.BeginForm(accion, "Retencion", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.Hidden("retencionID", retencion.idMovimiento)
+            @Html.HiddenFor(model=>model.chequeID)
+            <div class="row">
+                <div class="form-group col-xs-4 col-md-4">
+                    @Html.LabelFor(model => model.numCheque, new { @class = "control-label" })
+                    @Html.EditorFor(model => model.numCheque, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.numCheque, "", new { @class = "text-danger hidden-print" })
+                </div>
+                <div class="form-group col-xs-4 col-md-4">
+                    @Html.LabelFor(model => model.fecha, new { @class = "control-label" })
+                    @Html.EditorFor(model => model.fecha, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.fecha, "", new { @class = "text-danger hidden-print" })
+                </div>
+                <div class="form-group col-xs-4 col-md-4">
+                    @Html.LabelFor(model => model.monto, new { @class = "control-label" })
+                    @Html.EditorFor(model => model.monto, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               data_mask_reverse = "true",
+                               data_mask = "###0.00",
+                               onkeyup = "validarMontoCheque(this)"
+                           }
+                       })
+                    @Html.ValidationMessageFor(model => model.monto, "", new { @class = "text-danger hidden-print" })
+                </div>
+            </div>
+            <div class="form-group col-xs-2 col-md-2">
+                <button id="btnRegistrar" class="btn btn-primary" 
+                    @(retencion.estaPagada?"disabled":"")> Registrar
+                </button>
+            </div>
+            <div class="alert alert-danger col-xs-8 col-md-8" id="divChequeInvalido" style="display:none">
+                El monto del nuevo cheque es mayor a la cantidad por liquidar.
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var montoMax = @(Math.Abs(retencion.montoPorPagar));
+    function validarMontoCheque(inputMonto){
+        var valid = currencyToNumber(inputMonto.value) <= montoMax;
+        document.getElementById("btnRegistrar").disabled = !valid;
+        $('#divChequeInvalido').fadeInOrOut(!valid);
+    }
+
+    function bloquear_forma_cheque(){
+        $('#pnl_body_cheques form input').prop('disabled',true);
+        $('#pnlFormaRegistroCheque .panel-heading').trigger('click')
+    }
+</script>
