@@ -428,9 +428,9 @@
     <Compile Include="Migrations\201708232217532_requieredFields_Productores.Designer.cs">
       <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.cs" />
-    <Compile Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.Designer.cs">
-      <DependentUpon>201709132017415_nuevatabla_retencionesDeCheques.cs</DependentUpon>
+    <Compile Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.cs" />
+    <Compile Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.Designer.cs">
+      <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -920,8 +920,8 @@
     <EmbeddedResource Include="Migrations\201708232217532_requieredFields_Productores.resx">
       <DependentUpon>201708232217532_requieredFields_Productores.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201709132017415_nuevatabla_retencionesDeCheques.resx">
-      <DependentUpon>201709132017415_nuevatabla_retencionesDeCheques.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.resx">
+      <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

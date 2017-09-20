@@ -1,30 +1,35 @@
 ﻿@using CampanasDelDesierto_v1.HerramientasGenerales
 @using System.Globalization;
-@model CampanasDelDesierto_v1.Models.LiquidacionSemanal
+@model CampanasDelDesierto_v1.Models.LiquidacionSemanal.VMDatosDeCheque
 @using CampanasDelDesierto_v1.Models;
 
 @{
     Layout = null;
-    Model.montoMovimiento *= -1;
+    Model.montoMovimiento = Math.Abs(Model.montoMovimiento);
     string currency = "Dólares";
-   
 }
     
 <!DOCTYPE html>
-
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Impresion de Cheque - Campanas del Desierto</title>
-</head>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Impresion de Cheque - Campanas del Desierto</title>
+    </head>
 <body>
     <div id="pnlCheque">
-        <img src="~/images/Cheque.jpg"Width="1275" Heigth="3507" important! />
+        <img src="~/images/Cheque.jpg" />
         <span id="nombreCheque">
-            @Html.DisplayFor(model => model.Productor.nombreCheque)
+            @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+            {
+                @Html.DisplayFor(model => model.productor.nombreCheque)
+            }
+            @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+            {
+                <input value="@Html.DisplayFor(model => model.productor.nombreCheque)"/>
+            }
         </span>
         <span id="montoMovimiento">   
-        @Html.DisplayFor(model => model.montoMovimiento)
+            @(Math.Abs(Model.montoMovimiento).ToString("C"))
         </span>
         <span id="montoLetra">
             <a>Son:</a>  @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency).Replace(",","")) U.S.Cy.
@@ -32,16 +37,23 @@
         <span id="fechaMovimiento">
             @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
         </span>
-        @*<span id="cheque">
-        @Html.DisplayFor(model => model.cheque)
-    </span>*@
-            <span id="concepto">
-               <a>Productor: </a>@Html.DisplayFor(model => model.Productor.numProductor)<br />
-                <a>Semana: </a>@( "No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX")) + " al "+ Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy", CultureInfo.CreateSpecificCulture("es-MX")))
-                 </span>
-        </div>
+        <span id="concepto">
+            <a>Productor: </a>@Html.DisplayFor(model => model.productor.numProductor)
+            <br />
+            @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
+            { 
+                <a>Semana: </a>
+                @("No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy") 
+                    + " al " + Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy"))
+            }
+            @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+            {
+                <a>Liberación de </a>@(Model.nombreRetencion)
+            }
+        </span>
+    </div>
 
-        <style>
+    <style>
             *{
                 margin: 0;
                 padding: 0;
@@ -62,6 +74,11 @@
                 left: 18mm;
                 top: 38mm;
                 font-size: 1em;
+            }
+
+            span#nombreCheque input{
+                font-size: 1em;
+                width: 30em;
             }
 
             span#montoMovimiento {
@@ -116,8 +133,13 @@
                 #pnlCheque img {
                     display:none;
                 }
+
+                span input {
+                    background: none;
+                    border: none;
+                }
             }
         </style>
     </body>
-    </html>
+</html>
 

@@ -1,4 +1,5 @@
 ﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using CampanasDelDesierto_v1.Models.SistemaProductores;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -242,6 +243,37 @@ namespace CampanasDelDesierto_v1.Models
                         this.garantiaAcumulada -= this.garantiaSemana;
                     }
                 }
+            }
+        }
+
+        public class VMDatosDeCheque
+        {
+            public TypeOfMovements tipoDeMovimiento { get; set; }
+            public Productor productor { get; set; }
+            public decimal montoMovimiento { get; set; }
+            public DateTime fechaMovimiento { get; set; }
+            public string nombreRetencion { get; set; }
+
+            public int semana { get; set; }
+            public TimePeriod semanaLiquidada { get; set; }
+
+            public VMDatosDeCheque() { }
+            public VMDatosDeCheque(LiquidacionSemanal mov)
+            {
+                this.tipoDeMovimiento = mov.getTypeOfMovement();
+                this.productor = mov.Productor;
+                this.montoMovimiento = mov.montoMovimiento;
+                this.fechaMovimiento = mov.fechaMovimiento;
+                this.semanaLiquidada = mov.semanaLiquidada;
+                this.semana = mov.semana;
+            }
+            public VMDatosDeCheque(RetencionCheque mov)
+            {
+                this.tipoDeMovimiento = TypeOfMovements.RENTENCION;
+                this.productor = mov.productor;
+                this.montoMovimiento = mov.monto;
+                this.fechaMovimiento = mov.fecha;
+                this.nombreRetencion = mov.nombreTipoDeduccion;
             }
         }
     }

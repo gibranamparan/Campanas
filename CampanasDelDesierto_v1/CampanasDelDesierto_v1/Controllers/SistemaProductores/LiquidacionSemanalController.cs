@@ -546,7 +546,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            return View("Cheque", emisionDeCheque);
+            LiquidacionSemanal.VMDatosDeCheque datosCheque = new LiquidacionSemanal.VMDatosDeCheque(emisionDeCheque);
+            return View("Cheque", datosCheque);
         }
 
         protected override void Dispose(bool disposing)

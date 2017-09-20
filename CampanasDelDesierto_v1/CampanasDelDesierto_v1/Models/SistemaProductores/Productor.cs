@@ -59,6 +59,67 @@ namespace CampanasDelDesierto_v1.Models
         [DisplayName("Desactivado")]
         public bool Desactivado { get; set; }
         
+        /// <summary>
+        /// Coleccion de movimientos financieros registrados al productor.
+        /// </summary>
+        public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
+
+        /// <summary>
+        /// Conjunto de recibos de ingreso de cosecha que los productores hacen durante el fin de la temporada.
+        /// </summary>
+        public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
+
+        /// <summary>
+        /// Cheques generados para liberar el pago de rentecion.
+        /// </summary>
+        [DisplayName("Cheques de Pago de Retención")]
+        public virtual ICollection<RetencionCheque> cheques { get; set; }
+
+        public Productor() { }
+        /// <summary>
+        /// Constructor que crea una copia selectiva de otra instancia del productor
+        /// </summary>
+        /// <param name="otro"></param>
+        public Productor(Productor otro)
+        {
+            this.numProductor = otro.numProductor;
+            this.nombreProductor = otro.nombreProductor;
+            this.zona = otro.zona;
+            this.domicilio = otro.domicilio;
+            this.RFC = otro.RFC;
+            this.nombreCheque = otro.nombreCheque;
+            this.nombreRepresentanteLegal = otro.nombreRepresentanteLegal;
+            this.fechaIntegracion = otro.fechaIntegracion;
+        }
+        public Productor(ExcelRange rowProductor, ref ExcelTools.ExcelParseError error)
+        {
+            error = new ExcelTools.ExcelParseError();
+            try
+            {
+                this.numProductor = rowProductor.ElementAt((int)ExcelColumns.NUM).Value.ToString().Trim();
+                this.nombreProductor = rowProductor.ElementAt((int)ExcelColumns.NOMBRE).Value.ToString();
+                this.domicilio = rowProductor.ElementAt((int)ExcelColumns.DIRECCION).Value.ToString();
+                this.RFC = rowProductor.ElementAt((int)ExcelColumns.RFC).Value.ToString();
+                this.zona = rowProductor.ElementAt((int)ExcelColumns.ZONA).Value.ToString();
+                this.zona = this.zona.Replace("Zona", "").Trim();
+                this.nombreCheque = rowProductor.ElementAt((int)ExcelColumns.NOMBRE_DEL_CHEQUE).Value.ToString();
+
+                this.fechaIntegracion = DateTime.Today;
+            }
+            catch (NullReferenceException exc)
+            {
+                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
+                error.registro = new Productor(this);
+            }
+            catch (Exception exc)
+            {
+                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
+                error.registro = new Productor(this);
+            }
+        }
+
+        
+
         public decimal totalDeudaBalanceAnticiposPorTemporada(int temporadaID)
         {
             decimal res = 0;
@@ -99,8 +160,6 @@ namespace CampanasDelDesierto_v1.Models
                     .Where(mov => mov.isVentaDeArbolOlivo || mov.isAdeudoInicialVentaOlivo);
                 res = movimientos.Sum(mov => mov.montoMovimiento);
             }
-
-
 
             return res;
         }
@@ -368,52 +427,6 @@ namespace CampanasDelDesierto_v1.Models
                 }
             }
             return res;
-        }
-
-        public virtual ICollection<MovimientoFinanciero> MovimientosFinancieros { get; set; }
-
-        //Los productores tienen recepciones de producto
-        public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
-
-        public Productor() { }
-
-        public Productor(ExcelRange rowProductor, ref ExcelTools.ExcelParseError error)
-        {
-            error = new ExcelTools.ExcelParseError();
-            try
-            {
-                this.numProductor = rowProductor.ElementAt((int)ExcelColumns.NUM).Value.ToString().Trim();
-                this.nombreProductor = rowProductor.ElementAt((int)ExcelColumns.NOMBRE).Value.ToString();
-                this.domicilio = rowProductor.ElementAt((int)ExcelColumns.DIRECCION).Value.ToString();
-                this.RFC = rowProductor.ElementAt((int)ExcelColumns.RFC).Value.ToString();
-                this.zona = rowProductor.ElementAt((int)ExcelColumns.ZONA).Value.ToString();
-                this.zona = this.zona.Replace("Zona", "").Trim();
-                this.nombreCheque = rowProductor.ElementAt((int)ExcelColumns.NOMBRE_DEL_CHEQUE).Value.ToString();
-
-                this.fechaIntegracion = DateTime.Today;
-            }
-            catch (NullReferenceException exc)
-            {
-                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
-                error.registro = new Productor(this);
-            }
-            catch (Exception exc)
-            {
-                error = ExcelTools.ExcelParseError.errorFromException(exc, rowProductor);
-                error.registro = new Productor(this);
-            }
-        }
-
-        public Productor(Productor otro)
-        {
-            this.numProductor = otro.numProductor;
-            this.nombreProductor = otro.nombreProductor;
-            this.zona = otro.zona;
-            this.domicilio = otro.domicilio;
-            this.RFC = otro.RFC;
-            this.nombreCheque = otro.nombreCheque;
-            this.nombreRepresentanteLegal = otro.nombreRepresentanteLegal;
-            this.fechaIntegracion = otro.fechaIntegracion;
         }
 
         /// <summary>
@@ -1134,6 +1147,75 @@ namespace CampanasDelDesierto_v1.Models
             });
 
             return totalesProducto;
+        }
+
+        public class VMLiberacionRetencionesStatus
+        {
+            public Productor productor { get; set; }
+            public TemporadaDeCosecha temporada { get; set; }
+            public Retencion.TipoRetencion tipoRetencion { get; set; }
+            public List<RetencionCheque> cheques { get; set; }
+
+            public VMLiberacionRetencionesStatus() { }
+            public VMLiberacionRetencionesStatus(Productor productor, TemporadaDeCosecha temporada, 
+                Retencion.TipoRetencion tipoRetencion)
+            {
+                this.productor = productor;
+                this.temporada = temporada;
+                this.tipoRetencion = tipoRetencion;
+                this.cheques = this.productor.cheques.Where(ch => ch.tipoDeDeduccion == tipoRetencion).ToList();
+            }
+
+            [DisplayName("Monto Liberado")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal montoLiberado
+            {
+                get
+                {
+                    decimal res = 0;
+                    if (this.cheques != null && this.cheques.Count() > 0)
+                        res = this.productor.cheques.Where(ch => ch.tipoDeDeduccion == this.tipoRetencion
+                        && ch.temporadaID == temporada.TemporadaDeCosechaID).Sum(mov => mov.monto);
+
+                    return res;
+                }
+            }
+
+            [DisplayName("Monto Total Retenido")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal montoTotalRetenido {
+                get{
+                    decimal res = 0;
+                    var movs = this.productor.MovimientosFinancieros
+                        .Where(mov => mov.TemporadaDeCosechaID == temporada.TemporadaDeCosechaID
+                            && mov.getTypeOfMovement() == TypeOfMovements.RENTENCION
+                            && ((Retencion)mov).tipoDeDeduccion == this.tipoRetencion)
+                        .ToList();
+
+                    if (movs != null && movs.Count() > 0)
+                    { res = movs.Sum(mov => mov.montoMovimiento); }
+
+                    return Math.Abs(res);
+                }
+            }
+
+            [DisplayName("Monto aún retenido")]
+            [DisplayFormat(DataFormatString = "{0:C}")]
+            public decimal montoAunRetenido
+            {
+                get { return Math.Abs(this.montoTotalRetenido) - Math.Abs(this.montoLiberado);  }
+            }
+
+            [DisplayName("Pagada")]
+            public bool isRetencionesPagadas
+            {
+                get { return this.montoAunRetenido <= 0; }
+            }
+
+            [DisplayName("Retención")]
+            public string nombreTipoRetencion { get {
+                    return Retencion.getNombreTipoRetencion(this.tipoRetencion);
+                } }
         }
     }
 }

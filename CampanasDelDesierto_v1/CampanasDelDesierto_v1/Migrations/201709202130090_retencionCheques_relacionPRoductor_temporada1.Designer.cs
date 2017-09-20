@@ -7,13 +7,13 @@ namespace CampanasDelDesierto_v1.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class nuevatabla_retencionesDeCheques : IMigrationMetadata
+    public sealed partial class retencionCheques_relacionPRoductor_temporada1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(nuevatabla_retencionesDeCheques));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(retencionCheques_relacionPRoductor_temporada1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201709132017415_nuevatabla_retencionesDeCheques"; }
+            get { return "201709202130090_retencionCheques_relacionPRoductor_temporada1"; }
         }
         
         string IMigrationMetadata.Source

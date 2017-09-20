@@ -1,4 +1,5 @@
 ﻿using CampanasDelDesierto_v1.HerramientasGenerales;
+using CampanasDelDesierto_v1.Models.SistemaProductores;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,6 @@ namespace CampanasDelDesierto_v1.Models
             } }
 
         //TIPOS DE PRODUCTO
-
         /*MANZANITA CABORCA*/
         [DisplayFormat(DataFormatString = "{0:C}",
         ApplyFormatInEditMode = true)]
@@ -113,8 +113,16 @@ namespace CampanasDelDesierto_v1.Models
         //Los movimientos financieros se registran dentro de una temporada de cosecha
         public virtual ICollection<MovimientoFinanciero> movimientosFinancieros { get; set; }
 
-        //Los movimientos financieros se registran dentro de una temporada de cosecha
+        /// <summary>
+        /// Los movimientos financieros se registran dentro de una temporada de cosecha
+        /// </summary>
         public virtual ICollection<RecepcionDeProducto> recepcionesDeProducto { get; set; }
+
+        /// <summary>
+        /// Cheques generados para liberar el pago de rentecion.
+        /// </summary>
+        [DisplayName("Cheques de Pago de Retención")]
+        public virtual ICollection<RetencionCheque> cheques { get; set; }
 
         /// <summary>
         /// Almancena en base de datos todos los registros de ingreso de productos 

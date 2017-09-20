@@ -3,7 +3,8 @@
 @{ 
     bool editMode = Model.chequeID > 0;
     string accion = "crear";
-    Retencion retencion = (Retencion)ViewData["retencion"];
+    Productor.VMLiberacionRetencionesStatus estatusRetenciones = 
+        (Productor.VMLiberacionRetencionesStatus)ViewData["estatusRetenciones"];
     Model.fecha = DateTime.Now;
 }
 <div class="panel panel-primary" id="pnlFormaRegistroCheque">
@@ -13,10 +14,15 @@
         <i class="pull-right fa fa-window-maximize"></i>
     </div>
     <div class="panel-body collapse in" id="pnl_body_cheques">
+        @if (estatusRetenciones.isRetencionesPagadas) {
+            <div class="alert alert-info">No hay monto retenido</div>
+        }
         @using (@Html.BeginForm(accion, "Retencion", FormMethod.Post))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.Hidden("retencionID", retencion.idMovimiento)
+            @Html.Hidden("productorID", estatusRetenciones.productor.idProductor)
+            @Html.Hidden("temporadaID", estatusRetenciones.temporada.TemporadaDeCosechaID)
+            @Html.Hidden("tipoDeDeduccion", estatusRetenciones.tipoRetencion)
             @Html.HiddenFor(model=>model.chequeID)
             <div class="row">
                 <div class="form-group col-xs-4 col-md-4">
@@ -46,7 +52,7 @@
             </div>
             <div class="form-group col-xs-2 col-md-2">
                 <button id="btnRegistrar" class="btn btn-primary" 
-                    @(retencion.estaPagada?"disabled":"")> Registrar
+                    @(estatusRetenciones.isRetencionesPagadas?"disabled":"")> Registrar
                 </button>
             </div>
             <div class="alert alert-danger col-xs-8 col-md-8" id="divChequeInvalido" style="display:none">
@@ -57,7 +63,7 @@
 </div>
 
 <script>
-    var montoMax = @(Math.Abs(retencion.montoPorPagar));
+    var montoMax = @(Math.Abs(estatusRetenciones.montoAunRetenido));
     function validarMontoCheque(inputMonto){
         var valid = currencyToNumber(inputMonto.value) <= montoMax;
         document.getElementById("btnRegistrar").disabled = !valid;

@@ -1,10 +1,12 @@
-﻿@model CampanasDelDesierto_v1.Models.Retencion
+﻿@model CampanasDelDesierto_v1.Models.Productor.VMLiberacionRetencionesStatus
 @using CampanasDelDesierto_v1.HerramientasGenerales
 @using CampanasDelDesierto_v1.Models.SistemaProductores
+@using CampanasDelDesierto_v1.Models
 
 @{
-    ViewBag.Title = "Cheques de Retencion de "+Model.nombreTipoDeduccion;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Cheques de Retencion de " + Model.nombreTipoRetencion;
+
     VMConfirmModalAttributes vmOptionsCancel = new VMConfirmModalAttributes
     {
         action = "Cancelar",
@@ -21,32 +23,28 @@
 @Html.Partial("Partial_ConfirmationModal",vmOptionsCancel)
 
 <nav>
-    <a href="@Url.Action("Details","Productores",new { id = Model.idProductor})">
+    <a href="@Url.Action("Details","Productores",new { id = Model.productor.idProductor, temporada = Model.temporada.TemporadaDeCosechaID})">
         <i class="fa fa-arrow-left"></i><span>Volver a Movimientos del Productor</span>
     </a>
 </nav>
 <div class="panel panel-primary">
     <div class="panel-heading">
         <span class="panel-primary">
-            Retención: <strong style="color:white">@(Model.nombreTipoDeduccion)</strong>
+            @Html.DisplayNameFor(model=>model.nombreTipoRetencion): <strong style="color:white">@Model.nombreTipoRetencion</strong>
         </span>
     </div>
     <div class="panel-body">
         <div class="form-group col-xs-3 col-xs-3">
-            @Html.LabelFor(model => model.Productor.nombreProductor, new { @class = "control-label" })
-            <p class="form-control-static">@Html.DisplayFor(model => model.Productor.nombreProductor)</p>
+            @Html.LabelFor(model => Model.productor.nombreProductor, new { @class = "control-label" })
+            <p class="form-control-static">@Html.DisplayFor(model => Model.productor.nombreProductor)</p>
         </div>
         <div class="form-group col-xs-3 col-xs-3">
-            <label class="control-label">Ret. en Liq. de @Html.DisplayNameFor(model => model.liquidacionSemanal.cheque)</label>
-            <p class="form-control-static">@Html.DisplayFor(model => model.liquidacionSemanal.cheque)</p>
+            @Html.LabelFor(model => model.montoTotalRetenido, new { @class= "control-label"})
+            <p class="form-control-static">@Html.DisplayFor(model=>model.montoTotalRetenido)</p>
         </div>
         <div class="form-group col-xs-3 col-xs-3">
-            @Html.LabelFor(model => model.montoMovimiento, new { @class = "control-label" })
-            <p class="form-control-static">@Math.Abs(Model.montoMovimiento).ToString("C")</p>
-        </div>
-        <div class="form-group col-xs-3 col-xs-3">
-            @Html.LabelFor(model => model.montoPorPagar, new { @class = "control-label" })
-            <p class="form-control-static">@Math.Abs(Model.montoPorPagar).ToString("C")</p>
+            @Html.LabelFor(model => model.montoAunRetenido, new { @class = "control-label" })
+            <p class="form-control-static">@Html.DisplayFor(model => model.montoAunRetenido)</p>
         </div>
     </div>
 </div>
@@ -54,18 +52,18 @@
 @*Forma de registro de nuevo cheque para esta retencion*@
 @{ 
     ViewDataDictionary vddFormCheque = new ViewDataDictionary();
-    vddFormCheque.Add("retencion", Model);
+    vddFormCheque.Add("estatusRetenciones", Model);
 }
 @Html.Partial("Form_RetencionCheque", new RetencionCheque(), vddFormCheque)
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <span class="panel-primary">@Html.DisplayNameFor(model=>model.cheques)</span>
+        <span class="panel-primary">Cheques de Liberacipon de Retenciones</span>
     </div>
     <div class="panel-body">
-        @if (Model.cheques != null && Model.cheques.Count() > 0)
+        @if (Model != null && Model.cheques.Count() > 0)
         {
-            if (Model.estaPagada) {
+            if (Model.isRetencionesPagadas) {
                 <div class="alert alert-success">
                     Retencion pagada completamente.
                 </div>
@@ -73,9 +71,9 @@
         <table class="table table-hover table-striped table-responsive">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.cheques.FirstOrDefault().numCheque)</th>
-                    <th>@Html.DisplayNameFor(model => model.cheques.FirstOrDefault().fecha)</th>
-                    <th>@Html.DisplayNameFor(model => model.cheques.FirstOrDefault().monto)</th>
+                    <th>@Html.DisplayNameFor(model => Model.productor.cheques.FirstOrDefault().numCheque)</th>
+                    <th>@Html.DisplayNameFor(model => Model.productor.cheques.FirstOrDefault().fecha)</th>
+                    <th>@Html.DisplayNameFor(model => Model.productor.cheques.FirstOrDefault().monto)</th>
                     <th></th>
                 </tr>
             </thead>
@@ -86,7 +84,7 @@
                     <td>@Html.DisplayFor(model => item.fecha)</td>
                     <td>@Html.DisplayFor(model => item.monto)</td>
                     <td>
-                        <a href="@Url.Action("Imprimir",new { id = item.chequeID})" target="_blank">
+                        <a href="@Url.Action("PrintCheque",new { id = item.chequeID})" target="_blank">
                             <i class="fa fa-print"></i><span>Imprimir</span>
                         </a><span>|</span>
                         <a href="#" id_cheque="@item.chequeID" num_cheque="@item.numCheque"
@@ -99,8 +97,8 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2">@Html.DisplayNameFor(model=>model.montoPagado)</th>
-                    <td colspan="2">@Html.DisplayFor(model => model.montoPagado)</td>
+                    <th colspan="2">@Html.DisplayNameFor(model=>model.montoLiberado)</th>
+                    <td colspan="2">@Html.DisplayFor(model => model.montoLiberado)</td>
                 </tr>
             </tfoot>
         </table>
@@ -127,7 +125,7 @@
             strongNumCheque.html(enlace.attr('num_cheque'))
         }
     </script>
-    @if (Model.estaPagada)
+    @if (Model.isRetencionesPagadas)
     {
         <script>
             bloquear_forma_cheque()
