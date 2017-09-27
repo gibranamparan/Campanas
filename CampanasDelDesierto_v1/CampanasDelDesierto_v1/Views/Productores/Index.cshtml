@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "Lista de Productores";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //Se recibe el reporte de errores generado por la exporacion de excel.
     List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
     ExcelTools.ExcelParseError errorGeneral = ViewBag.errorGeneral;
 

@@ -778,17 +778,26 @@ namespace CampanasDelDesierto_v1.Models
             return 0;
         }
 
+        /// <summary>
+        /// Clase que guarda calcula de manera simple el total de deudas, deudas iniciales, abonos y un balance de las mismas, basado en ua lista de movimientos dada
+        /// al constructor.
+        /// </summary>
         public class VMTotalesSimple
         {
             public decimal abonos { get; set; }
             public decimal deudas { get; set; }
+            public decimal deudaInicial { get; private set; }
+            public decimal deudaTotal { get; set; }
             public decimal balance { get; set; }
+
             public VMTotalesSimple() { }
             public VMTotalesSimple(List<MovimientoFinanciero> lista)
             {
+                this.deudaInicial = lista.Where(mov => mov.isAdeudoInicialVentaOlivo).Sum(mov => mov.montoMovimiento);
                 this.abonos = lista.Where(mov=>mov.montoMovimiento>0).Sum(mov => mov.montoMovimiento);
-                this.deudas = lista.Where(mov => mov.montoMovimiento<0).Sum(mov => mov.montoMovimiento);
-                this.balance = this.abonos + this.deudas;
+                this.deudas = lista.Where(mov => mov.montoMovimiento<0  && !mov.isAdeudoInicialVentaOlivo).Sum(mov => mov.montoMovimiento);
+                this.deudaTotal = this.deudas + this.deudaInicial;
+                this.balance = this.abonos + this.deudaTotal;
             }
         }
 

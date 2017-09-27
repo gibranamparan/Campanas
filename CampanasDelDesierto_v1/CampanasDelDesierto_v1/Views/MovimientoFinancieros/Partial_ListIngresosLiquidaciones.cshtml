@@ -18,7 +18,7 @@
 {
     if(movimientos.Where(mov=>mov.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.RENTENCION).Count()>0)
     {
-        <div class="col-md-6 hidden-print pull-right" style="text-align:right">
+        <div class="col-md-7 hidden-print pull-right" style="text-align:right">
             <strong>Liberación de retenciones: </strong>
             <a href="@Url.Action("cheques","Retencion",new { productorID = Model.idProductor,
                    temporadaID = temporada.TemporadaDeCosechaID, tipoRetencion = Retencion.TipoRetencion.SANIDAD })">
@@ -31,7 +31,7 @@
             <a href="@Url.Action("cheques","Retencion",new { productorID = Model.idProductor,
                    temporadaID = temporada.TemporadaDeCosechaID, tipoRetencion = Retencion.TipoRetencion.OTRO })">
                 <i class="fa fa-arrow-right"></i><span>@Retencion.NombreRetencion.OTRO</span>
-            </a><span>|</span>
+            </a>
         </div>
     }
     <div class="col-xs-12">

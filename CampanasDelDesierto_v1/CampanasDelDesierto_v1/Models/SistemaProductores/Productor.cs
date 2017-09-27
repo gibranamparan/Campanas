@@ -91,6 +91,12 @@ namespace CampanasDelDesierto_v1.Models
             this.nombreRepresentanteLegal = otro.nombreRepresentanteLegal;
             this.fechaIntegracion = otro.fechaIntegracion;
         }
+
+        /// <summary>
+        /// Genera una instancia de productor basado del renglon provenienten de un excel.
+        /// </summary>
+        /// <param name="rowProductor">RangeExcel proveniente de un excel cargado.</param>
+        /// <param name="error">Instancia sobre la cual se capturara un posible error al cargar el renglon en la nueva instancia.</param>
         public Productor(ExcelRange rowProductor, ref ExcelTools.ExcelParseError error)
         {
             error = new ExcelTools.ExcelParseError();
@@ -763,6 +769,9 @@ namespace CampanasDelDesierto_v1.Models
             public const string ZONA2 = "Baja";
         }
 
+        /// <summary>
+        /// Enumera las columnas del excel de productores.
+        /// </summary>
         public enum ExcelColumns
         {
             NUM = 0, NOMBRE=1,
@@ -803,8 +812,9 @@ namespace CampanasDelDesierto_v1.Models
                     //Se convierte renglon en registro para DB con registro de errores
                     var productorReg = new Productor(rowProductor, ref error);
 
-                    if (!error.isError)
+                    if (!error.isError) //Si la instancia se creo satisfactoriamente basada de un renglon de excel
                     {
+                        //Se busca si ya existe el productor con el mismo numero en la base de datos
                         var productorDB = db.Productores.ToList()
                             .FirstOrDefault(rp => rp.numProductor == productorReg.numProductor);
                         //Si el registro no existe, se agrega
@@ -892,8 +902,16 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         /// <param name="tem">Temporada actual</param>
         /// <param name="db">Contexto de la base de datos</param>
+        /// <param name="totales">Instancia de VMTotalesSimple donde se guarda un reporte de los totales del reporte</param>
         /// <returns></returns>
         public List<MovimientoFinanciero> generarReporteVentasArboles(TemporadaDeCosecha tem, ApplicationDbContext db, 
+            ref VMTotalesSimple totales)
+        {
+            TemporadaDeCosecha temporadaAnterior = tem.getTemporadaAnterior(db);
+            return generarReporteVentasArboles(tem,temporadaAnterior, ref totales);
+        }
+
+        public List<MovimientoFinanciero> generarReporteVentasArboles(TemporadaDeCosecha tem, TemporadaDeCosecha temporadaAnterior,
             ref VMTotalesSimple totales)
         {
             var res = this.MovimientosFinancieros;
@@ -903,11 +921,12 @@ namespace CampanasDelDesierto_v1.Models
                 .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
                 .OrderBy(mov => mov.fechaMovimiento).ToList();
             }
-            TemporadaDeCosecha temporadaAnterior = tem.getTemporadaAnterior(db);
-            if (temporadaAnterior != null) { 
+            if (temporadaAnterior != null)
+            {
                 decimal balanceAnteriorArbolesOlivo = this.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID);
-                if (Math.Abs(balanceAnteriorArbolesOlivo) > 0) { 
-                    AdeudoInicial adeudoInicialArbolesOlivoDesdeTemporadaAnterior = new AdeudoInicial(balanceAnteriorArbolesOlivo, 
+                if (Math.Abs(balanceAnteriorArbolesOlivo) > 0)
+                {
+                    AdeudoInicial adeudoInicialArbolesOlivoDesdeTemporadaAnterior = new AdeudoInicial(balanceAnteriorArbolesOlivo,
                         tem, this, true, TipoDeBalance.VENTA_OLIVO);
                     LinkedList<MovimientoFinanciero> tempRes = new LinkedList<MovimientoFinanciero>(res);
                     tempRes.AddFirst(adeudoInicialArbolesOlivoDesdeTemporadaAnterior);
@@ -931,6 +950,82 @@ namespace CampanasDelDesierto_v1.Models
                 res = movs.Last().balance;
 
             return res;
+        }
+
+        /// <summary>
+        /// Metodo recursivo que genera un reporte de anticipos e intereses dados dentro de una temporada. Incluye adeudo de temporada anterior, lo cual
+        /// se determina al vuelo tomando cada una de las temporadas anteriores a la actual de forma recursiva.
+        /// </summary>
+        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
+        /// <param name="temporadaSeleccionada">Temporada reportada</param>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns></returns>
+        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual,
+            TemporadaDeCosecha temporadaSeleccionada, ApplicationDbContext db)
+        {
+            TemporadaDeCosecha temporadaAnterior = temporadaSeleccionada == null ? null : temporadaSeleccionada.getTemporadaAnterior(db);
+            if (temporadaAnterior == null && temporadaSeleccionada == null)
+            {
+                return new List<VMMovimientoBalanceAnticipos>();
+            }
+            else
+                return generarReporteAnticiposConIntereses(fechaActual, temporadaSeleccionada, temporadaAnterior);
+        }
+
+        /// <summary>
+        /// Genera un reporte de anticipos e intereses dados dentro de una temporada
+        /// </summary>
+        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
+        /// <param name="temporadaSeleccionada">Temporada reportada</param>
+        /// <param name="db">Contexto de la base de datos</param>
+        /// <returns></returns>
+        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual,
+            TemporadaDeCosecha temporadaSeleccionada, TemporadaDeCosecha temporadaAnterior)
+        {
+
+            //Solo prestamos y abonos
+            var movimientosFiltrados = this.MovimientosFinancieros
+            .Where(mov => mov.TemporadaDeCosechaID == temporadaSeleccionada.TemporadaDeCosechaID)
+            .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
+            .OrderBy(mov => mov.fechaMovimiento).ToList();
+
+            //Se prepara un reporte de movimientos de anticipos con los movimientos filtrados
+            var movs = from mov in movimientosFiltrados
+                       select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
+
+            //Se genera una lista encandenada de los movimientos filtrados
+            LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
+                        new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
+
+
+            //TODO: Deteminar el adeudo de la temporada anterior o los movimientos de ese tipo
+            List<AdeudoInicial> adeudos = this.calcularAdeudoFinal(temporadaAnterior, fechaActual);
+            AdeudoInicial adeudoAnticipos = adeudos.Count() > 0 ? adeudos.ElementAt(0) : null;
+            AdeudoInicial adeudoPorVentas = adeudos.Count() > 1 ? adeudos.ElementAt(1) : null;
+
+            agregarALaVistaDeBalances(adeudoPorVentas, fechaActual, ref movimientos);
+            agregarALaVistaDeBalances(adeudoAnticipos, fechaActual, ref movimientos);
+
+            //Se calcula el balance de deuda
+            MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, 0);
+
+            return movimientos;
+        }
+
+        private void agregarALaVistaDeBalances(AdeudoInicial adeudo, DateTime fechaActual,
+            ref LinkedList<VMMovimientoBalanceAnticipos> movimientos)
+        {
+            //Si el calculo de adeudo no es nulo, se construye una vista del registro para ser agregada a la lista de balances
+            VMMovimientoBalanceAnticipos vmAdeudoAnteriorAnticipos = adeudo == null ? null :
+                vmAdeudoAnteriorAnticipos = new VMMovimientoBalanceAnticipos(adeudo, fechaActual);
+
+            //El registro solamente se agrega a la vita si no es nulo y si alguno de sus campos de moneda no es cero
+            if (vmAdeudoAnteriorAnticipos != null && (Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.anticipo, 2)) > 0
+                || Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.interes, 2)) > 0))
+            {
+                //Se agrega el movimiento de adeudo anterior al inicio de la lista
+                movimientos.AddFirst(vmAdeudoAnteriorAnticipos);
+            }
         }
 
         /// <summary>
@@ -968,81 +1063,6 @@ namespace CampanasDelDesierto_v1.Models
             }
 
             return report;
-        }
-
-        /// <summary>
-        /// Metodo recursivo que genera un reporte de anticipos e intereses dados dentro de una temporada. Incluye adeudo de temporada anterior, lo cual
-        /// se determina al vuelo tomando cada una de las temporadas anteriores a la actual de forma recursiva.
-        /// </summary>
-        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
-        /// <param name="temporadaSeleccionada">Temporada reportada</param>
-        /// <param name="db">Contexto de la base de datos</param>
-        /// <returns></returns>
-        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual, 
-            TemporadaDeCosecha temporadaSeleccionada, ApplicationDbContext db)
-        {
-            TemporadaDeCosecha temporadaAnterior = temporadaSeleccionada==null?null:temporadaSeleccionada.getTemporadaAnterior(db);
-            if (temporadaAnterior == null && temporadaSeleccionada == null) {
-                return new List<VMMovimientoBalanceAnticipos>();
-            }
-            else
-                return generarReporteAnticiposConIntereses(fechaActual, temporadaSeleccionada, temporadaAnterior);
-        }
-
-        /// <summary>
-        /// Genera un reporte de anticipos e intereses dados dentro de una temporada
-        /// </summary>
-        /// <param name="fechaActual">Fecha a la cual se calculan los balances para determinar intereses.</param>
-        /// <param name="temporadaSeleccionada">Temporada reportada</param>
-        /// <param name="db">Contexto de la base de datos</param>
-        /// <returns></returns>
-        public IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> generarReporteAnticiposConIntereses(DateTime fechaActual,
-            TemporadaDeCosecha temporadaSeleccionada, TemporadaDeCosecha temporadaAnterior)
-        {
-
-            //Solo prestamos y abonos
-            var movimientosFiltrados = this.MovimientosFinancieros
-            .Where(mov => mov.TemporadaDeCosechaID == temporadaSeleccionada.TemporadaDeCosechaID)
-            .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.CAPITAL_VENTAS)
-            .OrderBy(mov => mov.fechaMovimiento).ToList();
-
-            //Se prepara un reporte de movimientos de anticipos con los movimientos filtrados
-            var movs = from mov in movimientosFiltrados
-                       select new MovimientoFinanciero.VMMovimientoBalanceAnticipos(mov, fechaActual);
-
-            //Se genera una lista encandenada de los movimientos filtrados
-            LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos> movimientos =
-                        new LinkedList<MovimientoFinanciero.VMMovimientoBalanceAnticipos>(movs);
-
-
-            //TODO: Deteminar el adeudo de la temporada anterior o los movimientos de ese tipo
-            List<AdeudoInicial> adeudos = this.calcularAdeudoFinal(temporadaAnterior, fechaActual);
-            AdeudoInicial adeudoAnticipos = adeudos.Count()>0?adeudos.ElementAt(0):null;
-            AdeudoInicial adeudoPorVentas = adeudos.Count() > 1?adeudos.ElementAt(1):null;
-
-            agregarALaVistaDeBalances(adeudoPorVentas, fechaActual, ref movimientos);
-            agregarALaVistaDeBalances(adeudoAnticipos, fechaActual, ref movimientos);
-
-            //Se calcula el balance de deuda
-            MovimientoFinanciero.VMMovimientoBalanceAnticipos.balancear(ref movimientos, 0);
-
-            return movimientos;
-        }
-
-        private void agregarALaVistaDeBalances(AdeudoInicial adeudo,DateTime fechaActual,
-            ref LinkedList<VMMovimientoBalanceAnticipos> movimientos)
-        {
-            //Si el calculo de adeudo no es nulo, se construye una vista del registro para ser agregada a la lista de balances
-            VMMovimientoBalanceAnticipos vmAdeudoAnteriorAnticipos = adeudo == null ? null :
-                vmAdeudoAnteriorAnticipos = new VMMovimientoBalanceAnticipos(adeudo, fechaActual);
-
-            //El registro solamente se agrega a la vita si no es nulo y si alguno de sus campos de moneda no es cero
-            if (vmAdeudoAnteriorAnticipos != null && (Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.anticipo, 2)) > 0
-                || Math.Abs(Math.Round(vmAdeudoAnteriorAnticipos.interes, 2)) > 0))
-            {
-                //Se agrega el movimiento de adeudo anterior al inicio de la lista
-                movimientos.AddFirst(vmAdeudoAnteriorAnticipos);
-            }
         }
 
         /// <summary>

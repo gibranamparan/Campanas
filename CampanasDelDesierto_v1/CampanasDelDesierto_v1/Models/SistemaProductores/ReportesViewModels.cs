@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using static CampanasDelDesierto_v1.Models.MovimientoFinanciero;
 using VMBalanceAnticiposTotales = CampanasDelDesierto_v1.Models.MovimientoFinanciero.VMMovimientoBalanceAnticipos.VMBalanceAnticiposTotales;
 
 namespace CampanasDelDesierto_v1.Models
@@ -295,30 +296,29 @@ namespace CampanasDelDesierto_v1.Models
             }
             
             private void calcularVentasDeOlivo(Productor productor,List<MovimientoFinanciero> movimientos, TemporadaDeCosecha temporadaActual,
-                TemporadaDeCosecha temporadaAnterior,VMBalanceAnticiposTotales totales)
+                TemporadaDeCosecha temporadaAnterior, VMTotalesSimple totales)
             {
                 //filtro de movmientos de balance tipo venta olivo
                 var movimientosBalanceArboles = movimientos
                     .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
 
                 //Calculo de compra total de arboles
-                this.adeudoArboles = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                //this.adeudoArboles = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                this.adeudoArboles = Math.Abs(totales.deudas);
 
                 //Adeudo inicial por venta de arboles
-                this.adeudoVentaArbolesAnteriorCosecha = totales.deudaVentasArbolesInicial; //Registrado en el productor
-                decimal adedudoArboles = temporadaAnterior==null?0: Math.Abs(productor.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID)); //Deuda debido a temporada anterior
-                this.adeudoVentaArbolesAnteriorCosecha += adedudoArboles;
+                this.adeudoVentaArbolesAnteriorCosecha = Math.Abs(totales.deudaInicial); //Registrado en el productor o de adeudo anterior
+
+                //decimal adedudoArboles = temporadaAnterior==null?0: Math.Abs(productor.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID)); //Deuda debido a temporada anterior
+                //this.adeudoVentaArbolesAnteriorCosecha += adedudoArboles;
 
                 //Calculo de abono total a deuda por arboles
-                this.abonoArbolitos = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                //this.abonoArbolitos = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                this.abonoArbolitos = Math.Abs(totales.abonos);
 
                 //Calculo total de adeudo por recuperar
-                this.adeudoArbolitosPorRecuperar = this.adeudoArboles < this.abonoArbolitos?
-                    0:((this.adeudoArboles+ this.adeudoVentaArbolesAnteriorCosecha) - this.abonoArbolitos);
-
-                var ventasPolen = movimientos.Where(mov => mov.isVentaDeMaterial).ToList()
-                    .Where(mov => (VentaACredito.isVentaPolen(((VentaACredito)mov).ComprasProductos)));
-                this.ventaTotalPolen = Math.Abs(ventasPolen.Sum(mov => mov.montoMovimiento));
+                this.adeudoArbolitosPorRecuperar = (Math.Abs(totales.deudaTotal)) - this.abonoArbolitos;
+                this.adeudoArbolitosPorRecuperar = this.adeudoArbolitosPorRecuperar < 0 ? 0 : this.adeudoArbolitosPorRecuperar;
             }
 
             private void calcularPagoPorCosecha(List<MovimientoFinanciero> movimientos)
@@ -382,10 +382,15 @@ namespace CampanasDelDesierto_v1.Models
                 //Filtro de movimientos por cosecha
                 var movimientos = productor.MovimientosFinancieros
                     .Where(mov => mov.TemporadaDeCosechaID == temporadaActual.TemporadaDeCosechaID).ToList();
-                
+
                 //Se genera el reporte de movimientos de anticipos en la temporada calculando intereses a la fecha actual
                 IEnumerable<MovimientoFinanciero.VMMovimientoBalanceAnticipos> reporteAnticipos =
                     productor.generarReporteAnticiposConIntereses(DateTime.Today, temporadaActual, temporadaAnterior);
+
+                //Se genera el reporte del balance de venta de arboles en la temporada calculando el adeudo con la temporada anterior
+                VMTotalesSimple totalesReporteArboles = new VMTotalesSimple();
+                IEnumerable<MovimientoFinanciero> reporteVentaArboles =
+                    productor.generarReporteVentasArboles(temporadaActual, temporadaAnterior,ref totalesReporteArboles);
 
                 //Se calculan los montos totales del reporte.
                 VMBalanceAnticiposTotales totales = new VMBalanceAnticiposTotales(reporteAnticipos);
@@ -404,11 +409,16 @@ namespace CampanasDelDesierto_v1.Models
                 this.saldoPendienteAnticipos = this.totalAdeudos < (this.adeudoRecuperado + this.interesAbonado)?0:
                     this.totalAdeudos - (this.adeudoRecuperado + this.interesAbonado);
 
+                //Calculo de deuda por venta de polen
+                var ventasPolen = movimientos.Where(mov => mov.isVentaDeMaterial).ToList()
+                    .Where(mov => (VentaACredito.isVentaPolen(((VentaACredito)mov).ComprasProductos)));
+                this.ventaTotalPolen = Math.Abs(ventasPolen.Sum(mov => mov.montoMovimiento));
+
                 //PAGOS POR COSECHA
                 calcularPagoPorCosecha(movimientos);
 
                 //VENTAS DE OLIVO
-                calcularVentasDeOlivo(productor,movimientos, temporadaActual,temporadaAnterior, totales);
+                calcularVentasDeOlivo(productor,movimientos, temporadaActual,temporadaAnterior, totalesReporteArboles);
 
                 //retencion sanidad vegetal
                 calcularRetenciones(movimientos);

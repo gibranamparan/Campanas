@@ -8,6 +8,7 @@
         @*Solo ventas de olivo*@
     List<MovimientoFinanciero> movimientos = ViewBag.reporteVentasArboles==null?
         new List<MovimientoFinanciero>(): ViewBag.reporteVentasArboles;
+
     MovimientoFinanciero.VMTotalesSimple totales = ViewBag.totalesVentasArboles == null ?
         new MovimientoFinanciero.VMTotalesSimple() : ViewBag.totalesVentasArboles;
 
@@ -101,7 +102,7 @@ else
 <div class="pull-right" style="padding-right:2em">
     <span>
         <strong style="color:red">TOTAL DE DEUDA: </strong>
-        <span>@Math.Abs(totales.deudas).ToString("C")</span>
+        <span>@Math.Abs(totales.deudaTotal).ToString("C")</span>
     </span><span>|</span>
     <span>
         <strong style="color:red">TOTAL DE ABONO: </strong>
@@ -109,7 +110,7 @@ else
     </span><span>|</span>
     <span>
         <strong style="color:red">DEUDA POR LIQUIDAR: </strong>
-        <span>@Math.Abs(totales.balance).ToString("C")</span>
+        <span>@Math.Abs(totales.deudaTotal - totales.abonos).ToString("C")</span>
     </span>
 </div>
 }

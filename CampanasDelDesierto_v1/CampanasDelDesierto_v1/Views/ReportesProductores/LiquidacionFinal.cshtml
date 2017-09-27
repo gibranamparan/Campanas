@@ -27,7 +27,7 @@ vddListMovimientos.Add("temporada", temporada);
 @Html.Partial("Partial_EncabezadoReporte")
 @*Enlaces de navegacion*@
 <nav class="hidden-print">
-    <a href="@Url.Action("Details","Productores",new { id = Model.idProductor })">
+    <a href="@Url.Action("Details","Productores",new { id = Model.idProductor, temporada = temporada.TemporadaDeCosechaID })">
         <i class="fa fa-arrow-left"></i><span>Volver a Detalles del Productor</span>
     </a>
 </nav>
@@ -55,10 +55,11 @@ vddListMovimientos.Add("temporada", temporada);
 @{ 
     ViewDataDictionary vddListOlivo = new ViewDataDictionary();
     vddListOlivo.Add("showTotals", false);
+    vddListOlivo.Add("reporteVentasArboles", ViewBag.reporteVentasArboles); 
 }
 <h4 class="hdrTitle">@MovimientoFinanciero.getNombreDeTipoBalance(MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)</h4>
 <div class="row">
-    @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo",Model, vddListOlivo)
+    @Html.Partial("../MovimientoFinancieros/Partial_ListVentaOlivo", Model, vddListOlivo)
 </div>
 
 
