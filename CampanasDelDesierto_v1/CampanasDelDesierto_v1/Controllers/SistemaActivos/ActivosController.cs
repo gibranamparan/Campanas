@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -19,8 +20,30 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Activos
         public async Task<ActionResult> Index()
         {
-            var activos = db.Activos.Include(a => a.inventario);
+            var activos = db.Activos;
+            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento");
             return View(await activos.ToListAsync());
+        }
+        // GET: Activos
+        [HttpPost]
+        public ActionResult Index(int departamentoID)
+        {
+            
+            if (departamentoID > 0)
+            {                
+                var departamentoEnc = db.Departamentos.Find(departamentoID);
+                var activosPrestados = departamentoEnc.Activos.Where(ac => ac.isPrestado == true).ToList();                            
+                ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento");
+                return View(activosPrestados.ToList());
+            }
+            else
+            {                
+                var activosPrestados = db.Activos.Where(ac => ac.isPrestado == true).ToList();                  
+                ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento");
+                return View(activosPrestados.ToList());
+            }    
+            
+            
         }
 
         // GET: Activos/Details/5
@@ -41,42 +64,54 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Activos/Create
         public ActionResult Create(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Inventario inventario = db.Inventarios.Find(id);
-            if (inventario == null)
-            {
-                return HttpNotFound();
-            }
-            Activo ac = prepararVistaCrear(inventario);
-            return View(ac);                 
+
+            //CategoriaDeActivo CategoriaDeActivo = db.CategoriasDeActivos.Find(id);           
+            //Activo ac = prepararVistaCrear(CategoriaDeActivo);
+            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos.ToList(), "CategoriaDeActivoID", "nombreCategoria", null);
+            return View();                 
         }
-        private Activo prepararVistaCrear(Inventario inventario)
+        private Activo prepararVistaCrear(CategoriaDeActivo CategoriaDeActivo)
         {
-            ViewBag.inventario = inventario;
-            ViewBag.inventarioID = new SelectList(db.Inventarios.ToList(), "inventarioID", "nombreInventario", null);
+            ViewBag.inventario = CategoriaDeActivo;
+            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos.ToList(), "CategoriaDeActivoID", "nombreCategoria", null);
             Activo ac = new Activo();
-            ac.inventarioID = inventario.inventarioID;            
-            ac.inventario = inventario;            
+            ac.CategoriaActivoID = CategoriaDeActivo.CategoriaActivoID;
+            ac.CategoriaDeActivo = CategoriaDeActivo;
             return ac;
         }
+
+        [HttpPost]
+        public ActionResult ImportFromExcel(HttpPostedFileBase xlsFile, int departamentoID)
+        {
+            //Lista para recoleccion de errores
+            List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
+            ExcelTools.ExcelParseError errorGeneral = new ExcelTools.ExcelParseError();
+            //Se importan los datos de recepcion de producto desde el excel recibido
+            int regsSaved = Activo.importarActivos(xlsFile, db, out errores, out errorGeneral, departamentoID);
+
+            if (errores.Count() > 0)
+                ViewBag.erroresExcel = errores;
+            if (errorGeneral.isError)
+                ViewBag.errorGeneral = errorGeneral;
+
+            return View(db.Activos.ToList());
+        }
+
         // POST: Activos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
+        public async Task<ActionResult> Create([Bind(Include = "idActivo,nombreActivo,estadoActivo,CategoriaActivoID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
                 db.Activos.Add(activo);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details/" + activo.inventarioID, "Inventarios");
+                return RedirectToAction("Details/" + activo.CategoriaActivoID, "CategoriasDeActivos");
             }
 
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos, "CategoriaActivoID", "nombreCategoria", activo.CategoriaActivoID);
             return View(activo);
         }
 
@@ -92,7 +127,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos, "CategoriaActivoID", "nombreCategoria", activo.CategoriaActivoID);
             return View(activo);
         }
 
@@ -101,15 +136,15 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo,inventarioID")] Activo activo)
+        public async Task<ActionResult> Edit([Bind(Include = "idActivo,nombreActivo,estadoActivo,CategoriaActivoID")] Activo activo)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(activo).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details/"+activo.inventarioID,"Inventarios");
+                return RedirectToAction("Details/"+activo.CategoriaActivoID, "CategoriasDeActivos");
             }
-            ViewBag.inventarioID = new SelectList(db.Inventarios, "inventarioID", "nombreInventario", activo.inventarioID);
+            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos, "CategoriaActivoID", "nombreCategoria", activo.CategoriaActivoID);
             return View(activo);
         }
 
@@ -136,7 +171,7 @@ namespace CampanasDelDesierto_v1.Controllers
             Activo activo = await db.Activos.FindAsync(id);
             db.Activos.Remove(activo);
             await db.SaveChangesAsync();
-            return RedirectToAction("Details/" + activo.inventarioID, "Inventarios");
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/39a6c464-fe8c-4c46-a06d-7905844ce7ac/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/CampanasDelDesierto_v1</ApplicationInsightsResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -241,7 +242,7 @@
     <Compile Include="Controllers\SistemaProductores\AdminDepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\LiquidacionSemanalController.cs" />
     <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
-    <Compile Include="Controllers\SistemaActivos\InventariosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\Inventarios.cs" />
     <Compile Include="Controllers\SistemaActivos\PrestamosActivosController.cs" />
     <Compile Include="Controllers\SistemaProductores\ProductosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -432,8 +433,41 @@
     <Compile Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.Designer.cs">
       <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709211548155_Cambios_Modelo_Activo.cs" />
+    <Compile Include="Migrations\201709211548155_Cambios_Modelo_Activo.Designer.cs">
+      <DependentUpon>201709211548155_Cambios_Modelo_Activo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709220653304_modificacion_importacionActivos.cs" />
+    <Compile Include="Migrations\201709220653304_modificacion_importacionActivos.Designer.cs">
+      <DependentUpon>201709220653304_modificacion_importacionActivos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709240128261_Modificacion_Modelos_SistemaActivos.cs" />
+    <Compile Include="Migrations\201709240128261_Modificacion_Modelos_SistemaActivos.Designer.cs">
+      <DependentUpon>201709240128261_Modificacion_Modelos_SistemaActivos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709262252304_Modificacion_Relacion_SistemaActivos.cs" />
+    <Compile Include="Migrations\201709262252304_Modificacion_Relacion_SistemaActivos.Designer.cs">
+      <DependentUpon>201709262252304_Modificacion_Relacion_SistemaActivos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709270007284_Modificaciones_SistemaActivos.cs" />
+    <Compile Include="Migrations\201709270007284_Modificaciones_SistemaActivos.Designer.cs">
+      <DependentUpon>201709270007284_Modificaciones_SistemaActivos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709271743271_Nueva_Tabla_AdquisicionDeActivo.cs" />
+    <Compile Include="Migrations\201709271743271_Nueva_Tabla_AdquisicionDeActivo.Designer.cs">
+      <DependentUpon>201709271743271_Nueva_Tabla_AdquisicionDeActivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709291631117_Cambio_Modelo_PrestamoActivo.cs" />
+    <Compile Include="Migrations\201709291631117_Cambio_Modelo_PrestamoActivo.Designer.cs">
+      <DependentUpon>201709291631117_Cambio_Modelo_PrestamoActivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710050429594_NuevoCampo_ModeloActivos.cs" />
+    <Compile Include="Migrations\201710050429594_NuevoCampo_ModeloActivos.Designer.cs">
+      <DependentUpon>201710050429594_NuevoCampo_ModeloActivos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AdquisicionDeActivo.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
     <Compile Include="Models\SistemaProductores\AdeudoInicial.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -441,7 +475,7 @@
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
     <Compile Include="Models\SistemaProductores\LiquidacionSemanal.cs" />
     <Compile Include="Models\SistemaActivos\Empleado.cs" />
-    <Compile Include="Models\SistemaActivos\Inventario.cs" />
+    <Compile Include="Models\SistemaActivos\CategoriaDeActivo.cs" />
     <Compile Include="Models\SistemaActivos\PrestamoActivo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -781,11 +815,12 @@
     <Content Include="Views\Sucursales\_PartialCrearteSucursal.cshtml" />
     <Content Include="Views\Departamentos\_PartialCreateDepartamento.cshtml" />
     <Content Include="Views\Empleados\_PartialCreateEmpleado.cshtml" />
-    <Content Include="Views\Departamentos\_PartialCreateInventario.cshtml" />
+    <Content Include="Views\Departamentos\_PartialIndexActivos.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionDeAceituna.cshtml" />
     <Content Include="Views\Retencion\cheques.cshtml" />
     <Content Include="Views\Retencion\Form_RetencionCheque.cshtml" />
+    <Content Include="Views\Shared\Partial_ListadoActivosAdquiridos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -922,6 +957,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.resx">
       <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211548155_Cambios_Modelo_Activo.resx">
+      <DependentUpon>201709211548155_Cambios_Modelo_Activo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709220653304_modificacion_importacionActivos.resx">
+      <DependentUpon>201709220653304_modificacion_importacionActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709240128261_Modificacion_Modelos_SistemaActivos.resx">
+      <DependentUpon>201709240128261_Modificacion_Modelos_SistemaActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709262252304_Modificacion_Relacion_SistemaActivos.resx">
+      <DependentUpon>201709262252304_Modificacion_Relacion_SistemaActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709270007284_Modificaciones_SistemaActivos.resx">
+      <DependentUpon>201709270007284_Modificaciones_SistemaActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709271743271_Nueva_Tabla_AdquisicionDeActivo.resx">
+      <DependentUpon>201709271743271_Nueva_Tabla_AdquisicionDeActivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709291631117_Cambio_Modelo_PrestamoActivo.resx">
+      <DependentUpon>201709291631117_Cambio_Modelo_PrestamoActivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710050429594_NuevoCampo_ModeloActivos.resx">
+      <DependentUpon>201710050429594_NuevoCampo_ModeloActivos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

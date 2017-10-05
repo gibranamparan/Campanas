@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Inventario>
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.CategoriaDeActivo>
 
 @{
     ViewBag.Title = "Index";
@@ -11,19 +11,10 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
+    <tr>     
         <th>
-            @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nombreInventario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.modeloInventario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.costo)
-        </th>
+            @Html.DisplayNameFor(model => model.nombreCategoria)
+        </th>   
         <th>
             Activos
         </th>        
@@ -33,24 +24,15 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nombreInventario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.modeloInventario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.costo)
-        </td>
+            @Html.DisplayFor(modelItem => item.nombreCategoria)
+        </td>          
         <td>
             @item.Activos.Count()
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.inventarioID }) |
-            @Html.ActionLink("Ver Activos", "Details", new { id=item.inventarioID }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.inventarioID })
+            @Html.ActionLink("Editar", "Edit", new { id=item.CategoriaActivoID }) |
+            @Html.ActionLink("Ver Activos", "Details", new { id=item.CategoriaActivoID }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.CategoriaActivoID })
         </td>
     </tr>
 }

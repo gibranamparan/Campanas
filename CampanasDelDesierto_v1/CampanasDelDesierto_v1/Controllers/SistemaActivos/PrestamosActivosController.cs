@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.Models;
+using System.Web.Script.Serialization;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -18,7 +19,7 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: PrestamosActivos
         public ActionResult Index()
         {        
-            var prestamoActivos = db.PrestamoActivos.Include(p => p.Activo).Include(p => p.Empleado).OrderBy(a=> a.fechaPrestamoActivo).Take(10);
+            var prestamoActivos = db.PrestamoActivos.Include(p => p.AdquisicionDeActivos).Include(p => p.Empleado).OrderBy(a=> a.fechaPrestamoActivo).Take(10);
             return View(prestamoActivos.ToList());
         }
         //Metodo post para poder realizar la busqueda (Buscador rango por fechas)
@@ -57,9 +58,10 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
 
-            }
-            var Activos = db.Activos.ToList();
-            ViewBag.idActivo = Activos;
+            }           
+            ViewBag.idActivo = db.Activos.ToList();
+            ViewBag.Empleado = db.Empleados.Find(id);
+            
             //ViewBag.idActivo = new SelectList(db.Activos.ToList().Where(a=>a.prestado()==false), "idActivo", "nombreActivo", null);
             PrestamoActivo prestamo = prepararVistaCrear(empleado);            
             return View(prestamo);             
@@ -75,6 +77,7 @@ namespace CampanasDelDesierto_v1.Controllers
             prestamo.idEmpleado = empleado.idEmpleado;
             prestamo.Empleado = empleado;
             prestamo.fechaPrestamoActivo = DateTime.Today;
+            prestamo.fechaEntregaActivo = DateTime.Today;
 
 
             return prestamo;
@@ -85,26 +88,33 @@ namespace CampanasDelDesierto_v1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idPrestamoActivo,fechaPrestamoActivo,fechaEntregaActivo,idEmpleado,idActivo")] PrestamoActivo prestamoActivo)
+        public ActionResult Create([Bind(Include = "idPrestamoActivo,fechaPrestamoActivo,fechaEntregaActivo,idEmpleado")] PrestamoActivo prestamoActivo, string Activos_AD)
         {
             if (ModelState.IsValid)
             {
-                var activo = new Activo();                
-                var ac = activo.prestado();
-                if (ac==true)
-                {
-                    ViewBag.Mensaje = "El prestamo no se pudo realizar";
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    db.PrestamoActivos.Add(prestamoActivo);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-            }
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                List<AdquisicionDeActivo> activosList = js.Deserialize<List<AdquisicionDeActivo>>(Activos_AD);
 
-            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", prestamoActivo.idActivo);
+                //Se asocian
+                foreach (var activoList in activosList)
+                {
+                    var activoEncontrado = db.Activos.Find(activoList.idActivo);
+                    activoEncontrado.isPrestado = true;   
+                }
+                prestamoActivo.AdquisicionDeActivos = activosList;
+                db.PrestamoActivos.Add(prestamoActivo);
+                int numReg = db.SaveChanges();
+                if (numReg > 0)
+                {
+                    //Se recargan las entidades de productos asociadass a cada compra dentro del prestamo
+                    prestamoActivo.AdquisicionDeActivos.ToList().ForEach(com => db.Entry(com).Reference(p => p.activo).Load());                    
+
+                    return RedirectToAction("Details", "PrestamosActivos", new { id = prestamoActivo.idPrestamoActivo });
+                }
+            }     
+      
+
+            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
             ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre", prestamoActivo.idEmpleado);
             return View(prestamoActivo);
         }
@@ -121,7 +131,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", prestamoActivo.idActivo);
+            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
             ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre", prestamoActivo.idEmpleado);
             return View(prestamoActivo);
         }
@@ -139,7 +149,7 @@ namespace CampanasDelDesierto_v1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo", prestamoActivo.idActivo);
+            ViewBag.idActivo = new SelectList(db.Activos, "idActivo", "nombreActivo");
             ViewBag.idEmpleado = new SelectList(db.Empleados, "idEmpleado", "nombre", prestamoActivo.idEmpleado);
             return View(prestamoActivo);
         }

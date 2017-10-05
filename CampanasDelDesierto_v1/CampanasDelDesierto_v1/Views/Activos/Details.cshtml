@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <p>
-    <a href="@Url.Action("Details","Inventarios",new { id = Model.inventarioID })">
+    <a href="@Url.Action("Details","Inventarios",new { id = Model.CategoriaActivoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
     <a href="@Url.Action("Edit","Activos",new { id = Model.idActivo })">
@@ -15,23 +15,23 @@
 </p>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong>Activo:</strong> @(Model.nombreActivo)</h2>
+        <h2 class="panel-title"><strong>Activo</strong></h2>
     </div>
     <div class="panel-body">
         <div class="row">
             <dl class="dl-horizontal col-md-6">
-                <dt>@Html.DisplayNameFor(model => model.estadoActivo)</dt>
-                <dd>@Html.DisplayFor(model => model.estadoActivo) </dd>
+                <dt> @Html.DisplayNameFor(model => model.partidaNumActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.partidaNumActivo) </dd>
 
-                <dt> @Html.DisplayNameFor(model => model.inventario.nombreInventario)</dt>
-                <dd> @Html.DisplayFor(model => model.inventario.nombreInventario) </dd>
+                <dt>@Html.DisplayNameFor(model => model.descripcionActivo)</dt>
+                <dd>@Html.DisplayFor(model => model.descripcionActivo) </dd>                
             </dl>
             <dl class="dl-horizontal col-md-6">
-                <dt> @Html.DisplayNameFor(model=> model.inventario.Departamento.nombreDepartamento)</dt>
-                <dd> @Html.DisplayFor(model => model.inventario.Departamento.nombreDepartamento) </dd>
+                <dt> @Html.DisplayNameFor(model=> model.observacionesActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.observacionesActivo) </dd>
 
-                <dt> @Html.DisplayNameFor(model => model.inventario.Departamento.Sucursal.nombreSucursal)</dt>
-                <dd> @Html.DisplayFor(model => model.inventario.Departamento.Sucursal.nombreSucursal) </dd>
+                <dt> @Html.DisplayNameFor(model => model.contabilidadActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.contabilidadActivo) </dd>
             </dl>
         </div>
     </div>

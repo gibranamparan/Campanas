@@ -5,44 +5,41 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<p>
-    <a href="@Url.Action("Details","Departamentos",new { id = Model.inventario.departamentoID })">
+@*<p>
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.CategoriaDeActivo.departamentoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
-    <a href="@Url.Action("Edit","Departamentos",new { id = Model.inventario.departamentoID })">
+    <a href="@Url.Action("Edit","Departamentos",new { id = Model.CategoriaDeActivo.departamentoID })">
         <i class="glyphicon glyphicon-pencil"></i> Editar
     </a>
 
 </p>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong>Inventario:</strong> @(Model.inventario.nombreInventario)</h2>
+        <h2 class="panel-title"><strong>Inventario:</strong> @(Model.CategoriaDeActivo.nombreCategoria)</h2>
     </div>
     <div class="panel-body">
         <div class="row">
             <dl class="dl-horizontal col-md-6">
-                <dt>@Html.DisplayNameFor(model => model.inventario.Departamento.Sucursal.nombreSucursal)</dt>
-                <dd>@Html.DisplayFor(model => model.inventario.Departamento.Sucursal.nombreSucursal) </dd>
+                <dt>@Html.DisplayNameFor(model => model.CategoriaDeActivo.Departamento.Sucursal.nombreSucursal)</dt>
+                <dd>@Html.DisplayFor(model => model.CategoriaDeActivo.Departamento.Sucursal.nombreSucursal) </dd>
 
-                <dt>@Html.DisplayNameFor(model => model.inventario.Departamento.nombreDepartamento)</dt>
-                <dd>@Html.DisplayFor(model => model.inventario.Departamento.nombreDepartamento) </dd>
-
-                <dt> @Html.DisplayNameFor(model => model.inventario.modeloInventario)</dt>
-                <dd> @Html.DisplayFor(model => model.inventario.modeloInventario) </dd>
+                <dt>@Html.DisplayNameFor(model => model.CategoriaDeActivo.Departamento.nombreDepartamento)</dt>
+                <dd>@Html.DisplayFor(model => model.CategoriaDeActivo.Departamento.nombreDepartamento) </dd>
             </dl>
             <dl class="dl-horizontal col-md-6">
-                <dt> @Html.DisplayNameFor(model => model.inventario.costo)</dt>
-                <dd> @Html.DisplayFor(model => model.inventario.costo) </dd>
+                @*<dt> @Html.DisplayNameFor(model => model.CategoriaDeActivo.)</dt>
+                <dd> @Html.DisplayFor(model => model.CategoriaDeActivo.costo) </dd>
 
                 <dt> @Html.DisplayName("Activos Disponibles")</dt>
-                <dd> @(Model.inventario.CantidadActivosDisponibles())  </dd>
+                <dd> @(Model.CategoriaDeActivo.CantidadActivosDisponibles())  </dd>
 
                 <dt> @Html.DisplayName("Activos Prestados")</dt>
-                <dd> @(Model.inventario.CantidadActivosPrestados())  </dd>
+                <dd> @(Model.CategoriaDeActivo.CantidadActivosPrestados())  </dd>
             </dl>
         </div>
     </div>
-</div>
+</div>*@
 
 
 @using (Html.BeginForm()) 
@@ -54,32 +51,62 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.nombreActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.partidaNumActivo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.nombreActivo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.nombreActivo, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.partidaNumActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.partidaNumActivo, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.estadoActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.codigoActivo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select name="estadoActivo">
-                    <option value="Nuevo">Nuevo</option>
-                    <option value="Usado">Usado</option>
-                </select>
-                @Html.ValidationMessageFor(model => model.estadoActivo, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.codigoActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.codigoActivo, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
-            @Html.LabelFor(model => model.inventarioID, "Inventario", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.descripcionActivo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("inventarioID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.inventarioID, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.descripcionActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.descripcionActivo, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+        <div class="form-group">
+            @Html.LabelFor(model => model.unidadesActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.unidadesActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.unidadesActivo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mmcUnidades, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.mmcUnidades, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.mmcUnidades, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.observacionesActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.observacionesActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.observacionesActivo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.contabilidadActivo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.contabilidadActivo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.contabilidadActivo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoriaActivoID, "Categoria", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoriaActivoID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoriaActivoID, "", new { @class = "text-danger" })
+            </div>
+        </div>        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit" class="btn btn-success">Crear</button>
@@ -87,6 +114,7 @@
         </div>
     </div>
 }
+
 
 
 @section Scripts {

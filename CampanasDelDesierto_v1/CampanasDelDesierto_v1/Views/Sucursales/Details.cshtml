@@ -31,8 +31,7 @@
             <thead>
                 <tr>
                     <th>Nombre del Departamento</th>
-                    <th>Domicilio</th>
-                    <th>Inventarios</th>
+                    <th>Domicilio</th>                    
                     <th>Activos Disponibles</th>
                     <th>Activos Prestados</th>
                     <th></th>                    
@@ -43,8 +42,7 @@
             {
                     <tr>
                         <td>@(departamento.nombreDepartamento)</td>
-                        <td>@departamento.domicilio</td>
-                        <td>@departamento.Inventarios.Count()</td>
+                        <td>@departamento.domicilio</td>                        
                         <td>@departamento.activosDisponibles()</td>
                         <td>@departamento.activosPrestados()</td>
                         <td>

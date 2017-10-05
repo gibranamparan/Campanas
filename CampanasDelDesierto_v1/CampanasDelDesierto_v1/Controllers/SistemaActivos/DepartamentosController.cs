@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using CampanasDelDesierto_v1.Models;
+using CampanasDelDesierto_v1.HerramientasGenerales;
 
 namespace CampanasDelDesierto_v1.Controllers
 {
@@ -48,6 +49,7 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Activos = db.Activos.ToList();
             return View(departamento);
         }
 
@@ -102,6 +104,32 @@ namespace CampanasDelDesierto_v1.Controllers
 
             ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
             return View(departamento);
+        }
+        [HttpPost, ActionName("Details")]
+        public ActionResult ImportFromExcel(HttpPostedFileBase xlsFile, int departamentoID)
+        {
+            //Lista para recoleccion de errores
+            List<ExcelTools.ExcelParseError> errores = new List<ExcelTools.ExcelParseError>();
+            ExcelTools.ExcelParseError errorGeneral = new ExcelTools.ExcelParseError();
+            //Se importan los datos de recepcion de producto desde el excel recibido
+            int regsSaved = Activo.importarActivos(xlsFile, db, out errores, out errorGeneral, departamentoID);
+
+            if (errores.Count() > 0)
+                ViewBag.erroresExcel = errores;
+            if (errorGeneral.isError)
+                ViewBag.errorGeneral = errorGeneral;
+
+            if (departamentoID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Departamento departamento =  db.Departamentos.Find(departamentoID);
+            if (departamento == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.idSucursal = new SelectList(db.Sucursales, "idSucursal", "nombreSucursal", departamento.idSucursal);
+            return View(departamento);           
         }
 
         // GET: Departamentos/Edit/5

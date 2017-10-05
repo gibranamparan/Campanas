@@ -1,9 +1,27 @@
 ﻿@model CampanasDelDesierto_v1.Models.Departamento
-    @using CampanasDelDesierto_v1.Models;
+@using CampanasDelDesierto_v1.Models;
+@using CampanasDelDesierto_v1.HerramientasGenerales
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Activo activoClass = new Activo();
+    List<Activo> Activos = ViewBag.Activos;
+    List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
+    ExcelTools.ExcelParseError errorGeneral = ViewBag.errorGeneral;
+
+    string errorMsgPrimario = "";
+    string erroresModalID = "";
+    if (erroresExcel != null)
+    {
+        errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+            + " Revise la tabla de errores de importación en la parte inferior.";
+    }
+    if (errorGeneral != null && errorGeneral.isError)
+    {
+        errorMsgPrimario = errorGeneral + "<br>" + errorMsgPrimario;
+    }
 }
 <p>
     <a href="@Url.Action("Index","Departamentos",new { id = Model.departamentoID })">
@@ -38,93 +56,208 @@
     </div>
 </div>
 
-    <h2>Empleados</h2>
+    @*Listado de Activos del departamento*@   
+    <div>
+        <h2>Activos</h2>
 
-    <p>   
+        <p>
+            <a href="@Url.Action("Create")">
+                <i class="fa fa-plus-circle"></i> Nuevo Activo
+            </a> |
+            <a href="#" onclick="$('#formImportExcel').slideToggle()">
+                <i class="fa fa-file-excel-o"></i> Importar de Excel
+            </a>
+        </p>
+        @using (Html.BeginForm(null, null, FormMethod.Post,
+                   new
+                   {
+                       enctype = "multipart/form-data",
+                       @class = "form-inline",
+                       id = "formImportExcel",
+                       style = "display:none"
+                   }))
+
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.departamentoID)
+            @Html.ValidationSummary()
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="xlsFile">Importar de Excel</label>
+                    <input id="xlsFile" name="xlsFile" type="file" class="form-control"
+                           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                    <button class="btn btn-success">
+                        <i class="fa fa-upload"></i> Subir
+                    </button>
+                    <i class="fa fa-question-circle helpIcon"
+                       onclick="$('#msgAyudaImportacion').slideToggle();
+                 $(this).toggleClass('clicked')"
+                       style="cursor: pointer"></i>
+                </div>
+                <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
+                    Para importar la información de los activos, cargue un archivo excel con la estructura
+                    mostrada en la siguiente imagen, respete el orden de las columnas. No es necesario
+                    que el nombre de las columnas sea el mismo. <br />
+                    <div style="text-align: center">
+                        <img style="border: 1px solid; margin: 1em auto"
+                             src="~/images/productores/excel_ejemplo.png" /> <br />
+                    </div>
+                    El sistema buscará en la base de datos los activos con el mismo numero de activo
+                    que marque el archivo Excel.
+                    <ul>
+                        <li>
+                            <strong>En caso de encontrarlo</strong>, modificará la información almacenada
+                            en la base de datos por la informacion del registro Excel.
+                        </li>
+                        <li>
+                            <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de activo
+                            con las datos del archivo Excel.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <table class="table table-striped table-hover datatablejs">
+            <thead>
+                <tr>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.inventario.nombreInventario)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => activoClass.partidaNumActivo)
+                    </th>
+                    <th>
+                        @Html.DisplayName("Codigo")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Descripcion")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Unidades")
+                    </th>
+                    <th>
+                        @Html.DisplayName("MMC Unidades")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Observaciones")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Contabilidad")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Activos)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.partidaNumActivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.codigoActivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.descripcionActivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.unidadesActivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.mmcUnidades)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.observacionesActivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.contabilidadActivo)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit","Activos",new { id = item.idActivo })">
+                                <i class="glyphicon glyphicon-pencil"></i> Editar
+                            </a><br />
+                            <a href="@Url.Action("Details","Activos",new { id = item.idActivo })">
+                                <i class="glyphicon glyphicon-eye-open"></i> Detalles
+                            </a><br />
+                            <a href="@Url.Action("Delete","Activos",new { id = item.idActivo })">
+                                <i class="glyphicon glyphicon-remove"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+@*Listado de Empleados*@
+<div>
+    <h2>Empleados</h2>
+    <p>
         <a href="@Url.Action("Create","Empleados",new { id = Model.departamentoID })">
             <i class="glyphicon glyphicon-plus"></i> Crear Empleado
         </a>
     </p>
-   
-        <table class="table table-striped table-hover datatablejs">
-            <thead>
-                <tr>
-                    <th>Nombre Empleado</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Prestamos</th>
-                    <th></th>                    
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var empleado in Model.Empleados)
-            {
-                    <tr>
-                        <td>@(empleado.nombre)</td>
-                        <td>@empleado.apellidoPaterno</td>
-                        <td>@empleado.apellidoMaterno</td>
-                        <td>@empleado.PrestamosActivos.Count()</td>
-                        <td>
-                            <a href="@Url.Action("Delete","Empleados",new { id = empleado.idEmpleado })">
-                                <i class="glyphicon glyphicon glyphicon-remove"></i> Eliminar
-                            </a><br />
-                            <a href="@Url.Action("Details","Empleados",new { id = empleado.idEmpleado })">
-                                <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
-                            </a><br />
-                            <a href="@Url.Action("Editar","Empleados",new { idEmpleado = empleado.idEmpleado, id = empleado.Departamento.departamentoID })">
-                                <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
-                            </a><br />
-                            <a href="@Url.Action("Create","PrestamosActivos",new { id = empleado.idEmpleado })">
-                                <i class="glyphicon glyphicon glyphicon-plus"></i> Crear Prestamo
-                            </a>
-                        </td>                       
-                    </tr>
-                }
-            </tbody>
-        </table>    
-   
 
-@Html.Partial("_PartialCreateInventario", new Inventario())
-
-<h2>Inventarios</h2>
-<p>
-    <a href="@Url.Action("Create","Inventarios",new { id = Model.departamentoID })">
-        <i class="glyphicon glyphicon-plus"></i> Crear Inventario
-    </a>
-</p>
-
-<table class="table table-striped table-hover datatablejs">
-    <thead>
-        <tr>
-            <th>Nombre Inventario</th>
-            <th>Nombre Departamento </th>
-            <th>Activos Disponibles</th>
-            <th>Activos Prestados</th>
-            <th></th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var inventario in Model.Inventarios)
-            {
+    <table class="table table-striped table-hover datatablejs">
+        <thead>
             <tr>
-                <td>@(inventario.nombreInventario)</td>
-                <td>@inventario.Departamento.nombreDepartamento</td>
-                <td>@inventario.CantidadActivosDisponibles()</td>
-                <td>@(inventario.Activos.Count() - inventario.CantidadActivosDisponibles())</td>
-                <td>
-                    <a href="@Url.Action("Delete","Inventarios",new { id = inventario.inventarioID })">
-                        <i class="glyphicon glyphicon-remove"></i> Eliminar
-                    </a><br />
-                    <a href="@Url.Action("Edit","Inventarios",new { id = inventario.inventarioID })">
-                        <i class="glyphicon glyphicon-pencil"></i> Editar
-                    </a><br />
-                    <a href="@Url.Action("Details","Inventarios",new { id = inventario.inventarioID })">
-                        <i class="glyphicon glyphicon-eye-open"></i> Activos
-                    </a>
-                </td>               
+                <th>Nombre Empleado</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Prestamos</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
+        </thead>
+        <tbody>
+            @foreach (var empleado in Model.Empleados)
+            {
 
-</table>
+                var activosPres = empleado.PrestamosActivos.SelectMany(a => a.AdquisicionDeActivos);
+                
+                <tr>
+                    <td>@(empleado.nombre)</td>
+                    <td>@empleado.apellidoPaterno</td>
+                    <td>@empleado.apellidoMaterno</td>
+                    <td>@activosPres.Sum(gg => gg.cantidadActivo)</td>
+                    <td>
+                        <a href="@Url.Action("Delete","Empleados",new { id = empleado.idEmpleado })">
+                            <i class="glyphicon glyphicon glyphicon-remove"></i> Eliminar
+                        </a><br />
+                        <a href="@Url.Action("Details","Empleados",new { id = empleado.idEmpleado })">
+                            <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
+                        </a><br />
+                        <a href="@Url.Action("Editar","Empleados",new { idEmpleado = empleado.idEmpleado, id = empleado.Departamento.departamentoID })">
+                            <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
+                        </a><br />
+                        <a href="@Url.Action("Create","PrestamosActivos",new { id = empleado.idEmpleado })">
+                            <i class="glyphicon glyphicon glyphicon-plus"></i> Crear Prestamo
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!String.IsNullOrEmpty(errorMsgPrimario))
+{
+    erroresModalID = "importExcelErrorMessage";
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("erroresModalID", erroresModalID);
+    vdd.Add("errorMsgPrimario", errorMsgPrimario);
+    <div>
+        @Html.Partial("../Shared/Partial_ExcelErrors", erroresExcel, vdd);
+    </div>
+}
+
+
+@section Scripts{
+    @if (erroresExcel != null && erroresExcel.Count() > 0)
+    {
+        <script>
+            $('@("#"+ erroresModalID)').modal();
+        </script>
+    }
+}

@@ -1,15 +1,26 @@
 ﻿@using CampanasDelDesierto_v1.Models
-@model IEnumerable<Activo>
-@{
+@model IEnumerable<CampanasDelDesierto_v1.Models.Activo>
 
+@{
     bool selectMode = false;
     if (ViewData["selectMode"] != null)
     {
         selectMode = (bool)ViewData["selectMode"];
     }
+
+    @*Variables para editar la lista de productos comprados*@
+bool editMode = false;
+bool found = false;
+List<AdquisicionDeActivo> activosAdquiridos = null;
+AdquisicionDeActivo adquirirIndex = null;
+if (ViewData["activosAdquiridos"] != null)
+{
+    activosAdquiridos = (List<AdquisicionDeActivo>)ViewData["activosAdquiridos"];
+    editMode = activosAdquiridos != null && activosAdquiridos.Count() > 0;
 }
 
-<table id="Activos" class="table table-hover">
+}
+<table id="Activos" class="table table-hover table-striped">
     <thead>
         <tr>
             @if (selectMode)
@@ -17,48 +28,82 @@
                 <th>
 
                 </th>
+
+                <th width="1em">
+                    Cantidad
+                </th>
             }
             <th class="hidden">
                 @Html.DisplayNameFor(model => model.idActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.inventario.nombreInventario)
+                @Html.DisplayNameFor(model => model.partidaNumActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.nombreActivo)
+                @Html.DisplayNameFor(model => model.codigoActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.estadoActivo)
+                @Html.DisplayNameFor(model => model.descripcionActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unidadesActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mmcUnidades)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.observacionesActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contabilidadActivo)
             </th>
         </tr>
     </thead>
-
     <tbody>
         @foreach (var item in Model)
         {
+            if (editMode)
+            {
+                adquirirIndex = activosAdquiridos.FirstOrDefault(com => com.idActivo == item.idActivo);
+                found = adquirirIndex != null;
+            }
 
-            <tr @*@((item.inventarioID!=null && item.inventarioID>0)?"default-selected":"")*@>
-
+            <tr @(found ? "default-selected" : "") @(found ? "AdquirirActivosID=" + adquirirIndex.cantidadActivo : "")>
                 @if (selectMode)
                 {
                     <td></td>
+
+                    <td width="1em">
+                        <input type="number" idActivo="@(item.idActivo)" id="Activo@(item.idActivo)" min="0"
+                               oninput="editarElemento(this)"
+                               value="@(editMode && found?adquirirIndex.cantidadActivo:0)" />
+                    </td>
                 }
                 <td class="hidden">
                     @Html.DisplayFor(modelItem => item.idActivo)
                 </td>
-
                 <td>
-                    @Html.DisplayFor(modelItem => item.inventario.nombreInventario)
+                    @Html.DisplayFor(modelItem => item.partidaNumActivo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.nombreActivo)
+                    @Html.DisplayFor(modelItem => item.codigoActivo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.estadoActivo)
+                    @Html.DisplayFor(modelItem => item.descripcionActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.unidadesActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mmcUnidades)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.observacionesActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contabilidadActivo)
                 </td>
             </tr>
-
-
         }
     </tbody>
 </table>

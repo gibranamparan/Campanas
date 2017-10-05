@@ -92,10 +92,11 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<PrestamoActivo> PrestamoActivos { get; set; }
-        public DbSet<Inventario> Inventarios { get; set; }
+        public DbSet<CategoriaDeActivo> CategoriasDeActivos { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<CompraProducto> ComprasProductos { get; set; }
         public DbSet<AdminDepartamento> AdminsDepartamentos { get; set; }
+        public DbSet<AdquisicionDeActivo> AdquisiscionDeActivos { get; set; }
 
 
         public ApplicationDbContext()

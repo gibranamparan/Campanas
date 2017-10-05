@@ -1,0 +1,61 @@
+﻿@model CampanasDelDesierto_v1.Models.PrestamoActivo
+<div class="col-md-12">
+    @*LISTA DE LOS PRODUCTOS COMPRADOS*@
+    <h4>Activos Adquiridos</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="10em">
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.partidaNumActivo)
+                </th>
+                <th width="20%">
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.codigoActivo)
+                </th>
+                <th width="10em">
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.descripcionActivo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.unidadesActivo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.mmcUnidades)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.observacionesActivo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.contabilidadActivo)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var activos_AD in Model.AdquisicionDeActivos)
+            {
+                <tr>
+                    <td width="10em">
+                        @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
+                    </td>
+                    <td width="20%">
+                        @Html.DisplayFor(model => activos_AD.activo.codigoActivo)
+                    </td>
+                    <td width="10em">
+                        @Html.DisplayFor(model => activos_AD.activo.descripcionActivo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => activos_AD.activo.unidadesActivo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => activos_AD.activo.mmcUnidades)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => activos_AD.activo.observacionesActivo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
