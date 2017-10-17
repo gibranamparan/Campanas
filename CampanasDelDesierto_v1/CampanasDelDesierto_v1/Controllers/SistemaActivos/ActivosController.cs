@@ -64,19 +64,28 @@ namespace CampanasDelDesierto_v1.Controllers
         // GET: Activos/Create
         public ActionResult Create(int? id)
         {
-
-            //CategoriaDeActivo CategoriaDeActivo = db.CategoriasDeActivos.Find(id);           
-            //Activo ac = prepararVistaCrear(CategoriaDeActivo);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Departamento Departamento = db.Departamentos.Find(id);
+            if (Departamento == null)
+            {
+                return HttpNotFound();
+            }
+          
+           
+            Activo ac = prepararVistaCrear(Departamento);
             ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos.ToList(), "CategoriaDeActivoID", "nombreCategoria", null);
-            return View();                 
+            return View(ac);                 
         }
-        private Activo prepararVistaCrear(CategoriaDeActivo CategoriaDeActivo)
+        private Activo prepararVistaCrear(Departamento Departamento)
         {
-            ViewBag.inventario = CategoriaDeActivo;
-            ViewBag.CategoriaActivoID = new SelectList(db.CategoriasDeActivos.ToList(), "CategoriaDeActivoID", "nombreCategoria", null);
+            ViewBag.Departamento = Departamento;
+            ViewBag.departamentoID = new SelectList(db.Departamentos.ToList(), "departamentoID", "nombreDepartamento", null);
             Activo ac = new Activo();
-            ac.CategoriaActivoID = CategoriaDeActivo.CategoriaActivoID;
-            ac.CategoriaDeActivo = CategoriaDeActivo;
+            ac.departamentoID = Departamento.departamentoID;
+            ac.Departamento = Departamento;
             return ac;
         }
 

@@ -61,7 +61,7 @@
         <h2>Activos</h2>
 
         <p>
-            <a href="@Url.Action("Create")">
+            <a href="@Url.Action("Create","Activos", new { id = Model.departamentoID })">
                 <i class="fa fa-plus-circle"></i> Nuevo Activo
             </a> |
             <a href="#" onclick="$('#formImportExcel').slideToggle()">

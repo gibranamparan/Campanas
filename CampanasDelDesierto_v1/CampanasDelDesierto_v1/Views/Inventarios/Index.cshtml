@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.CategoriaDeActivo>
+@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Index";
@@ -7,17 +8,12 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
+@Html.Partial("_PartialCreateCategoria", new CategoriaDeActivo())
+<table class="table table-hover table-striped">
     <tr>     
         <th>
             @Html.DisplayNameFor(model => model.nombreCategoria)
-        </th>   
-        <th>
-            Activos
-        </th>        
+        </th>                 
         <th></th>
     </tr>
 
@@ -25,13 +21,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.nombreCategoria)
-        </td>          
+        </td>                 
         <td>
-            @item.Activos.Count()
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.CategoriaActivoID }) |
-            @Html.ActionLink("Ver Activos", "Details", new { id=item.CategoriaActivoID }) |
+            @Html.ActionLink("Editar", "Edit", new { id=item.CategoriaActivoID }) |            
             @Html.ActionLink("Eliminar", "Delete", new { id=item.CategoriaActivoID })
         </td>
     </tr>

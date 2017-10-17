@@ -5,47 +5,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<p>
-    <a href="@Url.Action("Details","Departamentos",new { id = Model.CategoriaDeActivo.departamentoID })">
+<p>
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.Departamento.departamentoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
-    <a href="@Url.Action("Edit","Departamentos",new { id = Model.CategoriaDeActivo.departamentoID })">
+    <a href="@Url.Action("Edit","Departamentos",new { id = Model.Departamento.departamentoID })">
         <i class="glyphicon glyphicon-pencil"></i> Editar
     </a>
 
 </p>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2 class="panel-title"><strong>Inventario:</strong> @(Model.CategoriaDeActivo.nombreCategoria)</h2>
+        <h2 class="panel-title"><strong>Inventario:</strong> @(Model.Departamento.nombreDepartamento)</h2>
     </div>
     <div class="panel-body">
         <div class="row">
             <dl class="dl-horizontal col-md-6">
-                <dt>@Html.DisplayNameFor(model => model.CategoriaDeActivo.Departamento.Sucursal.nombreSucursal)</dt>
-                <dd>@Html.DisplayFor(model => model.CategoriaDeActivo.Departamento.Sucursal.nombreSucursal) </dd>
+                <dt>@Html.DisplayNameFor(model => model.Departamento.Sucursal.nombreSucursal)</dt>
+                <dd>@Html.DisplayFor(model => model.Departamento.Sucursal.nombreSucursal) </dd>
 
-                <dt>@Html.DisplayNameFor(model => model.CategoriaDeActivo.Departamento.nombreDepartamento)</dt>
-                <dd>@Html.DisplayFor(model => model.CategoriaDeActivo.Departamento.nombreDepartamento) </dd>
+                <dt>@Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)</dt>
+                <dd>@Html.DisplayFor(model => model.Departamento.nombreDepartamento) </dd>
             </dl>
             <dl class="dl-horizontal col-md-6">
-                @*<dt> @Html.DisplayNameFor(model => model.CategoriaDeActivo.)</dt>
-                <dd> @Html.DisplayFor(model => model.CategoriaDeActivo.costo) </dd>
+                <dt> @Html.DisplayNameFor(model => model.Departamento.domicilio)</dt>
+                <dd> @Html.DisplayFor(model => model.Departamento.domicilio) </dd>
 
-                <dt> @Html.DisplayName("Activos Disponibles")</dt>
+                @*<dt> @Html.DisplayName("Activos Disponibles")</dt>
                 <dd> @(Model.CategoriaDeActivo.CantidadActivosDisponibles())  </dd>
 
                 <dt> @Html.DisplayName("Activos Prestados")</dt>
-                <dd> @(Model.CategoriaDeActivo.CantidadActivosPrestados())  </dd>
+                <dd> @(Model.CategoriaDeActivo.CantidadActivosPrestados())  </dd>*@
             </dl>
         </div>
     </div>
-</div>*@
+</div>
 
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.departamentoID)
     <div class="form-horizontal">
         <h4>Activo</h4>
         <hr />

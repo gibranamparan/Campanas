@@ -4,46 +4,50 @@
     ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<a href="@Url.Action("Details","Inventarios",new { id = Model.CategoriaActivoID })">
+    <i class="fa fa-arrow-circle-left"></i> Regresar
+</a>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Eliminar</strong></h2>
+    </div>
+    <div class="panel-body">
+        <h3>¿Estás seguro que quieres eliminar esto?</h3>
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.partidaNumActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.partidaNumActivo) </dd>
 
-<h2>Delete</h2>
+                <dt> @Html.DisplayNameFor(model => model.codigoActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.codigoActivo) </dd>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Activo</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.inventario.nombreInventario)
-        </dt>
+                <dt>@Html.DisplayNameFor(model => model.descripcionActivo)</dt>
+                <dd>@Html.DisplayFor(model => model.descripcionActivo) </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.inventario.nombreInventario)
-        </dd>
+                <dt> @Html.DisplayNameFor(model => model.unidadesActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.unidadesActivo) </dd>
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.mmcUnidades)</dt>
+                <dd> @Html.DisplayFor(model => model.mmcUnidades) </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.nombreActivo)
-        </dt>
+                <dt> @Html.DisplayNameFor(model => model.observacionesActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.observacionesActivo) </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.nombreActivo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.estadoActivo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.estadoActivo)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+                <dt> @Html.DisplayNameFor(model => model.contabilidadActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.contabilidadActivo) </dd>
+            </dl>
         </div>
-    }
+        <div class="form-group">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <button class="btn btn-danger">Eliminar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
