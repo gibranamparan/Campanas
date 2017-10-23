@@ -52,14 +52,13 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Empleado empleado = db.Empleados.Find(id);
-            var activo = db.Activos.ToList();
+            Empleado empleado = db.Empleados.Find(id);        
             if (empleado == null)
             {
                 return HttpNotFound();
 
-            }           
-            ViewBag.idActivo = db.Activos.ToList();
+            }            
+            ViewBag.ProductoActivoID = db.ProductosActivos.Where(ac=>ac.Activo.departamentoID == empleado.departamentoID).ToList();
             ViewBag.Empleado = db.Empleados.Find(id);
             
             //ViewBag.idActivo = new SelectList(db.Activos.ToList().Where(a=>a.prestado()==false), "idActivo", "nombreActivo", null);
@@ -93,24 +92,24 @@ namespace CampanasDelDesierto_v1.Controllers
             if (ModelState.IsValid)
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
-                List<AdquisicionDeActivo> activosList = js.Deserialize<List<AdquisicionDeActivo>>(Activos_AD);
-
+                List<AdquisicionDeActivo> ProductoActivosList = js.Deserialize<List<AdquisicionDeActivo>>(Activos_AD);               
                 //Se asocian
-                foreach (var activoList in activosList)
-                {
-                    var activoEncontrado = db.Activos.Find(activoList.idActivo);
-                    activoEncontrado.isPrestado = true;   
+                foreach (var productoActivo in ProductoActivosList)
+                {                   
+                    var activoEncontrado = db.ProductosActivos.Find(productoActivo.ProductoActivoID);
+                    activoEncontrado.fechaPrestamo = DateTime.Now;   
                 }
-                prestamoActivo.AdquisicionDeActivos = activosList;
+                prestamoActivo.AdquisicionDeActivos = ProductoActivosList;
                 db.PrestamoActivos.Add(prestamoActivo);
                 int numReg = db.SaveChanges();
                 if (numReg > 0)
                 {
                     //Se recargan las entidades de productos asociadass a cada compra dentro del prestamo
-                    prestamoActivo.AdquisicionDeActivos.ToList().ForEach(com => db.Entry(com).Reference(p => p.activo).Load());                    
+                    prestamoActivo.AdquisicionDeActivos.ToList().ForEach(com => db.Entry(com).Reference(p => p.ProductoActivo).Load());                    
 
                     return RedirectToAction("Details", "PrestamosActivos", new { id = prestamoActivo.idPrestamoActivo });
                 }
+                return RedirectToAction("Details", "PrestamosActivos", new { id = prestamoActivo.idPrestamoActivo });
             }     
       
 

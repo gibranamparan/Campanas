@@ -1,0 +1,70 @@
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.ProductoActivo>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Activo.partidaNumActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.noSerie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.descripcionActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.observacionesActivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaPrestamo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaDevolucion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaEntregado)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Activo.partidaNumActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.noSerie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.descripcionActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.observacionesActivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaPrestamo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaDevolucion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaEntregado)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProductoActivoID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProductoActivoID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProductoActivoID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -15,7 +15,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Empleado Empleado = ViewBag.Empleado;
-    List<Activo> Activos = ViewBag.idActivo;
+    List<ProductoActivo> ProductosActivos = ViewBag.ProductoActivoID;
     List<AdquisicionDeActivo> ActivosAdquiridos = null;
     if (editMode)
     {
@@ -55,7 +55,7 @@
         </a>    
     </div>
 </div>
-@Html.Partial("Partial_ListaActivos", Activos, vdd)
+@Html.Partial("Partial_ListaProductosActivos", ProductosActivos, vdd)
 
 <div id="mensajes" class="container"></div><br />
 
@@ -104,7 +104,7 @@
 
     <script>
 
-        var COLS_ENUM = Object.freeze({ CANTIDAD: 1, ID: 2, PROD1: 4 })
+        var COLS_ENUM = Object.freeze({ ID: 1, noSerie: 2, Descripcion: 3 })
         var table = $('#Activos').DataTable({
             columnDefs: [{
                 orderable: false,
@@ -122,7 +122,7 @@
         });
 
         table.on('select', function (e, dt, type, indexes) {
-            var selRow = dt.data()
+            var selRow = dt.data();
             agregarSeleccion(selRow)
             funcionRecalcularMontos();
             console.log(compras)
@@ -140,15 +140,15 @@
         function agregarSeleccion(rows) {
             var renglones = new Array();
             if (!rows.rows) { //Si es un solo elemento
-                var inputCantidad = $('input[idActivo=' + rows[COLS_ENUM.ID] + ']');
-                introducirNuevaCantidad(inputCantidad[0]);
+                var inputCantidad = rows[COLS_ENUM.ID];
+                introducirNuevaCantidad(inputCantidad);
             } else { //Si son varios
                 renglones = rows;
                 //selectedIngresosIDs = new Array();
                 $.each(renglones, function (idx, row) {
                     //compras.push(row[COLS_ENUM.ID])
-                    var inputCantidad = $('input[idActivo=' + row[COLS_ENUM.ID] + ']');
-                    introducirNuevaCantidad(inputCantidad[0]);
+                    var inputCantidad = rows[COLS_ENUM.ID];
+                    introducirNuevaCantidad(inputCantidad);
                 })
             }
         }
@@ -167,7 +167,7 @@
             }
             $.each(renglonesAEliminar, function (idx, row) {
                 compras = $.grep(compras, function (item, idx) {
-                    return item.idActivo == row[COLS_ENUM.ID]
+                    return item.ProductoActivoID == row[COLS_ENUM.ID]
                 }, true)
             })
         }
@@ -176,21 +176,15 @@
         //selecciondos en la tabla
         function funcionRecalcularMontos() {
             /*var selectedRows = table.rows({ selected: true });
-            var data = selectedRows.data();*/
-            var totalCant1 = 0; var costoUnitario = 0;
+            var data = selectedRows.data();*/      
 
             //var cantidad = $('#cantidadMaterial').val();
             if (compras.length == 0)
                 $('#crear').attr('disabled', true);
-            else {
-                $.each(compras, function (idx, item) {
-                    totalCant1 += item.cantidadActivo * item.costo;
-                })
+            else
+            {               
                 $('#crear').attr('disabled', false);
             }
-
-            $('#montoMovimiento').val(numeral(totalCant1).format('0.00')).trigger('input');
-            $('#montoMovimiento').attr('value', totalCant1);
             $('#Activos_AD').val(JSON.stringify(compras))
         }
 
@@ -202,12 +196,12 @@
         }
 
         function nuevoRenglonDeCompras(selRow, inputCantidad) {
-            var cantidadActivo = inputCantidad ? inputCantidad.valueAsNumber : Number($(selRow[COLS_ENUM.CANTIDAD]).val());
+            //var cantidadActivo = inputCantidad ? inputCantidad.valueAsNumber : Number($(selRow[COLS_ENUM.CANTIDAD]).val());
             //Se agrega el nuevo elemento al arreglo
             var newItem = {
-                idActivo: selRow[COLS_ENUM.ID],
-                cantidadActivo: cantidadActivo,
-                //costo: Number(selRow[COLS_ENUM.PROD1].replace('$', ''))
+                ProductoActivoID: selRow[COLS_ENUM.ID],
+                noSerie: selRow[COLS_ENUM.noSerie],
+                Descripcion: selRow[COLS_ENUM.Descripcion]                
             };
             compras.push(newItem);
         }
@@ -217,7 +211,7 @@
             if (selRow) {
                 var compraIDX
                 $.each(compras, function (idx, item) {
-                    if (selRow[COLS_ENUM.ID] == item.idActivo)
+                    if (selRow[COLS_ENUM.ID] == item.ProductoActivoID)
                         compraIDX = idx;
                 })
                 compras[compraIDX].cantidadActivo = inputEditado.valueAsNumber;
@@ -235,7 +229,7 @@
 
             //Se busca si el input editado se encuentra seleccionado
             var selRow = $.grep(data, function (item, idx) {
-                return item[COLS_ENUM.ID] == $(input).attr('idActivo');
+                return item[COLS_ENUM.ID] == input;
             })[0];
 
             return selRow;

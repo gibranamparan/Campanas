@@ -2,15 +2,17 @@
 @using CampanasDelDesierto_v1.Models
 @{
     ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var ActivosAD = Model.PrestamosActivos.FirstOrDefault().AdquisicionDeActivos;
+    Layout = "~/Views/Shared/_Layout.cshtml";    
     AdquisicionDeActivo adquisicion = new AdquisicionDeActivo();
   
 }
 
 <p>
-    <a href="@Url.Action("Index","Empleados")">
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.departamentoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar a lista de Empleados
+    </a><br />
+    <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
+        <i class="glyphicon glyphicon-pencil"></i> Editar
     </a>
 
 </p>
@@ -36,61 +38,59 @@
                 <thead>
                     <tr>
                         <th width="10em">
-                            @Html.DisplayNameFor(model => adquisicion.activo.partidaNumActivo)
+                            @Html.DisplayNameFor(model => adquisicion.ProductoActivo.noSerie)
                         </th>
                         <th width="20%">
-                            @Html.DisplayNameFor(model => adquisicion.activo.codigoActivo)
+                            @Html.DisplayNameFor(model => adquisicion.ProductoActivo.descripcionActivo)
                         </th>
                         <th width="10em">
-                            @Html.DisplayNameFor(model => adquisicion.activo.descripcionActivo)
+                            @Html.DisplayNameFor(model => adquisicion.ProductoActivo.observacionesActivo)
                         </th>
                         <th>
-                             @Html.DisplayNameFor(model => adquisicion.activo.unidadesActivo)
+                             @Html.DisplayNameFor(model => adquisicion.ProductoActivo.fechaPrestamo)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => adquisicion.activo.mmcUnidades)
+                            @Html.DisplayNameFor(model => adquisicion.ProductoActivo.fechaDevolucion)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => adquisicion.activo.observacionesActivo)
+                            @Html.DisplayNameFor(model => adquisicion.ProductoActivo.fechaDevolucion)
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => adquisicion.activo.contabilidadActivo)
-                        </th>
+                    
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var activos_AD in Model.PrestamosActivos.FirstOrDefault().AdquisicionDeActivos)
-            {
-                        <tr>
-                            <td width="10em">
-                                @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
-                            </td>
-                            <td width="20%">
-                                @Html.DisplayFor(model => activos_AD.activo.codigoActivo)
-                            </td>
-                            <td width="10em">
-                                @Html.DisplayFor(model => activos_AD.activo.descripcionActivo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => activos_AD.activo.unidadesActivo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => activos_AD.activo.mmcUnidades)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => activos_AD.activo.observacionesActivo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
-                            </td>
-                        </tr>
+                    @foreach (var activos_AD in Model.PrestamosActivos.ToList())
+                    {
+                        var activos = activos_AD.AdquisicionDeActivos.ToList();
+                        foreach (var ac in activos)
+                        {
+                            <tr>
+                                <td width="10em">
+                                    @Html.DisplayFor(model => ac.ProductoActivo.noSerie)
+                                </td>
+                                <td width="20%">
+                                    @Html.DisplayFor(model => ac.ProductoActivo.descripcionActivo)
+                                </td>
+                                <td width="10em">
+                                    @Html.DisplayFor(model => ac.ProductoActivo.observacionesActivo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => ac.ProductoActivo.fechaPrestamo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => ac.ProductoActivo.fechaDevolucion)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => ac.ProductoActivo.fechaEntregado)
+                                </td>
+                            </tr>
+                        }
+
                     }
                 </tbody>
             </table>
         </div>
 
-        <a href="@Url.Action("Edit",new { id = Model.idEmpleado })">
-            <i class="glyphicon glyphicon-pencil"></i> Editar
-        </a>
+    
     </div>
 </div>

@@ -236,6 +236,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ProductosActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\AdeudoInicialController.cs" />
@@ -437,9 +438,14 @@
     <Compile Include="Migrations\201710110151282_CambiosGenerales_SistemaActivos.Designer.cs">
       <DependentUpon>201710110151282_CambiosGenerales_SistemaActivos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.cs" />
+    <Compile Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.Designer.cs">
+      <DependentUpon>201710200232080_NuevaTabla_ProductoActivo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AdquisicionDeActivo.cs" />
+    <Compile Include="Models\SistemaActivos\AdquisicionDeActivo.cs" />
+    <Compile Include="Models\ProductoActivo.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
     <Compile Include="Models\SistemaProductores\AdeudoInicial.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -760,7 +766,7 @@
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
     <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
-    <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
+    <Content Include="Views\PrestamosActivos\Partial_ListaProductosActivos.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_MovimientoDetails.cshtml" />
     <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
     <Content Include="Views\Proveedores\Partial_CreateConcepto.cshtml" />
@@ -794,6 +800,11 @@
     <Content Include="Views\Retencion\Form_RetencionCheque.cshtml" />
     <Content Include="Views\Shared\Partial_ListadoActivosAdquiridos.cshtml" />
     <Content Include="Views\Inventarios\_PartialCreateCategoria.cshtml" />
+    <Content Include="Views\ProductosActivos\Create.cshtml" />
+    <Content Include="Views\ProductosActivos\Delete.cshtml" />
+    <Content Include="Views\ProductosActivos\Details.cshtml" />
+    <Content Include="Views\ProductosActivos\Edit.cshtml" />
+    <Content Include="Views\ProductosActivos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -933,6 +944,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710110151282_CambiosGenerales_SistemaActivos.resx">
       <DependentUpon>201710110151282_CambiosGenerales_SistemaActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.resx">
+      <DependentUpon>201710200232080_NuevaTabla_ProductoActivo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,10 +17,10 @@ namespace CampanasDelDesierto_v1.Models
         [Display(Name = "Cantidad de Activos")]
         public int cantidadActivo { get; set; }
 
-        [Display(Name = "Activo")]
-        [ForeignKey("activo")]
-        public int? idActivo { get; set; }
-        public virtual Activo activo { get; set; }
+        //Referencias 
+        [Display(Name = "Producto Activo")]       
+        public int? ProductoActivoID { get; set; }
+        public virtual ProductoActivo ProductoActivo { get; set; }
 
         [Display(Name = "Prestamo")]
         [ForeignKey("prestamo")]

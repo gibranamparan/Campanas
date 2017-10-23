@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using CampanasDelDesierto_v1.HerramientasGenerales;
 using OfficeOpenXml;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CampanasDelDesierto_v1.Models
 {
@@ -39,7 +41,7 @@ namespace CampanasDelDesierto_v1.Models
         public bool isPrestado { get; set; }
 
         //Un activo tiene una collecion de prestamos
-        public virtual ICollection<PrestamoActivo> PrestamosActivos { get; set; }
+        public virtual ICollection<ProductoActivo> ProductosActivos { get; set; }
 
         ////Cada activo tiene a una categoria
         public int? CategoriaActivoID { get; set; }
@@ -47,6 +49,9 @@ namespace CampanasDelDesierto_v1.Models
 
         public int? departamentoID { get; set; }
         public virtual Departamento Departamento { get; set; }
+
+        //Conexion a la base de datos.
+        ApplicationDbContext db = new ApplicationDbContext();
 
         public enum ExcelColumns
         {
@@ -56,26 +61,29 @@ namespace CampanasDelDesierto_v1.Models
             CONTABILIDAD = 6
         }
 
-        [Display(Name = "Actualmente Prestado")]
-        public bool prestado()
+        //Generador de claves unicas
+        public static string GeneradorNoSerie()
+        {    
+            string noSerie = CreateKey(5);         
+            return noSerie;
+        }
+        public static String CreateKey(int numBytes)
         {
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] buff = new byte[numBytes];
 
+            rng.GetBytes(buff);
+            return BytesToHexString(buff);
+        }
+        public static String BytesToHexString(byte[] bytes)
+        {
+            StringBuilder hexString = new StringBuilder(64);
 
-            bool prestado = false;
-            if (this.PrestamosActivos == null)
+            for (int counter = 0; counter < bytes.Length; counter++)
             {
-                return prestado;
+                hexString.Append(String.Format("{0:X2}", bytes[counter]));
             }
-            else
-            {
-                List<PrestamoActivo> prestamo = this.PrestamosActivos.ToList();
-
-                if (prestamo.Count() > 0)
-                    prestado = prestamo.Last().fechaDevolucion == null;
-
-                return prestado;
-            }
-
+            return hexString.ToString();
         }
 
 
@@ -109,8 +117,7 @@ namespace CampanasDelDesierto_v1.Models
                 this.mmcUnidades = rowActivo.ElementAt((int)ExcelColumns.MMC).Value.ToString();
                 this.observacionesActivo = rowActivo.ElementAt((int)ExcelColumns.OBSERVACIONES).Text.ToString();
                 this.contabilidadActivo = rowActivo.ElementAt((int)ExcelColumns.CONTABILIDAD).Text.ToString();
-                this.departamentoID = departamentoID;
-
+                this.departamentoID = departamentoID;                    
             }
             catch (NullReferenceException exc) //Si llega a haber una excepccion nula, entra al catch y asigna dicho error
             {
@@ -158,28 +165,96 @@ namespace CampanasDelDesierto_v1.Models
                     var activoReg = new Activo(rowActivo, ref error, departamentoID);
 
                     if (!error.isError)
-                    {
+                    {                        
                         var activoDB = db.Activos.ToList()
                             .FirstOrDefault(rp => rp.partidaNumActivo == activoReg.partidaNumActivo && rp.descripcionActivo == activoReg.descripcionActivo);
                         //Si el registro no existe, se agrega
                         if (activoDB == null)
+                        {
                             db.Activos.Add(activoReg);
+                            db.SaveChanges();
+                            int cantidad = int.Parse(rowActivo.ElementAt((int)ExcelColumns.MMC).Value.ToString());
+                            ProductoActivo productoActivo = new ProductoActivo();
+                            List<ProductoActivo> ProductoActivoList = new List<ProductoActivo>();
+                            try
+                            {                                
+                                for (int i = 0; i < cantidad; i++)
+                                {
+                                    productoActivo.descripcionActivo = rowActivo.ElementAt((int)ExcelColumns.DESCRIPCION).Value.ToString();
+                                    productoActivo.observacionesActivo = rowActivo.ElementAt((int)ExcelColumns.OBSERVACIONES).Text.ToString();
+                                    productoActivo.noSerie = GeneradorNoSerie();
+                                    productoActivo.Activo = activoReg;
+                                    productoActivo.idActivo = activoReg.idActivo;
+                                    //Si el registro no existe, se agrega 
+                                    db.Entry(productoActivo).State = System.Data.Entity.EntityState.Added;                                                                                                                                   
+                                    regsSaved = db.SaveChanges();                                 
+                                    //Se recargan las entidades de productos asociadass a cada compra dentro del prestamo
+                                    activoReg.ProductosActivos.ToList().ForEach(com => db.Entry(com).Reference(p => p.Activo).Load());
+                                }                                
+                               
+                            }
+                            catch (NullReferenceException exc) //Si llega a haber una excepccion nula, entra al catch y asigna dicho error
+                            {
+                                error = ExcelTools.ExcelParseError.errorFromException(exc, rowActivo);
+                                error.registro = new Activo();
+                            }
+                            catch (Exception exc)
+                            {
+                                error = ExcelTools.ExcelParseError.errorFromException(exc, rowActivo);
+                                error.registro = new Activo();
+                            }
+                        }
                         else
                         {
-                            //Si ya existe, se identifica con el mismo ID y se marca como modificado
-                            activoReg.idActivo = activoDB.idActivo;
-                            db.Entry(activoDB).State = System.Data.Entity.EntityState.Detached;
+                            //Si ya existe, se identifica con el mismo ID y se marca como modificado                            
+                            activoReg.idActivo = activoDB.idActivo;                            
+                            db.Entry(activoDB).State = System.Data.Entity.EntityState.Detached;                          
                             db.Entry(activoReg).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                            ProductoActivo productoActivo = new ProductoActivo();
+                            List<ProductoActivo> ProductoActivoList = new List<ProductoActivo>();
+                            try
+                            {                                
+                                int cantidad = int.Parse(rowActivo.ElementAt((int)ExcelColumns.MMC).Value.ToString());
+                                int cantidadDB = db.ProductosActivos.Where(proac=> proac.idActivo == activoReg.idActivo).Count();
+                                if (cantidad > cantidadDB)
+                                {
+                                    int dif = cantidad - cantidadDB;
+                                    for (int i = 0; i < dif; i++)
+                                    {
+                                        productoActivo.descripcionActivo = rowActivo.ElementAt((int)ExcelColumns.DESCRIPCION).Value.ToString();
+                                        productoActivo.observacionesActivo = rowActivo.ElementAt((int)ExcelColumns.OBSERVACIONES).Text.ToString();
+                                        productoActivo.noSerie = GeneradorNoSerie();
+                                        productoActivo.Activo = activoReg;
+                                        productoActivo.idActivo = activoReg.idActivo;
+                                        //Si el registro no existe, se agrega 
+                                        db.Entry(productoActivo).State = System.Data.Entity.EntityState.Added;
+                                        regsSaved = db.SaveChanges();
+                                        //Se recargan las entidades de productos asociadass a cada compra dentro del prestamo
+                                        activoReg.ProductosActivos.ToList().ForEach(com => db.Entry(com).Reference(p => p.Activo).Load());
+                                    }
+                                }                                                            
+                            }
+                            catch (NullReferenceException exc) //Si llega a haber una excepccion nula, entra al catch y asigna dicho error
+                            {
+                                error = ExcelTools.ExcelParseError.errorFromException(exc, rowActivo);
+                                error.registro = new Activo();
+                            }
+                            catch (Exception exc)
+                            {
+                                error = ExcelTools.ExcelParseError.errorFromException(exc, rowActivo);
+                                error.registro = new Activo();
+                            }
                         }
                     }
                     else
                         errores.Add(error);
                 }
-
-                regsSaved = db.SaveChanges();
+                              
+                
             }
+            
             return regsSaved;
-        }
-
+        }      
     }
 }

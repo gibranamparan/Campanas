@@ -97,6 +97,7 @@ namespace CampanasDelDesierto_v1.Models
         public DbSet<CompraProducto> ComprasProductos { get; set; }
         public DbSet<AdminDepartamento> AdminsDepartamentos { get; set; }
         public DbSet<AdquisicionDeActivo> AdquisiscionDeActivos { get; set; }
+        public DbSet<ProductoActivo> ProductosActivos { get; set; }
 
 
         public ApplicationDbContext()

@@ -36,6 +36,8 @@ namespace CampanasDelDesierto_v1.Controllers
             {
                 return HttpNotFound();
             }
+            //ViewBag.ActivosResguardo = new SelectList(db.AdquisiscionDeActivos.Where(ac => ac.prestamo.idEmpleado == empleado.idEmpleado)
+            //    .ToList(), "");
             return View(empleado);
         }
 

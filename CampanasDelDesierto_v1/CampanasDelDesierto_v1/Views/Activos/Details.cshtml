@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <p>
-    <a href="@Url.Action("Details","Inventarios",new { id = Model.CategoriaActivoID })">
+    <a href="@Url.Action("Details","Departamentos",new { id = Model.departamentoID })">
         <i class="fa fa-arrow-circle-left"></i> Regresar
     </a>
     <a href="@Url.Action("Edit","Activos",new { id = Model.idActivo })">
@@ -41,31 +41,31 @@
 <table class="table table-striped table-hover datatablejs">
     <thead>
         <tr>
-            <th>Nombre Empleado</th>
-            <th>Fecha de Prestamo</th>
-            <th>Fecha de Entrega</th>
-            <th>Fecha de Devolucion</th>
+            <th>@Html.DisplayNameFor(model=>model.ProductosActivos.FirstOrDefault().noSerie)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductosActivos.FirstOrDefault().descripcionActivo)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductosActivos.FirstOrDefault().observacionesActivo)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductosActivos.FirstOrDefault().fechaPrestamo)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductosActivos.FirstOrDefault().fechaDevolucion)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductosActivos.FirstOrDefault().fechaEntregado)</th>
+            <th>@Html.DisplayName("Actualmente prestado")</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var prestamo in Model.PrestamosActivos)
+        @foreach (var productoActivo in Model.ProductosActivos.Where(proAc=> proAc.prestado() == true))
             {
             <tr>
-                <td>@(prestamo.Empleado.nombre+" "+prestamo.Empleado.apellidoPaterno+" "+prestamo.Empleado.apellidoMaterno)</td>
-                <td>@prestamo.fechaPrestamoActivo</td>
-                <td>@prestamo.fechaEntregaActivo</td>
-                <td>@prestamo.fechaDevolucion</td>
-                <td>
-                    <a href="@Url.Action("Delete","PrestamosActivos",new { id = prestamo.idPrestamoActivo})">
-                        <i class="glyphicon glyphicon glyphicon-remove"></i> Eliminar
-                    </a><br />
-                    <a href="@Url.Action("Details","PrestamosActivos",new { id = prestamo.idPrestamoActivo })">
+                <td>@(productoActivo.noSerie)</td>
+                <td>@(productoActivo.descripcionActivo)</td>
+                <td>@(productoActivo.observacionesActivo)</td>
+                <td>@productoActivo.fechaPrestamo</td>
+                <td>@productoActivo.fechaDevolucion</td>
+                <td>@productoActivo.fechaEntregado</td>
+                <td>@productoActivo.prestado()</td>
+                <td>                   
+                    <a href="@Url.Action("Details","ProductosActivos",new { id = productoActivo.ProductoActivoID })">
                         <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
-                    </a><br />
-                    <a href="@Url.Action("Editar","PrestamosActivos",new { id = prestamo.idPrestamoActivo })">
-                        <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
-                    </a><br />                    
+                    </a><br />                                     
                 </td>
             </tr>
         }

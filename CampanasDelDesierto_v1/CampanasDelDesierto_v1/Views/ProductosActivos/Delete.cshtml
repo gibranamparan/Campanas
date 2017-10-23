@@ -1,0 +1,81 @@
+﻿@model CampanasDelDesierto_v1.Models.ProductoActivo
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ProductoActivo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo.partidaNumActivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo.partidaNumActivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.noSerie)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.noSerie)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.descripcionActivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.descripcionActivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.observacionesActivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.observacionesActivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaPrestamo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaPrestamo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaDevolucion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaDevolucion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaEntregado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaEntregado)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

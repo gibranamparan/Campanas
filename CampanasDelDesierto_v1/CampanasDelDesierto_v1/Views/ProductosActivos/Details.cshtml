@@ -1,0 +1,76 @@
+﻿@model CampanasDelDesierto_v1.Models.ProductoActivo
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a href="@Url.Action("Details","Activos",new { id = Model.Activo.idActivo })">
+        <i class="fa fa-arrow-circle-left"></i> Regresar
+    </a>  
+</p>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Producto Activo</strong></h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.noSerie)</dt>
+                <dd> @Html.DisplayFor(model => model.noSerie) </dd>
+
+                <dt>@Html.DisplayNameFor(model => model.descripcionActivo)</dt>
+                <dd>@Html.DisplayFor(model => model.descripcionActivo) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.observacionesActivo)</dt>
+                <dd> @Html.DisplayFor(model => model.observacionesActivo) </dd>
+            </dl>
+            <dl class="dl-horizontal col-md-6">
+                <dt> @Html.DisplayNameFor(model => model.fechaPrestamo)</dt>
+                <dd> @Html.DisplayFor(model => model.fechaPrestamo) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.fechaDevolucion)</dt>
+                <dd> @Html.DisplayFor(model => model.fechaDevolucion) </dd>
+
+                <dt> @Html.DisplayNameFor(model => model.fechaEntregado)</dt>
+                <dd> @Html.DisplayFor(model => model.fechaEntregado) </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<h2>Historial de Préstamos</h2>
+<table class="table table-striped table-hover datatablejs">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.AdquisicionesDeActivos.FirstOrDefault().prestamo.Empleado.nombreCompleto)</th>
+            <th>@Html.DisplayNameFor(model => model.fechaPrestamo)</th>
+            <th>@Html.DisplayNameFor(model => model.fechaDevolucion)</th>
+            <th>@Html.DisplayNameFor(model => model.fechaEntregado)</th>                    
+            <th></th>            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var productoActivo in Model.AdquisicionesDeActivos)
+        {
+            <tr>
+                <td>@(productoActivo.prestamo.Empleado.nombreCompleto)</td>
+                <td>@(productoActivo.prestamo.fechaPrestamoActivo)</td>
+                <td>@(productoActivo.prestamo.fechaDevolucion)</td>
+                <td>@productoActivo.prestamo.fechaEntregaActivo</td>                
+                <td>
+                    <a href="@Url.Action("Delete","PrestamosActivos",new { id = productoActivo.ProductoActivoID})">
+                        <i class="glyphicon glyphicon glyphicon-remove"></i> Eliminar
+                    </a><br />
+                    <a href="@Url.Action("Details","PrestamosActivos",new { id = productoActivo.ProductoActivoID })">
+                        <i class="glyphicon glyphicon glyphicon-eye-open"></i> Detalles
+                    </a><br />
+                    <a href="@Url.Action("Editar","PrestamosActivos",new { id = productoActivo.ProductoActivoID })">
+                        <i class="glyphicon glyphicon glyphicon-pencil"></i> Editar
+                    </a><br />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

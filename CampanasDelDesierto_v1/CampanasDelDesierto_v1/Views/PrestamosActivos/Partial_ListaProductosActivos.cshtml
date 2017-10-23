@@ -1,5 +1,5 @@
 ﻿@using CampanasDelDesierto_v1.Models
-@model IEnumerable<CampanasDelDesierto_v1.Models.Activo>
+@model IEnumerable<CampanasDelDesierto_v1.Models.ProductoActivo>
 
 @{
     bool selectMode = false;
@@ -27,44 +27,37 @@ if (ViewData["activosAdquiridos"] != null)
             {
                 <th>
 
-                </th>
-
-                <th width="1em">
-                    Cantidad
-                </th>
+                </th>             
             }
             <th class="hidden">
-                @Html.DisplayNameFor(model => model.idActivo)
+                @Html.DisplayNameFor(model => model.ProductoActivoID)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.partidaNumActivo)
+            <th width="10em">
+                @Html.DisplayNameFor(model => model.noSerie)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.codigoActivo)
-            </th>
-            <th>
+            <th width="20%">
                 @Html.DisplayNameFor(model => model.descripcionActivo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.unidadesActivo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.mmcUnidades)
-            </th>
-            <th>
+            <th width="10em">
                 @Html.DisplayNameFor(model => model.observacionesActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.contabilidadActivo)
+                @Html.DisplayNameFor(model => model.fechaPrestamo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaDevolucion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaDevolucion)
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in this.Model)
         {
             if (editMode)
             {
-                adquirirIndex = activosAdquiridos.FirstOrDefault(com => com.idActivo == item.idActivo);
+                adquirirIndex = activosAdquiridos.FirstOrDefault(com => com.ProductoActivoID == item.ProductoActivoID);
                 found = adquirirIndex != null;
             }
 
@@ -73,36 +66,33 @@ if (ViewData["activosAdquiridos"] != null)
                 {
                     <td></td>
 
-                    <td width="1em">
-                        <input type="number" idActivo="@(item.idActivo)" id="Activo@(item.idActivo)" min="0"
+                    @*<td width="1em">
+                        <input type="number" idActivo="@(item.ProductoActivoID)" id="Activo@(item.ProductoActivoID)" min="0"
                                oninput="editarElemento(this)"
                                value="@(editMode && found?adquirirIndex.cantidadActivo:0)" />
-                    </td>
+                    </td>*@
                 }
                 <td class="hidden">
-                    @Html.DisplayFor(modelItem => item.idActivo)
+                    @Html.DisplayFor(modelItem => item.ProductoActivoID)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.partidaNumActivo)
+                <td width="10em">
+                    @Html.DisplayFor(modelItem => item.noSerie)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.codigoActivo)
-                </td>
-                <td>
+                <td width="20%">
                     @Html.DisplayFor(modelItem => item.descripcionActivo)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.unidadesActivo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.mmcUnidades)
-                </td>
-                <td>
+                <td width="10em">
                     @Html.DisplayFor(modelItem => item.observacionesActivo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.contabilidadActivo)
+                    @Html.DisplayFor(modelItem => item.fechaPrestamo)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaDevolucion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaEntregado)
+                </td>          
             </tr>
         }
     </tbody>

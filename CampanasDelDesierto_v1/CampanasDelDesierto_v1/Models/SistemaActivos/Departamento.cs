@@ -22,14 +22,16 @@ namespace CampanasDelDesierto_v1.Models
         //Un departamento tiene muchos inventarios
         public virtual ICollection<Activo> Activos { get; set; }
 
-        public int activosDisponibles()
-        {
-            return this.Activos.TakeWhile(ac => ac.prestado() == false).Count();
-        }
-        public int activosPrestados()
-        {
-            return this.Activos.TakeWhile(ac => ac.prestado() == true).Count();
-        }
+        //public int activosDisponibles()
+        //{
+        //    ApplicationDbContext db = new ApplicationDbContext();
+        //    var productosActivos = db.ProductosActivos.Fi;
+        //    return productosActivos.TakeWhile(ac => ac.prestado() == false).Count();
+        //}
+        //public int activosPrestados()
+        //{
+        //    return this.Activos.TakeWhile(ac => ac.prestado() == true).Count();
+        //}
 
         //Un departamento tiene una sucursal
         public int idSucursal { get; set; }

@@ -1,31 +1,28 @@
 ﻿@model CampanasDelDesierto_v1.Models.PrestamoActivo
 <div class="col-md-12">
     @*LISTA DE LOS PRODUCTOS COMPRADOS*@
-    <h4>Activos Adquiridos</h4>
+    <h4>Activos a su Resguardo</h4>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th width="10em">
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.partidaNumActivo)
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.noSerie)
                 </th>
                 <th width="20%">
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.codigoActivo)
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.descripcionActivo)
                 </th>
                 <th width="10em">
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.descripcionActivo)
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.observacionesActivo)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.unidadesActivo)
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.fechaPrestamo)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.mmcUnidades)
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.fechaDevolucion)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.observacionesActivo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().activo.contabilidadActivo)
-                </th>
+                    @Html.DisplayNameFor(model => Model.AdquisicionDeActivos.FirstOrDefault().ProductoActivo.fechaEntregado)
+                </th>            
             </tr>
         </thead>
         <tbody>
@@ -33,26 +30,23 @@
             {
                 <tr>
                     <td width="10em">
-                        @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.noSerie)
                     </td>
                     <td width="20%">
-                        @Html.DisplayFor(model => activos_AD.activo.codigoActivo)
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.descripcionActivo)
                     </td>
                     <td width="10em">
-                        @Html.DisplayFor(model => activos_AD.activo.descripcionActivo)
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.observacionesActivo)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => activos_AD.activo.unidadesActivo)
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.fechaPrestamo)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => activos_AD.activo.mmcUnidades)
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.fechaDevolucion)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => activos_AD.activo.observacionesActivo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => activos_AD.activo.partidaNumActivo)
-                    </td>
+                        @Html.DisplayFor(model => activos_AD.ProductoActivo.fechaEntregado)
+                    </td>                  
                 </tr>
             }
         </tbody>
