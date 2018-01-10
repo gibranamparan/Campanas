@@ -37,7 +37,11 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.productor.numProductor.ToUpper().Replace("P","").Replace("-",".")</td>
+                <td>
+                    <a href="@Url.Action("Details","Productores",new { id = item.productor.idProductor })">
+                        @item.productor.numProductor.ToUpper().Replace("P", "").Replace("-", ".")
+                    </a>
+                </td>
                 <td>@item.productor</td>
                 <td>@Html.DisplayFor(model => item.totalAdeudo)</td>
                 <td>@Html.DisplayFor(model => item.adeudoRecuperado)</td>

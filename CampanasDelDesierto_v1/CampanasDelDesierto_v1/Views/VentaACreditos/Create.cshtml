@@ -226,7 +226,7 @@
             var newItem = {
                 idProducto: selRow[COLS_ENUM.ID],
                 cantidadMaterial: cantidadMaterial,
-                costo: Number(selRow[COLS_ENUM.PROD1].replace('$', ''))
+                costo: currencyToNumber(selRow[COLS_ENUM.PROD1])
             };
             compras.push(newItem);
         }

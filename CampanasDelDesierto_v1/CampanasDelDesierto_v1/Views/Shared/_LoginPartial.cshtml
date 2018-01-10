@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using CampanasDelDesierto_v1.Models
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
@@ -6,10 +7,14 @@
     @Html.AntiForgeryToken()
 
     <ul class="nav usrPanel">
+        @{ 
+            string userName = (new ApplicationDbContext()).Users.Find(User.Identity.GetUserId()).nombre;
         <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @*Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+            @Html.ActionLink("Hello " + userName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
             <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
         </li>
+        }
     </ul>
     }
 }

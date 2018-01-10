@@ -154,6 +154,24 @@ namespace CampanasDelDesierto_v1.HerramientasGenerales
                 builder.ToString(1, builder.Length - 1));
             }
         }
+
+        public static string convertirMontoALetra(decimal monto,string unidades)
+        {
+            int centsPart = (int)Math.Floor((monto - Math.Floor(monto)) * 100);
+            string strCentsPart = String.Format("{0:00}/100", centsPart);
+
+            int intPart = (int)Math.Floor(monto);
+            string strIntPart = Humanizer.ToQuantityExtensions.ToQuantity(unidades, intPart, Humanizer.ShowQuantityAs.Words);
+
+            strIntPart = strIntPart.Replace("uno mil", "un mil");
+            strIntPart = strIntPart.Replace("veintiun", "veintiún");
+
+            string firstLetter = strIntPart.ElementAt(0).ToString().ToUpperInvariant();
+            strIntPart = firstLetter + strIntPart.Substring(1);
+
+
+            return string.Format("{0} {1}", strIntPart, strCentsPart);
+        }
     }
 
 }

@@ -7,6 +7,7 @@
     Layout = null;
     Model.montoMovimiento = Math.Abs(Model.montoMovimiento);
     string currency = "Dólares";
+    double fontsize = 15.8;
 }
     
 <!DOCTYPE html>
@@ -18,21 +19,26 @@
 <body>
     <div id="pnlCheque">
         <img src="~/images/Cheque.jpg" />
-        <span id="nombreCheque">
+
+        <span class="fitin" id="nombreCheque">
             @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
             {
                 @Html.DisplayFor(model => model.productor.nombreCheque)
             }
             @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
             {
-                <input value="@Html.DisplayFor(model => model.productor.nombreCheque)"/>
+                <span style="display:block">
+                    <label for="fontsize">Tamaño de letra:</label><input type="number" id="fontsize" value="@(fontsize)" oninput="$('#nombreCheque textarea').css('font-size',$(this).val()+'px')" />
+                </span><br />
+                <textarea style="display:block" cols="@(Model.productor.nombreCheque.Length + 3)" rows="1">@Html.DisplayFor(model => model.productor.nombreCheque)</textarea>
             }
         </span>
-        <span id="montoMovimiento">   
-            @(Math.Abs(Model.montoMovimiento).ToString("C"))
-        </span>
-        <span id="montoLetra">
-            <a>Son:</a>  @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency).Replace(",","")) U.S.Cy.
+    <span id="montoMovimiento">
+        @(Math.Abs(Model.montoMovimiento).ToString("C"))
+    </span>
+    <span id="montoLetra">
+        <a>Son:</a>  @*(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency).Replace(",","")) U.S.Cy.*@
+            @NumbersTools.convertirMontoALetra(Model.montoMovimiento, currency) U.S.Cy.
         </span>
         <span id="fechaMovimiento">
             @Model.fechaMovimiento.ToString("dd 'de' MMMM 'de' yyyy", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -41,10 +47,10 @@
             <a>Productor: </a>@Html.DisplayFor(model => model.productor.numProductor)
             <br />
             @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.LIQUIDACION)
-            { 
+            {
                 <a>Semana: </a>
-                @("No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy") 
-                    + " al " + Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy"))
+                @("No. " + Model.semana + " del " + Model.semanaLiquidada.startDate.ToString("dd 'de' MMMM yyyy")
+            + " al " + Model.semanaLiquidada.endDate.ToString("dd 'de' MMMM  yyyy"))
             }
             @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
             {
@@ -71,14 +77,26 @@
             }
 
             span#nombreCheque {
-                left: 18mm;
                 top: 38mm;
+                left: 15mm;
                 font-size: 1em;
             }
 
-            span#nombreCheque input{
-                font-size: 1em;
-                width: 30em;
+            span#nombreCheque textarea{
+                font-size: @(fontsize);
+                background: none;
+            }
+
+            span#nombreCheque textarea {
+                resize: horizontal
+            }
+            span#nombreCheque input#fontsize, span#nombreCheque label {
+                height: 12px;
+                font-size: 9px
+            }
+
+            span#nombreCheque input#fontsize{
+                width: 35px;
             }
 
             span#montoMovimiento {
@@ -88,9 +106,9 @@
 
             span#montoLetra{
                 top: 46mm;
-                left: 17mm;
+                left: 15mm;
             }
-             span#concepto{
+                span#concepto{
                 top: 104mm;
                 left: 10mm;
                 font-size: 14px;
@@ -122,7 +140,13 @@
                 width: 8.31in; /*Factor: */
                 height: 11in;/*Factor:*/
             }
-
+            #fitin {
+                width: 300px;
+                height: 200px;
+                border: 1px solid black;
+                overflow: hidden;
+                font-size: 1em;
+            }
             @@page {
                 size: letter;
                 margin: 0;
@@ -133,13 +157,69 @@
                 #pnlCheque img {
                     display:none;
                 }
+                
+                span#nombreCheque label, span#nombreCheque input{
+                    display:none
+                }
 
                 span input {
                     background: none;
                     border: none;
                 }
+                span{
+                    border: none !important;
+                    background: none;
+                }
+                textarea{
+                    border: none;
+                    outline: none;
+                    box-shadow: none;
+                    resize: none !important;
+                }
             }
         </style>
+
+        @if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+        {
+            <style>
+                span#nombreCheque {
+                    width:500px;
+                }
+
+                span#nombreCheque {
+                    top: 32mm;
+                    cursor: move;
+                    background: rgba(0,0,0,.2);
+                    z-index:100
+                }
+            </style>
+        }
+    
+    
     </body>
 </html>
+@Scripts.Render("~/bundles/jquery")
+@if (Model.tipoDeMovimiento == MovimientoFinanciero.TypeOfMovements.RENTENCION)
+{
+<script>
+    ajustar($("span#nombreCheque textarea")[0])
+    $("span#nombreCheque").draggable();
+    function ajustar(input) {
+        var contenedor = $(input).parent()
+        var fontsize = 0
+        while ($(input).width() <= contenedor.width() && parseFloat($(input).css('font-size')) < @(fontsize)) {
+            fontsize = parseFloat($(input).css('font-size')) + .01 //incrementa
+            $(input).css('font-size', fontsize + "px"); //establece fuente
+            console.log(fontsize)
+        }
+
+        while ($(input).width() >= contenedor.width()) {
+            fontsize = parseFloat($(input).css('font-size')) - .01
+            $(input).css('font-size', fontsize + "px");
+            console.log(fontsize)
+        }
+        $(input).attr('cols', $(input).val().length + 3) //establece tamaño contenedor
+    }
+</script>
+}
 

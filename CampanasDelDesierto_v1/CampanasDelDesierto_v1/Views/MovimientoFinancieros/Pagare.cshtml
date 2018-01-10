@@ -78,7 +78,8 @@
                 @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
             </span>
             <span id="montoMovimiento">
-                @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
+                @*(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.*@
+                @Model.montoALetra
             </span>
             <span id="diafechaMovimiento">
                 @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -146,11 +147,6 @@
     }
     @if (isVenta)
     {
-        
-            
-
-
-        
         <div id="pnlPagare">
             <img src="/images/Pagare.jpg" />
             <span id="ImportePagare">
@@ -166,7 +162,7 @@
                 @fechaPagar.ToString("yyy", CultureInfo.CreateSpecificCulture("es-MX"))
             </span>
             <span id="montoMovimiento">
-                @(NumbersTools.NumberToText.Convert(Model.montoMovimiento, currency)) U.S.Cy.
+                @Model.montoALetra
             </span>
             <span id="diafechaMovimiento">
                 @Model.fechaMovimiento.ToString("dd", CultureInfo.CreateSpecificCulture("es-MX"))
@@ -266,9 +262,11 @@
         }
 
         span#montoMovimiento {
-            left: 117mm;
+            left: 115mm;
             top: 46mm;
             font-size: 14px;
+            display: inline-block;
+            width: 310px;
         }
 
         span#diafechaMovimiento {

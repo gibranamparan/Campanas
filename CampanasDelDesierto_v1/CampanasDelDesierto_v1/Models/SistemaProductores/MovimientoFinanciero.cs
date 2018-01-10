@@ -328,12 +328,15 @@ namespace CampanasDelDesierto_v1.Models
             }
         }
 
+        public string montoALetra { get {
+                return NumbersTools.convertirMontoALetra(this.montoMovimiento, "Dólares")+ " U.S.Cy.";
+            } }
+
         /// <summary>
         /// Indica TRUE si el monto del abono ya ha sido distribuido completamente en un conjunto de prestamos o si
         /// la instancia de prestamo ya ha sido saldada por un conjunto de abonos. En caso contrario, arroja FALSE.
         /// </summary>
         public bool agotado { get { return Math.Round(this.montoActivo,2) <= 0; } }
-
 
         public static System.Data.Entity.EntityState determinarEstadoMovimiento(MovimientoFinanciero adeudo)
         {
@@ -784,13 +787,32 @@ namespace CampanasDelDesierto_v1.Models
         /// </summary>
         public class VMTotalesSimple
         {
+            /// <summary>
+            /// Total de abonos introducidos dentro de la temporada actual
+            /// </summary>
             public decimal abonos { get; set; }
+            /// <summary>
+            /// Total de deuda introducida en la temporada actual
+            /// </summary>
             public decimal deudas { get; set; }
+            /// <summary>
+            /// Monto total de la deuda debida desde la temporada anterior
+            /// </summary>
             public decimal deudaInicial { get; private set; }
+            /// <summary>
+            /// Suma de la deuda inicial con la deuda total de la cosecha actual
+            /// </summary>
             public decimal deudaTotal { get; set; }
+            /// <summary>
+            /// Balance de la temporada actual
+            /// </summary>
             public decimal balance { get; set; }
 
             public VMTotalesSimple() { }
+            /// <summary>
+            /// Calcula el total de deudaInicial, abonos, deudas, deudaTotal y balance
+            /// </summary>
+            /// <param name="lista">Lista sobre la cual se calcularan los totales</param>
             public VMTotalesSimple(List<MovimientoFinanciero> lista)
             {
                 this.deudaInicial = lista.Where(mov => mov.isAdeudoInicialVentaOlivo).Sum(mov => mov.montoMovimiento);

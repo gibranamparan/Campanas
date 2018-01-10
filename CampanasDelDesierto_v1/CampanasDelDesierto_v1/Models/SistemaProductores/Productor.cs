@@ -911,16 +911,27 @@ namespace CampanasDelDesierto_v1.Models
             return generarReporteVentasArboles(tem,temporadaAnterior, ref totales);
         }
 
+        /// <summary>
+        //Genera una lista en orden cronoligo de todos los movimientos de compras y abonos a arboles de olivo
+        //incluyendo tambien el global de temporadas anteriores
+        /// </summary>
+        /// <param name="tem">Referencia a la instancia del año de cosecha actual</param>
+        /// <param name="temporadaAnterior">Referencia a la instancia del año de cosecha anterior</param>
+        /// <param name="totales">Argumento por referencia donde se almacenaran la suma de los campos principales del reporte.</param>
+        /// <returns></returns>
         public List<MovimientoFinanciero> generarReporteVentasArboles(TemporadaDeCosecha tem, TemporadaDeCosecha temporadaAnterior,
             ref VMTotalesSimple totales)
         {
             var res = this.MovimientosFinancieros;
+            //Genera una lista de todos los movimientos de compras de arboles en el presente año
             if (res != null && res.Count() > 0)
             {
                 res = res.Where(mov => mov.TemporadaDeCosechaID == tem.TemporadaDeCosechaID)
                 .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
                 .OrderBy(mov => mov.fechaMovimiento).ToList();
             }
+            //Si existe un año anterior, agrega un movimiento inicial nuevo englobando el balance resultante de ese año
+            //para el concepto de compras de arboles y lo agrega a la lista
             if (temporadaAnterior != null)
             {
                 decimal balanceAnteriorArbolesOlivo = this.getBalanceArbolesOlivo(temporadaAnterior.TemporadaDeCosechaID);
@@ -928,24 +939,35 @@ namespace CampanasDelDesierto_v1.Models
                 {
                     AdeudoInicial adeudoInicialArbolesOlivoDesdeTemporadaAnterior = new AdeudoInicial(balanceAnteriorArbolesOlivo,
                         tem, this, true, TipoDeBalance.VENTA_OLIVO);
+                    //Se le asigna al movimiento de deuda inicial la fecha final de la temporada anterior
+                    adeudoInicialArbolesOlivoDesdeTemporadaAnterior.fechaMovimiento = tem.fechaInicio;
                     LinkedList<MovimientoFinanciero> tempRes = new LinkedList<MovimientoFinanciero>(res);
                     tempRes.AddFirst(adeudoInicialArbolesOlivoDesdeTemporadaAnterior);
                     res = tempRes.ToList();
                 }
             }
+            //De la lista generada, se acumulan los totales en uns instancia VMTotalesSimple
             totales = new VMTotalesSimple(res.ToList());
             return res.ToList();
         }
 
+        /// <summary>
+        /// Determina el balance resultante dentro de un año de cosecha correspondiente a el estado de cuenta de compra de arboles
+        /// para la instancia del productor.
+        /// </summary>
+        /// <param name="temporadaDeCosechaID"></param>
+        /// <returns></returns>
         public decimal getBalanceArbolesOlivo(int temporadaDeCosechaID)
         {
             decimal res = 0;
             var movs = this.MovimientosFinancieros.Where(mov => mov.TemporadaDeCosechaID == temporadaDeCosechaID);
+            //Se toman solamente los movimientos correpondientes a compras de arboles dentro de un año de cosecha especifico
             if (movs != null && movs.Count() > 0)
             {
                 movs = movs.Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO)
                 .OrderBy(mov => mov.fechaMovimiento).ToList();
             }
+            //Se determina el balance final resultante del ultimo movimiento dentro del año
             if (movs.Count() > 0)
                 res = movs.Last().balance;
 

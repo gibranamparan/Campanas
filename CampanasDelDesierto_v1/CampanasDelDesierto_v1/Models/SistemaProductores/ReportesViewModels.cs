@@ -89,10 +89,14 @@ namespace CampanasDelDesierto_v1.Models
                     .Where(mov => mov.tipoDeBalance == MovimientoFinanciero.TipoDeBalance.VENTA_OLIVO);
 
                 //Calculo de compra total de arboles
-                this.adeudoArbolitos = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                VMTotalesSimple totalesArboles = new VMTotalesSimple();
+                var listaArboles = productor.generarReporteVentasArboles(temporadaActual, temporadaAnterior, ref totalesArboles);
+                //this.adeudoArbolitos = Math.Abs(productor.totalDeudaVentaArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                this.adeudoArbolitos = Math.Abs(totalesArboles.deudaTotal);
 
                 //Calculo de abono total a deuda por arboles
-                this.abonoArbolitosRecuperado = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                //this.abonoArbolitosRecuperado = Math.Abs(productor.totalAbonoArbolitoPorTemporada(temporadaActual.TemporadaDeCosechaID));
+                this.abonoArbolitosRecuperado = totalesArboles.abonos;
 
                 //Calculo total de adeudo por recuperar
                 this.adeudoPorRecuperarArbolitos = (this.adeudoArbolitos - this.abonoArbolitosRecuperado);

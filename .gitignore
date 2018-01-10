@@ -245,3 +245,7 @@ ModelManifest.xml
 .fake/
 /ConsoleApplication1
 /Prog_R1
+
+CampanasDelDesierto_v1/Properties
+
+*.config

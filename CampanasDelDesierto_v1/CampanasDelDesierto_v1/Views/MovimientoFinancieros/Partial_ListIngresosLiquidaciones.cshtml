@@ -88,8 +88,8 @@
                                         <i class="glyphicon glyphicon-option-horizontal"></i>
                                     </button>
                                     <div id="myDropdown" class="dropdown-content">
-                                        @*Opciones para liquidaciones y ingresos de cosecha*@
-                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                        <!--Opciones para liquidaciones y ingresos de cosecha-->
+                                        @if(!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
                                         {
                                             <a href="@Url.Action("Edit", item.getNombreControlador(), new { id = item.idMovimiento })">
                                                 <i class="glyphicon glyphicon-edit"></i> Editar
@@ -100,7 +100,7 @@
                                             <i class="glyphicon glyphicon-print"></i> Detalles
                                         </a>
 
-                                        if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
+                                        @if (!(item.getTypeOfMovement() == MovimientoFinanciero.TypeOfMovements.PAGO_POR_PRODUCTO && ((PagoPorProducto)item).yaLiquidado))
                                         {
                                             <a href="@Url.Action("Delete", "MovimientoFinancieros", new { id = item.idMovimiento })">
                                                 <i class="glyphicon glyphicon-remove"></i> Borrar
