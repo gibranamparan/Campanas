@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Inventario>
+﻿@model IEnumerable<CampanasDelDesierto_v1.Models.CategoriaDeActivo>
+@using CampanasDelDesierto_v1.Models
 
 @{
     ViewBag.Title = "Index";
@@ -7,50 +8,23 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
+@Html.Partial("_PartialCreateCategoria", new CategoriaDeActivo())
+<table class="table table-hover table-striped">
+    <tr>     
         <th>
-            @Html.DisplayNameFor(model => model.Departamento.nombreDepartamento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nombreInventario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.modeloInventario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.costo)
-        </th>
-        <th>
-            Activos
-        </th>        
+            @Html.DisplayNameFor(model => model.nombreCategoria)
+        </th>                 
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Departamento.nombreDepartamento)
-        </td>
+            @Html.DisplayFor(modelItem => item.nombreCategoria)
+        </td>                 
         <td>
-            @Html.DisplayFor(modelItem => item.nombreInventario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.modeloInventario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.costo)
-        </td>
-        <td>
-            @item.Activos.Count()
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.inventarioID }) |
-            @Html.ActionLink("Ver Activos", "Details", new { id=item.inventarioID }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.inventarioID })
+            @Html.ActionLink("Editar", "Edit", new { id=item.CategoriaActivoID }) |            
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.CategoriaActivoID })
         </td>
     </tr>
 }

@@ -22,12 +22,12 @@
                 <th>
                     @Html.DisplayNameFor(model => model.nombreDepartamento)
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayName("Activos Disponibles")
                 </th>
                 <th>
                     @Html.DisplayName("Activos Prestados")
-                </th>
+                </th>*@
                 <th></th>
             </tr>
 
@@ -40,10 +40,10 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.nombreDepartamento)
                     </td>
-                    <td>
+                    @*<td>
                         @(item.activosDisponibles())
                     </td>
-                    <td>@(item.activosPrestados())</td>
+                    <td>@(item.activosPrestados())</td>*@
                     <td>
                         <a href="@Url.Action("Edit","Departamentos",new { id = item.departamentoID })">
                             <i class="glyphicon glyphicon-pencil"></i> Editar

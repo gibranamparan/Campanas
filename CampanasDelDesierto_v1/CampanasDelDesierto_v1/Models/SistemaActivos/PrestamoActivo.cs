@@ -33,8 +33,7 @@ namespace CampanasDelDesierto_v1.Models
         public int idEmpleado { get; set; }
         public virtual Empleado Empleado { get; set; }
 
-        [Display(Name = "Activo")]
-        public int idActivo { get; set; }
-        public virtual Activo Activo { get; set; }
+        //Un prestamo contiene muchas adquisiciones de activos
+        public virtual ICollection<AdquisicionDeActivo> AdquisicionDeActivos { get; set; }
     }
 }

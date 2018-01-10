@@ -1,0 +1,99 @@
+﻿@using CampanasDelDesierto_v1.Models
+@model IEnumerable<CampanasDelDesierto_v1.Models.ProductoActivo>
+
+@{
+    bool selectMode = false;
+    if (ViewData["selectMode"] != null)
+    {
+        selectMode = (bool)ViewData["selectMode"];
+    }
+
+    @*Variables para editar la lista de productos comprados*@
+bool editMode = false;
+bool found = false;
+List<AdquisicionDeActivo> activosAdquiridos = null;
+AdquisicionDeActivo adquirirIndex = null;
+if (ViewData["activosAdquiridos"] != null)
+{
+    activosAdquiridos = (List<AdquisicionDeActivo>)ViewData["activosAdquiridos"];
+    editMode = activosAdquiridos != null && activosAdquiridos.Count() > 0;
+}
+
+}
+<table id="Activos" class="table table-hover table-striped">
+    <thead>
+        <tr>
+            @if (selectMode)
+            {
+                <th>
+
+                </th>             
+            }
+            <th class="hidden">
+                @Html.DisplayNameFor(model => model.ProductoActivoID)
+            </th>
+            <th width="10em">
+                @Html.DisplayNameFor(model => model.noSerie)
+            </th>
+            <th width="20%">
+                @Html.DisplayNameFor(model => model.descripcionActivo)
+            </th>
+            <th width="10em">
+                @Html.DisplayNameFor(model => model.observacionesActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaPrestamo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaDevolucion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaDevolucion)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in this.Model)
+        {
+            if (editMode)
+            {
+                adquirirIndex = activosAdquiridos.FirstOrDefault(com => com.ProductoActivoID == item.ProductoActivoID);
+                found = adquirirIndex != null;
+            }
+
+            <tr @(found ? "default-selected" : "") @(found ? "AdquirirActivosID=" + adquirirIndex.cantidadActivo : "")>
+                @if (selectMode)
+                {
+                    <td></td>
+
+                    @*<td width="1em">
+                        <input type="number" idActivo="@(item.ProductoActivoID)" id="Activo@(item.ProductoActivoID)" min="0"
+                               oninput="editarElemento(this)"
+                               value="@(editMode && found?adquirirIndex.cantidadActivo:0)" />
+                    </td>*@
+                }
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.ProductoActivoID)
+                </td>
+                <td width="10em">
+                    @Html.DisplayFor(modelItem => item.noSerie)
+                </td>
+                <td width="20%">
+                    @Html.DisplayFor(modelItem => item.descripcionActivo)
+                </td>
+                <td width="10em">
+                    @Html.DisplayFor(modelItem => item.observacionesActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaPrestamo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaDevolucion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaEntregado)
+                </td>          
+            </tr>
+        }
+    </tbody>
+</table>

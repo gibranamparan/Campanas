@@ -1,26 +1,124 @@
 ﻿@model IEnumerable<CampanasDelDesierto_v1.Models.Activo>
+@using CampanasDelDesierto_v1.HerramientasGenerales
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Activos";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ExcelTools.ExcelParseError> erroresExcel = ViewBag.erroresExcel;
+    ExcelTools.ExcelParseError errorGeneral = ViewBag.errorGeneral;   
+
+    string errorMsgPrimario = "";
+    string erroresModalID = "";
+    if (erroresExcel != null)
+    {
+        errorMsgPrimario = "Se presentaron <strong>" + erroresExcel.Count() + " errores</strong> al importar el documento Excel."
+            + " Revise la tabla de errores de importación en la parte inferior.";
+    }
+    if (errorGeneral != null && errorGeneral.isError)
+    {
+        errorMsgPrimario = errorGeneral + "<br>" + errorMsgPrimario;
+    }
+  
 }
 
-<h2>Lista De Activos</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
-        @Html.ActionLink("Crear Nuevo", "Create")
+    <a href="@Url.Action("Create")">
+        <i class="fa fa-plus-circle"></i> Nuevo Activo
+    </a> |
+    <a href="#" onclick="$('#formImportExcel').slideToggle()">
+        <i class="fa fa-file-excel-o"></i> Importar de Excel
+    </a>  
 </p>
-<table class="table table-striped table-hover datablejs">
+@using (Html.BeginForm(null, null, FormMethod.Post,
+                new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "form-inline",
+                    id = "formImportExcel",
+                    style = "display:none"
+                }))
+{
+    @Html.ValidationSummary()
+    <div class="row">
+        <div class="col-md-12">
+            <label for="xlsFile">Importar de Excel</label>
+            <input id="xlsFile" name="xlsFile" type="file" class="form-control"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <button class="btn btn-success">
+                <i class="fa fa-upload"></i> Subir
+            </button>
+            <i class="fa fa-question-circle helpIcon"
+               onclick="$('#msgAyudaImportacion').slideToggle();
+                 $(this).toggleClass('clicked')"
+               style="cursor: pointer"></i>
+        </div>
+        <div id="msgAyudaImportacion" style="display: none;" class="col-md-12 alert alert-info">
+            Para importar la información de los activos, cargue un archivo excel con la estructura
+            mostrada en la siguiente imagen, respete el orden de las columnas. No es necesario
+            que el nombre de las columnas sea el mismo. <br />
+            <div style="text-align: center">
+                <img style="border: 1px solid; margin: 1em auto"
+                     src="~/images/productores/excel_ejemplo.png" /> <br />
+            </div>
+            El sistema buscará en la base de datos los activos con el mismo numero de activo
+            que marque el archivo Excel.
+            <ul>
+                <li>
+                    <strong>En caso de encontrarlo</strong>, modificará la información almacenada
+                    en la base de datos por la informacion del registro Excel.
+                </li>
+                <li>
+                    <strong>En caso de no encontrarlo</strong>, se creará un nuevo registro de activo
+                    con las datos del archivo Excel.
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("Index", null, FormMethod.Post, new { @class = "form-group" }))
+{
+    <div class="col-md-12">
+        <div class="col-md-6">@Html.DropDownList("departamentoID", null, new { name = "departamentoID", id = "departamentoID" })</div>        
+        <div><button type="submit" class="btn btn-success">Buscar</button></div>
+
+        <div>
+            <h4>
+                <a href="@Url.Action("Index")">
+                    <i class="glyphicon glyphicon-repeat"></i>
+                </a><br />
+            </h4>
+        </div>
+    </div>                    
+}
+<table class="table table-striped table-hover datatablejs">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.inventario.nombreInventario)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.partidaNumActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.nombreActivo)
+                @Html.DisplayNameFor(model => model.codigoActivo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.estadoActivo)
+                @Html.DisplayNameFor(model => model.descripcionActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unidadesActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mmcUnidades)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.observacionesActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contabilidadActivo)
             </th>
             <th></th>
         </tr>
@@ -29,14 +127,29 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.inventario.nombreInventario)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.partidaNumActivo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.nombreActivo)
+                    @Html.DisplayFor(modelItem => item.codigoActivo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.estadoActivo)
+                    @Html.DisplayFor(modelItem => item.descripcionActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.unidadesActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mmcUnidades)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.observacionesActivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contabilidadActivo)
                 </td>
                 <td>
                     <a href="@Url.Action("Edit","Activos",new { id = item.idActivo })">
@@ -53,3 +166,25 @@
         }
     </tbody>
 </table>
+
+
+@if (!String.IsNullOrEmpty(errorMsgPrimario))
+{
+    erroresModalID = "importExcelErrorMessage";
+    ViewDataDictionary vdd = new ViewDataDictionary();
+    vdd.Add("erroresModalID", erroresModalID);
+    vdd.Add("errorMsgPrimario", errorMsgPrimario);
+    <div>
+        @Html.Partial("../Shared/Partial_ExcelErrors", erroresExcel, vdd);
+    </div>
+}
+
+
+@section Scripts{
+    @if (erroresExcel != null && erroresExcel.Count() > 0)
+    {
+        <script>
+            $('@("#"+ erroresModalID)').modal();
+        </script>
+    }
+}

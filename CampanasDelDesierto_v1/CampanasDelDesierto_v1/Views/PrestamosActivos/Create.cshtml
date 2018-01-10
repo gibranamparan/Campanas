@@ -5,10 +5,25 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Message = "";
-    List<Activo> Activos = ViewBag.idActivo;
+
 
     ViewDataDictionary vdd = new ViewDataDictionary();
     vdd.Add("selectMode", true);
+
+    bool editMode = Model.idPrestamoActivo > 0;
+    ViewBag.Title = (editMode ? "Editar" : "Nuevo") + " Prestamo de Activo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Empleado Empleado = ViewBag.Empleado;
+    List<ProductoActivo> ProductosActivos = ViewBag.ProductoActivoID;
+    List<AdquisicionDeActivo> ActivosAdquiridos = null;
+    if (editMode)
+    {
+        //Se obtiene las activos adquiridos para ser editadas
+        ActivosAdquiridos = Model.AdquisicionDeActivos.ToList();
+    }
+    vdd.Add("prestamos", ActivosAdquiridos);
+
 }
 <p>
     <a href="@Url.Action("Details","Departamentos", new { id = Model.Empleado.departamentoID})">
@@ -40,7 +55,7 @@
         </a>    
     </div>
 </div>
-@Html.Partial("Partial_ListaActivos", Activos, vdd)
+@Html.Partial("Partial_ListaProductosActivos", ProductosActivos, vdd)
 
 <div id="mensajes" class="container"></div><br />
 
@@ -53,7 +68,7 @@
         {
             @Html.AntiForgeryToken()<br />
             @Html.HiddenFor(model => model.idEmpleado)<br />
-            @Html.Hidden("idActivo")
+            @Html.Hidden("Activos_AD")
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -74,7 +89,7 @@
                
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button disabled type="submit" id="Buscar" class="btn btn-success">Crear</button>
+                        <button disabled type="submit" id="crear" class="btn btn-success">Crear</button>
                     </div>
                 </div>
             </div>
@@ -89,115 +104,13 @@
 
     <script>
 
-        //Validacion texbox llenados y habilitacion de boton buscar
-        function validacionFechas(){
-             
-                 var fech1 = document.getElementById("FechaI").value;
-                 var fech2 = document.getElementById("FechaF").value;
-
-                 if (fech2 == "") {
-                     $('#Buscar').attr('disabled', true)
-                 }
-                 else
-                 {
-                     var valorInput =$('#idActivo').val()
-                     if (valorInput>=0) {
-                         $('#Buscar').attr('disabled', false)
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
-                         $('#Buscar').attr('disabled', true);
-                     }
-             
-                 }
-                 //Valida los rangos
-                 if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-                     $('#mensaje').remove();
-                     $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
-                     if ($('#Buscar').attr('disabled', true)) {
-
-                     }
-                     else {
-                         $('#Buscar').attr('disabled', true)
-                     }
-                 }
-                 else
-                 {
-                     var valorInput = $('#idActivo').val()
-                     if (valorInput > 0) {
-                         $('#Buscar').attr('disabled', false)
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
-                         $('#Buscar').attr('disabled', true);
-                     }
-                 }
-               
-        }
-        function validacionFechas2(){
-           
-                 var fech1 = document.getElementById("FechaI").value;
-                 var fech2 = document.getElementById("FechaF").value;
-                 if (fech1 == "") {
-                     $('#Buscar').attr('disabled', true)
-                 }
-                 else
-                 {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {                         
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Seleccione un Activo!</div>");
-                     }
-                 }
-                 //Valida los rangos
-                 if ((Date.parse(fech1)) > (Date.parse(fech2))) {
-                     $('#mensaje').remove();
-                     $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>La Fecha de Entrega no puede ser menor a la fecha final</div>");
-                     if ($('#Buscar').attr('disabled', true)) {
-
-                }
-                else {  
-                 
-                         $('#Buscar').attr('disabled', true)
-                     }
-                 }
-                 else
-                 {
-                     var body = $('#Activos').children('tbody');
-                     var renglon = body.children('tr');
-                     if ($(renglon).hasClass('selected')) {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-success'>¡Las fechas son adecuadas!</div>");
-                     }
-                     else
-                     {
-                         $('#mensaje').remove();
-                         $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
-                     }
-            
-            }
-        }
-
-
-        //Data table select sigle row
-        var COLS_ENUM = Object.freeze({ ID: 1})
+        var COLS_ENUM = Object.freeze({ ID: 1, noSerie: 2, Descripcion: 3 })
         var table = $('#Activos').DataTable({
             columnDefs: [{
                 orderable: false,
                 className: 'select-checkbox',
                 targets: 0
-            }, {                
+            }, {
                 visible: false,
                 searchable: false
             }],
@@ -207,36 +120,138 @@
             },
             order: [[1, 'asc']]
         });
-        //Al Seleccionar un activo
-        $('#Activos tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected'))
-            {
-                $(this).removeClass('selected');      
-                $('#idActivo').val('');
-                $('#Buscar').attr('disabled', true);
-                $('#mensaje').remove();
-                $('#mensajes').append("<div id='mensaje' class='alert alert-danger'>¡Seleccione un Activo!</div>");
-               
-            }
-            else
-            {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-                validacionFechas();
-                validacionFechas2();
-                var row = $(this).closest('tr')[0];
-                var rowData = table.row(row).data();
-                if (rowData) {
-                    var rowId = rowData[1];
-                    $('#idActivo').val(rowId);
-                }  
 
-            }
+        table.on('select', function (e, dt, type, indexes) {
+            var selRow = dt.data();
+            agregarSeleccion(selRow)
+            funcionRecalcularMontos();
+            console.log(compras)
+        }).on('deselect', function (e, dt, type, indexes) {
+            var unSelRows = dt.data();
+            removerSeleccion(unSelRows);
+            funcionRecalcularMontos();
+            console.log(compras)
         });
 
-        //$('#button').click(function () {
-        //    table.row('.selected').remove().draw(false);
-        //});        
+        //Data table select sigle row
+        var compras = new Array();
+
+        //Metodo que agrega del estado de compras los elementos desseleccionados
+        function agregarSeleccion(rows) {
+            var renglones = new Array();
+            if (!rows.rows) { //Si es un solo elemento
+                var inputCantidad = rows[COLS_ENUM.ID];
+                introducirNuevaCantidad(inputCantidad);
+            } else { //Si son varios
+                renglones = rows;
+                //selectedIngresosIDs = new Array();
+                $.each(renglones, function (idx, row) {
+                    //compras.push(row[COLS_ENUM.ID])
+                    var inputCantidad = rows[COLS_ENUM.ID];
+                    introducirNuevaCantidad(inputCantidad);
+                })
+            }
+        }
+
+        function validarCantidades() {
+
+        }
+
+        //Metodo que elimina del estado de compras los elementos desseleccionados
+        function removerSeleccion(rows) {
+            var renglonesAEliminar = new Array();
+            if (!rows.rows) {
+                renglonesAEliminar.push(rows);
+            } else {
+                renglonesAEliminar = rows;
+            }
+            $.each(renglonesAEliminar, function (idx, row) {
+                compras = $.grep(compras, function (item, idx) {
+                    return item.ProductoActivoID == row[COLS_ENUM.ID]
+                }, true)
+            })
+        }
+
+        //Recalcula el total de la venta segun los costos de cantidad de material comprado
+        //selecciondos en la tabla
+        function funcionRecalcularMontos() {
+            /*var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data();*/      
+
+            //var cantidad = $('#cantidadMaterial').val();
+            if (compras.length == 0)
+                $('#crear').attr('disabled', true);
+            else
+            {               
+                $('#crear').attr('disabled', false);
+            }
+            $('#Activos_AD').val(JSON.stringify(compras))
+        }
+
+        function introducirNuevaCantidad(inputCantidad) {
+            var selRow = buscarRenglonSeleccionado(inputCantidad)
+            //Se el input editado se encontraba seleccionado
+            if (selRow)
+                nuevoRenglonDeCompras(selRow, inputCantidad)
+        }
+
+        function nuevoRenglonDeCompras(selRow, inputCantidad) {
+            //var cantidadActivo = inputCantidad ? inputCantidad.valueAsNumber : Number($(selRow[COLS_ENUM.CANTIDAD]).val());
+            //Se agrega el nuevo elemento al arreglo
+            var newItem = {
+                ProductoActivoID: selRow[COLS_ENUM.ID],
+                noSerie: selRow[COLS_ENUM.noSerie],
+                Descripcion: selRow[COLS_ENUM.Descripcion]                
+            };
+            compras.push(newItem);
+        }
+
+        function editarElemento(inputEditado) {
+            var selRow = buscarRenglonSeleccionado(inputEditado);
+            if (selRow) {
+                var compraIDX
+                $.each(compras, function (idx, item) {
+                    if (selRow[COLS_ENUM.ID] == item.ProductoActivoID)
+                        compraIDX = idx;
+                })
+                compras[compraIDX].cantidadActivo = inputEditado.valueAsNumber;
+
+                console.log(JSON.stringify(compras));
+            }
+
+            funcionRecalcularMontos();
+        }
+
+        function buscarRenglonSeleccionado(input) {
+            //Se toman los datos de los renglones seleccionados
+            var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data()
+
+            //Se busca si el input editado se encuentra seleccionado
+            var selRow = $.grep(data, function (item, idx) {
+                return item[COLS_ENUM.ID] == input;
+            })[0];
+
+            return selRow;
+        }
+</script>
+
+@if (editMode)
+{
+    <script>
+        $('#Activos').DataTable().table().rows('[default-selected]').select();
+
+        inicializarListadoDeActivosAdquiridos();
+
+        function inicializarListadoDeActivosAdquiridos() {
+            var selectedRows = table.rows({ selected: true });
+            var data = selectedRows.data();
+            activosAdquiridos = new Array();
+            $.each(data, function (idx, item) {
+                nuevoRenglonDeActivosAdquiridos(item)
+            })
+        }
     </script>
+    }
 }
 

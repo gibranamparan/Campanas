@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/39a6c464-fe8c-4c46-a06d-7905844ce7ac/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/CampanasDelDesierto_v1</ApplicationInsightsResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -239,13 +240,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ProductosActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\ActivosController.cs" />
     <Compile Include="Controllers\SistemaActivos\DepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\AdeudoInicialController.cs" />
     <Compile Include="Controllers\SistemaProductores\AdminDepartamentosController.cs" />
     <Compile Include="Controllers\SistemaProductores\LiquidacionSemanalController.cs" />
     <Compile Include="Controllers\SistemaActivos\EmpleadosController.cs" />
-    <Compile Include="Controllers\SistemaActivos\InventariosController.cs" />
+    <Compile Include="Controllers\SistemaActivos\Inventarios.cs" />
     <Compile Include="Controllers\SistemaActivos\PrestamosActivosController.cs" />
     <Compile Include="Controllers\SistemaProductores\ProductosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -436,8 +438,18 @@
     <Compile Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.Designer.cs">
       <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710110151282_CambiosGenerales_SistemaActivos.cs" />
+    <Compile Include="Migrations\201710110151282_CambiosGenerales_SistemaActivos.Designer.cs">
+      <DependentUpon>201710110151282_CambiosGenerales_SistemaActivos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.cs" />
+    <Compile Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.Designer.cs">
+      <DependentUpon>201710200232080_NuevaTabla_ProductoActivo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\SistemaActivos\AdquisicionDeActivo.cs" />
+    <Compile Include="Models\ProductoActivo.cs" />
     <Compile Include="Models\SistemaActivos\AdminDepartamento.cs" />
     <Compile Include="Models\SistemaProductores\AdeudoInicial.cs" />
     <Compile Include="Models\SistemaProductores\CompraProducto.cs" />
@@ -445,7 +457,7 @@
     <Compile Include="Models\SistemaActivos\Departamento.cs" />
     <Compile Include="Models\SistemaProductores\LiquidacionSemanal.cs" />
     <Compile Include="Models\SistemaActivos\Empleado.cs" />
-    <Compile Include="Models\SistemaActivos\Inventario.cs" />
+    <Compile Include="Models\SistemaActivos\CategoriaDeActivo.cs" />
     <Compile Include="Models\SistemaActivos\PrestamoActivo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -760,7 +772,7 @@
     <Content Include="Views\RecepcionDeProductos\Partial_CreateRecepcionProducto.cshtml" />
     <Content Include="Views\RecepcionDeProductos\Partial_ConfirmEliminarProductos.cshtml" />
     <Content Include="Views\VentaACreditos\Partial_ListaProductos.cshtml" />
-    <Content Include="Views\PrestamosActivos\Partial_ListaActivos.cshtml" />
+    <Content Include="Views\PrestamosActivos\Partial_ListaProductosActivos.cshtml" />
     <Content Include="Views\MovimientoFinancieros\Partial_MovimientoDetails.cshtml" />
     <Content Include="Views\Proveedores\Partial_DeleteConcepto.cshtml" />
     <Content Include="Views\Proveedores\Partial_CreateConcepto.cshtml" />
@@ -787,11 +799,18 @@
     <Content Include="Views\Sucursales\_PartialCrearteSucursal.cshtml" />
     <Content Include="Views\Departamentos\_PartialCreateDepartamento.cshtml" />
     <Content Include="Views\Empleados\_PartialCreateEmpleado.cshtml" />
-    <Content Include="Views\Departamentos\_PartialCreateInventario.cshtml" />
+    <Content Include="Views\Departamentos\_PartialIndexActivos.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionFinal.cshtml" />
     <Content Include="Views\ReportesProductores\LiquidacionDeAceituna.cshtml" />
     <Content Include="Views\Retencion\cheques.cshtml" />
     <Content Include="Views\Retencion\Form_RetencionCheque.cshtml" />
+    <Content Include="Views\Shared\Partial_ListadoActivosAdquiridos.cshtml" />
+    <Content Include="Views\Inventarios\_PartialCreateCategoria.cshtml" />
+    <Content Include="Views\ProductosActivos\Create.cshtml" />
+    <Content Include="Views\ProductosActivos\Delete.cshtml" />
+    <Content Include="Views\ProductosActivos\Details.cshtml" />
+    <Content Include="Views\ProductosActivos\Edit.cshtml" />
+    <Content Include="Views\ProductosActivos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -928,6 +947,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709202130090_retencionCheques_relacionPRoductor_temporada1.resx">
       <DependentUpon>201709202130090_retencionCheques_relacionPRoductor_temporada1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710110151282_CambiosGenerales_SistemaActivos.resx">
+      <DependentUpon>201710110151282_CambiosGenerales_SistemaActivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710200232080_NuevaTabla_ProductoActivo.resx">
+      <DependentUpon>201710200232080_NuevaTabla_ProductoActivo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

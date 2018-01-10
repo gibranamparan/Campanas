@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+        var activosAD = Model.AdquisicionDeActivos;
+    
 }
 
 <p>
@@ -27,11 +30,7 @@
             <div class="form-group col-md-4">
                 @Html.LabelFor(model => model.Empleado.Departamento.nombreDepartamento)
                 <p class="form-control-static">@Html.DisplayFor(model => model.Empleado.Departamento.nombreDepartamento)</p>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Activo Prestado:</label>
-                <p class="form-control-static">@Html.DisplayFor(model => model.Activo.nombreActivo)</p>
-            </div>
+            </div>                  
             <div class="form-group col-md-4">
                 @Html.LabelFor(model => model.fechaPrestamoActivo)
                 <p class="form-control-static">@Html.DisplayFor(model => model.fechaPrestamoActivo)</p>
@@ -44,6 +43,9 @@
                 @Html.LabelFor(model => model.fechaDevolucion)
                 <p class="form-control-static">@Html.DisplayFor(model => model.fechaDevolucion)</p>
             </div>
-        </div>
+        </div>        
+       @*Partial de listado de Activos Adquiridos*@
+        @Html.Partial("Partial_ListadoActivosAdquiridos")
+
     </div>
 </div>
